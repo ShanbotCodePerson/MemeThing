@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Login View Controller-->
         <scene sceneID="WDJ-V4-tCT">
             <objects>
-                <viewController id="Z7G-aV-WzP" sceneMemberID="viewController">
+                <viewController id="Z7G-aV-WzP" customClass="LoginViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jaz-qT-BjZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -19,13 +19,13 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="RH0-Qc-nWr">
                                 <rect key="frame" x="109.5" y="83" width="195.5" height="61"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Meme Thing!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7lZ-sP-LMr">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Meme Thing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7lZ-sP-LMr">
                                         <rect key="frame" x="0.0" y="0.0" width="195.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please sign up or log in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozd-FJ-riY">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please sign up or log in" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozd-FJ-riY">
                                         <rect key="frame" x="0.0" y="40.5" width="195.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
@@ -42,10 +42,16 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TA2-Zb-LEP">
                                                 <rect key="frame" x="0.0" y="0.0" width="165.5" height="32"/>
                                                 <state key="normal" title="Sign Up"/>
+                                                <connections>
+                                                    <action selector="signUpToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="q6s-ln-sVF"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Asi-DS-fLW">
                                                 <rect key="frame" x="165.5" y="0.0" width="165.5" height="32"/>
                                                 <state key="normal" title="Log In"/>
+                                                <connections>
+                                                    <action selector="loginToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="QHd-jT-mRK"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -55,27 +61,27 @@
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Username Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1fD-XS-hIB">
                                                 <rect key="frame" x="0.0" y="0.0" width="331" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" returnKeyType="next" textContentType="username"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Screen Name Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qwu-Ed-SWn">
                                                 <rect key="frame" x="0.0" y="46" width="331" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="twx-kb-Bqy">
                                                 <rect key="frame" x="0.0" y="91.5" width="331" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next" textContentType="email"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Password Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IxU-ce-hvA">
                                                 <rect key="frame" x="0.0" y="137" width="331" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" returnKeyType="next" textContentType="password"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ea3-oj-rzn">
                                                 <rect key="frame" x="0.0" y="183" width="331" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" textContentType="password"/>
                                             </textField>
                                         </subviews>
                                     </stackView>
@@ -87,6 +93,9 @@
                                 <state key="normal" title="Sign Up">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="doneButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="xTo-2U-eNt"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -105,6 +114,16 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="TCl-xO-nvx"/>
                     </view>
+                    <connections>
+                        <outlet property="confirmPasswordTextField" destination="Ea3-oj-rzn" id="FCw-Xu-Ea5"/>
+                        <outlet property="doneButton" destination="cam-3L-kts" id="SAk-I6-a2L"/>
+                        <outlet property="emailTextField" destination="twx-kb-Bqy" id="f5Q-Dq-d9U"/>
+                        <outlet property="loginToggleButton" destination="Asi-DS-fLW" id="eSc-Hz-h9l"/>
+                        <outlet property="passwordTextField" destination="IxU-ce-hvA" id="lzg-3M-IKU"/>
+                        <outlet property="screenNameTextField" destination="qwu-Ed-SWn" id="yEY-gX-Uaq"/>
+                        <outlet property="signUpToggleButton" destination="TA2-Zb-LEP" id="3Gf-Ku-2Tg"/>
+                        <outlet property="usernameTextField" destination="1fD-XS-hIB" id="ozj-2i-lUR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eVC-Xj-uC6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
