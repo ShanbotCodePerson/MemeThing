@@ -69,16 +69,9 @@
 			isa = PBXGroup;
 			children = (
 				40ACAB61247ECD1E004516CF /* Model Controllers */,
-				40ACAB60247ECD14004516CF /* View Controllers */,
+				40C2146A247EE010007B7630 /* View Controllers */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		40ACAB60247ECD14004516CF /* View Controllers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 		40ACAB61247ECD1E004516CF /* Model Controllers */ = {
@@ -129,6 +122,13 @@
 			children = (
 			);
 			path = "Custom Views";
+			sourceTree = "<group>";
+		};
+		40C2146A247EE010007B7630 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
