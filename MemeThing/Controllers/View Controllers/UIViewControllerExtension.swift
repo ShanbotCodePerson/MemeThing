@@ -11,7 +11,7 @@ import UIKit
 extension UIViewController {
     
     // Present an alert with a simple dismiss button to display a message to the user
-    func presentAlert(with title: String, message: String) {
+    func presentAlert(title: String, message: String) {
         // Create the alert controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
