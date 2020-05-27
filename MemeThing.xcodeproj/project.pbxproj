@@ -12,6 +12,7 @@
 		405279EC24781E1A00942A7D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405279EA24781E1A00942A7D /* Main.storyboard */; };
 		405279EE24781E1C00942A7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405279ED24781E1C00942A7D /* Assets.xcassets */; };
 		405279F124781E1C00942A7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405279EF24781E1C00942A7D /* LaunchScreen.storyboard */; };
+		408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 408A26E0247ED77D008CE8DC /* MainMenu.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		405279ED24781E1C00942A7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		405279F024781E1C00942A7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		405279F224781E1C00942A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		408A26E1247ED77D008CE8DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/Base.lproj/MainMenu.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				405279EA24781E1A00942A7D /* Main.storyboard */,
+				408A26E0247ED77D008CE8DC /* MainMenu.storyboard */,
 				40ACAB66247ECD61004516CF /* Custom Views */,
 			);
 			path = Views;
@@ -186,6 +189,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */,
 				405279F124781E1C00942A7D /* LaunchScreen.storyboard in Resources */,
 				405279EE24781E1C00942A7D /* Assets.xcassets in Resources */,
 				405279EC24781E1A00942A7D /* Main.storyboard in Resources */,
@@ -221,6 +225,14 @@
 				405279F024781E1C00942A7D /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		408A26E0247ED77D008CE8DC /* MainMenu.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				408A26E1247ED77D008CE8DC /* Base */,
+			);
+			name = MainMenu.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
