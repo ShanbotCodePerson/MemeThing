@@ -9,22 +9,28 @@
 import UIKit
 
 class MainMenuViewController: UIViewController {
-
+    
+    // MARK: - Outlets
+    
+    @IBOutlet weak var welcomeLabel: UILabel!
+    
+    // MARK: - Lifecycle Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        setUpViews()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
-    */
-
+    
+    // MARK: - Set Up View
+    
+    func setUpViews() {
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        guard let user = UserController.shared.currentUser else { return }
+        welcomeLabel.text = "Welcome, \(user.screenName)!"
+    }
 }

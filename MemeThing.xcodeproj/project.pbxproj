@@ -22,6 +22,7 @@
 		40C2147A247EE97D007B7630 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40C21479247EE97D007B7630 /* CloudKit.framework */; };
 		40C2147C247EEE9B007B7630 /* MemeThingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2147B247EEE9B007B7630 /* MemeThingError.swift */; };
 		40C2147E247EF1BE007B7630 /* CKService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2147D247EF1BE007B7630 /* CKService.swift */; };
+		40C21481247F1434007B7630 /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21480247F1434007B7630 /* ProfileTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		40C21479247EE97D007B7630 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		40C2147B247EEE9B007B7630 /* MemeThingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MemeThingError.swift; path = "MemeThing/Controllers/Model Controllers/MemeThingError.swift"; sourceTree = SOURCE_ROOT; };
 		40C2147D247EF1BE007B7630 /* CKService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CKService.swift; path = "MemeThing/Controllers/Model Controllers/CKService.swift"; sourceTree = SOURCE_ROOT; };
+		40C21480247F1434007B7630 /* ProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +159,7 @@
 				40C2146B247EE0E7007B7630 /* LoginViewController.swift */,
 				40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */,
 				40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */,
+				40C21480247F1434007B7630 /* ProfileTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 				405279E524781E1A00942A7D /* AppDelegate.swift in Sources */,
 				40C2147E247EF1BE007B7630 /* CKService.swift in Sources */,
 				405279E724781E1A00942A7D /* SceneDelegate.swift in Sources */,
+				40C21481247F1434007B7630 /* ProfileTableViewController.swift in Sources */,
 				40C21474247EE939007B7630 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

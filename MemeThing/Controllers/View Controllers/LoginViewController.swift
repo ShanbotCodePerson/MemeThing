@@ -39,24 +39,73 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func doneButtonTapped(_ sender: UIButton) {
-        // TODO: - Allow the current user to sign in
+        // If the user has already logged in, don't create a new account but go straight to the main menu
+        if UserController.shared.currentUser != nil {
+            presentMainMenuVC()
+            return
+        }
         
         // TODO: - handle signing in with a different account or something?
         
-        // TODO: - check that the username and email are unique
+        // Check to see if the username contains an actual string
+        guard let username = usernameTextField.text, !username.isEmpty else {
+            presentAlert(title: "Invalid Username", message: "You must choose a username")
+            return
+        }
+        // Check to see if the username is unique
+        UserController.shared.searchFor(username) { [weak self] (result) in
+            switch result {
+            case .success(_):
+                self?.presentAlert(title: "Username Taken", message: "That username is already taken - please choose a different username")
+                return
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
         
-        // TODO: - check that the remaining text fields have valid information
+        // TODO: - check that the email is unique and is a valid email address
         
-        // TODO: - check that the passwords match
+        // Check that the remaining text fields have valid information
+        guard let screenName = screenNameTextField.text,
+            let email = emailTextField.text,
+            let password = passwordTextField.text, !password.isEmpty
+            else {
+                presentAlert(title: "Invalid Password", message: "You must enter a password")
+                return
+        }
         
-        // TODO: - create the new user and transition to the main menu
+        // Check that the passwords match
+        if doneButton.titleLabel?.text == "Sign Up" &&  password == confirmPasswordTextField.text {
+            presentAlert(title: "Passwords Don't Match", message: "The passwords you have entered don't match - make sure to enter your password carefully")
+            return
+        }
         
+        // Create the new user
+        UserController.shared.createUser(with: username, password: password, screenName: screenName, email: email) { [weak self] (result) in
+            switch result {
+            case .success(_):
+                // Go straight to the main menu if the user was created correctly
+                self?.presentMainMenuVC()
+            case .failure(let error):
+                // TODO: - better error handling, error alert
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
     }
     
     // MARK: - Helper Methods
     
     func fetchUser() {
-        // TODO: - try to get the current user from the cloud, transition to main menu if successful
+        UserController.shared.fetchUser { [weak self] (result) in
+            switch result {
+            case .success(_):
+                // Go straight to the main menu if the user was fetched correctly
+                self?.presentMainMenuVC()
+            case .failure(let error):
+                // TODO: - better error handling, error alert
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
     }
     
     func toggleToLogin() {
