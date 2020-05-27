@@ -13,6 +13,10 @@
 		405279EE24781E1C00942A7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405279ED24781E1C00942A7D /* Assets.xcassets */; };
 		405279F124781E1C00942A7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405279EF24781E1C00942A7D /* LaunchScreen.storyboard */; };
 		408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 408A26E0247ED77D008CE8DC /* MainMenu.storyboard */; };
+		40C2146C247EE0E7007B7630 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146B247EE0E7007B7630 /* LoginViewController.swift */; };
+		40C2146E247EE0F4007B7630 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */; };
+		40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */; };
+		40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,10 @@
 		405279F024781E1C00942A7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		405279F224781E1C00942A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		408A26E1247ED77D008CE8DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/Base.lproj/MainMenu.storyboard; sourceTree = "<group>"; };
+		40C2146B247EE0E7007B7630 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
+		40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListTableViewController.swift; sourceTree = "<group>"; };
+		40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIViewControllerExtension.swift; path = "MemeThing/Controllers/View Controllers/UIViewControllerExtension.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,10 +64,10 @@
 		405279E324781E1A00942A7D /* MemeThing */ = {
 			isa = PBXGroup;
 			children = (
-				40ACAB64247ECD2C004516CF /* Helpers */,
 				40ACAB63247ECD27004516CF /* Models */,
 				40ACAB62247ECD25004516CF /* Views */,
 				40ACAB5F247ECD10004516CF /* Controllers */,
+				40ACAB64247ECD2C004516CF /* Helpers */,
 				40ACAB65247ECD3B004516CF /* Resources */,
 			);
 			path = MemeThing;
@@ -101,6 +109,7 @@
 		40ACAB64247ECD2C004516CF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -127,6 +136,9 @@
 		40C2146A247EE010007B7630 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				40C2146B247EE0E7007B7630 /* LoginViewController.swift */,
+				40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */,
+				40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -203,6 +215,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40C2146E247EE0F4007B7630 /* MainMenuViewController.swift in Sources */,
+				40C2146C247EE0E7007B7630 /* LoginViewController.swift in Sources */,
+				40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */,
+				40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */,
 				405279E524781E1A00942A7D /* AppDelegate.swift in Sources */,
 				405279E724781E1A00942A7D /* SceneDelegate.swift in Sources */,
 			);
