@@ -18,6 +18,7 @@ class UserController {
     // MARK: - Source of Truth
     
     var currentUser: User?
+    var usersFriends: [User]?
     
     // MARK: - Properties
     
@@ -67,7 +68,7 @@ class UserController {
                 switch result {
                 case .success(let users):
                     // There should only be one user
-                    guard let user = users.first else { return completion(.failure(.unknownError)) }
+                    guard let user = users.first else { return completion(.failure(.noUserFound)) }
                     // Save the user to the source of truth
                     self?.currentUser = user
                     return completion(.success(true))
@@ -80,7 +81,32 @@ class UserController {
         }
     }
     
-    // Read (fetch) a search for a friend
+    // Read (fetch) all the friends of a user
+    // TODO: - is this a problem with security? how to only have access to relevant details?
+    func fetchUsersFriends(completion: @escaping resultHandler) {
+        // Make sure that the current user was fetched correctly
+        guard let user = currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Create the search predicate to look for all the user's friends
+        let predicate = NSPredicate(format: "%K IN %A", argumentArray: [UserStrings.appleUserReferenceKey, user.friendsReferences])
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
+        
+        // Fetch the records from the cloud
+        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[User], MemeThingError>) in
+            switch result {
+            case .success(let users):
+                // Save the list of friends to the source of truth
+                self?.usersFriends = users
+                return completion(.success(true))
+            case .failure(let error):
+                // TODO: - better error handling, error alert
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    // Read (fetch) a search for another user
     func searchFor(_ username: String, completion: @escaping (Result<User, MemeThingError>) -> Void) {
         // TODO: - allow searching based on screen name or based on partial username
         
@@ -93,7 +119,7 @@ class UserController {
             switch result {
             case .success(let users):
                 // There should only be one user with that username
-                guard let user = users.first else { return completion(.failure(.unknownError)) }
+                guard let user = users.first else { return completion(.failure(.noUserFound)) }
                 // Return the result
                 return completion(.success(user))
             case .failure(let error):
@@ -177,5 +203,11 @@ class UserController {
             let reference = CKRecord.Reference(recordID: recordID, action: .none)
             return completion(reference)
         }
+    }
+    
+    // MARK: - Notifications
+    
+    func subscribeToFriendRequests(completion: @escaping resultHandler) {
+        
     }
 }

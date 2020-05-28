@@ -18,7 +18,8 @@ struct UserStrings {
     fileprivate static let screenNameKey = "screenName"
     fileprivate static let emailKey = "email"
     fileprivate static let pointsKey = "points"
-    fileprivate static let friendsReferencesKey = "friendsReferences"
+    fileprivate static let numberOfFriends = "numberOfFriends"
+    fileprivate static let friendsReferenceKey = "friendsReference"
     static let appleUserReferenceKey = "appleUserReference"
 }
 
@@ -32,6 +33,7 @@ class User: CKCompatible {
     var screenName: String
     var email: String
     var points: Int
+    var numberOfFriends: Int { friendsReferences.count }
     
     // CloudKit Properties
     var friendsReferences: [CKRecord.Reference]
@@ -65,11 +67,18 @@ class User: CKCompatible {
             let screenName = ckRecord[UserStrings.screenNameKey] as? String,
             let email = ckRecord[UserStrings.emailKey] as? String,
             let points = ckRecord[UserStrings.pointsKey] as? Int,
-            //            let friendsReferences = ckRecord[UserStrings.friendsReferencesKey] as? [CKRecord.Reference],
+            let numberOfFriends = ckRecord[UserStrings.numberOfFriends] as? Int,
             let appleUserReference = ckRecord[UserStrings.appleUserReferenceKey] as? CKRecord.Reference
             else { return nil }
         
-        self.init(username: username, password: password, screenName: screenName, email: email, points: points, appleUserReference: appleUserReference, recordID: ckRecord.recordID)
+        var friendsReferences: [CKRecord.Reference] = []
+        for i in 0..<numberOfFriends {
+            if let friendReference = ckRecord["\(UserStrings.friendsReferenceKey)\(i)"] as? CKRecord.Reference {
+                friendsReferences.append(friendReference)
+            }
+        }
+        
+        self.init(username: username, password: password, screenName: screenName, email: email, points: points, friendsReferences: friendsReferences, appleUserReference: appleUserReference, recordID: ckRecord.recordID)
     }
     
     // MARK: - Convert to CKRecord
@@ -83,9 +92,13 @@ class User: CKCompatible {
             UserStrings.screenNameKey : screenName,
             UserStrings.emailKey : email,
             UserStrings.pointsKey : points,
-            //            UserStrings.friendsReferencesKey : friendsReferences,
+            UserStrings.numberOfFriends : numberOfFriends,
             UserStrings.appleUserReferenceKey : appleUserReference
         ])
+        
+        for i in 0..<numberOfFriends {
+            record.setValue(friendsReferences[i], forKey: "\(UserStrings.friendsReferenceKey)\(i)")
+        }
         
         return record
     }

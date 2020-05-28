@@ -62,7 +62,7 @@ class LoginViewController: UIViewController {
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
         }
-        
+        return
         // TODO: - check that the email is unique and is a valid email address
         
         // Check that the remaining text fields have valid information
