@@ -118,8 +118,10 @@ class UserController {
         CKService.shared.read(predicate: compoundPredicate) { (result: Result<[User], MemeThingError>) in
             switch result {
             case .success(let users):
+                print("got here to \(#function) and \(users)")
                 // There should only be one user with that username
                 guard let user = users.first else { return completion(.failure(.noUserFound)) }
+                print("got here to \(#function) and \(user)")
                 // Return the result
                 return completion(.success(user))
             case .failure(let error):

@@ -21,6 +21,10 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var doneButton: UIButton!
     
+    // MARK: - Properties
+    
+    var signingUp = true
+    
     // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
@@ -56,13 +60,14 @@ class LoginViewController: UIViewController {
         UserController.shared.searchFor(username) { [weak self] (result) in
             switch result {
             case .success(_):
-                self?.presentAlert(title: "Username Taken", message: "That username is already taken - please choose a different username")
+                // FIXME: - only run other code after checking that username is unique
+                DispatchQueue.main.async { self?.presentAlert(title: "Username Taken", message: "That username is already taken - please choose a different username") }
                 return
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
         }
-        return
+        
         // TODO: - check that the email is unique and is a valid email address
         
         // Check that the remaining text fields have valid information
@@ -75,7 +80,7 @@ class LoginViewController: UIViewController {
         }
         
         // Check that the passwords match
-        if doneButton.titleLabel?.text == "Sign Up" &&  password == confirmPasswordTextField.text {
+        if signingUp && password != confirmPasswordTextField.text {
             presentAlert(title: "Passwords Don't Match", message: "The passwords you have entered don't match - make sure to enter your password carefully")
             return
         }
@@ -123,6 +128,7 @@ class LoginViewController: UIViewController {
             // Change the text of the done button
             self.doneButton.setTitle("Log In", for: .normal)
         }
+        signingUp = false
     }
     
     func toggleToSignUp() {
@@ -140,6 +146,7 @@ class LoginViewController: UIViewController {
             // Change the text of the done button
             self.doneButton.setTitle("Sign Up", for: .normal)
         }
+        signingUp = true
     }
     
     func presentMainMenuVC() {
