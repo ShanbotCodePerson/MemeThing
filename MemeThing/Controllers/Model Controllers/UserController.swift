@@ -87,6 +87,13 @@ class UserController {
         // Make sure that the current user was fetched correctly
         guard let user = currentUser else { return completion(.failure(.noUserFound)) }
         
+        // Return an empty array if the user has no friends
+        // TODO: - CHECK THIS
+        if user.friendsReferences.count == 0 {
+            self.usersFriends = []
+            return completion(.success(false))
+        }
+        
         // Create the search predicate to look for all the user's friends
         let predicate = NSPredicate(format: "%K IN %A", argumentArray: [UserStrings.appleUserReferenceKey, user.friendsReferences])
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
@@ -118,10 +125,8 @@ class UserController {
         CKService.shared.read(predicate: compoundPredicate) { (result: Result<[User], MemeThingError>) in
             switch result {
             case .success(let users):
-                print("got here to \(#function) and \(users)")
                 // There should only be one user with that username
                 guard let user = users.first else { return completion(.failure(.noUserFound)) }
-                print("got here to \(#function) and \(user)")
                 // Return the result
                 return completion(.success(user))
             case .failure(let error):
@@ -147,7 +152,7 @@ class UserController {
     }
     
     // Update a user with new profile information
-    func update(_ user: User, with password: String?, screenName: String?, email: String?, completion: @escaping resultHandler) {
+    func update(_ user: User, password: String?, screenName: String?, email: String?, completion: @escaping resultHandler) {
         // Update any fields that changed
         if let password = password { user.password = password }
         if let screenName = screenName { user.screenName = screenName }
@@ -167,7 +172,7 @@ class UserController {
     }
     
     // Update a user with a new friend
-    func update(_ user: User, with friend: CKRecord.Reference, completion: @escaping resultHandler) {
+    func update(_ user: User, friend: CKRecord.Reference, completion: @escaping resultHandler) {
         // Add the friend to the user's list of friends
         user.friendsReferences.append(friend)
         

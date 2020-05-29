@@ -22,6 +22,37 @@ extension UIViewController {
         present(alertController, animated: true)
     }
     
+    // Present an alert with a text field to get some input from the user
+    func presentTextFieldAlert(title: String, message: String, textFieldPlaceholder: String, textFieldText: String? = nil, saveButtonTitle: String = "Save", completion: @escaping (String) -> Void) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        // Add the text field
+        alertController.addTextField { (textField) in
+            textField.placeholder = textFieldPlaceholder
+            if let textFieldText = textFieldText {
+                textField.text = textFieldText
+            }
+        }
+        
+        // Create the cancel button
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        // Create the save button
+        let saveAction = UIAlertAction(title: saveButtonTitle, style: .default) { (_) in
+            // Get the text from the text field
+            guard let text = alertController.textFields?.first?.text, !text.isEmpty else { return }
+            
+            // Pass it to the helper function to handle sending the friend request
+            completion(text)
+        }
+        
+        // Add the buttons to the alert and present it
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        present(alertController, animated: true)
+    }
+    
     // Present an alert at the bottom of the screen to display an error to the user
     func presentErrorToUser(_ localizedError: LocalizedError) {
         // Create the alert controller
