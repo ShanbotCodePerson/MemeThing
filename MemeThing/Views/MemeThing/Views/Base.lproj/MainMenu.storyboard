@@ -114,16 +114,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="arE-fS-NLh">
-                                                    <rect key="frame" x="20.5" y="0.0" width="373" height="43.5"/>
+                                                    <rect key="frame" x="20.5" y="0.0" width="373" height="44"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[screen name]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QVt-ga-Rmi">
-                                                            <rect key="frame" x="0.0" y="0.0" width="182.5" height="43.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="182.5" height="44"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I20-6M-Sa3">
-                                                            <rect key="frame" x="190.5" y="0.0" width="182.5" height="43.5"/>
+                                                            <rect key="frame" x="190.5" y="0.0" width="182.5" height="44"/>
                                                             <state key="normal" title="Edit"/>
                                                             <connections>
                                                                 <action selector="editScreenNameButtonTapped:" destination="Ko3-va-DOb" eventType="touchUpInside" id="KGI-Ms-gWZ"/>
@@ -148,16 +148,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="BQC-ab-ueE">
-                                                    <rect key="frame" x="20.5" y="0.0" width="373" height="43.5"/>
+                                                    <rect key="frame" x="20.5" y="0.0" width="373" height="44"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[password]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IRX-p3-Rs7">
-                                                            <rect key="frame" x="0.0" y="0.0" width="182.5" height="43.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="182.5" height="44"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kpv-MJ-C7Y">
-                                                            <rect key="frame" x="190.5" y="0.0" width="182.5" height="43.5"/>
+                                                            <rect key="frame" x="190.5" y="0.0" width="182.5" height="44"/>
                                                             <state key="normal" title="Show"/>
                                                             <connections>
                                                                 <action selector="showPasswordButtonTapped:" destination="Ko3-va-DOb" eventType="touchUpInside" id="1uV-f8-TTi"/>
@@ -182,16 +182,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fKD-OG-6My">
-                                                    <rect key="frame" x="20.5" y="0.0" width="373" height="43.5"/>
+                                                    <rect key="frame" x="20.5" y="0.0" width="373" height="44"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[email]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NGW-jQ-HLn">
-                                                            <rect key="frame" x="0.0" y="0.0" width="182.5" height="43.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="182.5" height="44"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3kE-xz-jbx">
-                                                            <rect key="frame" x="190.5" y="0.0" width="182.5" height="43.5"/>
+                                                            <rect key="frame" x="190.5" y="0.0" width="182.5" height="44"/>
                                                             <state key="normal" title="Edit"/>
                                                             <connections>
                                                                 <action selector="editEmailButtonTapped:" destination="Ko3-va-DOb" eventType="touchUpInside" id="I4Y-o9-fCk"/>
@@ -216,16 +216,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="DZv-jx-GpH">
-                                                    <rect key="frame" x="20.5" y="0.0" width="373" height="43.5"/>
+                                                    <rect key="frame" x="20.5" y="0.0" width="373" height="44"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[points]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WSS-g0-N67">
-                                                            <rect key="frame" x="0.0" y="0.0" width="182.5" height="43.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="182.5" height="44"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k3r-bV-d4L">
-                                                            <rect key="frame" x="190.5" y="0.0" width="182.5" height="43.5"/>
+                                                            <rect key="frame" x="190.5" y="0.0" width="182.5" height="44"/>
                                                             <state key="normal" image="info.circle" catalog="system"/>
                                                             <connections>
                                                                 <action selector="pointsInformationButtonTapped:" destination="Ko3-va-DOb" eventType="touchUpInside" id="zCx-GH-64P"/>
@@ -343,17 +343,30 @@
                                                 </constraints>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" image="arrow.counterclockwise" catalog="system"/>
+                                                <connections>
+                                                    <action selector="undoButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LM4-Vl-Ww8"/>
+                                                </connections>
                                             </button>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Jwu-Ri-QEe">
+                                                <rect key="frame" x="0.0" y="0.0" width="373" height="627.5"/>
+                                            </imageView>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="hdu-03-sxy" secondAttribute="trailing" constant="8" id="KEm-R5-sGf"/>
                                             <constraint firstItem="hdu-03-sxy" firstAttribute="top" secondItem="7cY-5M-71c" secondAttribute="top" constant="8" id="M1I-by-Gyk"/>
+                                            <constraint firstItem="Jwu-Ri-QEe" firstAttribute="top" secondItem="7cY-5M-71c" secondAttribute="top" id="aJD-GE-AA8"/>
+                                            <constraint firstAttribute="bottom" secondItem="Jwu-Ri-QEe" secondAttribute="bottom" id="hiI-HK-CAH"/>
+                                            <constraint firstAttribute="trailing" secondItem="Jwu-Ri-QEe" secondAttribute="trailing" id="vgK-88-M1x"/>
+                                            <constraint firstItem="Jwu-Ri-QEe" firstAttribute="leading" secondItem="7cY-5M-71c" secondAttribute="leading" id="xBY-TK-djq"/>
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4zL-R8-fD7">
                                         <rect key="frame" x="0.0" y="664" width="373" height="53"/>
                                         <state key="normal" title="Send"/>
+                                        <connections>
+                                            <action selector="sentButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PCf-Nl-Lhq"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -369,6 +382,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="canvasView" destination="7cY-5M-71c" id="Qh0-j3-Dzc"/>
+                        <outlet property="drawingImageView" destination="Jwu-Ri-QEe" id="1Rt-yT-BrO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
