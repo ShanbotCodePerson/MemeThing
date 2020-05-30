@@ -18,6 +18,7 @@ class DrawingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     // MARK: - Actions

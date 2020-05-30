@@ -10,6 +10,9 @@
 		4039CE042481DF5C004DA41F /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE032481DF5C004DA41F /* CanvasView.swift */; };
 		4039CE062481E553004DA41F /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE052481E553004DA41F /* Meme.swift */; };
 		4039CE082481E55D004DA41F /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE072481E55D004DA41F /* MemeController.swift */; };
+		4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE0B248205D4004DA41F /* StyleGuide.swift */; };
+		4039CE132482067E004DA41F /* MemeThingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE122482067E004DA41F /* MemeThingButton.swift */; };
+		4039CE1724820B5D004DA41F /* MemeThingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE1624820B5D004DA41F /* MemeThingLabel.swift */; };
 		405279E524781E1A00942A7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405279E424781E1A00942A7D /* AppDelegate.swift */; };
 		405279E724781E1A00942A7D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405279E624781E1A00942A7D /* SceneDelegate.swift */; };
 		405279EC24781E1A00942A7D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405279EA24781E1A00942A7D /* Main.storyboard */; };
@@ -36,6 +39,9 @@
 		4039CE032481DF5C004DA41F /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		4039CE052481E553004DA41F /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Meme.swift; path = "MemeThing/Controllers/View Controllers/Meme.swift"; sourceTree = SOURCE_ROOT; };
 		4039CE072481E55D004DA41F /* MemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeController.swift; sourceTree = "<group>"; };
+		4039CE0B248205D4004DA41F /* StyleGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleGuide.swift; sourceTree = SOURCE_ROOT; };
+		4039CE122482067E004DA41F /* MemeThingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingButton.swift; sourceTree = "<group>"; };
+		4039CE1624820B5D004DA41F /* MemeThingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingLabel.swift; sourceTree = "<group>"; };
 		405279E124781E1A00942A7D /* MemeThing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemeThing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		405279E424781E1A00942A7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		405279E624781E1A00942A7D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +79,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4039CE0F24820640004DA41F /* Custom Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				4039CE122482067E004DA41F /* MemeThingButton.swift */,
+			);
+			path = "Custom Buttons";
+			sourceTree = "<group>";
+		};
+		4039CE1024820644004DA41F /* Custom Text Fields */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Custom Text Fields";
+			sourceTree = "<group>";
+		};
+		4039CE1124820652004DA41F /* Custom Labels */ = {
+			isa = PBXGroup;
+			children = (
+				4039CE1624820B5D004DA41F /* MemeThingLabel.swift */,
+			);
+			path = "Custom Labels";
+			sourceTree = "<group>";
+		};
 		405279D824781E1A00942A7D = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +175,7 @@
 				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
 				40C2147B247EEE9B007B7630 /* MemeThingError.swift */,
 				40C2147D247EF1BE007B7630 /* CKService.swift */,
+				4039CE0B248205D4004DA41F /* StyleGuide.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -165,6 +195,9 @@
 		40ACAB66247ECD61004516CF /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				4039CE1124820652004DA41F /* Custom Labels */,
+				4039CE1024820644004DA41F /* Custom Text Fields */,
+				4039CE0F24820640004DA41F /* Custom Buttons */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -272,12 +305,15 @@
 				40C2146C247EE0E7007B7630 /* LoginViewController.swift in Sources */,
 				40C2148724809A47007B7630 /* ResultsViewController.swift in Sources */,
 				40C2148524809A35007B7630 /* CaptionViewController.swift in Sources */,
+				4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */,
 				4039CE082481E55D004DA41F /* MemeController.swift in Sources */,
 				40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */,
 				40C21476247EE944007B7630 /* UserController.swift in Sources */,
+				4039CE1724820B5D004DA41F /* MemeThingLabel.swift in Sources */,
 				40C2147C247EEE9B007B7630 /* MemeThingError.swift in Sources */,
 				40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */,
 				40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */,
+				4039CE132482067E004DA41F /* MemeThingButton.swift in Sources */,
 				405279E524781E1A00942A7D /* AppDelegate.swift in Sources */,
 				40C2147E247EF1BE007B7630 /* CKService.swift in Sources */,
 				405279E724781E1A00942A7D /* SceneDelegate.swift in Sources */,
