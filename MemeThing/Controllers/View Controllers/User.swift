@@ -18,7 +18,7 @@ struct UserStrings {
     fileprivate static let screenNameKey = "screenName"
     fileprivate static let emailKey = "email"
     fileprivate static let pointsKey = "points"
-    fileprivate static let friendsReferencesKey = "friendsReferences"
+    fileprivate static let friendsReferenceKey = "friendsReference"
     static let appleUserReferenceKey = "appleUserReference"
 }
 
@@ -65,11 +65,11 @@ class User: CKCompatible {
             let screenName = ckRecord[UserStrings.screenNameKey] as? String,
             let email = ckRecord[UserStrings.emailKey] as? String,
             let points = ckRecord[UserStrings.pointsKey] as? Int,
-            //            let friendsReferences = ckRecord[UserStrings.friendsReferencesKey] as? [CKRecord.Reference],
+            let friendsReferences = ckRecord[UserStrings.friendsReferenceKey] as? [CKRecord.Reference],
             let appleUserReference = ckRecord[UserStrings.appleUserReferenceKey] as? CKRecord.Reference
             else { return nil }
         
-        self.init(username: username, password: password, screenName: screenName, email: email, points: points, appleUserReference: appleUserReference, recordID: ckRecord.recordID)
+        self.init(username: username, password: password, screenName: screenName, email: email, points: points, friendsReferences: friendsReferences, appleUserReference: appleUserReference, recordID: ckRecord.recordID)
     }
     
     // MARK: - Convert to CKRecord
@@ -83,10 +83,10 @@ class User: CKCompatible {
             UserStrings.screenNameKey : screenName,
             UserStrings.emailKey : email,
             UserStrings.pointsKey : points,
-            //            UserStrings.friendsReferencesKey : friendsReferences,
+            UserStrings.friendsReferenceKey : friendsReferences,
             UserStrings.appleUserReferenceKey : appleUserReference
         ])
-        
+       
         return record
     }
 }
