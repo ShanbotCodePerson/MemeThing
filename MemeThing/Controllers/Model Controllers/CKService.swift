@@ -8,10 +8,13 @@
 
 import Foundation
 import CloudKit
+import UIKit.UIImage
 
 class CKService: CKServicing {
     static let shared = CKService()
 }
+
+// MARK: - CKCompatible Protocol
 
 // Define the characteristics of a generic type that can be saved to CloudKit
 protocol CKCompatible {
@@ -20,6 +23,8 @@ protocol CKCompatible {
     static var recordType: CKRecord.RecordType { get }
     init?(ckRecord: CKRecord)
 }
+
+// MARK: - CKServicing Protocol
 
 // Define the basic CRUD functions for accessing the cloud
 protocol CKServicing {
@@ -33,6 +38,8 @@ protocol CKServicing {
     func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func delete<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<Bool>)
 }
+
+// MARK: - CKServicing Implementation
 
 // Provide default implementations of the CRUD functions
 
@@ -114,5 +121,34 @@ extension CKServicing {
         
         // Perform the operation to save the change to the cloud
         publicDB.add(operation)
+    }
+}
+
+// MARK: - CKPhoto Protocol
+
+protocol CKPhotoAsset where Self: CKCompatible {
+    var photo: UIImage? { get set }
+    var photoData: Data? { get }
+    var photoAsset: CKAsset? { get }
+}
+
+// MARK: - CKPhoto Implementation
+
+extension CKPhotoAsset {
+    var photoData: Data? {
+        guard let photo = photo else { return nil }
+        return photo.jpegData(compressionQuality: 0.5)
+    }
+    
+    var photoAsset: CKAsset? {
+        guard let photoData = photoData else { return nil }
+        let directoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+        let fileURL = directoryURL.appendingPathComponent(UUID().uuidString).appendingPathExtension("jpg")
+        do {
+            try photoData.write(to: fileURL)
+        } catch {
+            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+        }
+        return CKAsset(fileURL: fileURL)
     }
 }
