@@ -18,10 +18,18 @@ class CanvasView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setUpViews()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        setUpViews()
+    }
+    
+    // Some formatting
+    func setUpViews() {
+        addCornerRadius()
+        addBorder()
     }
     
     // MARK: - Drawing Methods
