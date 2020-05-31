@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4039CE042481DF5C004DA41F /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE032481DF5C004DA41F /* CanvasView.swift */; };
 		4039CE062481E553004DA41F /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE052481E553004DA41F /* Meme.swift */; };
-		4039CE082481E55D004DA41F /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE072481E55D004DA41F /* MemeController.swift */; };
 		4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE0B248205D4004DA41F /* StyleGuide.swift */; };
 		4039CE132482067E004DA41F /* MemeThingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE122482067E004DA41F /* MemeThingButton.swift */; };
 		4039CE1724820B5D004DA41F /* MemeThingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE1624820B5D004DA41F /* MemeThingLabel.swift */; };
@@ -33,12 +32,14 @@
 		40C2148524809A35007B7630 /* CaptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148424809A35007B7630 /* CaptionViewController.swift */; };
 		40C2148724809A47007B7630 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148624809A47007B7630 /* ResultsViewController.swift */; };
 		40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148824809A57007B7630 /* WaitingViewController.swift */; };
+		40D003B724831B690046D64B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003B624831B690046D64B /* Game.swift */; };
+		40D003B924831B700046D64B /* Caption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003B824831B700046D64B /* Caption.swift */; };
+		40D003BB2483220B0046D64B /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003BA2483220B0046D64B /* GameController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4039CE032481DF5C004DA41F /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		4039CE052481E553004DA41F /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Meme.swift; path = "MemeThing/Controllers/View Controllers/Meme.swift"; sourceTree = SOURCE_ROOT; };
-		4039CE072481E55D004DA41F /* MemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeController.swift; sourceTree = "<group>"; };
 		4039CE0B248205D4004DA41F /* StyleGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleGuide.swift; sourceTree = SOURCE_ROOT; };
 		4039CE122482067E004DA41F /* MemeThingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingButton.swift; sourceTree = "<group>"; };
 		4039CE1624820B5D004DA41F /* MemeThingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingLabel.swift; sourceTree = "<group>"; };
@@ -65,6 +66,9 @@
 		40C2148424809A35007B7630 /* CaptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionViewController.swift; sourceTree = "<group>"; };
 		40C2148624809A47007B7630 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		40C2148824809A57007B7630 /* WaitingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingViewController.swift; sourceTree = "<group>"; };
+		40D003B624831B690046D64B /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Game.swift; path = "MemeThing/Views/Custom Views/Custom Labels/Game.swift"; sourceTree = SOURCE_ROOT; };
+		40D003B824831B700046D64B /* Caption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Caption.swift; path = "MemeThing/Views/Custom Views/Custom Labels/Caption.swift"; sourceTree = SOURCE_ROOT; };
+		40D003BA2483220B0046D64B /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,7 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				40C21475247EE944007B7630 /* UserController.swift */,
-				4039CE072481E55D004DA41F /* MemeController.swift */,
+				40D003BA2483220B0046D64B /* GameController.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";
@@ -164,7 +168,9 @@
 			isa = PBXGroup;
 			children = (
 				40C21473247EE939007B7630 /* User.swift */,
+				40D003B624831B690046D64B /* Game.swift */,
 				4039CE052481E553004DA41F /* Meme.swift */,
+				40D003B824831B700046D64B /* Caption.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -306,15 +312,17 @@
 				40C2148724809A47007B7630 /* ResultsViewController.swift in Sources */,
 				40C2148524809A35007B7630 /* CaptionViewController.swift in Sources */,
 				4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */,
-				4039CE082481E55D004DA41F /* MemeController.swift in Sources */,
 				40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */,
 				40C21476247EE944007B7630 /* UserController.swift in Sources */,
 				4039CE1724820B5D004DA41F /* MemeThingLabel.swift in Sources */,
+				40D003B924831B700046D64B /* Caption.swift in Sources */,
+				40D003BB2483220B0046D64B /* GameController.swift in Sources */,
 				40C2147C247EEE9B007B7630 /* MemeThingError.swift in Sources */,
 				40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */,
 				40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */,
 				4039CE132482067E004DA41F /* MemeThingButton.swift in Sources */,
 				405279E524781E1A00942A7D /* AppDelegate.swift in Sources */,
+				40D003B724831B690046D64B /* Game.swift in Sources */,
 				40C2147E247EF1BE007B7630 /* CKService.swift in Sources */,
 				405279E724781E1A00942A7D /* SceneDelegate.swift in Sources */,
 				40C21481247F1434007B7630 /* ProfileTableViewController.swift in Sources */,
