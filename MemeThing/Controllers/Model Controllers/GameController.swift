@@ -129,6 +129,7 @@ class GameController {
             case .success(_):
                 // Update the points of the author who wrote that caption
                 // FIXME: - how do I do this??
+                return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
