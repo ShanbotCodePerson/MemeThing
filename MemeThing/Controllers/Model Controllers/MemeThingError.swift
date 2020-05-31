@@ -13,7 +13,7 @@ enum MemeThingError: LocalizedError {
     case ckError(Error)
     case couldNotUnwrap
     case noUserFound
-    case unknownError
+    case unknownError // FIXME: - need to convert this to real error, replace all instances of it
     
     var errorDescription: String? {
         switch self {

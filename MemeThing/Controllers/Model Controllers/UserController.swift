@@ -44,7 +44,7 @@ class UserController {
                     self?.currentUser = user
                     return completion(.success(true))
                 case .failure(let error):
-                    // TODO: - better error handling, error alert
+                    // Print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(error))
                 }
@@ -73,7 +73,7 @@ class UserController {
                     self?.currentUser = user
                     return completion(.success(true))
                 case .failure(let error):
-                    // TODO: - better error handling, error alert
+                   // Print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(error))
                 }
@@ -88,14 +88,14 @@ class UserController {
         guard let user = currentUser else { return completion(.failure(.noUserFound)) }
         
         // Return an empty array if the user has no friends
-        // TODO: - CHECK THIS
+        // FIXME: - CHECK THIS
         if user.friendsReferences.count == 0 {
             self.usersFriends = []
             return completion(.success(false))
         }
         
         // Create the search predicate to look for all the user's friends
-        let predicate = NSPredicate(format: "%K IN %A", argumentArray: [UserStrings.appleUserReferenceKey, user.friendsReferences])
+        let predicate = NSPredicate(format: "%K IN %A", argumentArray: [UserStrings.appleUserReferenceKey, user.friendsReferences]) // FIXME: - i don't think this predicate will work - check
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
         
         // Fetch the records from the cloud
@@ -106,7 +106,7 @@ class UserController {
                 self?.usersFriends = users
                 return completion(.success(true))
             case .failure(let error):
-                // TODO: - better error handling, error alert
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(error))
             }
@@ -130,7 +130,7 @@ class UserController {
                 // Return the result
                 return completion(.success(user))
             case .failure(let error):
-                // TODO: - better error handling, error alert
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(error))
             }
@@ -142,9 +142,10 @@ class UserController {
         CKService.shared.update(object: user) { (result) in
             switch result {
             case .success(_):
+                // Return the success
                 return completion(.success(true))
             case .failure(let error):
-                // TODO: - better error handling, error alert
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(error))
             }
@@ -185,9 +186,10 @@ class UserController {
         CKService.shared.delete(object: user) { (result) in
             switch result {
             case .success(_):
+                // Return the success
                 return completion(.success(true))
             case .failure(let error):
-                // TODO: - better error handling, error alert
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(error))
             }
@@ -197,7 +199,7 @@ class UserController {
     // MARK: - Helper Method
     
     // Get the apple user reference of the user from their phone
-    private func fetchAppleUserReference(completion: @escaping (CKRecord.Reference?) -> Void) {
+    func fetchAppleUserReference(completion: @escaping (CKRecord.Reference?) -> Void) {
         CKContainer.default().fetchUserRecordID { (recordID, error) in
             // Handle the error
             if let error = error {
@@ -210,7 +212,7 @@ class UserController {
             let reference = CKRecord.Reference(recordID: recordID, action: .none)
             return completion(reference)
         }
-    }
+}
     
     // MARK: - Notifications
     
