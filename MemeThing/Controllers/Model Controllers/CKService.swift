@@ -35,6 +35,7 @@ protocol CKServicing {
     
     func create<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func read<T: CKCompatible> (predicate: NSCompoundPredicate, completion: @escaping ArrayHandler<T>)
+    func read<T: CKCompatible> (referenceKey: String, references: [CKRecord.Reference], completion: @escaping ArrayHandler<T>)
     func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func delete<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<Bool>)
 }
@@ -78,6 +79,15 @@ extension CKServicing {
             // Complete with the objects
             return completion(.success(objects))
         }
+    }
+    
+    func read<T: CKCompatible> (referenceKey: String, references: [CKRecord.Reference], completion: @escaping ArrayHandler<T>) {
+        // Form the predicate based on the references
+        let predicate = NSPredicate(format: "%K IN %@", argumentArray: [referenceKey, references.compactMap({ $0.recordID })])
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
+        
+        // Fetch the data from the cloud
+        read(predicate: compoundPredicate, completion: completion)
     }
     
     func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>) {

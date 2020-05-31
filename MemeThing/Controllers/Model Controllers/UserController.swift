@@ -19,10 +19,18 @@ class UserController {
     
     var currentUser: User?
     var usersFriends: [User]?
+    var pendingFriendRequests: [User]?
     
     // MARK: - Properties
     
     typealias resultHandler = (Result<Bool, MemeThingError>) -> Void
+    
+    // MARK: - Initializer
+    
+    init() {
+        // Automatically subscribe all users to receive notifications for friend requests
+        subscribeToFriendRequests()
+    }
     
     // MARK: - CRUD Methods
     
@@ -95,15 +103,40 @@ class UserController {
         }
         
         // Create the search predicate to look for all the user's friends
-        let predicate = NSPredicate(format: "%K IN %A", argumentArray: [UserStrings.appleUserReferenceKey, user.friendsReferences]) // FIXME: - i don't think this predicate will work - check
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
-        
-        // Fetch the records from the cloud
-        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[User], MemeThingError>) in
+        // FIXME: - i don't think this predicate will work - check
+        CKService.shared.read(referenceKey: UserStrings.appleUserReferenceKey, references: user.friendsReferences) { [weak self] (result: Result<[User], MemeThingError>) in
             switch result {
             case .success(let users):
                 // Save the list of friends to the source of truth
                 self?.usersFriends = users
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchUsersPendingFriendRequests(completion: @escaping resultHandler) {
+        // Make sure that the current user was fetched correctly
+        guard let user = currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Return an empty array if the user has no pending friend requests
+        // FIXME: - CHECK THIS
+        guard let pendingFriendRequests = user.pendingFriendRequestReferences,
+            pendingFriendRequests.count > 0 else {
+            self.pendingFriendRequests = []
+            return completion(.success(true))
+        }
+        
+        // Create the search predicate to look for all the user's friends
+        // FIXME: - i don't think this predicate will work - check
+        CKService.shared.read(referenceKey: UserStrings.appleUserReferenceKey, references: pendingFriendRequests) { [weak self] (result: Result<[User], MemeThingError>) in
+            switch result {
+            case .success(let users):
+                // Save the list of friends to the source of truth
+                self?.pendingFriendRequests = users
                 return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
@@ -137,7 +170,7 @@ class UserController {
         }
     }
     
-    // Update a user
+    // Update a user - generic helper function for other update functionality
     private func update(_ user: User, completion: @escaping resultHandler) {
         CKService.shared.update(object: user) { (result) in
             switch result {
@@ -216,7 +249,19 @@ class UserController {
     
     // MARK: - Notifications
     
-    func subscribeToFriendRequests(completion: @escaping resultHandler) {
+    func sendFriendRequest(to user: User, completion: @escaping resultHandler) {
+        // Make sure the current user exists
+        guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
+        // Add the current user to the friend's array of pending friend requests
+        user.pendingFriendRequestReferences?.append(currentUser.appleUserReference) // FIXME: - can't append to nil array
+        
+        // Save the changes to the cloud
+        update(user, completion: completion)
+    }
+    
+    func subscribeToFriendRequests() {
+        // Form the predicate to look for changes in the user's own pending friend requests array
+        let subscription = CKQuerySubscription(recordType: UserStrings.recordType, predicate: NSPredicate(value: true), options: [.firesOnRecordUpdate])
     }
 }
