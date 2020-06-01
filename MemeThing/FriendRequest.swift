@@ -27,8 +27,10 @@ class FriendRequest: CKCompatible {
     let to: String
     var accepted: Bool
     
+    // FIXME: - use an enum for the response instead, so there's three possibilities
+    
     // CloudKit properties
-    static var recordType: CKRecord.RecordType { UserStrings.recordType }
+    static var recordType: CKRecord.RecordType { FriendRequestStrings.recordType }
     var ckRecord: CKRecord { createCKRecord() }
     var recordID: CKRecord.ID
     
@@ -64,5 +66,14 @@ class FriendRequest: CKCompatible {
         ])
         
         return record
+    }
+}
+
+// MARK: - Equatable
+
+extension FriendRequest: Equatable {
+    
+    static func == (lhs: FriendRequest, rhs: FriendRequest) -> Bool {
+        return lhs.from == rhs.from && lhs.to == rhs.to
     }
 }

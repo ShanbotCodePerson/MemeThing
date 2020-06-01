@@ -8,8 +8,16 @@
 
 import UIKit
 
-class FriendTableViewCell: UITableViewCell {
+protocol FriendTableViewCellButtonDelegate: class {
+    func friendRequestResponse(for cell: FriendTableViewCell, accepted: Bool)
+}
 
+class FriendTableViewCell: UITableViewCell {
+    
+    // MARK: - Properties
+    
+    weak var delegate: FriendTableViewCellButtonDelegate?
+    
     // MARK: - Set Up UI
     
     func setUpViews(section: Int, username: String, points: Int? = nil) {
@@ -33,11 +41,15 @@ class FriendTableViewCell: UITableViewCell {
     }
     
     private func constrainViews() {
-        stackView.anchor(top: contentView.topAnchor, bottom: nil, leading: contentView.leadingAnchor, trailing: nil, width: contentView.frame.width, height: contentView.frame.height)
+        stackView.anchor(top: contentView.topAnchor, bottom: contentView.bottomAnchor, leading: contentView.leadingAnchor, trailing: contentView.trailingAnchor)
+        
+        usernameLabel.numberOfLines = 0
+        pointsLabel.numberOfLines = 0
     }
     
     private func activateButtons() {
-        // TODO: - add button functionality
+        acceptButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        denyButton.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
     }
     
     private func pendingFriendRequestView(_ username: String) {
@@ -73,7 +85,9 @@ class FriendTableViewCell: UITableViewCell {
     
     // MARK: - Actions
     
-    // TODO: - button functionality
+    @objc func buttonTapped(_ sender: UIButton) {
+        delegate?.friendRequestResponse(for: self, accepted: (sender.tag == 1))
+    }
     
     // MARK: - UI Elements
     
@@ -84,24 +98,25 @@ class FriendTableViewCell: UITableViewCell {
         stackView.distribution = .fill
         return stackView
     }()
-    private let usernameLabel: MemeThingLabel = MemeThingLabel()
-    private let pointsLabel: MemeThingLabel = MemeThingLabel()
+    private let usernameLabel: UILabel = MemeThingLabel()
+    private let pointsLabel: UILabel = MemeThingLabel()
     private let buttonStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
-        stackView.spacing = 0
         return stackView
     }()
     private let acceptButton: UIButton = {
         let button = UIButton()
+        button.tag = 1
         button.setTitle("Accept", for: .normal)
         button.contentMode = .center
         return button
     }()
     private let denyButton: UIButton = {
         let button = UIButton()
+        button.tag = 2
         button.setTitle("Deny", for: .normal)
         button.contentMode = .center
         return button

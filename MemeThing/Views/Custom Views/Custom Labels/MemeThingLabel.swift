@@ -15,7 +15,6 @@ extension UILabel {
         addBorder(width: borderWidth, color: borderColor)
         self.backgroundColor = backgroundColor.withAlphaComponent(opacity)
         self.textColor = textColor
-        self.numberOfLines = 0 // FIXME: - this has to be updated, edited for various labels
         font = UIFont(name: fontName, size: fontSize)
     }
 }
