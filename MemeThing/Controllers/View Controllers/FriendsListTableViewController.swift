@@ -18,6 +18,7 @@ class FriendsListTableViewController: UITableViewController {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(false, animated: true)
         tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .lightGray
         
         // Load all the data, if it hasn't been loaded already
         loadAllData()
