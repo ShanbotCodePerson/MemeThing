@@ -12,7 +12,7 @@ import CloudKit
 // MARK: - String Constants
 
 struct UserStrings {
-    fileprivate static let recordType = "User"
+    static let recordType = "User"
     static let usernameKey = "username"
     fileprivate static let passwordKey = "password"
     fileprivate static let screenNameKey = "screenName"
@@ -87,7 +87,7 @@ class User: CKCompatible {
             UserStrings.friendsReferenceKey : friendsReferences,
             UserStrings.appleUserReferenceKey : appleUserReference
         ])
-       
+        
         return record
     }
 }

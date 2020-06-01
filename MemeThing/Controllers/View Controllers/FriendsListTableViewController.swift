@@ -10,26 +10,39 @@ import UIKit
 
 class FriendsListTableViewController: UITableViewController {
     
+    // MARK: - Lifecycle Methods
+    
     // TODO: - have a place to display pending friend requests
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(false, animated: true)
+        tableView.tableFooterView = UIView()
         
-        // Load the user's friends, if they haven't been loaded already
-        if UserController.shared.usersFriends == nil {
-            UserController.shared.fetchUsersFriends { [weak self] (result) in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(_):
-                        self?.tableView.reloadData()
-                    case .failure(let error):
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
-                    }
-                }
+        // Load all the data, if it hasn't been loaded already
+//        loadAllData()
+    }
+    
+    // MARK: - Helper Methods
+    
+    func loadAllData() {
+        if UserController.shared.pendingFriendRequests == nil {
+            UserController.shared.fetchPendingFriendRequests { (result) in
+                // TODO: -
             }
         }
+        if UserController.shared.outgoingFriendRequests == nil {
+            UserController.shared.fetchOutgoingFriendRequests { (result) in
+                // TODO: -
+            }
+        }
+        if UserController.shared.usersFriends == nil {
+            UserController.shared.fetchUsersFriends { (result) in
+                // TODO: -
+            }
+        }
+        sleep(1) // FIXME: - I know this isn't the right way to do it
+        tableView.reloadData()
     }
     
     // MARK: - Actions
@@ -45,14 +58,35 @@ class FriendsListTableViewController: UITableViewController {
             return
         }
         
+        // Make sure the user hasn't already sent a request to or received a request from that username
+        guard UserController.shared.outgoingFriendRequests?.filter({ $0.to == username }).count == 0 else {
+            presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(username)")
+            return
+        }
+        guard UserController.shared.pendingFriendRequests?.filter({ $0.from == username }).count == 0 else {
+            presentAlert(title: "Already Received", message: "You have already received a friend request from \(username)")
+            return
+        }
+        
         // Search to see if that username exists
         UserController.shared.searchFor(username) { [weak self] (result) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let friend):
-                    // If the username exists, create the notification to send them a friend request
-                    self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.username)")
-                case .failure(let error):
+            switch result {
+            case .success(let friend):
+                // If the username exists, send them a friend request
+                UserController.shared.sendFriendRequest(to: friend) { (result) in // FIXME: - better way than nested functions?
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(_):
+                            self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.username)")
+                            // TODO: - update tableview?
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentAlert(title: "Uh-oh", message: "something went wrong - this shouldn't happen") // TODO: - replace with proper error message
+                        }
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
                     // Otherwise, show an alert to the user that the username doesn't exist
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentAlert(title: "Username Not Found", message: "That username does not exist - make sure to enter the username carefully.")
@@ -63,23 +97,65 @@ class FriendsListTableViewController: UITableViewController {
     
     // MARK: - Table view data source
     
-    // TODO: - sort alphabetically, like contacts?
-    //    override func numberOfSections(in tableView: UITableView) -> Int {
-    //        return 0
-    //    }
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    // TODO: - hide sections if they're empty
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "Pending friend requests"
+        case 1:
+            return "Sent friend requests"
+        case 2:
+            return "Current friends"
+        default:
+            // TODO: - better error handling here
+            return "Error"
+        }
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UserController.shared.usersFriends?.count ?? 0
+        switch section {
+        case 0:
+             return UserController.shared.pendingFriendRequests?.count ?? 1
+        case 1:
+             return UserController.shared.outgoingFriendRequests?.count ?? 1
+        case 2:
+             return UserController.shared.usersFriends?.count ?? 1
+        default:
+            return 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? FriendTableViewCell else { return UITableViewCell() }
         
-        guard let friend = UserController.shared.usersFriends?[indexPath.row] else { return cell }
-        cell.textLabel?.text = friend.screenName
-        cell.detailTextLabel?.text = "Points: \(friend.points)"
+        switch indexPath.section {
+        case 0:
+//            guard let friendRequest = UserController.shared.pendingFriendRequests?[indexPath.row] else { return cell }
+//            cell.setUpViews(section: 0, username: friendRequest.from)
+            cell.setUpViews(section: 0, username: "test")
+        case 1:
+//            guard let friendRequest = UserController.shared.outgoingFriendRequests?[indexPath.row] else { return cell }
+//            cell.setUpViews(section: 1, username: friendRequest.to)
+            cell.setUpViews(section: 1, username: "test2")
+        case 2:
+//            guard let friend = UserController.shared.usersFriends?[indexPath.row] else { return cell }
+//            cell.setUpViews(section: 2, username: friend.username, points: friend.points)
+            cell.setUpViews(section: 2, username: "test3", points: 3)
+        default:
+            print("Error in \(#function) : too many sections somehow")
+        }
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Enable swipe-to-delete functionality only for friends, not friend requests
+        if indexPath.section == 2 { return true }
+        return false
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
