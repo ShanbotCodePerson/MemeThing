@@ -81,6 +81,7 @@ extension CKServicing {
         }
     }
     
+    // TODO: - might want to refactor this function away - not very useful
     func read<T: CKCompatible> (referenceKey: String, references: [CKRecord.Reference], completion: @escaping ArrayHandler<T>) {
         // Form the predicate based on the references
         let predicate = NSPredicate(format: "%K IN %@", argumentArray: [referenceKey, references.compactMap({ $0.recordID })])

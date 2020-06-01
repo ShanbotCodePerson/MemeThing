@@ -36,6 +36,8 @@
 		40D003B924831B700046D64B /* Caption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003B824831B700046D64B /* Caption.swift */; };
 		40D003BB2483220B0046D64B /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003BA2483220B0046D64B /* GameController.swift */; };
 		40D003C024844C110046D64B /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003BF24844C110046D64B /* FriendRequest.swift */; };
+		40D003C2248493470046D64B /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003C1248493470046D64B /* FriendTableViewCell.swift */; };
+		40D003C62484957C0046D64B /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003C52484957C0046D64B /* UIViewExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +73,8 @@
 		40D003B824831B700046D64B /* Caption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Caption.swift; path = "MemeThing/Views/Custom Views/Custom Labels/Caption.swift"; sourceTree = SOURCE_ROOT; };
 		40D003BA2483220B0046D64B /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		40D003BF24844C110046D64B /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendRequest.swift; path = MemeThing/FriendRequest.swift; sourceTree = SOURCE_ROOT; };
+		40D003C1248493470046D64B /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
+		40D003C52484957C0046D64B /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIViewExtension.swift; path = MemeThing/UIViewExtension.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
+				40D003C52484957C0046D64B /* UIViewExtension.swift */,
 				40C2147B247EEE9B007B7630 /* MemeThingError.swift */,
 				40C2147D247EF1BE007B7630 /* CKService.swift */,
 				4039CE0B248205D4004DA41F /* StyleGuide.swift */,
@@ -207,6 +212,7 @@
 				4039CE1124820652004DA41F /* Custom Labels */,
 				4039CE1024820644004DA41F /* Custom Text Fields */,
 				4039CE0F24820640004DA41F /* Custom Buttons */,
+				40D003C1248493470046D64B /* FriendTableViewCell.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -314,6 +320,7 @@
 				40C2146C247EE0E7007B7630 /* LoginViewController.swift in Sources */,
 				40C2148724809A47007B7630 /* ResultsViewController.swift in Sources */,
 				40C2148524809A35007B7630 /* CaptionViewController.swift in Sources */,
+				40D003C2248493470046D64B /* FriendTableViewCell.swift in Sources */,
 				4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */,
 				40D003C024844C110046D64B /* FriendRequest.swift in Sources */,
 				40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */,
@@ -328,6 +335,7 @@
 				405279E524781E1A00942A7D /* AppDelegate.swift in Sources */,
 				40D003B724831B690046D64B /* Game.swift in Sources */,
 				40C2147E247EF1BE007B7630 /* CKService.swift in Sources */,
+				40D003C62484957C0046D64B /* UIViewExtension.swift in Sources */,
 				405279E724781E1A00942A7D /* SceneDelegate.swift in Sources */,
 				40C21481247F1434007B7630 /* ProfileTableViewController.swift in Sources */,
 				40C21474247EE939007B7630 /* User.swift in Sources */,

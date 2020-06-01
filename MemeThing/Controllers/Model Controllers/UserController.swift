@@ -20,18 +20,12 @@ class UserController {
     var currentUser: User?
     var usersFriends: [User]?
     var pendingFriendRequests: [FriendRequest]?
+    var outgoingFriendRequests: [FriendRequest]?
     // TODO: - a list of all sent friend requests as well as received friend requests
     
     // MARK: - Properties
     
     typealias resultHandler = (Result<Bool, MemeThingError>) -> Void
-    
-    // MARK: - Initializer
-    
-    init() {
-        // Automatically subscribe all users to receive notifications for friend requests
-//        subscribeToFriendRequests()
-    }
     
     // MARK: - CRUD Methods
     
@@ -117,11 +111,13 @@ class UserController {
         }
     }
     
-    func fetchUsersPendingFriendRequests(completion: @escaping resultHandler) {
+    func fetchPendingFriendRequests(completion: @escaping resultHandler) {
         guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
         // Create the search predicate to look for all friend requests directed at the current user
-        let predicate = NSPredicate(format: "%K == %@", argumentArray: [FriendRequestStrings.toKey, currentUser.username])
+//        let predicate = NSPredicate(format: "%K == %@", argumentArray: [FriendRequestStrings.toKey, currentUser.username])
+        // FIXME: - fix "unknown field" error in CK
+        let predicate = NSPredicate(value: true)
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
         // FIXME: - i don't think this predicate will work - check
         
@@ -130,7 +126,33 @@ class UserController {
             case .success(let friendRequests):
                 // Save the list of friend requests to the source of truth
                 self?.pendingFriendRequests = friendRequests
-                print(friendRequests)
+                print("got here to \(#function) and \(friendRequests)")
+                // FIXME: - it's breaking because the data format in the cloud is wrong - getting users instead of strings
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchOutgoingFriendRequests(completion: @escaping resultHandler) {
+        guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Create the search predicate to look for all friend requests sent from the current user
+//        let predicate = NSPredicate(format: "%K == %@", argumentArray: [FriendRequestStrings.fromKey, currentUser.username])
+        // FIXME: - fix "unknown field" error in CK
+        let predicate = NSPredicate(value: true)
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
+        // FIXME: - i don't think this predicate will work - check
+        
+        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[FriendRequest], MemeThingError>) in
+            switch result {
+            case .success(let friendRequests):
+                // Save the list of friend requests to the source of truth
+                print("got here to \(#function) and \(friendRequests)")
+                self?.outgoingFriendRequests = friendRequests
                 return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
@@ -267,12 +289,26 @@ class UserController {
         }
     }
     
-    func acceptFriendRequest() {
+    func respond(to friendRequest: FriendRequest, accept: Bool, completion: @escaping resultHandler) {
+        guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
-    }
-    
-    func denyFriendRequest() {
+        // Change the status of the friend request
+        friendRequest.accepted = accept
         
+        // Add the new friend to the list of friends, if applicable
+//        // TODO: - get reference from username
+//        if accept {
+//            let friend = CKRecord.Reference //todo
+//            currentUser?.friendsReferences.append(friend)
+//            update(currentUser, friend: friend) { (result) in
+//                // TODO: - how to handle multiple completions like this?
+//            }
+//        }
+        
+        // Save the changes to the cloud
+        CKService.shared.update(object: friendRequest) { (result) in
+            // TODO: -
+        }
     }
     
     func subscribeToFriendRequests() {
@@ -296,6 +332,12 @@ class UserController {
     }
     
     func subscribeToFriendRequestResult() {
+        // TODO: - if accepted, add to list of friends
         
+        // TODO: - display an alert to the user with the result of the friend request
+        
+        // TODO: - delete the friend request from the cloud
+        
+        // TODO: - cause the tableview in the friends list to update automatically?
     }
 }
