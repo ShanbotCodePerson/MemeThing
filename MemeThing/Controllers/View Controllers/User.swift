@@ -19,7 +19,6 @@ struct UserStrings {
     fileprivate static let emailKey = "email"
     fileprivate static let pointsKey = "points"
     fileprivate static let friendsReferenceKey = "friendsReference"
-    fileprivate static let pendingFriendRequestReferencesKey = "pendingFriendRequestReferences"
     static let appleUserReferenceKey = "appleUserReference"
 }
 
@@ -36,7 +35,6 @@ class User: CKCompatible {
     
     // CloudKit properties
     var friendsReferences: [CKRecord.Reference]
-    var pendingFriendRequestReferences: [CKRecord.Reference]?
     let appleUserReference: CKRecord.Reference
     var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .none) }
     static var recordType: CKRecord.RecordType { UserStrings.recordType }
@@ -45,7 +43,7 @@ class User: CKCompatible {
     
     // MARK: - Initializer
     
-    init(username: String, password: String, screenName: String?, email: String, points: Int = 0, friendsReferences: [CKRecord.Reference] = [], pendingFriendRequestReferences: [CKRecord.Reference]? = nil, appleUserReference: CKRecord.Reference, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+    init(username: String, password: String, screenName: String?, email: String, points: Int = 0, friendsReferences: [CKRecord.Reference] = [], appleUserReference: CKRecord.Reference, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
         self.username = username
         self.password = password
         if let screenName = screenName {
@@ -56,7 +54,6 @@ class User: CKCompatible {
         self.email = email
         self.points = points
         self.friendsReferences = friendsReferences
-        self.pendingFriendRequestReferences = pendingFriendRequestReferences
         self.appleUserReference = appleUserReference
         self.recordID = recordID
     }
@@ -72,9 +69,8 @@ class User: CKCompatible {
             let friendsReferences = ckRecord[UserStrings.friendsReferenceKey] as? [CKRecord.Reference],
             let appleUserReference = ckRecord[UserStrings.appleUserReferenceKey] as? CKRecord.Reference
             else { return nil }
-        let pendingFriendRequestReferences = ckRecord[UserStrings.pendingFriendRequestReferencesKey] as? [CKRecord.Reference]
         
-        self.init(username: username, password: password, screenName: screenName, email: email, points: points, friendsReferences: friendsReferences, pendingFriendRequestReferences: pendingFriendRequestReferences, appleUserReference: appleUserReference, recordID: ckRecord.recordID)
+        self.init(username: username, password: password, screenName: screenName, email: email, points: points, friendsReferences: friendsReferences, appleUserReference: appleUserReference, recordID: ckRecord.recordID)
     }
     
     // MARK: - Convert to CKRecord
@@ -92,10 +88,6 @@ class User: CKCompatible {
             UserStrings.appleUserReferenceKey : appleUserReference
         ])
         
-        if let pendingFriendRequestReferences = pendingFriendRequestReferences {
-            record.setValue(pendingFriendRequestReferences, forKey: UserStrings.pendingFriendRequestReferencesKey)
-        }
-       
         return record
     }
 }

@@ -13,6 +13,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        // Clear the notification badge from the app icon
+        application.applicationIconBadgeNumber = 0
+        
+        // Request permission to send notifications
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (success, error) in
             // Handle any errors
             if let error = error {
@@ -41,10 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // TODO: - handle receiving a remote notification
-    }
-    
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        application.applicationIconBadgeNumber = 0
+        // FIXME: - only works if the app is open - need to handle background notifications too
+        print("got here!!")
     }
 }
 

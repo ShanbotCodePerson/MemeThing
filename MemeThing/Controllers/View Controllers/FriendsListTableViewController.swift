@@ -30,6 +30,8 @@ class FriendsListTableViewController: UITableViewController {
                 }
             }
         }
+        
+        // TODO: - show lists of all pending sent and received friend requests as well
     }
     
     // MARK: - Actions
@@ -47,12 +49,22 @@ class FriendsListTableViewController: UITableViewController {
         
         // Search to see if that username exists
         UserController.shared.searchFor(username) { [weak self] (result) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let friend):
-                    // If the username exists, create the notification to send them a friend request
-                    self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.username)")
-                case .failure(let error):
+            switch result {
+            case .success(let friend):
+                // If the username exists, create the notification to send them a friend request
+                UserController.shared.sendFriendRequest(to: friend) { (result) in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(_):
+                            self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.username)")
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentAlert(title: "Uh-oh", message: "something went wrong - this shouldn't happen") // TODO: - replace with proper error message
+                        }
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
                     // Otherwise, show an alert to the user that the username doesn't exist
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentAlert(title: "Username Not Found", message: "That username does not exist - make sure to enter the username carefully.")

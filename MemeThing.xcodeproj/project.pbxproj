@@ -35,6 +35,7 @@
 		40D003B724831B690046D64B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003B624831B690046D64B /* Game.swift */; };
 		40D003B924831B700046D64B /* Caption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003B824831B700046D64B /* Caption.swift */; };
 		40D003BB2483220B0046D64B /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003BA2483220B0046D64B /* GameController.swift */; };
+		40D003C024844C110046D64B /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003BF24844C110046D64B /* FriendRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,7 @@
 		40D003B624831B690046D64B /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Game.swift; path = "MemeThing/Views/Custom Views/Custom Labels/Game.swift"; sourceTree = SOURCE_ROOT; };
 		40D003B824831B700046D64B /* Caption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Caption.swift; path = "MemeThing/Views/Custom Views/Custom Labels/Caption.swift"; sourceTree = SOURCE_ROOT; };
 		40D003BA2483220B0046D64B /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
+		40D003BF24844C110046D64B /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendRequest.swift; path = MemeThing/FriendRequest.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				40C21473247EE939007B7630 /* User.swift */,
+				40D003BF24844C110046D64B /* FriendRequest.swift */,
 				40D003B624831B690046D64B /* Game.swift */,
 				4039CE052481E553004DA41F /* Meme.swift */,
 				40D003B824831B700046D64B /* Caption.swift */,
@@ -312,6 +315,7 @@
 				40C2148724809A47007B7630 /* ResultsViewController.swift in Sources */,
 				40C2148524809A35007B7630 /* CaptionViewController.swift in Sources */,
 				4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */,
+				40D003C024844C110046D64B /* FriendRequest.swift in Sources */,
 				40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */,
 				40C21476247EE944007B7630 /* UserController.swift in Sources */,
 				4039CE1724820B5D004DA41F /* MemeThingLabel.swift in Sources */,
