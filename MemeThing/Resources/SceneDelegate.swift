@@ -24,12 +24,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
-        // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
+        // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        
+        // Check for and handle any notifications that came in while the app was in the background
+        UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
+            for notification in notifications {
+                // Parse the notification data to find out what type of notification it is
+                let category = notification.request.content.categoryIdentifier
+                let identifier = notification.request.identifier
+                guard let notificationType = NotificationHelper.Category(rawValue: category) else { return }
+                
+                // Handle the notification
+                NotificationHelper.processNotification(with: notificationType)
+                
+                // Remove the notification after it's been handled
+                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
+            }
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

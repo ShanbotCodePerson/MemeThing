@@ -9,7 +9,7 @@
 import UIKit
 
 protocol FriendTableViewCellButtonDelegate: class {
-    func friendRequestResponse(for cell: FriendTableViewCell, accepted: Bool)
+    func respondToFriendRequest(from cell: FriendTableViewCell, accept: Bool)
 }
 
 class FriendTableViewCell: UITableViewCell {
@@ -27,45 +27,37 @@ class FriendTableViewCell: UITableViewCell {
     // MARK: - Actions
     
     @IBAction func friendRequestButtonTapped(_ sender: UIButton) {
-        delegate?.friendRequestResponse(for: self, accepted: (sender.tag == 1))
+        delegate?.respondToFriendRequest(from: self, accept: (sender.tag == 1))
     }
     
     // MARK: - Set Up UI
-
-    func setUpViews(section: Int, username: String?, points: Int? = nil) {
+    
+    func setUpViews(section: FriendsListTableViewController.SectionNames, username: String?, points: Int? = nil) {
         switch section {
-        case 0:
+        case .pendingFriendRequests:
+            guard let username = username else { return }
             pendingFriendRequestView(username)
-        case 1:
+        case .outgoingFriendRequests:
+            guard let username = username else { return }
             outgoingFriendRequestView(username)
-        case 2:
+        case .friends:
             friendView(username, points: points)
-        default:
-            return
         }
     }
-
-    private func pendingFriendRequestView(_ username: String?) {
+    
+    private func pendingFriendRequestView(_ username: String) {
         pointsLabel.isHidden = true
-        if let username = username {
-            usernameLabel.text = "\(username) has sent you a friend request"
-            contentView.backgroundColor = .systemGreen
-        } else {
-            usernameLabel.text = "You have no new friend requests"
-        }
+        usernameLabel.text = "\(username) has sent you a friend request"
+        contentView.backgroundColor = .systemGreen
     }
-
-    private func outgoingFriendRequestView(_ username: String?) {
+    
+    private func outgoingFriendRequestView(_ username: String) {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = true
-        if let username = username {
-            usernameLabel.text = "Waiting for \(username) to respond to your friend request"
-            contentView.backgroundColor = .systemRed
-        } else {
-            usernameLabel.text = "You have no unanswered friend requests"
-        }
+        usernameLabel.text = "Waiting for \(username) to respond to your friend request"
+        contentView.backgroundColor = .systemRed
     }
-
+    
     private func friendView(_ username: String?, points: Int?) {
         buttonStackView.isHidden = true
         if let username = username {
@@ -73,6 +65,7 @@ class FriendTableViewCell: UITableViewCell {
             pointsLabel.text = "Points: \(points ?? 0)"
         } else {
             usernameLabel.text = "You have not yet added any friends"
+            pointsLabel.isHidden = true
         }
     }
 }
