@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Outlets
     
@@ -30,6 +30,12 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchUser()
+        
+        usernameTextField.delegate = self
+        screenNameTextField.delegate = self
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        confirmPasswordTextField.delegate = self
     }
     
     // MARK: - Actions
@@ -98,6 +104,15 @@ class LoginViewController: UIViewController {
         }
     }
     
+    @IBAction func tappedScreen(_ sender: UITapGestureRecognizer) {
+        // Close the keyboard for each text field
+        usernameTextField.resignFirstResponder()
+        screenNameTextField.resignFirstResponder()
+        emailTextField.resignFirstResponder()
+        passwordTextField.resignFirstResponder()
+        confirmPasswordTextField.resignFirstResponder()
+    }
+    
     // MARK: - Helper Methods
     
     func fetchUser() {
@@ -156,5 +171,30 @@ class LoginViewController: UIViewController {
             initialVC.modalPresentationStyle = .fullScreen
             self.present(initialVC, animated: true)
         }
+    }
+    
+    // MARK: - Text Field Controls
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if signingUp {
+            if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
+                // If there's another text field, move the editing view to that text field
+                nextField.becomeFirstResponder()
+            } else {
+                // Otherwise, remove the keyboard
+                textField.resignFirstResponder()
+            }
+        }
+            // Increment different in the login view where there are fewer text fields
+        else {
+            if let nextField = textField.superview?.viewWithTag(textField.tag + 3) as? UITextField {
+                nextField.becomeFirstResponder()
+            } else {
+                // Otherwise, remove the keyboard
+                textField.resignFirstResponder()
+            }
+        }
+        
+        return true
     }
 }

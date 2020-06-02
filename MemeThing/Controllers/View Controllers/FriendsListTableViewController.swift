@@ -61,13 +61,13 @@ class FriendsListTableViewController: UITableViewController {
         
         // Make sure the user hasn't already sent a request to or received a request from that username
         if let outgoingFriendRequests = UserController.shared.outgoingFriendRequests {
-            guard outgoingFriendRequests.filter({ $0.to == username }).count == 0 else {
+            guard outgoingFriendRequests.filter({ $0.toUsername == username }).count == 0 else {
                 presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(username)")
                 return
             }
         }
         if let pendingFriendRequests = UserController.shared.pendingFriendRequests {
-            guard pendingFriendRequests.filter({ $0.from == username }).count == 0 else {
+            guard pendingFriendRequests.filter({ $0.fromUsername == username }).count == 0 else {
                 presentAlert(title: "Already Received", message: "You have already received a friend request from \(username)")
                 return
             }
@@ -116,19 +116,18 @@ class FriendsListTableViewController: UITableViewController {
         case 2:
             return "Current friends"
         default:
-            // TODO: - better error handling here
-            return "Error"
+            return "ERROR"
         }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-             return UserController.shared.pendingFriendRequests?.count ?? 0
+            return UserController.shared.pendingFriendRequests?.count ?? 0
         case 1:
-             return UserController.shared.outgoingFriendRequests?.count ?? 0
+            return UserController.shared.outgoingFriendRequests?.count ?? 0
         case 2:
-             return UserController.shared.usersFriends?.count ?? 0
+            return UserController.shared.usersFriends?.count ?? 0
         default:
             return 0
         }
@@ -141,16 +140,13 @@ class FriendsListTableViewController: UITableViewController {
         switch indexPath.section {
         case 0:
             guard let friendRequest = UserController.shared.pendingFriendRequests?[indexPath.row] else { return cell }
-            cell.setUpViews(section: 0, username: friendRequest.from)
-//            cell.setUpViews(section: 0, username: "test")
+            cell.setUpViews(section: 0, username: friendRequest.fromUsername)
         case 1:
             guard let friendRequest = UserController.shared.outgoingFriendRequests?[indexPath.row] else { return cell }
-            cell.setUpViews(section: 1, username: friendRequest.to)
-//            cell.setUpViews(section: 1, username: "test2")
+            cell.setUpViews(section: 1, username: friendRequest.toUsername)
         case 2:
             guard let friend = UserController.shared.usersFriends?[indexPath.row] else { return cell }
             cell.setUpViews(section: 2, username: friend.username, points: friend.points)
-//            cell.setUpViews(section: 2, username: "test3", points: 3)
         default:
             print("Error in \(#function) : too many sections somehow")
         }
@@ -185,13 +181,13 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
             else { return }
         
         // Respond to the friend request
-        UserController.shared.respond(to: friendRequest, accept: accepted) { [weak self] (result) in
+        UserController.shared.sendResponse(to: friendRequest, accept: accepted) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
                     // Show an alert that the friend request has been accepted or denied
                     if accepted {
-                        self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.from) as a friend!")
+                        self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromUsername) as a friend!")
                     }
                     // TODO: - if denied, give user opportunity to block that person?
                     // Refresh the tableview to reflect the changes

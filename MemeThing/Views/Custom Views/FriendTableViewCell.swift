@@ -32,7 +32,7 @@ class FriendTableViewCell: UITableViewCell {
     
     // MARK: - Set Up UI
 
-    func setUpViews(section: Int, username: String, points: Int? = nil) {
+    func setUpViews(section: Int, username: String?, points: Int? = nil) {
         switch section {
         case 0:
             pendingFriendRequestView(username)
@@ -45,23 +45,34 @@ class FriendTableViewCell: UITableViewCell {
         }
     }
 
-    private func pendingFriendRequestView(_ username: String) {
-        usernameLabel.text = "\(username) has sent you a friend request"
+    private func pendingFriendRequestView(_ username: String?) {
         pointsLabel.isHidden = true
-        contentView.backgroundColor = .systemGreen
+        if let username = username {
+            usernameLabel.text = "\(username) has sent you a friend request"
+            contentView.backgroundColor = .systemGreen
+        } else {
+            usernameLabel.text = "You have no new friend requests"
+        }
     }
 
-    private func outgoingFriendRequestView(_ username: String) {
-        usernameLabel.text = "Waiting for \(username) to respond to your friend request"
+    private func outgoingFriendRequestView(_ username: String?) {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = true
-        contentView.backgroundColor = .systemRed
+        if let username = username {
+            usernameLabel.text = "Waiting for \(username) to respond to your friend request"
+            contentView.backgroundColor = .systemRed
+        } else {
+            usernameLabel.text = "You have no unanswered friend requests"
+        }
     }
 
-    private func friendView(_ username: String, points: Int?) {
-        usernameLabel.text = username
-        pointsLabel.text = "Points: \(points ?? 0)"
+    private func friendView(_ username: String?, points: Int?) {
         buttonStackView.isHidden = true
-        contentView.backgroundColor = .systemGray5
+        if let username = username {
+            usernameLabel.text = username
+            pointsLabel.text = "Points: \(points ?? 0)"
+        } else {
+            usernameLabel.text = "You have not yet added any friends"
+        }
     }
 }

@@ -46,7 +46,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // TODO: - handle receiving a remote notification
         // FIXME: - only works if the app is open - need to handle background notifications too
-        print("got here!!")
+        print("got here!")
+        // FIXME: - way to find notifications that came in while the app was closed?
+        // Parse the notification data to find out what type of notification it is
+        guard let aps = userInfo["aps"] as? NSDictionary,
+            let category = aps["category"] as? String,
+            let notificationType = NotificationStrings(rawValue: category)
+            else { return }
+        
+        switch notificationType {
+        case .newFriendRequest:
+            print("received new friend request")
+            // TODO: - display an alert if app is open?
+        // TODO: - refresh tableview if viewing friends list? how to do that?
+        case .friendRequestResponse:
+            print("received response to friend request")
+            // TODO: - display an alert if app is open?
+            // TODO: - have an alert waiting next time app is opened?
+            // TODO: - refresh tableview if viewing friends list? how to do that?
+            UserController.shared.receiveResponseToFriendRequest()
+        }
     }
 }
 

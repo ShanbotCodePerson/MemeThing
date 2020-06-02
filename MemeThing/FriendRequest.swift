@@ -13,9 +13,11 @@ import CloudKit
 
 struct FriendRequestStrings {
     static let recordType = "FriendRequest"
-    static let fromKey = "from"
-    static let toKey = "to"
-    static let acceptedKey = "accepted"
+    static let fromReferenceKey = "fromReference"
+    static let fromUsernameKey = "fromUsername"
+    static let toReferenceKey = "toReference"
+    static let toUsernameKey = "toUsername"
+    static let statusKey = "status"
 }
 
 class FriendRequest: CKCompatible {
@@ -23,9 +25,17 @@ class FriendRequest: CKCompatible {
     // MARK: - Properties
     
     // FriendRequest properties
-    let from: String
-    let to: String
-    var accepted: Bool
+    let fromReference: CKRecord.Reference
+    let fromUsername: String
+    let toReference: CKRecord.Reference
+    let toUsername: String
+    var status: Status
+    
+    enum Status: Int {
+        case waiting
+        case accepted
+        case denied
+    }
     
     // FIXME: - use an enum for the response instead, so there's three possibilities
     
@@ -36,22 +46,27 @@ class FriendRequest: CKCompatible {
     
     // MARK: - Initializer
     
-    init(from: String, to: String, accepted: Bool = false, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
-        self.from = from
-        self.to = to
-        self.accepted = accepted
+    init(fromReference: CKRecord.Reference, fromUsername: String, toReference: CKRecord.Reference, toUsername: String, status: Status = .waiting, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+        self.fromReference = fromReference
+        self.fromUsername = fromUsername
+        self.toReference = toReference
+        self.toUsername = toUsername
+        self.status = status
         self.recordID = recordID
     }
     
     // MARK: - Convert from CKRecord
     
     required convenience init?(ckRecord: CKRecord) {
-        guard let from = ckRecord[FriendRequestStrings.fromKey] as? String,
-            let to = ckRecord[FriendRequestStrings.toKey] as? String,
-            let accepted = ckRecord[FriendRequestStrings.acceptedKey] as? Bool
+        guard let fromReference = ckRecord[FriendRequestStrings.fromReferenceKey] as? CKRecord.Reference,
+            let fromUsername = ckRecord[FriendRequestStrings.fromUsernameKey] as? String,
+            let toReference = ckRecord[FriendRequestStrings.toReferenceKey] as? CKRecord.Reference,
+            let toUsername = ckRecord[FriendRequestStrings.toUsernameKey] as? String,
+            let statusRawValue = ckRecord[FriendRequestStrings.statusKey] as? Int,
+            let status = Status(rawValue: statusRawValue)
             else { return nil }
         
-        self.init(from: from, to: to, accepted: accepted, recordID: ckRecord.recordID)
+        self.init(fromReference: fromReference, fromUsername: fromUsername, toReference: toReference, toUsername: toUsername, status: status, recordID: ckRecord.recordID)
     }
     
     // MARK: - Convert to CKRecord
@@ -60,9 +75,11 @@ class FriendRequest: CKCompatible {
         let record = CKRecord(recordType: FriendRequestStrings.recordType, recordID: recordID)
         
         record.setValuesForKeys([
-            FriendRequestStrings.fromKey : from,
-            FriendRequestStrings.toKey : to,
-            FriendRequestStrings.acceptedKey : accepted
+            FriendRequestStrings.fromReferenceKey : fromReference,
+            FriendRequestStrings.fromUsernameKey : fromUsername,
+            FriendRequestStrings.toReferenceKey : toReference,
+            FriendRequestStrings.toUsernameKey : toUsername,
+            FriendRequestStrings.statusKey : status.rawValue
         ])
         
         return record
@@ -74,6 +91,6 @@ class FriendRequest: CKCompatible {
 extension FriendRequest: Equatable {
     
     static func == (lhs: FriendRequest, rhs: FriendRequest) -> Bool {
-        return lhs.from == rhs.from && lhs.to == rhs.to
+        return lhs.recordID.recordName == rhs.recordID.recordName // TODO: - best way to do this?
     }
 }
