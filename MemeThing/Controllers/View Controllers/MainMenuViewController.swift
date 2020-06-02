@@ -18,18 +18,18 @@ class MainMenuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpViews()
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         navigationController?.setNavigationBarHidden(true, animated: true)
+        setUpViews()
     }
     
     // MARK: - Set Up View
     
     func setUpViews() {
-        navigationController?.setNavigationBarHidden(true, animated: false)
         guard let user = UserController.shared.currentUser else { return }
         welcomeLabel.text = "Welcome, \(user.screenName)!"
     }

@@ -8,14 +8,31 @@
 
 import UIKit
 
-class FriendTableViewCell: UITableViewCell {
+protocol FriendTableViewCellButtonDelegate: class {
+    func friendRequestResponse(for cell: FriendTableViewCell, accepted: Bool)
+}
 
-    // MARK: - Set Up UI
+class FriendTableViewCell: UITableViewCell {
     
-    func setUpViews(section: Int, username: String, points: Int? = nil) {
-        addAllSubviews()
-        constrainViews()
-        
+    // MARK: - Outlets
+    
+    @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var pointsLabel: UILabel!
+    @IBOutlet weak var buttonStackView: UIStackView!
+    
+    // MARK: - Properties
+    
+    weak var delegate: FriendTableViewCellButtonDelegate?
+    
+    // MARK: - Actions
+    
+    @IBAction func friendRequestButtonTapped(_ sender: UIButton) {
+        delegate?.friendRequestResponse(for: self, accepted: (sender.tag == 1))
+    }
+    
+    // MARK: - Set Up UI
+
+    func setUpViews(section: Int, username: String?, points: Int? = nil) {
         switch section {
         case 0:
             pendingFriendRequestView(username)
@@ -27,83 +44,35 @@ class FriendTableViewCell: UITableViewCell {
             return
         }
     }
-    
-    private func addAllSubviews() {
-        addSubviews(stackView, usernameLabel, pointsLabel, buttonStackView, acceptButton, denyButton)
+
+    private func pendingFriendRequestView(_ username: String?) {
+        pointsLabel.isHidden = true
+        if let username = username {
+            usernameLabel.text = "\(username) has sent you a friend request"
+            contentView.backgroundColor = .systemGreen
+        } else {
+            usernameLabel.text = "You have no new friend requests"
+        }
     }
-    
-    private func constrainViews() {
-        stackView.anchor(top: contentView.topAnchor, bottom: nil, leading: contentView.leadingAnchor, trailing: nil, width: contentView.frame.width, height: contentView.frame.height)
+
+    private func outgoingFriendRequestView(_ username: String?) {
+        pointsLabel.isHidden = true
+        buttonStackView.isHidden = true
+        if let username = username {
+            usernameLabel.text = "Waiting for \(username) to respond to your friend request"
+            contentView.backgroundColor = .systemRed
+        } else {
+            usernameLabel.text = "You have no unanswered friend requests"
+        }
     }
-    
-    private func activateButtons() {
-        // TODO: - add button functionality
+
+    private func friendView(_ username: String?, points: Int?) {
+        buttonStackView.isHidden = true
+        if let username = username {
+            usernameLabel.text = username
+            pointsLabel.text = "Points: \(points ?? 0)"
+        } else {
+            usernameLabel.text = "You have not yet added any friends"
+        }
     }
-    
-    private func pendingFriendRequestView(_ username: String) {
-        stackView.addArrangedSubview(usernameLabel)
-        stackView.addArrangedSubview(buttonStackView)
-        buttonStackView.addArrangedSubview(acceptButton)
-        buttonStackView.addArrangedSubview(denyButton)
-        
-        activateButtons()
-        
-        usernameLabel.text = "\(username) has sent you a friend request"
-        
-        contentView.backgroundColor = .systemGreen
-    }
-    
-    private func outgoingFriendRequestView(_ username: String) {
-        stackView.addArrangedSubview(usernameLabel)
-        
-        usernameLabel.text = "Waiting for \(username) to respond to your friend request"
-        
-        contentView.backgroundColor = .systemRed
-    }
-    
-    private func friendView(_ username: String, points: Int?) {
-        stackView.addArrangedSubview(usernameLabel)
-        stackView.addArrangedSubview(pointsLabel)
-        
-        usernameLabel.text = username
-        pointsLabel.text = "Points: \(points ?? 0)"
-        
-        contentView.backgroundColor = .systemGray5
-    }
-    
-    // MARK: - Actions
-    
-    // TODO: - button functionality
-    
-    // MARK: - UI Elements
-    
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-        return stackView
-    }()
-    private let usernameLabel: MemeThingLabel = MemeThingLabel()
-    private let pointsLabel: MemeThingLabel = MemeThingLabel()
-    private let buttonStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .fill
-        stackView.distribution = .fillEqually
-        stackView.spacing = 0
-        return stackView
-    }()
-    private let acceptButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Accept", for: .normal)
-        button.contentMode = .center
-        return button
-    }()
-    private let denyButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Deny", for: .normal)
-        button.contentMode = .center
-        return button
-    }()
 }

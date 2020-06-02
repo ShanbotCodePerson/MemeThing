@@ -35,7 +35,7 @@ protocol CKServicing {
     
     func create<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func read<T: CKCompatible> (predicate: NSCompoundPredicate, completion: @escaping ArrayHandler<T>)
-    func read<T: CKCompatible> (referenceKey: String, references: [CKRecord.Reference], completion: @escaping ArrayHandler<T>)
+    func read<T: CKCompatible> (reference: CKRecord.Reference, completion: @escaping SingleItemHandler<T>)
     func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func delete<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<Bool>)
 }
@@ -81,14 +81,19 @@ extension CKServicing {
         }
     }
     
-    // TODO: - might want to refactor this function away - not very useful
-    func read<T: CKCompatible> (referenceKey: String, references: [CKRecord.Reference], completion: @escaping ArrayHandler<T>) {
-        // Form the predicate based on the references
-        let predicate = NSPredicate(format: "%K IN %@", argumentArray: [referenceKey, references.compactMap({ $0.recordID })])
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
-        
-        // Fetch the data from the cloud
-        read(predicate: compoundPredicate, completion: completion)
+    func read<T: CKCompatible> (reference: CKRecord.Reference, completion: @escaping SingleItemHandler<T>) {
+          // Fetch the data from the cloud
+        publicDB.fetch(withRecordID: reference.recordID) { (record, error) in
+            // Handle any errors
+            if let error = error { return completion(.failure(.ckError(error))) }
+            
+            // Unwrap the data
+            guard let record = record, let object = T(ckRecord: record)
+                else { return completion(.failure(.couldNotUnwrap)) }
+            
+            // Complete with the objects
+            return completion(.success(object))
+        }
     }
     
     func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>) {
