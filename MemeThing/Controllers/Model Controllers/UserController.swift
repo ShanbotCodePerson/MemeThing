@@ -72,6 +72,7 @@ class UserController {
                     // Save the user to the source of truth and set up notifications for friend requests
                     self?.currentUser = user
                     self?.subscribeToFriendRequests()
+                    self?.subscribeToFriendRequestResponses()
                     return completion(.success(true))
                 case .failure(let error):
                    // Print and return the error
@@ -219,9 +220,28 @@ class UserController {
     }
     
     // Update a user with a new friend
-    func update(_ user: User, friend: CKRecord.Reference, completion: @escaping resultHandler) {
+    func update(_ user: User, friendReference: CKRecord.Reference, completion: @escaping resultHandler) {
         // Add the friend to the user's list of friends
-        user.friendsReferences.append(friend)
+        user.friendsReferences.append(friendReference)
+        
+        // Fetch the friend from the reference
+        CKService.shared.read(reference: friendReference) { [weak self] (result: Result<User, MemeThingError>) in
+            switch result {
+            case .success(let friend):
+                // Save the friend to the source of truth
+                if var userFriends = self?.usersFriends {
+                    userFriends.append(friend)
+                    self?.usersFriends = userFriends
+                } else {
+                    self?.usersFriends = [friend]
+                }
+            case .failure(let error):
+                // Print the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
+        
+        print("got here to \(#function) and sot is now \(self.usersFriends)")
         
         // Save the changes to the cloud
         update(user, completion: completion)
@@ -269,9 +289,12 @@ class UserController {
         let friendRequest = FriendRequest(fromReference: currentUser.reference, fromUsername: currentUser.username, toReference: user.reference, toUsername: user.username)
         
         // Save the friend request to the cloud
-        CKService.shared.create(object: friendRequest) { (result) in
+        CKService.shared.create(object: friendRequest) { [weak self] (result) in
             switch result {
             case .success(_):
+                // Add the new friend request to the source of truth
+                self?.outgoingFriendRequests?.append(friendRequest)
+                print("got here to \(#function) and succesfully saved friend request, SoT now \(self?.outgoingFriendRequests)")
                 // Return the success
                 return completion(.success(true))
             case .failure(let error):
@@ -287,11 +310,12 @@ class UserController {
         
         // Change the status of the friend request
         friendRequest.status = accept ? .accepted : .denied
+        print("got here to \(#function) and friend request is now \(friendRequest)")
         
-        // Add the new friend to the list of friends, if applicable
+        // Add the new friend to the list of friends, if accepted
         if accept {
-            update(currentUser, friend: friendRequest.fromReference) { (result) in
-                print("got here to \(#function) and \(result)")
+            update(currentUser, friendReference: friendRequest.fromReference) { (result) in
+                print("got here to \(#function) and accepted request and \(result)")
                 // TODO: - how to handle multiple completions like this?
             }
         }
@@ -303,6 +327,7 @@ class UserController {
                 // Remove the friend request from the source of truth
                 guard let index = self?.pendingFriendRequests?.firstIndex(of: friendRequest) else { return completion(.failure(.unknownError)) }
                 self?.pendingFriendRequests?.remove(at: index)
+                print("got here to \(#function) after updating friend request and SoT for pending is now \(self?.pendingFriendRequests)")
                 return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
@@ -321,11 +346,13 @@ class UserController {
         let predicateFromSelf = NSPredicate(format: "%K == %@", argumentArray: [FriendRequestStrings.fromUsernameKey, currentUser.username])
         let predicateHasResponse = NSPredicate(format: "%K != %@", argumentArray: [FriendRequestStrings.statusKey, FriendRequest.Status.waiting.rawValue])
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicateFromSelf, predicateHasResponse])
+        print("got here to \(#function) and \(compoundPredicate)")
         
         // Fetch the data from the cloud
         CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[FriendRequest], MemeThingError>) in
             switch result {
             case .success(let friendRequests):
+                print("got here to \(#function) and relevant friendrequests are \(friendRequests)")
                 for friendRequest in friendRequests { self?.handleResponse(to: friendRequest) }
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -337,30 +364,24 @@ class UserController {
     private func handleResponse(to friendRequest: FriendRequest) {
         guard let currentUser = currentUser else { return }
         
+        print("got here to \(#function) and the friendRequest is \(friendRequest)")
+        
         // If the friend accepted, add them to the user's list of friends
         if friendRequest.status == .accepted {
-            currentUser.friendsReferences.append(friendRequest.toReference)
-            
-            // Update the source of truth with the new friend
-            CKService.shared.read(reference: friendRequest.toReference) { [weak self] (result: Result<User, MemeThingError>) in
-                switch result {
-                case .success(let friend):
-                    // Update the source of truth
-                    self?.usersFriends?.append(friend)
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                }
+            update(currentUser, friendReference: friendRequest.toReference) { (result) in
+                print("got here to \(#function) and accepted request and \(result) and user has  \(currentUser.friendsReferences.count) friends now")
             }
         }
         
         // TODO: - display an alert to the user with the result of the friend request?? How would I do that?
         
-        // Delete the friend request from the cloud
+        // Delete the friend request from the cloud now that it's no longer needed
         CKService.shared.delete(object: friendRequest) { [weak self] (result) in
             switch result {
             case .success(_):
                 // Remove the friend request from the source of truth
                 guard let index = self?.outgoingFriendRequests?.firstIndex(of: friendRequest) else { return }
+                print("got here to \(#function) and removed friend request and SoT for outgoing is now \(self?.outgoingFriendRequests)")
                 self?.outgoingFriendRequests?.remove(at: index)
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -382,7 +403,7 @@ class UserController {
         let notificationInfo = CKQuerySubscription.NotificationInfo()
         notificationInfo.title = "New Friend Request"
         notificationInfo.alertBody = "You have received a friend request on MemeThing"
-        notificationInfo.category = NotificationStrings.newFriendRequest.rawValue
+        notificationInfo.category = NotificationHelper.Category.newFriendRequest.rawValue
 //        notificationInfo.shouldBadge = true // TODO: - Not sure I like this behavior
         subscription.notificationInfo = notificationInfo
         
@@ -398,22 +419,18 @@ class UserController {
         let predicateFromSelf = NSPredicate(format: "%K == %@", argumentArray: [FriendRequestStrings.fromUsernameKey, currentUser.username])
         let predicateNoResponse = NSPredicate(format: "%K != %@", argumentArray: [FriendRequestStrings.statusKey, FriendRequest.Status.waiting.rawValue])
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicateFromSelf, predicateNoResponse])
-        let subscription = CKQuerySubscription(recordType: FriendRequestStrings.recordType, predicate: predicate, options: [.firesOnRecordCreation])
+        print(predicate)
+        let subscription = CKQuerySubscription(recordType: FriendRequestStrings.recordType, predicate: predicate, options: [.firesOnRecordUpdate])
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
         notificationInfo.title = "Response to Friend Request"
         notificationInfo.alertBody = "New response to friend request on MemeThing" // FIXME: - be able to change this based on status of friend request
-        notificationInfo.category = NotificationStrings.friendRequestResponse.rawValue
+        notificationInfo.category = NotificationHelper.Category.friendRequestResponse.rawValue
 //        notificationInfo.shouldBadge = true // TODO: - Not sure I like this behavior
         subscription.notificationInfo = notificationInfo
         
         // Save the subscription to the cloud
         CKService.shared.publicDB.save(subscription) { (_, _) in }
     }
-}
-
-enum NotificationStrings: String {
-    case newFriendRequest = "NEW_FRIEND_REQUEST"
-    case friendRequestResponse = "FRIEND_REQUEST_RESPONSE"
 }

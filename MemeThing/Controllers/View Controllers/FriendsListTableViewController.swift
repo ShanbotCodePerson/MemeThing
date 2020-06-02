@@ -10,6 +10,33 @@ import UIKit
 
 class FriendsListTableViewController: UITableViewController {
     
+    // MARK: - Properties
+    
+    enum SectionNames: String {
+        case pendingFriendRequests = "Pending Friend Requests"
+        case outgoingFriendRequests = "Outgoing Friend Requests"
+        case friends = "Friends"
+    }
+    
+    var dataSource: [(name: SectionNames, data: [Any])] {
+        var arrays = [(SectionNames, [Any])]()
+        if let pendingFriendRequests = UserController.shared.pendingFriendRequests {
+            if pendingFriendRequests.count > 0 {
+                arrays.append((.pendingFriendRequests, pendingFriendRequests))
+            }
+        }
+        if let outgoingFriendRequests = UserController.shared.outgoingFriendRequests {
+            if outgoingFriendRequests.count > 0 {
+                arrays.append((.outgoingFriendRequests, outgoingFriendRequests))
+            }
+        }
+        if let userFriends = UserController.shared.usersFriends {
+            arrays.append((.friends, userFriends))
+        }
+        print("datasource called")
+        return arrays
+    }
+    
     // MARK: - Lifecycle Methods
     
     // TODO: - have a place to display pending friend requests
@@ -59,7 +86,7 @@ class FriendsListTableViewController: UITableViewController {
             return
         }
         
-        // Make sure the user hasn't already sent a request to or received a request from that username
+        // Make sure the user hasn't already sent, received, or accepted a request from that username
         if let outgoingFriendRequests = UserController.shared.outgoingFriendRequests {
             guard outgoingFriendRequests.filter({ $0.toUsername == username }).count == 0 else {
                 presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(username)")
@@ -69,6 +96,12 @@ class FriendsListTableViewController: UITableViewController {
         if let pendingFriendRequests = UserController.shared.pendingFriendRequests {
             guard pendingFriendRequests.filter({ $0.fromUsername == username }).count == 0 else {
                 presentAlert(title: "Already Received", message: "You have already received a friend request from \(username)")
+                return
+            }
+        }
+        if let userFriends = UserController.shared.usersFriends {
+            guard userFriends.filter({ $0.username == username }).count == 0 else {
+                presentAlert(title: "Already Friends", message: "You are already friends with \(username)")
                 return
             }
         }
@@ -83,7 +116,7 @@ class FriendsListTableViewController: UITableViewController {
                         switch result {
                         case .success(_):
                             self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.username)")
-                            // TODO: - update tableview?
+                            self?.tableView.reloadData()
                         case .failure(let error):
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             self?.presentAlert(title: "Uh-oh", message: "something went wrong - this shouldn't happen") // TODO: - replace with proper error message
@@ -103,52 +136,41 @@ class FriendsListTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return dataSource.count
     }
     
-    // TODO: - hide sections if they're empty
+    // TODO: - display a message if all the fields are empty
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            return "Pending friend requests"
-        case 1:
-            return "Sent friend requests"
-        case 2:
-            return "Current friends"
-        default:
-            return "ERROR"
-        }
+        return dataSource[section].name.rawValue
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return UserController.shared.pendingFriendRequests?.count ?? 0
-        case 1:
-            return UserController.shared.outgoingFriendRequests?.count ?? 0
-        case 2:
-            return UserController.shared.usersFriends?.count ?? 0
-        default:
-            return 0
-        }
+        // Add a placeholder row if the user has no friends
+        if dataSource[section].name == .friends && dataSource[section].data.count == 0 { return 1 }
+        return dataSource[section].data.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? FriendTableViewCell else { return UITableViewCell() }
         cell.delegate = self
         
-        switch indexPath.section {
-        case 0:
-            guard let friendRequest = UserController.shared.pendingFriendRequests?[indexPath.row] else { return cell }
-            cell.setUpViews(section: 0, username: friendRequest.fromUsername)
-        case 1:
-            guard let friendRequest = UserController.shared.outgoingFriendRequests?[indexPath.row] else { return cell }
-            cell.setUpViews(section: 1, username: friendRequest.toUsername)
-        case 2:
-            guard let friend = UserController.shared.usersFriends?[indexPath.row] else { return cell }
-            cell.setUpViews(section: 2, username: friend.username, points: friend.points)
-        default:
-            print("Error in \(#function) : too many sections somehow")
+        let sectionName = dataSource[indexPath.section].name
+        let data = dataSource[indexPath.section].data
+        
+        switch sectionName {
+        case .pendingFriendRequests:
+            guard let friendRequest = data[indexPath.row] as? FriendRequest else { return cell }
+            cell.setUpViews(section: sectionName, username: friendRequest.fromUsername)
+        case .outgoingFriendRequests:
+            guard let friendRequest = data[indexPath.row] as? FriendRequest else { return cell }
+            cell.setUpViews(section: sectionName, username: friendRequest.toUsername)
+        case .friends:
+            // Add a placeholder row if the user has no friends
+            if data.count == 0 { cell.setUpViews(section: sectionName, username: nil) }
+            else {
+                guard let friend = data[indexPath.row] as? User else { return cell }
+                cell.setUpViews(section: sectionName, username: friend.username, points: friend.points)
+            }
         }
         
         return cell
@@ -156,7 +178,7 @@ class FriendsListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Enable swipe-to-delete functionality only for friends, not friend requests
-        if indexPath.section == 2 { return true }
+        if dataSource[indexPath.section].name == .friends { return true }
         return false
     }
     
@@ -174,19 +196,20 @@ class FriendsListTableViewController: UITableViewController {
 
 extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
     
-    func friendRequestResponse(for cell: FriendTableViewCell, accepted: Bool) {
+    func respondToFriendRequest(from cell: FriendTableViewCell, accept: Bool) {
         // Get the reference to the friend request that was responded to
-        guard let indexPath = tableView.indexPath(for: cell), indexPath.section == 0,
-            let friendRequest = UserController.shared.pendingFriendRequests?[indexPath.row]
+        guard let indexPath = tableView.indexPath(for: cell),
+            dataSource[indexPath.section].name == .pendingFriendRequests,
+            let friendRequest = dataSource[indexPath.section].data[indexPath.row] as? FriendRequest
             else { return }
         
         // Respond to the friend request
-        UserController.shared.sendResponse(to: friendRequest, accept: accepted) { [weak self] (result) in
+        UserController.shared.sendResponse(to: friendRequest, accept: accept) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
                     // Show an alert that the friend request has been accepted or denied
-                    if accepted {
+                    if accept {
                         self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromUsername) as a friend!")
                     }
                     // TODO: - if denied, give user opportunity to block that person?

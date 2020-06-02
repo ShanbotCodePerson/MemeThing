@@ -6,6 +6,8 @@
 //  Copyright © 2020 Shannon Draeker. All rights reserved.
 //
 
+// IMPORTANT NOTE: Once this data exists in the cloud, you must adjust the security settings for this object to allow other users to edit this record (since someone else will be responding, they need to change the value of the "status" object, which requires permission to change a record created by someone else, which is not the default). For instructions on how to do this, see https://stackoverflow.com/questions/32192968/cloudkit-error-saving-record-write-operation-not-permitted
+
 import Foundation
 import CloudKit
 
