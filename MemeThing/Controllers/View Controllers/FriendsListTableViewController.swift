@@ -20,12 +20,12 @@ class FriendsListTableViewController: UITableViewController {
     
     var dataSource: [(name: SectionNames, data: [Any])] {
         var arrays = [(SectionNames, [Any])]()
-        if let pendingFriendRequests = UserController.shared.pendingFriendRequests {
+        if let pendingFriendRequests = FriendRequestController.shared.pendingFriendRequests {
             if pendingFriendRequests.count > 0 {
                 arrays.append((.pendingFriendRequests, pendingFriendRequests))
             }
         }
-        if let outgoingFriendRequests = UserController.shared.outgoingFriendRequests {
+        if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
             if outgoingFriendRequests.count > 0 {
                 arrays.append((.outgoingFriendRequests, outgoingFriendRequests))
             }
@@ -33,7 +33,6 @@ class FriendsListTableViewController: UITableViewController {
         if let userFriends = UserController.shared.usersFriends {
             arrays.append((.friends, userFriends))
         }
-        print("datasource called")
         return arrays
     }
     
@@ -49,18 +48,21 @@ class FriendsListTableViewController: UITableViewController {
         
         // Load all the data, if it hasn't been loaded already
         loadAllData()
+        
+        // TODO: -delete this later
+        FriendRequestController.shared.receiveResponseToFriendRequest()
     }
     
     // MARK: - Helper Methods
     
     func loadAllData() {
-        if UserController.shared.pendingFriendRequests == nil {
-            UserController.shared.fetchPendingFriendRequests { (result) in
+        if FriendRequestController.shared.pendingFriendRequests == nil {
+            FriendRequestController.shared.fetchPendingFriendRequests { (result) in
                 // TODO: -
             }
         }
-        if UserController.shared.outgoingFriendRequests == nil {
-            UserController.shared.fetchOutgoingFriendRequests { (result) in
+        if FriendRequestController.shared.outgoingFriendRequests == nil {
+            FriendRequestController.shared.fetchOutgoingFriendRequests { (result) in
                 // TODO: -
             }
         }
@@ -87,13 +89,13 @@ class FriendsListTableViewController: UITableViewController {
         }
         
         // Make sure the user hasn't already sent, received, or accepted a request from that username
-        if let outgoingFriendRequests = UserController.shared.outgoingFriendRequests {
+        if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
             guard outgoingFriendRequests.filter({ $0.toUsername == username }).count == 0 else {
                 presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(username)")
                 return
             }
         }
-        if let pendingFriendRequests = UserController.shared.pendingFriendRequests {
+        if let pendingFriendRequests = FriendRequestController.shared.pendingFriendRequests {
             guard pendingFriendRequests.filter({ $0.fromUsername == username }).count == 0 else {
                 presentAlert(title: "Already Received", message: "You have already received a friend request from \(username)")
                 return
@@ -111,7 +113,7 @@ class FriendsListTableViewController: UITableViewController {
             switch result {
             case .success(let friend):
                 // If the username exists, send them a friend request
-                UserController.shared.sendFriendRequest(to: friend) { (result) in // FIXME: - better way than nested functions?
+                FriendRequestController.shared.sendFriendRequest(to: friend) { (result) in // FIXME: - better way than nested functions?
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
@@ -204,7 +206,7 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
             else { return }
         
         // Respond to the friend request
-        UserController.shared.sendResponse(to: friendRequest, accept: accept) { [weak self] (result) in
+        FriendRequestController.shared.sendResponse(to: friendRequest, accept: accept) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
@@ -213,6 +215,7 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
                         self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromUsername) as a friend!")
                     }
                     // TODO: - if denied, give user opportunity to block that person?
+                    
                     // Refresh the tableview to reflect the changes
                     self?.tableView.reloadData()
                 case .failure(let error):

@@ -30,7 +30,7 @@ class NotificationHelper {
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
             // TODO: - refresh tableview if viewing friends list? how to do that?
-            UserController.shared.receiveResponseToFriendRequest()
+            FriendRequestController.shared.receiveResponseToFriendRequest()
         }
     }
 }
