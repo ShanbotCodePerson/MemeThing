@@ -16,60 +16,71 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="b0C-Xq-aSa">
-                                <rect key="frame" x="20.5" y="64.5" width="373" height="777"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JNr-ca-bWi">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Draw something funny!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zx1-JU-3wd" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="373" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="cRg-mx-Epg"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7cY-5M-71c" customClass="CanvasView" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="65" width="373" height="627"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="b0C-Xq-aSa">
+                                        <rect key="frame" x="20.5" y="19.5" width="373" height="735"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="hdu-03-sxy" customClass="CircularButton" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="315.5" y="8" width="49.5" height="49"/>
-                                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Draw something funny!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zx1-JU-3wd" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="373" height="30"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="hdu-03-sxy" secondAttribute="height" multiplier="1:1" id="fjl-H2-bAB"/>
+                                                    <constraint firstAttribute="height" constant="30" id="cRg-mx-Epg"/>
                                                 </constraints>
-                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <state key="normal" image="arrow.counterclockwise" catalog="system"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7cY-5M-71c" customClass="CanvasView" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="44" width="373" height="627"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="hdu-03-sxy" customClass="CircularButton" customModule="MemeThing" customModuleProvider="target">
+                                                        <rect key="frame" x="343" y="8" width="22" height="22"/>
+                                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="hdu-03-sxy" secondAttribute="height" multiplier="1:1" id="fjl-H2-bAB"/>
+                                                        </constraints>
+                                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="arrow.counterclockwise" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="undoButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LM4-Vl-Ww8"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="hdu-03-sxy" secondAttribute="trailing" constant="8" id="KEm-R5-sGf"/>
+                                                    <constraint firstItem="hdu-03-sxy" firstAttribute="top" secondItem="7cY-5M-71c" secondAttribute="top" constant="8" id="M1I-by-Gyk"/>
+                                                </constraints>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4zL-R8-fD7" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="685" width="373" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="8HQ-nA-F0q"/>
+                                                </constraints>
+                                                <state key="normal" title="Send"/>
                                                 <connections>
-                                                    <action selector="undoButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LM4-Vl-Ww8"/>
+                                                    <action selector="sentButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PCf-Nl-Lhq"/>
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="hdu-03-sxy" secondAttribute="trailing" constant="8" id="KEm-R5-sGf"/>
-                                            <constraint firstItem="hdu-03-sxy" firstAttribute="top" secondItem="7cY-5M-71c" secondAttribute="top" constant="8" id="M1I-by-Gyk"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4zL-R8-fD7" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="727" width="373" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="8HQ-nA-F0q"/>
-                                        </constraints>
-                                        <state key="normal" title="Send"/>
-                                        <connections>
-                                            <action selector="sentButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PCf-Nl-Lhq"/>
-                                        </connections>
-                                    </button>
+                                    </stackView>
                                 </subviews>
-                            </stackView>
-                            <navigationBar contentMode="scaleToFill" id="T1x-I8-aFt">
-                                <rect key="frame" x="0.0" y="426" width="414" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="b0C-Xq-aSa" firstAttribute="height" secondItem="JNr-ca-bWi" secondAttribute="height" multiplier="0.95" id="5hc-Ts-shH"/>
+                                    <constraint firstItem="b0C-Xq-aSa" firstAttribute="width" secondItem="JNr-ca-bWi" secondAttribute="width" multiplier="0.9" id="cAy-hF-S3o"/>
+                                    <constraint firstItem="b0C-Xq-aSa" firstAttribute="centerY" secondItem="JNr-ca-bWi" secondAttribute="centerY" id="ofA-u0-hpn"/>
+                                    <constraint firstItem="b0C-Xq-aSa" firstAttribute="centerX" secondItem="JNr-ca-bWi" secondAttribute="centerX" id="yZM-33-OWg"/>
+                                </constraints>
+                            </view>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UWg-1Y-3dz">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <items>
-                                    <navigationItem id="FuQ-zH-qBd">
-                                        <barButtonItem key="leftBarButtonItem" title="Exit to Main Menu" id="dVk-ay-tHP">
+                                    <navigationItem id="0yv-Xm-4gS">
+                                        <barButtonItem key="leftBarButtonItem" title="Main Menu" id="iOH-De-Uvz">
                                             <connections>
-                                                <action selector="exitToMainMenuButtonTapped:" destination="BYZ-38-t0r" id="PMJ-Ih-iHW"/>
+                                                <action selector="mainMenuButtonTapped:" destination="BYZ-38-t0r" id="zFc-VT-1z6"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -78,14 +89,16 @@
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="b0C-Xq-aSa" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.9" id="93s-WI-uYO"/>
-                            <constraint firstItem="4zL-R8-fD7" firstAttribute="height" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.06" priority="999" id="VHc-QJ-zUB"/>
-                            <constraint firstItem="Zx1-JU-3wd" firstAttribute="height" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.06" priority="999" id="euk-r2-EvL"/>
-                            <constraint firstItem="b0C-Xq-aSa" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="mSO-D5-Ece"/>
-                            <constraint firstItem="b0C-Xq-aSa" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.95" id="n7Z-hk-w1p"/>
-                            <constraint firstItem="b0C-Xq-aSa" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="o0d-Pe-68g"/>
-                            <constraint firstItem="hdu-03-sxy" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.055" id="ob0-jP-I4p"/>
-                            <constraint firstItem="7cY-5M-71c" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.7" id="yHN-Lq-VLN"/>
+                            <constraint firstItem="UWg-1Y-3dz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="1ce-ez-N1u"/>
+                            <constraint firstItem="JNr-ca-bWi" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="2O4-35-5Et"/>
+                            <constraint firstItem="Zx1-JU-3wd" firstAttribute="height" relation="lessThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.03" priority="999" id="61E-6b-3ht"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="UWg-1Y-3dz" secondAttribute="trailing" id="8FJ-Wj-mRe"/>
+                            <constraint firstItem="JNr-ca-bWi" firstAttribute="top" secondItem="UWg-1Y-3dz" secondAttribute="bottom" id="U00-HR-qXI"/>
+                            <constraint firstItem="UWg-1Y-3dz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="l74-gC-lWa"/>
+                            <constraint firstItem="JNr-ca-bWi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="pzT-LQ-RI5"/>
+                            <constraint firstItem="JNr-ca-bWi" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="qYq-PN-0OA"/>
+                            <constraint firstItem="4zL-R8-fD7" firstAttribute="height" relation="lessThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.06" priority="999" id="syP-T1-LZ3"/>
+                            <constraint firstItem="7cY-5M-71c" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.7" id="tZr-sc-DL3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

@@ -22,7 +22,7 @@ class DrawingViewController: UIViewController {
     
     // MARK: - Actions
     
-    @IBAction func exitToMainMenuButtonTapped(_ sender: UIBarButtonItem) {
+    @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "MainMenu", bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() else { return }
         initialVC.modalPresentationStyle = .fullScreen
