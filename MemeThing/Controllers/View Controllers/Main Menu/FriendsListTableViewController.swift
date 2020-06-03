@@ -38,8 +38,6 @@ class FriendsListTableViewController: UITableViewController {
     
     // MARK: - Lifecycle Methods
     
-    // TODO: - have a place to display pending friend requests
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(false, animated: true)
@@ -49,30 +47,47 @@ class FriendsListTableViewController: UITableViewController {
         // Load all the data, if it hasn't been loaded already
         loadAllData()
         
+        // Listen for notifications telling the tableview to reload its data
+        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: friendsUpdate, object: nil)
+        
         // TODO: -delete this later
-        FriendRequestController.shared.receiveResponseToFriendRequest()
+//        FriendRequestController.shared.receiveResponseToFriendRequest()
     }
     
     // MARK: - Helper Methods
     
+    @objc func updateData() {
+        tableView.reloadData()
+    }
+    
     func loadAllData() {
+        let group = DispatchGroup()
+        
         if FriendRequestController.shared.pendingFriendRequests == nil {
+            group.enter()
             FriendRequestController.shared.fetchPendingFriendRequests { (result) in
-                // TODO: -
+                // TODO: - handle completion of fetching data
+                group.leave()
             }
         }
         if FriendRequestController.shared.outgoingFriendRequests == nil {
+            group.enter()
             FriendRequestController.shared.fetchOutgoingFriendRequests { (result) in
-                // TODO: -
+                // TODO: - handle completion of fetching data
+                group.leave()
             }
         }
         if UserController.shared.usersFriends == nil {
+            group.enter()
             UserController.shared.fetchUsersFriends { (result) in
-                // TODO: -
+                // TODO: - handle completion of fetching data
+                group.leave()
             }
         }
-        sleep(1) // FIXME: - I know this isn't the right way to do it
-        tableView.reloadData()
+        
+        group.notify(queue: .main) {
+            self.tableView.reloadData()
+        }
     }
     
     // MARK: - Actions
@@ -141,7 +156,6 @@ class FriendsListTableViewController: UITableViewController {
         return dataSource.count
     }
     
-    // TODO: - display a message if all the fields are empty
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return dataSource[section].name.rawValue
     }
@@ -171,7 +185,7 @@ class FriendsListTableViewController: UITableViewController {
             if data.count == 0 { cell.setUpViews(section: sectionName, username: nil) }
             else {
                 guard let friend = data[indexPath.row] as? User else { return cell }
-                cell.setUpViews(section: sectionName, username: friend.username, points: friend.points)
+                cell.setUpViews(section: sectionName, username: friend.screenName, points: friend.points)
             }
         }
         
@@ -189,7 +203,7 @@ class FriendsListTableViewController: UITableViewController {
             // TODO: - first present alert to confirm unfriending someone
             
             // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
 }

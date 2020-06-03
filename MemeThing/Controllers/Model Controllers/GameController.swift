@@ -153,13 +153,23 @@ class GameController {
         }
     }
     
-    // MARK: - Notifications
+    // MARK: - Subscribe to Notifications
     
-    // Subscribe all players to notifications for games they're participating in
+    // Subscribe all players to notifications of invitations to games
     
-    // Respond to a notification that you've been invited to a game
+    // Subscribe all players to notifications of all updates to games they're participating in
     
-    // Respond to a notification that a new meme has been pushed
+    // MARK: - Send Notifications
     
-    // Respond to a notification that a new caption has been pushed
+    // Send a response to an invitation to a new game
+    
+    // MARK: - Receive Notifications
+    
+    // Receive a notification that you've been invited to a game
+    
+    // Receive a friend's response to a game invitation
+    
+    // Receive a notification that a new meme has been pushed
+    
+    // Receive a notification that a new caption has been pushed
 }

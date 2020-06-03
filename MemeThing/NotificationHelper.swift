@@ -24,6 +24,7 @@ class NotificationHelper {
         case .newFriendRequest:
             print("received new friend request")
                 // TODO: - display an alert if app is open?
+            
             // TODO: - refresh tableview if viewing friends list? how to do that?
         case .friendRequestResponse:
             print("received response to friend request")
@@ -34,3 +35,7 @@ class NotificationHelper {
         }
     }
 }
+
+// MARK: - Local Notification Names
+
+let friendsUpdate = Notification.Name("friendsUpdate")

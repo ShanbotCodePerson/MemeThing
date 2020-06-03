@@ -89,7 +89,6 @@ class FriendRequestController {
         notificationInfo.title = "New Friend Request"
         notificationInfo.alertBody = "You have received a friend request on MemeThing"
         notificationInfo.category = NotificationHelper.Category.newFriendRequest.rawValue
-        //        notificationInfo.shouldBadge = true // TODO: - Not sure I like this behavior
         subscription.notificationInfo = notificationInfo
         
         // Save the subscription to the cloud
@@ -111,7 +110,6 @@ class FriendRequestController {
         notificationInfo.title = "Response to Friend Request"
         notificationInfo.alertBody = "New response to friend request on MemeThing" // FIXME: - be able to change this based on status of friend request
         notificationInfo.category = NotificationHelper.Category.friendRequestResponse.rawValue
-        //        notificationInfo.shouldBadge = true // TODO: - Not sure I like this behavior
         subscription.notificationInfo = notificationInfo
         
         // Save the subscription to the cloud
@@ -170,10 +168,12 @@ class FriendRequestController {
             }
         }
         
-        // TODO: - need to remove friend request from source of truth and update display on view controller
+        // Tell the tableview in the friends list to update
+        let notification = Notification(name: friendsUpdate)
+        NotificationCenter.default.post(notification)
     }
     
-    // MARK: - Respond to Notifications
+    // MARK: - Receive Notifications
     
     func receiveResponseToFriendRequest() {
         print("got here to \(#function)")
@@ -223,6 +223,8 @@ class FriendRequestController {
             }
         }
         
-        // TODO: - cause the tableview in the friends list to update automatically?
+        // Tell the tableview in the friends list to update
+        let notification = Notification(name: friendsUpdate)
+        NotificationCenter.default.post(notification)
     }
 }

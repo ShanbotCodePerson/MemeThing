@@ -18,10 +18,16 @@ class DrawingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     // MARK: - Actions
+    
+    @IBAction func exitToMainMenuButtonTapped(_ sender: UIBarButtonItem) {
+        let storyboard = UIStoryboard(name: "MainMenu", bundle: nil)
+        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
+        initialVC.modalPresentationStyle = .fullScreen
+        self.present(initialVC, animated: true)
+    }
     
     @IBAction func undoButtonTapped(_ sender: UIButton) {
         canvasView.undoDraw()

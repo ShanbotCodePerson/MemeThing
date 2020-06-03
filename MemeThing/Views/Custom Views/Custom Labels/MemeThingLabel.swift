@@ -28,7 +28,6 @@ class MemeThingLabel: UILabel {
     override func drawText(in rect: CGRect) {
         let insets = UIEdgeInsets(top: 3, left: 6, bottom: 3, right: 6)
         super.drawText(in: rect.inset(by: insets))
-//        super.drawText(in: rect)
     }
     
     override var intrinsicContentSize: CGSize { return addInsets(to: super.intrinsicContentSize) }
