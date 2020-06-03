@@ -16,39 +16,62 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="OD7-rI-H93">
-                                <rect key="frame" x="20.5" y="64.5" width="373" height="777"/>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nkK-uE-dFS">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <items>
+                                    <navigationItem id="npf-vo-2v7">
+                                        <barButtonItem key="leftBarButtonItem" title="Main Menu" id="LIn-io-HxE"/>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqp-zC-yKT">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7IK-AJ-lNo">
-                                        <rect key="frame" x="0.0" y="0.0" width="373" height="627"/>
-                                    </imageView>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter funniest caption..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KHy-3E-I4Q">
-                                        <rect key="frame" x="0.0" y="657" width="373" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="T14-aV-BZz"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcm-NG-LHC" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="727" width="373" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="am8-CB-ok0"/>
-                                        </constraints>
-                                        <state key="normal" title="Send"/>
-                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="OD7-rI-H93">
+                                        <rect key="frame" x="20.5" y="19.5" width="373" height="735"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7IK-AJ-lNo" customClass="MemeImageView" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="373" height="627"/>
+                                            </imageView>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter funniest caption..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KHy-3E-I4Q">
+                                                <rect key="frame" x="0.0" y="636" width="373" height="40"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="T14-aV-BZz"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcm-NG-LHC" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="685" width="373" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="am8-CB-ok0"/>
+                                                </constraints>
+                                                <state key="normal" title="Send"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
-                            </stackView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="OD7-rI-H93" firstAttribute="height" secondItem="oqp-zC-yKT" secondAttribute="height" multiplier="0.95" id="GE5-aA-Gpj"/>
+                                    <constraint firstItem="OD7-rI-H93" firstAttribute="width" secondItem="oqp-zC-yKT" secondAttribute="width" multiplier="0.9" id="e9b-yW-uk3"/>
+                                    <constraint firstItem="OD7-rI-H93" firstAttribute="centerY" secondItem="oqp-zC-yKT" secondAttribute="centerY" id="gcT-G6-Ohw"/>
+                                    <constraint firstItem="OD7-rI-H93" firstAttribute="centerX" secondItem="oqp-zC-yKT" secondAttribute="centerX" id="yIf-NC-trN"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="OD7-rI-H93" firstAttribute="centerX" secondItem="9G1-Tm-2X0" secondAttribute="centerX" id="97r-j5-sp0"/>
-                            <constraint firstItem="OD7-rI-H93" firstAttribute="width" secondItem="gCh-mx-hlE" secondAttribute="width" multiplier="0.9" id="G04-x1-0A7"/>
-                            <constraint firstItem="KHy-3E-I4Q" firstAttribute="height" relation="lessThanOrEqual" secondItem="gCh-mx-hlE" secondAttribute="height" multiplier="0.06" priority="999" id="MVJ-Dl-EX6"/>
-                            <constraint firstItem="OD7-rI-H93" firstAttribute="centerY" secondItem="9G1-Tm-2X0" secondAttribute="centerY" id="aY5-DM-mk1"/>
-                            <constraint firstItem="xcm-NG-LHC" firstAttribute="height" relation="lessThanOrEqual" secondItem="gCh-mx-hlE" secondAttribute="height" multiplier="0.06" priority="999" id="g6w-UA-EJi"/>
-                            <constraint firstItem="OD7-rI-H93" firstAttribute="height" secondItem="9G1-Tm-2X0" secondAttribute="height" multiplier="0.95" id="rbg-vc-gBK"/>
-                            <constraint firstItem="7IK-AJ-lNo" firstAttribute="height" secondItem="gCh-mx-hlE" secondAttribute="height" multiplier="0.7" id="sDO-6Q-ZFt"/>
+                            <constraint firstItem="nkK-uE-dFS" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="5SB-46-XB9"/>
+                            <constraint firstItem="oqp-zC-yKT" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="6RU-cv-ruF"/>
+                            <constraint firstItem="oqp-zC-yKT" firstAttribute="bottom" secondItem="9G1-Tm-2X0" secondAttribute="bottom" id="A5c-17-peN"/>
+                            <constraint firstItem="KHy-3E-I4Q" firstAttribute="height" relation="lessThanOrEqual" secondItem="9G1-Tm-2X0" secondAttribute="height" multiplier="0.03" priority="999" id="I3d-Zb-hnc"/>
+                            <constraint firstItem="xcm-NG-LHC" firstAttribute="height" relation="lessThanOrEqual" secondItem="9G1-Tm-2X0" secondAttribute="height" multiplier="0.06" priority="999" id="KMI-aD-31n"/>
+                            <constraint firstItem="oqp-zC-yKT" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="OYi-cy-iCu"/>
+                            <constraint firstItem="nkK-uE-dFS" firstAttribute="top" secondItem="9G1-Tm-2X0" secondAttribute="top" id="PPz-Ku-KyE"/>
+                            <constraint firstItem="nkK-uE-dFS" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="lbv-kp-mhg"/>
+                            <constraint firstItem="7IK-AJ-lNo" firstAttribute="height" secondItem="gCh-mx-hlE" secondAttribute="height" multiplier="0.7" id="n9Z-qe-ISE"/>
+                            <constraint firstItem="oqp-zC-yKT" firstAttribute="top" secondItem="nkK-uE-dFS" secondAttribute="bottom" id="tdQ-xw-Ojx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9G1-Tm-2X0"/>
                     </view>

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401109882487FF7600E8FCE2 /* MemeImageView.swift */; };
 		4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365B2486B898007C2601 /* NotificationHelper.swift */; };
 		403936602486E684007C2601 /* FriendRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365F2486E684007C2601 /* FriendRequestController.swift */; };
 		4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039366124870328007C2601 /* InviteFriendsTableViewController.swift */; };
@@ -48,6 +49,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		401109882487FF7600E8FCE2 /* MemeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeImageView.swift; sourceTree = "<group>"; };
 		4039365B2486B898007C2601 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationHelper.swift; path = MemeThing/NotificationHelper.swift; sourceTree = SOURCE_ROOT; };
 		4039365F2486E684007C2601 /* FriendRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestController.swift; sourceTree = "<group>"; };
 		4039366124870328007C2601 /* InviteFriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsTableViewController.swift; sourceTree = "<group>"; };
@@ -103,6 +105,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		401109872487FF5800E8FCE2 /* Custom Images */ = {
+			isa = PBXGroup;
+			children = (
+				401109882487FF7600E8FCE2 /* MemeImageView.swift */,
+			);
+			path = "Custom Images";
+			sourceTree = "<group>";
+		};
 		4039366324870341007C2601 /* Main Menu */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,6 +277,7 @@
 		40ACAB66247ECD61004516CF /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				401109872487FF5800E8FCE2 /* Custom Images */,
 				4039CE1124820652004DA41F /* Custom Labels */,
 				4039CE1024820644004DA41F /* Custom Text Fields */,
 				4039CE0F24820640004DA41F /* Custom Buttons */,
@@ -390,6 +401,7 @@
 				40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */,
 				403936602486E684007C2601 /* FriendRequestController.swift in Sources */,
 				40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */,
+				401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */,
 				4039CE132482067E004DA41F /* MemeThingButton.swift in Sources */,
 				405279E524781E1A00942A7D /* AppDelegate.swift in Sources */,
 				40D003B724831B690046D64B /* Game.swift in Sources */,
