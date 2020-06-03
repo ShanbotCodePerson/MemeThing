@@ -95,7 +95,6 @@ class UserController {
         
         let predicate = NSPredicate(format: "%K IN %@", argumentArray: ["recordID", currentUser.friendsReferences.compactMap({ $0.recordID })])
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
-        print(compoundPredicate)
         
         // Create the search predicate to look for all the user's friends
         CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[User], MemeThingError>) in

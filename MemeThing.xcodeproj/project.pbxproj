@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365B2486B898007C2601 /* NotificationHelper.swift */; };
 		403936602486E684007C2601 /* FriendRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365F2486E684007C2601 /* FriendRequestController.swift */; };
+		4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039366124870328007C2601 /* InviteFriendsTableViewController.swift */; };
 		4039CE042481DF5C004DA41F /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE032481DF5C004DA41F /* CanvasView.swift */; };
 		4039CE062481E553004DA41F /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE052481E553004DA41F /* Meme.swift */; };
 		4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE0B248205D4004DA41F /* StyleGuide.swift */; };
@@ -20,6 +21,10 @@
 		405279EE24781E1C00942A7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405279ED24781E1C00942A7D /* Assets.xcassets */; };
 		405279F124781E1C00942A7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405279EF24781E1C00942A7D /* LaunchScreen.storyboard */; };
 		408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 408A26E0247ED77D008CE8DC /* MainMenu.storyboard */; };
+		40BA228D248715B3009A2197 /* Drawing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA228B248715B3009A2197 /* Drawing.storyboard */; };
+		40BA228F248715C9009A2197 /* AddCaption.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA228E248715C9009A2197 /* AddCaption.storyboard */; };
+		40BA229224871603009A2197 /* ViewResults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA229024871603009A2197 /* ViewResults.storyboard */; };
+		40BA229424871F0D009A2197 /* Waiting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA229324871F0D009A2197 /* Waiting.storyboard */; };
 		40C2146C247EE0E7007B7630 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146B247EE0E7007B7630 /* LoginViewController.swift */; };
 		40C2146E247EE0F4007B7630 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */; };
 		40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */; };
@@ -45,6 +50,7 @@
 /* Begin PBXFileReference section */
 		4039365B2486B898007C2601 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationHelper.swift; path = MemeThing/NotificationHelper.swift; sourceTree = SOURCE_ROOT; };
 		4039365F2486E684007C2601 /* FriendRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestController.swift; sourceTree = "<group>"; };
+		4039366124870328007C2601 /* InviteFriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsTableViewController.swift; sourceTree = "<group>"; };
 		4039CE032481DF5C004DA41F /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		4039CE052481E553004DA41F /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Meme.swift; path = "MemeThing/Controllers/View Controllers/Meme.swift"; sourceTree = SOURCE_ROOT; };
 		4039CE0B248205D4004DA41F /* StyleGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleGuide.swift; sourceTree = SOURCE_ROOT; };
@@ -58,6 +64,10 @@
 		405279F024781E1C00942A7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		405279F224781E1C00942A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		408A26E1247ED77D008CE8DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/Base.lproj/MainMenu.storyboard; sourceTree = "<group>"; };
+		40BA228C248715B3009A2197 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/MemeThing/Views/Base.lproj/Drawing.storyboard; sourceTree = "<group>"; };
+		40BA228E248715C9009A2197 /* AddCaption.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AddCaption.storyboard; sourceTree = "<group>"; };
+		40BA229124871603009A2197 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/MemeThing/Views/Base.lproj/ViewResults.storyboard; sourceTree = "<group>"; };
+		40BA229324871F0D009A2197 /* Waiting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Waiting.storyboard; sourceTree = "<group>"; };
 		40C2146B247EE0E7007B7630 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListTableViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +103,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4039366324870341007C2601 /* Main Menu */ = {
+			isa = PBXGroup;
+			children = (
+				40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */,
+				40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */,
+				40C21480247F1434007B7630 /* ProfileTableViewController.swift */,
+			);
+			path = "Main Menu";
+			sourceTree = "<group>";
+		};
+		4039366424870348007C2601 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				40C2146B247EE0E7007B7630 /* LoginViewController.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		4039366524870356007C2601 /* Start Game */ = {
+			isa = PBXGroup;
+			children = (
+				4039366124870328007C2601 /* InviteFriendsTableViewController.swift */,
+			);
+			path = "Start Game";
+			sourceTree = "<group>";
+		};
+		4039366624870363007C2601 /* GamePlay */ = {
+			isa = PBXGroup;
+			children = (
+				4039CE032481DF5C004DA41F /* CanvasView.swift */,
+				40C2148224809A24007B7630 /* DrawingViewController.swift */,
+				40C2148424809A35007B7630 /* CaptionViewController.swift */,
+				40C2148624809A47007B7630 /* ResultsViewController.swift */,
+				40C2148824809A57007B7630 /* WaitingViewController.swift */,
+			);
+			path = GamePlay;
+			sourceTree = "<group>";
+		};
 		4039CE0F24820640004DA41F /* Custom Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -170,6 +218,10 @@
 			children = (
 				405279EA24781E1A00942A7D /* Main.storyboard */,
 				408A26E0247ED77D008CE8DC /* MainMenu.storyboard */,
+				40BA228B248715B3009A2197 /* Drawing.storyboard */,
+				40BA228E248715C9009A2197 /* AddCaption.storyboard */,
+				40BA229024871603009A2197 /* ViewResults.storyboard */,
+				40BA229324871F0D009A2197 /* Waiting.storyboard */,
 				40ACAB66247ECD61004516CF /* Custom Views */,
 			);
 			path = Views;
@@ -190,12 +242,12 @@
 		40ACAB64247ECD2C004516CF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
-				40D003C52484957C0046D64B /* UIViewExtension.swift */,
-				40C2147B247EEE9B007B7630 /* MemeThingError.swift */,
 				40C2147D247EF1BE007B7630 /* CKService.swift */,
-				4039CE0B248205D4004DA41F /* StyleGuide.swift */,
 				4039365B2486B898007C2601 /* NotificationHelper.swift */,
+				40C2147B247EEE9B007B7630 /* MemeThingError.swift */,
+				4039CE0B248205D4004DA41F /* StyleGuide.swift */,
+				40D003C52484957C0046D64B /* UIViewExtension.swift */,
+				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -226,15 +278,10 @@
 		40C2146A247EE010007B7630 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				40C2146B247EE0E7007B7630 /* LoginViewController.swift */,
-				40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */,
-				40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */,
-				40C21480247F1434007B7630 /* ProfileTableViewController.swift */,
-				4039CE032481DF5C004DA41F /* CanvasView.swift */,
-				40C2148224809A24007B7630 /* DrawingViewController.swift */,
-				40C2148424809A35007B7630 /* CaptionViewController.swift */,
-				40C2148624809A47007B7630 /* ResultsViewController.swift */,
-				40C2148824809A57007B7630 /* WaitingViewController.swift */,
+				4039366424870348007C2601 /* Login */,
+				4039366324870341007C2601 /* Main Menu */,
+				4039366524870356007C2601 /* Start Game */,
+				4039366624870363007C2601 /* GamePlay */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -306,8 +353,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */,
+				40BA229224871603009A2197 /* ViewResults.storyboard in Resources */,
+				40BA228F248715C9009A2197 /* AddCaption.storyboard in Resources */,
 				405279F124781E1C00942A7D /* LaunchScreen.storyboard in Resources */,
 				405279EE24781E1C00942A7D /* Assets.xcassets in Resources */,
+				40BA229424871F0D009A2197 /* Waiting.storyboard in Resources */,
+				40BA228D248715B3009A2197 /* Drawing.storyboard in Resources */,
 				405279EC24781E1A00942A7D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -331,6 +382,7 @@
 				40D003C024844C110046D64B /* FriendRequest.swift in Sources */,
 				40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */,
 				40C21476247EE944007B7630 /* UserController.swift in Sources */,
+				4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */,
 				4039CE1724820B5D004DA41F /* MemeThingLabel.swift in Sources */,
 				40D003B924831B700046D64B /* Caption.swift in Sources */,
 				40D003BB2483220B0046D64B /* GameController.swift in Sources */,
@@ -375,6 +427,22 @@
 				408A26E1247ED77D008CE8DC /* Base */,
 			);
 			name = MainMenu.storyboard;
+			sourceTree = "<group>";
+		};
+		40BA228B248715B3009A2197 /* Drawing.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				40BA228C248715B3009A2197 /* Base */,
+			);
+			name = Drawing.storyboard;
+			sourceTree = "<group>";
+		};
+		40BA229024871603009A2197 /* ViewResults.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				40BA229124871603009A2197 /* Base */,
+			);
+			name = ViewResults.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -67,16 +67,16 @@ extension CKServicing {
     func read<T: CKCompatible> (predicate: NSCompoundPredicate, completion: @escaping ArrayHandler<T>) {
         // Form the query based on the predicate
         let query = CKQuery(recordType: T.recordType, predicate: predicate)
-        print("got here to \(#function) and query is \(query)")
+//        print("got here to \(#function) and query is \(query)")
         
         // Fetch the data from the cloud
         publicDB.perform(query, inZoneWith: nil) { (records, error) in
             // Handle any errors
             if let error = error { return completion(.failure(.ckError(error))) }
-            print("inside completion and records are \(records)")
+//            print("inside completion and records are \(records)")
             // Unwrap the data
             guard let objects = records?.compactMap({ T(ckRecord: $0) }) else { return completion(.failure(.couldNotUnwrap)) }
-            print("unwrapped objects are \(objects)")
+//            print("unwrapped objects are \(objects)")
             
             // Complete with the objects
             return completion(.success(objects))

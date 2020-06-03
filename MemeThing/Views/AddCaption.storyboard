@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wv3-dL-fID">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Caption View Controller-->
+        <scene sceneID="TY4-go-eBC">
+            <objects>
+                <viewController id="wv3-dL-fID" customClass="CaptionViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gCh-mx-hlE">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="OD7-rI-H93">
+                                <rect key="frame" x="20.5" y="64.5" width="373" height="777"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7IK-AJ-lNo">
+                                        <rect key="frame" x="0.0" y="0.0" width="373" height="627"/>
+                                    </imageView>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter funniest caption..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KHy-3E-I4Q">
+                                        <rect key="frame" x="0.0" y="657" width="373" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="T14-aV-BZz"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcm-NG-LHC" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="727" width="373" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="am8-CB-ok0"/>
+                                        </constraints>
+                                        <state key="normal" title="Send"/>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="OD7-rI-H93" firstAttribute="centerX" secondItem="9G1-Tm-2X0" secondAttribute="centerX" id="97r-j5-sp0"/>
+                            <constraint firstItem="OD7-rI-H93" firstAttribute="width" secondItem="gCh-mx-hlE" secondAttribute="width" multiplier="0.9" id="G04-x1-0A7"/>
+                            <constraint firstItem="KHy-3E-I4Q" firstAttribute="height" relation="lessThanOrEqual" secondItem="gCh-mx-hlE" secondAttribute="height" multiplier="0.06" priority="999" id="MVJ-Dl-EX6"/>
+                            <constraint firstItem="OD7-rI-H93" firstAttribute="centerY" secondItem="9G1-Tm-2X0" secondAttribute="centerY" id="aY5-DM-mk1"/>
+                            <constraint firstItem="xcm-NG-LHC" firstAttribute="height" relation="lessThanOrEqual" secondItem="gCh-mx-hlE" secondAttribute="height" multiplier="0.06" priority="999" id="g6w-UA-EJi"/>
+                            <constraint firstItem="OD7-rI-H93" firstAttribute="height" secondItem="9G1-Tm-2X0" secondAttribute="height" multiplier="0.95" id="rbg-vc-gBK"/>
+                            <constraint firstItem="7IK-AJ-lNo" firstAttribute="height" secondItem="gCh-mx-hlE" secondAttribute="height" multiplier="0.7" id="sDO-6Q-ZFt"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="9G1-Tm-2X0"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bXW-Rs-L83" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3839.130434782609" y="129.91071428571428"/>
+        </scene>
+    </scenes>
+</document>
