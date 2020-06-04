@@ -14,6 +14,7 @@ import CloudKit
 struct GameStrings {
     static let recordType = "Game"
     static let playersKey = "players"
+    fileprivate static let playersNamesKey = "playersNames"
     fileprivate static let playersStatusKey = "playersStatus"
     fileprivate static let playersPointsKey = "playersPoints"
     fileprivate static let leadPlayerKey = "leadPlayer"
@@ -28,6 +29,7 @@ class Game: CKCompatible {
     
     // Game properties
     private var players: [CKRecord.Reference]
+    var playersNames: [String]
     private var playersStatus: [PlayerStatus]
     private var playersPoints: [Int]
     var leadPlayer: CKRecord.Reference
@@ -65,20 +67,33 @@ class Game: CKCompatible {
     // Helper properties for easier interaction with the game object
     
     // A named grouping of the player references with their relevant data
-    var playerInfo: [(reference: CKRecord.Reference, status: PlayerStatus, points: Int)] {
+    // TODO: - may get rid of name variable here - not sure it's necessary
+    var playerInfo: [(reference: CKRecord.Reference, name: String, status: PlayerStatus, points: Int)] {
         get {
-            var data = [(reference: CKRecord.Reference, status: PlayerStatus, points: Int)]()
+            var data = [(reference: CKRecord.Reference, name: String, status: PlayerStatus, points: Int)]()
             for index in 0..<players.count {
-                data.append((players[index], playersStatus[index], playersPoints[index]))
+                data.append((players[index], playersNames[index], playersStatus[index], playersPoints[index]))
             }
             return data
         }
         set(newData) {
-            players = newData.compactMap { $0.reference }
-            playersStatus = newData.compactMap { $0.status }
-            playersPoints = newData.compactMap { $0.points }
+            players = newData.map { $0.reference }
+            playersNames = newData.map { $0.name }
+            playersStatus = newData.map { $0.status }
+            playersPoints = newData.map { $0.points }
         }
     }
+    
+    // A nicely formatted list of the names of the game participants, minus the current user
+    var listOfPlayerNames: String {
+        guard let currentUser = UserController.shared.currentUser else { return "ERROR" }
+        return playersNames.filter({ $0 != currentUser.screenName }).joined(separator: ", ")
+    }
+    
+    // A nicely formatted string to tell a given user what phase the game is currently in
+    // TODO: - game phase string
+    
+    // TODO: - a function telling the view controller which view to go to, based on phase of game?
     
     // Calculate whether all players have responded to the game invitation
     var allPlayersResponded: Bool {
@@ -105,8 +120,18 @@ class Game: CKCompatible {
     
     // MARK: - Initializer
     
-    init(players: [CKRecord.Reference], playersStatus: [PlayerStatus]? = nil, playersPoints: [Int]? = nil, leadPlayer: CKRecord.Reference, memes: [CKRecord.Reference]? = nil, pointsToWin: Int = 3, gameStatus: GameStatus = .waitingForPlayers, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+    init(players: [CKRecord.Reference],
+         playersNames: [String],
+         playersStatus: [PlayerStatus]? = nil,
+         playersPoints: [Int]? = nil,
+         leadPlayer: CKRecord.Reference,
+         memes: [CKRecord.Reference]? = nil,
+         pointsToWin: Int = 3,
+         gameStatus: GameStatus = .waitingForPlayers,
+         recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+        
         self.players = players
+        self.playersNames = playersNames
         if let playersStatus = playersStatus { self.playersStatus = playersStatus }
         else {
             // By default, the initial status of all players is waiting, except for the lead player (who starts off at the first index)
@@ -129,6 +154,7 @@ class Game: CKCompatible {
     
     required convenience init?(ckRecord: CKRecord) {
         guard let players = ckRecord[GameStrings.playersKey] as? [CKRecord.Reference],
+            let playersNames = ckRecord[GameStrings.playersNamesKey] as? [String],
             let playersStatusRawValues = ckRecord[GameStrings.playersStatusKey] as? [Int],
             let playersPoints = ckRecord[GameStrings.playersPointsKey] as? [Int],
             let leadPlayer = ckRecord[GameStrings.leadPlayerKey] as? CKRecord.Reference,
@@ -139,7 +165,7 @@ class Game: CKCompatible {
         let memes = ckRecord[GameStrings.memesKey] as? [CKRecord.Reference]
         let playersStatus = playersStatusRawValues.compactMap({ PlayerStatus(rawValue: $0) })
         
-        self.init(players: players, playersStatus: playersStatus, playersPoints: playersPoints, leadPlayer: leadPlayer, memes: memes, pointsToWin: pointsToWin, gameStatus: gameStatus, recordID: ckRecord.recordID)
+        self.init(players: players, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, leadPlayer: leadPlayer, memes: memes, pointsToWin: pointsToWin, gameStatus: gameStatus, recordID: ckRecord.recordID)
     }
     
     // MARK: - Convert to CKRecord
@@ -149,6 +175,7 @@ class Game: CKCompatible {
         
         record.setValuesForKeys([
             GameStrings.playersKey : players,
+            GameStrings.playersNamesKey : playersNames,
             GameStrings.playersStatusKey : playersStatus.compactMap({ $0.rawValue }),
             GameStrings.playersPointsKey : playersPoints,
             GameStrings.leadPlayerKey : leadPlayer,

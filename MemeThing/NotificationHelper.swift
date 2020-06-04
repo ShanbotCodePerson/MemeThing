@@ -39,6 +39,7 @@ class NotificationHelper {
         case .newFriendRequest:
             print("received new friend request")
             // TODO: - display an alert if app is open?
+            // TODO: - have an alert waiting next time app is opened?
             FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged)
         case .friendRequestResponse:
             print("received response to friend request")
@@ -57,6 +58,8 @@ class NotificationHelper {
             GameController.shared.receiveUpdateToGame(withID: recordIDChanged)
         case .gameEnded:
             print("received notification that game ended")
+            // TODO: - display an alert if app is open?
+            // TODO: - have an alert waiting next time app is opened?
             GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged)
         }
     }
@@ -66,4 +69,4 @@ class NotificationHelper {
 
 let friendsUpdate = Notification.Name("friendsUpdate")
 let newGameInvitation = Notification.Name("newGameInvitation")
-let gameUpdate = Notification.Name("gameUpdate")
+//let gameUpdate = Notification.Name("gameUpdate")

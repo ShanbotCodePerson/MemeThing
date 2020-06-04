@@ -8,6 +8,8 @@
 
 import UIKit
 
+// MARK: - Button Protocol
+
 protocol FriendTableViewCellButtonDelegate: class {
     func respondToFriendRequest(from cell: FriendTableViewCell, accept: Bool)
 }
@@ -36,29 +38,29 @@ class FriendTableViewCell: UITableViewCell {
         switch section {
         case .pendingFriendRequests:
             guard let username = username else { return }
-            pendingFriendRequestView(username)
+            setUpPendingFriendRequestView(for: username)
         case .outgoingFriendRequests:
             guard let username = username else { return }
-            outgoingFriendRequestView(username)
+            setUpOutgoingFriendRequestView(for: username)
         case .friends:
-            friendView(username, points: points)
+            setUpFriendView(for: username, points: points)
         }
     }
     
-    private func pendingFriendRequestView(_ username: String) {
+    private func setUpPendingFriendRequestView(for username: String) {
         pointsLabel.isHidden = true
         usernameLabel.text = "\(username) has sent you a friend request"
         contentView.backgroundColor = .systemGreen
     }
     
-    private func outgoingFriendRequestView(_ username: String) {
+    private func setUpOutgoingFriendRequestView(for username: String) {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = true
         usernameLabel.text = "Waiting for \(username) to respond to your friend request"
         contentView.backgroundColor = .systemRed
     }
     
-    private func friendView(_ username: String?, points: Int?) {
+    private func setUpFriendView(for username: String?, points: Int?) {
         buttonStackView.isHidden = true
         if let username = username {
             usernameLabel.text = username

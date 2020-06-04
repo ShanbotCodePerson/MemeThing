@@ -33,9 +33,10 @@ class GameController {
             guard let reference = reference else { return completion(.failure(.noUserFound)) }
             
             // Create the new game with the current user as the default lead player
-            var playerReferences = players.map({ $0.reference })
+            var playerReferences = players.map { $0.reference }
             playerReferences.insert(reference, at: 0)
-            let game = Game(players: playerReferences, leadPlayer: reference)
+            let playersNames = players.map { $0.screenName }
+            let game = Game(players: playerReferences, playersNames: playersNames, leadPlayer: reference)
             
             // Save the game to the cloud
             CKService.shared.create(object: game) { (result) in
@@ -66,8 +67,7 @@ class GameController {
             guard let reference = reference else { return completion(.failure(.noUserFound)) }
             
             // Create the query to only look for games where the current user is a player
-            // FIXME: - make sure this works
-            let predicate = NSPredicate(format: "%K IN %@", argumentArray: [reference, GameStrings.playersKey])
+            let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [reference, GameStrings.playersKey])
             let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
             
             // Fetch the data from the cloud
@@ -249,8 +249,6 @@ class GameController {
     
     // Receive a notification that a game has been updated
     func receiveUpdateToGame(withID recordID: CKRecord.ID) {
-        // TODO: - show an alert to user if applicable? (ie, if they're on a different view)
-        
         // Fetch the game object from the cloud
         fetchGame(from: recordID) { [weak self] (result) in
             switch result {
@@ -271,7 +269,6 @@ class GameController {
                     self?.handleFinish(for: game)
                 }
             case .failure(let error):
-                // Print the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 // TODO: - better error handling  - display an alert to the user?
             }
@@ -279,8 +276,6 @@ class GameController {
     }
     
     // MARK: - Handle Game Updates
-    
-    // TODO: - transition to the correct view, or update views or stuff
     
     // Player status changed - accepted game invite
     func waitingForPlayers(for game: Game) {

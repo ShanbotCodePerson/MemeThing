@@ -23,6 +23,8 @@
 		405279EE24781E1C00942A7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405279ED24781E1C00942A7D /* Assets.xcassets */; };
 		405279F124781E1C00942A7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405279EF24781E1C00942A7D /* LaunchScreen.storyboard */; };
 		408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 408A26E0247ED77D008CE8DC /* MainMenu.storyboard */; };
+		40A777EC248966F200ADBB82 /* GameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777EB248966F200ADBB82 /* GameTableViewCell.swift */; };
+		40A777EE24896A4500ADBB82 /* GamesListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */; };
 		40BA228D248715B3009A2197 /* Drawing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA228B248715B3009A2197 /* Drawing.storyboard */; };
 		40BA228F248715C9009A2197 /* AddCaption.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA228E248715C9009A2197 /* AddCaption.storyboard */; };
 		40BA229224871603009A2197 /* ViewResults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA229024871603009A2197 /* ViewResults.storyboard */; };
@@ -68,6 +70,8 @@
 		405279F024781E1C00942A7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		405279F224781E1C00942A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		408A26E1247ED77D008CE8DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/Base.lproj/MainMenu.storyboard; sourceTree = "<group>"; };
+		40A777EB248966F200ADBB82 /* GameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTableViewCell.swift; sourceTree = "<group>"; };
+		40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListTableViewController.swift; sourceTree = "<group>"; };
 		40BA228C248715B3009A2197 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/MemeThing/Views/Base.lproj/Drawing.storyboard; sourceTree = "<group>"; };
 		40BA228E248715C9009A2197 /* AddCaption.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AddCaption.storyboard; sourceTree = "<group>"; };
 		40BA229124871603009A2197 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/MemeThing/Views/Base.lproj/ViewResults.storyboard; sourceTree = "<group>"; };
@@ -119,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */,
+				40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */,
 				40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */,
 				40C21480247F1434007B7630 /* ProfileTableViewController.swift */,
 			);
@@ -285,6 +290,7 @@
 				4039CE1024820644004DA41F /* Custom Text Fields */,
 				4039CE0F24820640004DA41F /* Custom Buttons */,
 				40D003C1248493470046D64B /* FriendTableViewCell.swift */,
+				40A777EB248966F200ADBB82 /* GameTableViewCell.swift */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -399,10 +405,12 @@
 				4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */,
 				4039CE1724820B5D004DA41F /* MemeThingLabel.swift in Sources */,
 				40D003B924831B700046D64B /* Caption.swift in Sources */,
+				40A777EC248966F200ADBB82 /* GameTableViewCell.swift in Sources */,
 				40D003BB2483220B0046D64B /* GameController.swift in Sources */,
 				40C2147C247EEE9B007B7630 /* MemeThingError.swift in Sources */,
 				40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */,
 				4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */,
+				40A777EE24896A4500ADBB82 /* GamesListTableViewController.swift in Sources */,
 				403936602486E684007C2601 /* FriendRequestController.swift in Sources */,
 				40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */,
 				401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */,
