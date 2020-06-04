@@ -99,4 +99,10 @@ class MemeController {
     }
     
     // MARK: - Notifications?
+    
+    // TODO: - subscribe to notifications for captions you created, in case you won
+    
+    // TODO: - receive a notification that your caption has won, update your points and update the game accordingly
+    
+    // TODO: - remove subscriptions to captions after receiving a response or when the game is over
 }

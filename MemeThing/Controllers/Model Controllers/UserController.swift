@@ -23,6 +23,9 @@ class UserController {
     // MARK: - Properties
     
     typealias resultHandler = (Result<Bool, MemeThingError>) -> Void
+    typealias resultHandlerWithObject = (resultTypeOne) -> Void
+    typealias resultTypeMany = Result<[User], MemeThingError>
+    typealias resultTypeOne = Result<User, MemeThingError>
     
     // MARK: - CRUD Methods
     
@@ -62,7 +65,7 @@ class UserController {
             let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
             
             // Fetch the user from the cloud
-            CKService.shared.read(predicate: compoundPredicate) { (result: Result<[User], MemeThingError>) in
+            CKService.shared.read(predicate: compoundPredicate) { (result: resultTypeMany) in
                 switch result {
                 case .success(let users):
                     // There should only be one user
@@ -95,7 +98,7 @@ class UserController {
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
         
         // Create the search predicate to look for all the user's friends
-        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[User], MemeThingError>) in
+        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: resultTypeMany) in
             switch result {
             case .success(let users):
                 // Save the list of friends to the source of truth
@@ -110,7 +113,7 @@ class UserController {
     }
     
     // Read (fetch) a search for another user
-    func searchFor(_ username: String, completion: @escaping (Result<User, MemeThingError>) -> Void) {
+    func searchFor(_ username: String, completion: @escaping resultHandlerWithObject) {
         // TODO: - allow searching based on screen name or based on partial username
         
         // Create the search predicate to only look for the given username
@@ -118,7 +121,7 @@ class UserController {
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
         
         // Fetch the user from the cloud
-        CKService.shared.read(predicate: compoundPredicate) { (result: Result<[User], MemeThingError>) in
+        CKService.shared.read(predicate: compoundPredicate) { (result: resultTypeMany) in
             switch result {
             case .success(let users):
                 // There should only be one user with that username
@@ -174,7 +177,7 @@ class UserController {
         user.friendsReferences.append(friendReference)
         
         // Fetch the friend from the reference
-        CKService.shared.read(reference: friendReference) { [weak self] (result: Result<User, MemeThingError>) in
+        CKService.shared.read(reference: friendReference) { [weak self] (result: resultTypeOne) in
             switch result {
             case .success(let friend):
                 // Save the friend to the source of truth
@@ -184,7 +187,7 @@ class UserController {
                 } else {
                     self?.usersFriends = [friend]
                 }
-                print("got here to \(#function) and usersFriends SoT should now be updated, count is now \(self?.usersFriends?.count)")
+                print("got here to \(#function) and usersFriends SoT should now be updated, count is now \(String(describing: self?.usersFriends?.count))")
                 // Tell the tableview in the friends list to update
                 let notification = Notification(name: friendsUpdate)
                 NotificationCenter.default.post(notification)

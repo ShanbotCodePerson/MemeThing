@@ -49,9 +49,6 @@ class FriendsListTableViewController: UITableViewController {
         
         // Listen for notifications telling the tableview to reload its data
         NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: friendsUpdate, object: nil)
-        
-        // TODO: -delete this later
-//        FriendRequestController.shared.receiveResponseToFriendRequest()
     }
     
     // MARK: - Helper Methods
