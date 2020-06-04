@@ -17,7 +17,7 @@ class UserController {
     
     // MARK: - Source of Truth
     
-    var currentUser: User?
+    var currentUser: User? { didSet { setUpUser() } }
     var usersFriends: [User]?
     
     // MARK: - Properties
@@ -69,8 +69,6 @@ class UserController {
                     guard let user = users.first else { return completion(.failure(.noUserFound)) }
                     // Save the user to the source of truth and set up notifications for friend requests
                     self?.currentUser = user
-                    FriendRequestController.shared.subscribeToFriendRequests()
-                    FriendRequestController.shared.subscribeToFriendRequestResponses()
                     return completion(.success(true))
                 case .failure(let error):
                    // Print and return the error
@@ -186,6 +184,10 @@ class UserController {
                 } else {
                     self?.usersFriends = [friend]
                 }
+                print("got here to \(#function) and usersFriends SoT should now be updated, count is now \(self?.usersFriends?.count)")
+                // Tell the tableview in the friends list to update
+                let notification = Notification(name: friendsUpdate)
+                NotificationCenter.default.post(notification)
             case .failure(let error):
                 // Print the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -211,7 +213,7 @@ class UserController {
         }
     }
     
-    // MARK: - Helper Method
+    // MARK: - Helper Methods
     
     // Get the apple user reference of the user from their phone
     func fetchAppleUserReference(completion: @escaping (CKRecord.Reference?) -> Void) {
@@ -228,4 +230,11 @@ class UserController {
             return completion(reference)
         }
 }
+    
+    // Set up all the necessary notification subscriptions for the user
+    func setUpUser() {
+        FriendRequestController.shared.subscribeToFriendRequests()
+        FriendRequestController.shared.subscribeToFriendRequestResponses()
+        GameController.shared.subscribeToGameInvitations()
+    }
 }

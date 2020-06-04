@@ -45,14 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
-        // Parse the notification data to find out what type of notification it is
-        guard let aps = userInfo["aps"] as? NSDictionary,
-            let category = aps["category"] as? String,
-            let notificationType = NotificationHelper.Category(rawValue: category)
-            else { return }
-        
         // Handle the notification
-        NotificationHelper.processNotification(with: notificationType)
+        NotificationHelper.processNotification(withData: userInfo)
     }
 }
 
