@@ -8,9 +8,21 @@
 
 import UIKit
 
-class CaptionViewController: UIViewController {
+class CaptionViewController: UIViewController, HasGameObject {
+    
+    // MARK: - Outlets
+    
+    // MARK: - Properties
+    
+    var game: Game?
+    
+    // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    // MARK: - Set Up UI
+    
+    // MARK: - Actions
 }

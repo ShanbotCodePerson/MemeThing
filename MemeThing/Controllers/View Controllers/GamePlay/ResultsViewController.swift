@@ -8,9 +8,21 @@
 
 import UIKit
 
-class ResultsViewController: UIViewController {
+class ResultsViewController: UIViewController, HasGameObject {
+    
+    // MARK: - Outlets
+    
+    // MARK: - Properties
+    
+    var game: Game?
+    
+    // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    // MARK: - Set Up UI
+    
+    // MARK: - Actions
 }

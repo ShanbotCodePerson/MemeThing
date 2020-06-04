@@ -43,24 +43,20 @@ class InviteFriendsTableViewController: UITableViewController {
     
     @IBAction func startGameButtonTapped(_ sender: UIButton) {
         // Get the list of selected players
+        // TODO: - display an alert if user hasn't selected anything
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
-        let friends = indexPaths.compactMap({ UserController.shared.usersFriends?[$0.row] })
-        
+        let friends = indexPaths.compactMap { UserController.shared.usersFriends?[$0.row] }
+
         // TODO: - check that enough players are selected
-        
+
         // Create the game object, thus saving it to the cloud and automatically alerting the selected players
         GameController.shared.newGame(players: friends) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let game):
-                    print("got here to \(#function) and seems to have created the game successfully")
-                    
                     // Transition to the waiting view, passing along the reference to the current game
-                    let storyboard = UIStoryboard(name: StoryboardNames.waitingView, bundle: nil)
-                    guard let waitingVC = storyboard.instantiateInitialViewController() as? WaitingViewController else { return }
-                    waitingVC.game = game
-                    waitingVC.modalPresentationStyle = .fullScreen
-                    self?.present(waitingVC, animated: true)
+                    print("got here to \(#function) and seems to have created the game successfully")
+                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                 case .failure(let error):
                     // TODO: - better error handling here
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

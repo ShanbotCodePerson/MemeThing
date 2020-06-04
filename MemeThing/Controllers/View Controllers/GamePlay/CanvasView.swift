@@ -14,7 +14,7 @@ class CanvasView: UIView {
     
     var lines: [[CGPoint]] = [[]]
     
-    // MARK: - Initializer
+    // MARK: - Initializers
     
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -8,16 +8,16 @@
 
 import UIKit
 
-class WaitingViewController: UIViewController {
-    
-    // MARK: - Properties
-    
-    var game: Game?
+class WaitingViewController: UIViewController, HasGameObject {
     
     // MARK: - Outlets
     
     @IBOutlet weak var waitingLabel: UILabel!
     @IBOutlet weak var waitingForTableView: UITableView!
+    
+    // MARK: - Properties
+       
+    var game: Game?
     
     // MARK: - Lifecycle Methods
 
@@ -28,12 +28,18 @@ class WaitingViewController: UIViewController {
         setUpViews()
         
         // Set up the observers to listen for notifications telling the view to reload its data
-        NotificationCenter.default.addObserver(self, selector: #selector(setUpViews), name: playerRespondedToGameInvite, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(setUpViews), name: playerSentCaption, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(test(_:)), name: playerRespondedToGameInvite, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(test(_:)), name: playerSentCaption, object: nil)
         // TODO: - either create one notification name or separate into different functionality to respond to these notifications
     }
     
     // MARK: - Set Up UI
+    
+    @objc func test(_ sender: NSNotification) {
+        guard let gameID = sender.userInfo?["gameID"] as? String,
+            gameID == game?.recordID.recordName
+            else { return }
+    }
     
     @objc func setUpViews() {
         guard let game = game else { return }
@@ -55,10 +61,7 @@ class WaitingViewController: UIViewController {
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        let storyboard = UIStoryboard(name: "MainMenu", bundle: nil)
-        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
-        initialVC.modalPresentationStyle = .fullScreen
-        self.present(initialVC, animated: true)
+        transitionToStoryboard(named: StoryboardNames.mainMenu)
     }
 }
 

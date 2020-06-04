@@ -8,11 +8,15 @@
 
 import UIKit
 
-class DrawingViewController: UIViewController {
+class DrawingViewController: UIViewController, HasGameObject {
     
     // MARK: - Outlets
     
     @IBOutlet weak var canvasView: CanvasView!
+    
+    // MARK: - Properties
+    
+    var game: Game?
     
     // MARK: - Lifecycle Methods
     
@@ -20,13 +24,12 @@ class DrawingViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    // MARK: - Set Up UI
+    
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        let storyboard = UIStoryboard(name: "MainMenu", bundle: nil)
-        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
-        initialVC.modalPresentationStyle = .fullScreen
-        self.present(initialVC, animated: true)
+        transitionToStoryboard(named: StoryboardNames.mainMenu)
     }
     
     @IBAction func undoButtonTapped(_ sender: UIButton) {
@@ -34,5 +37,6 @@ class DrawingViewController: UIViewController {
     }
     
     @IBAction func sendButtonTapped(_ sender: UIButton) {
+        
     }
 }

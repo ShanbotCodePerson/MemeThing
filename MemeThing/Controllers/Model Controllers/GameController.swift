@@ -28,33 +28,30 @@ class GameController {
     
     // Create a new game
     func newGame(players: [User], completion: @escaping resultHandlerWithObject) {
-        // Get the reference for the current user
-        UserController.shared.fetchAppleUserReference { [weak self] (reference) in
-            guard let reference = reference else { return completion(.failure(.noUserFound)) }
-            
-            // Create the new game with the current user as the default lead player
-            var playerReferences = players.map { $0.reference }
-            playerReferences.insert(reference, at: 0)
-            let playersNames = players.map { $0.screenName }
-            let game = Game(players: playerReferences, playersNames: playersNames, leadPlayer: reference)
-            
-            // Save the game to the cloud
-            CKService.shared.create(object: game) { (result) in
-                switch result {
-                case .success(let game):
-                    // Update the source of truth
-                    if var currentGames = self?.currentGames {
-                        currentGames.append(game)
-                        self?.currentGames = currentGames
-                    } else {
-                        self?.currentGames = [game]
-                    }
-                    return completion(.success(game))
-                case .failure(let error):
-                    // Print and return the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(error))
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Create the new game with the current user as the default lead player
+        var playerReferences = players.map { $0.reference }
+        playerReferences.insert(currentUser.reference, at: 0)
+        let playersNames = players.map { $0.screenName }
+        let game = Game(players: playerReferences, playersNames: playersNames, leadPlayer: currentUser.reference)
+        
+        // Save the game to the cloud
+        CKService.shared.create(object: game) { [weak self] (result) in
+            switch result {
+            case .success(let game):
+                // Update the source of truth
+                if var currentGames = self?.currentGames {
+                    currentGames.append(game)
+                    self?.currentGames = currentGames
+                } else {
+                    self?.currentGames = [game]
                 }
+                return completion(.success(game))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
             }
         }
     }
@@ -227,11 +224,22 @@ class GameController {
     
     // Receive a notification that you've been invited to a game
     func receiveInvitationToGame(withID recordID: CKRecord.ID) {
-        // TODO: - show an alert to the user
-        // TODO: - fetch the game record
-        // TODO: - add it to the source of truth
-        // TODO: - tell the table view list of current games to update itself
         print("got here to \(#function)")
+        
+        // TODO: - show an alert to the user
+        
+        // Fetch the game record from the cloud
+        CKService.shared.read(recordID: recordID) { (result: Result<Game, MemeThingError>) in
+            switch result {
+            case .success(let game):
+                print("temp")
+                // TODO: - add it to the source of truth
+                // TODO: - tell the table view list of current games to update itself
+            case .failure(let error):
+                // TODO: - better error handling here
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
     }
     
     // Accept or decline an invitation to a game
@@ -281,12 +289,15 @@ class GameController {
     
     // MARK: - Handle Game Updates
     
+    // TODO: - handle view transitions from view controllers? or conditional based on current view?
+    // TODO: - think about cases where user is actively playing multiple games at once - how to navigate?
+    
     // Player status changed - accepted game invite
     func waitingForPlayers(for game: Game) {
         print("got here to \(#function)")
         
         // Tell the waiting view to update to reflect the player's response
-        NotificationCenter.default.post(Notification(name: playerRespondedToGameInvite))
+        NotificationCenter.default.post(Notification(name: playerRespondedToGameInvite, userInfo: ["gameID" : game.recordID.recordName]))
         
         // Check to see if all the players have responded to the game invitation yet
         if game.allPlayersResponded {
@@ -333,7 +344,8 @@ class GameController {
             }
         } else {
             // Tell the waiting view to update to reflect a new caption being submitted
-            NotificationCenter.default.post(Notification(name: playerSentCaption))
+            // FIXME: - figure out passing objects
+            NotificationCenter.default.post(Notification(name: playerSentCaption, userInfo: ["gameID" : game.recordID.recordName]))
         }
     }
     // TODO: - when user sends a drawing, need to update game status to waiting for caption, set own status to .sentdrawing, save game to cloud
