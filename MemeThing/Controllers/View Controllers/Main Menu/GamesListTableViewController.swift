@@ -52,7 +52,8 @@ class GamesListTableViewController: UITableViewController {
         // Load the data, if it hasn't been loaded already
         loadData()
         
-        // TODO: - add observer to update data
+        // Set up the observer to listen for notifications telling the view to reload its data
+//        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: , object: nil)
     }
     
     // MARK: - Helper Methods

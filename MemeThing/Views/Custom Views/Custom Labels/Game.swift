@@ -28,13 +28,13 @@ class Game: CKCompatible {
     // MARK: - Properties
     
     // Game properties
-    private var players: [CKRecord.Reference]
+    var players: [CKRecord.Reference]
     var playersNames: [String]
-    private var playersStatus: [PlayerStatus]
+    var playersStatus: [PlayerStatus]
     private var playersPoints: [Int]
     var leadPlayer: CKRecord.Reference
     var memes: [CKRecord.Reference]? // FIXME: -should this be a reference or list of meme objects?
-    let pointsToWin: Int
+    private let pointsToWin: Int
     var gameStatus: GameStatus
     
     // CloudKit properties
@@ -51,6 +51,23 @@ class Game: CKCompatible {
         case quit
         case sentDrawing
         case sentCaption
+        
+        var asString: String {
+            switch self {
+            case .accepted:
+                return "In Game"
+            case .denied:
+                return "Declined Invitation"
+            case .invited:
+                return "Waiting for Response"
+            case .quit:
+                return "Quit Game"
+            case .sentCaption:
+                return "Submitted Caption"
+            case .sentDrawing:
+                return "Submitted Drawing"
+            }
+        }
     }
     
     // Game Status

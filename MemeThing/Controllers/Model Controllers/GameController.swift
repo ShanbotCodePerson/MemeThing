@@ -27,7 +27,7 @@ class GameController {
     // MARK: - CRUD Methods
     
     // Create a new game
-    func newGame(players: [User], completion: @escaping resultHandler) {
+    func newGame(players: [User], completion: @escaping resultHandlerWithObject) {
         // Get the reference for the current user
         UserController.shared.fetchAppleUserReference { [weak self] (reference) in
             guard let reference = reference else { return completion(.failure(.noUserFound)) }
@@ -49,7 +49,7 @@ class GameController {
                     } else {
                         self?.currentGames = [game]
                     }
-                    return completion(.success(true))
+                    return completion(.success(game))
                 case .failure(let error):
                     // Print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -117,14 +117,9 @@ class GameController {
         }
     }
     
-    // TODO: - Update a game with new data of any sort? separate functions for each? different types of updates?
-    
-    // Update a game's status
-    func updateStatus(of game: Game, to status: Game.GameStatus, completion: @escaping resultHandler) {
-        // Update the game's status
-        game.gameStatus = status
-        
-        // Save the changes to the cloud
+    // Update a game
+    func update(_ game: Game, completion: @escaping resultHandler) {
+        // Save the updated game to the cloud
         CKService.shared.update(object: game) { (result) in
             switch result {
             case .success(_):
@@ -136,6 +131,15 @@ class GameController {
                 return completion(.failure(error))
             }
         }
+    }
+    
+    // Update a game's status
+    func updateStatus(of game: Game, to status: Game.GameStatus, completion: @escaping resultHandler) {
+        // Update the game's status
+        game.gameStatus = status
+        
+        // Save the changes to the cloud
+        update(game, completion: completion)
     }
     
     // Delete a game when it's finished
@@ -279,64 +283,139 @@ class GameController {
     
     // Player status changed - accepted game invite
     func waitingForPlayers(for game: Game) {
-        // TODO: - update the waiting view to reflect the player's response
-        // TODO: - check if all players have responded to the game invite yet
-        // TODO: - if all have responded:
-            // TODO: - change game status to waitingfordrawing
-            // TODO: - save updated game to cloud
         print("got here to \(#function)")
+        
+        // Tell the waiting view to update to reflect the player's response
+        NotificationCenter.default.post(Notification(name: playerRespondedToGameInvite))
+        
+        // Check to see if all the players have responded to the game invitation yet
+        if game.allPlayersResponded {
+            // Update the game's status and save the change to the cloud
+            updateStatus(of: game, to: .waitingForDrawing) { (result) in
+                switch result {
+                case .success(_):
+                    // TODO: - handle this better
+                    print("seems like game updated saved successfully")
+                case .failure(let error):
+                    // TODO: - better error handling, present alert or something
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
+            }
+        }
+        
         // TODO: - display a loading icon while the views load?
     }
     
     // Round started
     func newRoundStarted(for game: Game) {
+        print("got here to \(#function)")
+        
         // TODO: - if lead player, change view to drawing view
         // TODO: - else, change view to updated waiting view
-        print("got here to \(#function)")
     }
     
     // Either the drawing has just been sent or a caption has been received
     func drawingSent(for game: Game) {
-        // TODO: - check if all the captions have been received yet
-        // TODO: - if not all captions received yet
-            // TODO: - if lead player, update waiting view to show how many players you're waiting for
-            // TODO: - else, change view to waiting view
-        // TODO: - if all captions received:
-            // TODO: - update game status to waitingforresult
-            // TODO: - save updated game to cloud
         print("got here to \(#function)")
+        
+        // Check to see if all the captions have been received yet
+        if game.allCaptionsSubmitted {
+            // Update the game's status and save the change to the cloud
+            updateStatus(of: game, to: .waitingForResult) { (result) in
+                switch result {
+                case .success(_):
+                    // TODO: - handle this better
+                    print("seems like game updated saved successfully")
+                case .failure(let error):
+                    // TODO: - better error handling, present alert or something
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
+            }
+        } else {
+            // Tell the waiting view to update to reflect a new caption being submitted
+            NotificationCenter.default.post(Notification(name: playerSentCaption))
+        }
     }
     // TODO: - when user sends a drawing, need to update game status to waiting for caption, set own status to .sentdrawing, save game to cloud
+    // TODO: - when a user submits a caption, should update own status to sentcaption, save game to cloud, and should transition to waiting view themselves
     // So all the above has been done by the time the function drawingSent() has been called
     
     // All the captions have been received
     func receivedAllCaptions(for game: Game) {
-        // TODO: - show results page (leader has button to choose winner, otherwise same for all)
         print("got here to \(#function)")
+        // TODO: - show results page (leader has button to choose winner, otherwise same for all)
     }
     
     // Winning caption selected
     func winningCaptionSelected(for game: Game) {
-        // TODO: - check if there's an overall winner of the game yet
-        // TODO: - if winner of game
-            // TODO: - update status of game to gameover
-            // TODO: - save updated game to cloud
-        // TODO: - else if no winner yet
-            // TODO: - update game status to waitingfordrawing
-            // TODO: - update leadplayer to next player in line
-            // TODO: - update all (active) players to .accepted status
-            // TODO: - save updated game to cloud
         print("got here to \(#function)")
+        
+        // Check to see if there's an overall winner of the game yet
+        if game.gameWinner != nil {
+            // Update the game's status and save the change to the cloud
+            updateStatus(of: game, to: .gameOver) { (result) in
+                switch result {
+                case .success(_):
+                    // TODO: - handle this better
+                    print("seems like game updated saved successfully")
+                case .failure(let error):
+                    // TODO: - better error handling, present alert or something
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
+            }
+        } else {
+            // Update the game's status
+            game.gameStatus = .waitingForDrawing
+            
+            // Increment the lead player, looping back to the beginning if neccessry
+            guard var index = game.players.firstIndex(of: game.leadPlayer) else { return }
+            index = (index + 1) % game.players.count
+            
+            // Reset the status of all the (active) players
+            for index in 0..<game.playersStatus.count {
+                if game.playersStatus[index] == .sentCaption || game.playersStatus[index] == .sentDrawing {
+                    game.playersStatus[index] = .accepted
+                }
+            }
+            
+            // Save the updated game to the cloud
+            update(game) { (result) in
+                switch result {
+                case .success(_):
+                    // TODO: - handle this better
+                    print("seems like game updated saved successfully")
+                case .failure(let error):
+                    // TODO: - better error handling, present alert or something
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
+            }
+        }
     }
     // TODO: - when player selects a winner, need to update that in meme's data, update user points in user object and game object, update game status to waitingfornextround, save changes to cloud
     // So all the above has been done by the time the function winningCaptionSelected() has been called
     
     // Game over
     func handleFinish(for game: Game) {
+        print("got here to \(#function)")
+        
         // TODO: - display results to users
         // I dunno some fancy animation or something make it look pretty
-        // TODO: - delete game object
+        
+        // Delete the game from the cloud
+        finishGame(game) { (result) in
+            switch result {
+            case .success(_):
+                // TODO: - handle this better
+
+                // TODO: - remove both subscriptions (update and delete) to the game at this point
+                print("seems like game deleted saved successfully")
+            case .failure(let error):
+                // TODO: - better error handling, present alert or something
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
+        // TODO: - make sure this also deletes all referenced memes and caption objects
+        
         // TODO: - return all users to main menu view
-        print("got here to \(#function)")
     }
 }

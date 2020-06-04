@@ -205,8 +205,7 @@ class FriendRequestController {
                 }
                 print("pendingrequests SoT should now be updated, count is now \(String(describing: self?.pendingFriendRequests?.count))")
                 // Tell the friends table view to reload its data
-                let notification = Notification(name: friendsUpdate)
-                NotificationCenter.default.post(notification)
+                NotificationCenter.default.post(Notification(name: friendsUpdate))
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
@@ -255,7 +254,6 @@ class FriendRequestController {
         }
         
         // Tell the tableview in the friends list to update
-        let notification = Notification(name: friendsUpdate)
-        NotificationCenter.default.post(notification)
+        NotificationCenter.default.post(Notification(name: friendsUpdate))
     }
 }

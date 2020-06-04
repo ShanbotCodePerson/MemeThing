@@ -69,4 +69,6 @@ class NotificationHelper {
 
 let friendsUpdate = Notification.Name("friendsUpdate")
 let newGameInvitation = Notification.Name("newGameInvitation")
+let playerRespondedToGameInvite = Notification.Name("playerRespondedToGameInvite")
+let playerSentCaption = Notification.Name("playerSentCaption")
 //let gameUpdate = Notification.Name("gameUpdate")
