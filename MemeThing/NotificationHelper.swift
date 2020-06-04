@@ -18,6 +18,7 @@ class NotificationHelper {
         case friendRequestResponse = "FRIEND_REQUEST_RESPONSE"
         case newGameInvitation = "NEW_GAME_INVITATION"
         case gameUpdate = "GAME_UPDATE"
+        case gameEnded = "GAME_ENDED"
     }
     
     // MARK: - Process Notifications
@@ -29,7 +30,7 @@ class NotificationHelper {
             let category = ckNotification.category,
             let notificationType = NotificationHelper.Category(rawValue: category),
             let recordIDChanged = ckNotification.recordID
-//            let recordFields = ckNotification.recordFields
+//            let recordFields = ckNotification.recordFields // TODO: - uncomment this if using desiredKeys in notifications
             else { return }
         
         print("got here to \(#function) and category is \(category) and recordID is \(recordIDChanged)")
@@ -38,25 +39,28 @@ class NotificationHelper {
         case .newFriendRequest:
             print("received new friend request")
             // TODO: - display an alert if app is open?
-            // TODO: - refresh tableview if viewing friends list? how to do that?
+            // TODO: - have an alert waiting next time app is opened?
             FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged)
         case .friendRequestResponse:
             print("received response to friend request")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            // TODO: - refresh tableview if viewing friends list? how to do that?
             FriendRequestController.shared.receiveResponseToFriendRequest(withID: recordIDChanged)
         case .newGameInvitation:
             print("received new game invitation")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            // TODO: - refresh tableview if viewing resume games list?
-            GameController.shared.receiveGameInvitation()
+            GameController.shared.receiveInvitationToGame(withID: recordIDChanged)
         case .gameUpdate:
             print("received update to game")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            // TODO: - refresh tableview if viewing resume games list?
+            GameController.shared.receiveUpdateToGame(withID: recordIDChanged)
+        case .gameEnded:
+            print("received notification that game ended")
+            // TODO: - display an alert if app is open?
+            // TODO: - have an alert waiting next time app is opened?
+            GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged)
         }
     }
 }
@@ -65,4 +69,6 @@ class NotificationHelper {
 
 let friendsUpdate = Notification.Name("friendsUpdate")
 let newGameInvitation = Notification.Name("newGameInvitation")
-let gameUpdate = Notification.Name("gameUpdate")
+let playerRespondedToGameInvite = Notification.Name("playerRespondedToGameInvite")
+let playerSentCaption = Notification.Name("playerSentCaption")
+//let gameUpdate = Notification.Name("gameUpdate")

@@ -23,6 +23,8 @@ class FriendRequestController {
     // MARK: - Properties
     
     typealias resultHandler = (Result<Bool, MemeThingError>) -> Void
+    typealias resultTypeMany = Result<[FriendRequest], MemeThingError>
+    typealias resultTypeOne = Result<FriendRequest, MemeThingError>
     
     // MARK: - CRUD Methods
     
@@ -36,7 +38,7 @@ class FriendRequestController {
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicateToSelf, predicateNoResponse])
         
         // Fetch the data from the cloud
-        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[FriendRequest], MemeThingError>) in
+        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: resultTypeMany) in
             switch result {
             case .success(let friendRequests):
                 // Save the list of friend requests to the source of truth
@@ -60,7 +62,7 @@ class FriendRequestController {
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicateFromSelf, predicateNoResponse])
         
         // Fetch the data from the cloud
-        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[FriendRequest], MemeThingError>) in
+        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: resultTypeMany) in
             switch result {
             case .success(let friendRequests):
                 // Save the list of friend requests to the source of truth
@@ -190,7 +192,7 @@ class FriendRequestController {
         print("got here to \(#function) and \(recordID)")
         
         // Fetch the new friend request from the cloud
-        CKService.shared.read(recordID: recordID) { [weak self] (result: Result<FriendRequest, MemeThingError>) in
+        CKService.shared.read(recordID: recordID) { [weak self] (result: resultTypeOne) in
             switch result {
             case .success(let friendRequest):
                 print("in completion and friend request is \(friendRequest)")
@@ -201,10 +203,9 @@ class FriendRequestController {
                 } else {
                     self?.pendingFriendRequests = [friendRequest]
                 }
-                print("pendingrequests SoT should now be updated, count is now \(self?.pendingFriendRequests?.count)")
+                print("pendingrequests SoT should now be updated, count is now \(String(describing: self?.pendingFriendRequests?.count))")
                 // Tell the friends table view to reload its data
-                let notification = Notification(name: friendsUpdate)
-                NotificationCenter.default.post(notification)
+                NotificationCenter.default.post(Notification(name: friendsUpdate))
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
@@ -214,7 +215,7 @@ class FriendRequestController {
     func receiveResponseToFriendRequest(withID recordID: CKRecord.ID) {
         print("got here to \(#function)")
         // Fetch the friend request record from the cloud
-        CKService.shared.read(recordID: recordID) { [weak self] (result: Result<FriendRequest, MemeThingError>) in
+        CKService.shared.read(recordID: recordID) { [weak self] (result: resultTypeOne) in
             switch result {
             case .success(let friendRequest):
                 print("in completion and friend request is \(friendRequest)")
@@ -246,14 +247,13 @@ class FriendRequestController {
                 // Remove the friend request from the source of truth
                 guard let index = self?.outgoingFriendRequests?.firstIndex(of: friendRequest) else { return }
                 self?.outgoingFriendRequests?.remove(at: index)
-                print("should have removed the friend request from the server and SoT, count is now \(self?.outgoingFriendRequests?.count)")
+                print("should have removed the friend request from the server and SoT, count is now \(String(describing: self?.outgoingFriendRequests?.count))")
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
         }
         
         // Tell the tableview in the friends list to update
-        let notification = Notification(name: friendsUpdate)
-        NotificationCenter.default.post(notification)
+        NotificationCenter.default.post(Notification(name: friendsUpdate))
     }
 }

@@ -22,35 +22,36 @@ class GameController {
     // MARK: - Properties
     
     typealias resultHandler = (Result<Bool, MemeThingError>) -> Void
+    typealias resultHandlerWithObject = (Result<Game, MemeThingError>) -> Void
     
     // MARK: - CRUD Methods
     
     // Create a new game
-    func newGame(players: [User], completion: @escaping resultHandler) {
-        // Get the reference for the current user
-        UserController.shared.fetchAppleUserReference { [weak self] (reference) in
-            guard let reference = reference else { return completion(.failure(.noUserFound)) }
-            
-            // Create the new game with the current user as the default lead player
-            let game = Game(players: players.map({ $0.reference }), leadPlayer: reference)
-            
-            // Save the game to the cloud
-            CKService.shared.create(object: game) { (result) in
-                switch result {
-                case .success(let game):
-                    // Update the source of truth
-                    if var currentGames = self?.currentGames {
-                        currentGames.append(game)
-                        self?.currentGames = currentGames
-                    } else {
-                        self?.currentGames = [game]
-                    }
-                    return completion(.success(true))
-                case .failure(let error):
-                    // Print and return the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(error))
+    func newGame(players: [User], completion: @escaping resultHandlerWithObject) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Create the new game with the current user as the default lead player
+        var playerReferences = players.map { $0.reference }
+        playerReferences.insert(currentUser.reference, at: 0)
+        let playersNames = players.map { $0.screenName }
+        let game = Game(players: playerReferences, playersNames: playersNames, leadPlayer: currentUser.reference)
+        
+        // Save the game to the cloud
+        CKService.shared.create(object: game) { [weak self] (result) in
+            switch result {
+            case .success(let game):
+                // Update the source of truth
+                if var currentGames = self?.currentGames {
+                    currentGames.append(game)
+                    self?.currentGames = currentGames
+                } else {
+                    self?.currentGames = [game]
                 }
+                return completion(.success(game))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
             }
         }
     }
@@ -63,8 +64,7 @@ class GameController {
             guard let reference = reference else { return completion(.failure(.noUserFound)) }
             
             // Create the query to only look for games where the current user is a player
-            // FIXME: - make sure this works
-            let predicate = NSPredicate(format: "%K IN %@", argumentArray: [reference, GameStrings.playersKey])
+            let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [reference, GameStrings.playersKey])
             let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
             
             // Fetch the data from the cloud
@@ -85,9 +85,9 @@ class GameController {
     }
     
     // Read (fetch) a particular game from a reference
-    func fetchGame(from reference: CKRecord.Reference, completion: @escaping resultHandler) {
-        // TODO: -
-        CKService.shared.read(reference: reference) { [weak self] (result: Result<Game, MemeThingError>) in
+    func fetchGame(from recordID: CKRecord.ID, completion: @escaping resultHandlerWithObject) {
+        // Fetch the data from the cloud
+        CKService.shared.read(recordID: recordID) { [weak self] (result: Result<Game, MemeThingError>) in
             switch result {
             case .success(let game):
                 // Update the source of truth
@@ -105,6 +105,22 @@ class GameController {
                     }
                 }
                 // Return the success
+                return completion(.success(game))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    // Update a game
+    func update(_ game: Game, completion: @escaping resultHandler) {
+        // Save the updated game to the cloud
+        CKService.shared.update(object: game) { (result) in
+            switch result {
+            case .success(_):
+                // Return the success
                 return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
@@ -120,17 +136,7 @@ class GameController {
         game.gameStatus = status
         
         // Save the changes to the cloud
-        CKService.shared.update(object: game) { (result) in
-            switch result {
-            case .success(_):
-                // Return the success
-                return completion(.success(true))
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
-        }
+        update(game, completion: completion)
     }
     
     // Delete a game when it's finished
@@ -151,17 +157,12 @@ class GameController {
     // MARK: - Subscribe to Notifications
     
     // Subscribe all players to notifications of invitations to games
-    // TODO: - need to call this from somewhere
     func subscribeToGameInvitations() {
         // TODO: - User defaults to track whether the subscription has already been saved
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Form the predicate to look for new games that include the current user in the players list
-        // TODO: - exclude ones created by self?
-//        let predicate = NSPredicate(format: "%K IN %@", argumentArray: [currentUser.recordID, GameStrings.playersKey])
-//        let predicate = NSPredicate(format: "%K CONTAINS[c] %@", argumentArray: [GameStrings.playersKey, currentUser.recordID])
         let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [currentUser.reference, GameStrings.playersKey])
-        // FIXME: - what's the correct predicate here?
         let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, options: [.firesOnRecordCreation])
         
         // Format the display of the notification
@@ -169,7 +170,6 @@ class GameController {
         notificationInfo.title = "New Game Invitation"
         notificationInfo.alertBody = "You have been invited to a new game on MemeThing"
         notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.desiredKeys = ["leadPlayer"] // TODO: - replace with actually useful data
         notificationInfo.category = NotificationHelper.Category.newGameInvitation.rawValue
         subscription.notificationInfo = notificationInfo
         
@@ -182,7 +182,21 @@ class GameController {
     
     // Subscribe all players to notifications of games they're participating in being deleted
     func subscribeToGameEndings(for game: Game) {
+        // Form the predicate to look for the specific game
+        let predicate = NSPredicate(format: "%K == %@", argumentArray: ["recordID", game.recordID])
+        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, options: [.firesOnRecordDeletion])
+        // FIXME: - use a subscriptionID so that the subscription can be deleted when the game is over
         
+        // Format the display of the notification
+        let notificationInfo = CKQuerySubscription.NotificationInfo()
+        notificationInfo.title = "Game Ended"
+        notificationInfo.alertBody = "Your game on MemeThing has finished"
+        notificationInfo.shouldSendContentAvailable = true
+        notificationInfo.category = NotificationHelper.Category.gameEnded.rawValue
+        subscription.notificationInfo = notificationInfo
+        
+        // Save the subscription to the cloud
+        CKService.shared.publicDB.save(subscription) { (_, _) in }
     }
     
     // Subscribe all players to notifications of all updates to games they're participating in
@@ -190,15 +204,16 @@ class GameController {
         // TODO: - User defaults to track whether the subscription has already been saved
         
         // Form the predicate to look for the specific game
-        // TODO: - exclude ones created by self?
         let predicate = NSPredicate(format: "%K == %@", argumentArray: ["recordID", game.recordID])
         let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, options: [.firesOnRecordUpdate])
+        // FIXME: - use a subscriptionID so that the subscription can be deleted when the game is over
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
         notificationInfo.title = "New Game Invitation"
         notificationInfo.alertBody = "You have been invited to a new game on MemeThing"
-        notificationInfo.category = NotificationHelper.Category.newGameInvitation.rawValue
+        notificationInfo.shouldSendContentAvailable = true
+        notificationInfo.category = NotificationHelper.Category.gameUpdate.rawValue
         subscription.notificationInfo = notificationInfo
         
         // Save the subscription to the cloud
@@ -208,24 +223,211 @@ class GameController {
     // MARK: - Receive Notifications
     
     // Receive a notification that you've been invited to a game
-    func receiveGameInvitation() {
-        // TODO: -if accepted, subscribe to updates for the game
+    func receiveInvitationToGame(withID recordID: CKRecord.ID) {
         print("got here to \(#function)")
+        
+        // TODO: - show an alert to the user
+        
+        // Fetch the game record from the cloud
+        CKService.shared.read(recordID: recordID) { (result: Result<Game, MemeThingError>) in
+            switch result {
+            case .success(let game):
+                print("temp")
+                // TODO: - add it to the source of truth
+                // TODO: - tell the table view list of current games to update itself
+            case .failure(let error):
+                // TODO: - better error handling here
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
+    }
+    
+    // Accept or decline an invitation to a game
+    func respondToInvitation(to game: Game, accept: Bool, completion: @escaping resultHandler) {
+        // TODO: - make the change to the game object
+        // TODO: - save the updates to the cloud
+        // TODO: - if declined, remove the game from the source of truth
+        // TODO: - if accepted, subscribe to updates and ending notifications for the game
+        // TODO: - tell the table view list of current games to update itself
     }
     
     // Receive a notification that a game has ended
+    func receiveNotificationGameEnded(withID recordID: CKRecord.ID) {
+        // TODO: - display an alert to the user
+        // TODO: - remove the game from the source of truth
+        // TODO: - remove the subscriptions to notifications for the game
+        // TODO: - tell the table view list of current games to update itself
+    }
     
     // Receive a notification that a game has been updated
+    func receiveUpdateToGame(withID recordID: CKRecord.ID) {
+        // Fetch the game object from the cloud
+        fetchGame(from: recordID) { [weak self] (result) in
+            switch result {
+            case .success(let game):
+                // Call the relevant helper method based on the status of the game
+                switch game.gameStatus {
+                case .waitingForPlayers:
+                    self?.waitingForPlayers(for: game)
+                case .waitingForDrawing:
+                    self?.newRoundStarted(for: game)
+                case .waitingForCaptions:
+                    self?.drawingSent(for: game)
+                case .waitingForResult:
+                    self?.receivedAllCaptions(for: game)
+                case .waitingForNextRound:
+                    self?.winningCaptionSelected(for: game)
+                case .gameOver:
+                    self?.handleFinish(for: game)
+                }
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                // TODO: - better error handling  - display an alert to the user?
+            }
+        }
+    }
     
-    // MARK: - Respond to Game Updates
+    // MARK: - Handle Game Updates
+    
+    // TODO: - handle view transitions from view controllers? or conditional based on current view?
+    // TODO: - think about cases where user is actively playing multiple games at once - how to navigate?
     
     // Player status changed - accepted game invite
+    func waitingForPlayers(for game: Game) {
+        print("got here to \(#function)")
+        
+        // Tell the waiting view to update to reflect the player's response
+        NotificationCenter.default.post(Notification(name: playerRespondedToGameInvite, userInfo: ["gameID" : game.recordID.recordName]))
+        
+        // Check to see if all the players have responded to the game invitation yet
+        if game.allPlayersResponded {
+            // Update the game's status and save the change to the cloud
+            updateStatus(of: game, to: .waitingForDrawing) { (result) in
+                switch result {
+                case .success(_):
+                    // TODO: - handle this better
+                    print("seems like game updated saved successfully")
+                case .failure(let error):
+                    // TODO: - better error handling, present alert or something
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
+            }
+        }
+        
+        // TODO: - display a loading icon while the views load?
+    }
     
-    // Meme pushed
+    // Round started
+    func newRoundStarted(for game: Game) {
+        print("got here to \(#function)")
+        
+        // TODO: - if lead player, change view to drawing view
+        // TODO: - else, change view to updated waiting view
+    }
     
-    // Player status changed - sent caption
+    // Either the drawing has just been sent or a caption has been received
+    func drawingSent(for game: Game) {
+        print("got here to \(#function)")
+        
+        // Check to see if all the captions have been received yet
+        if game.allCaptionsSubmitted {
+            // Update the game's status and save the change to the cloud
+            updateStatus(of: game, to: .waitingForResult) { (result) in
+                switch result {
+                case .success(_):
+                    // TODO: - handle this better
+                    print("seems like game updated saved successfully")
+                case .failure(let error):
+                    // TODO: - better error handling, present alert or something
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
+            }
+        } else {
+            // Tell the waiting view to update to reflect a new caption being submitted
+            // FIXME: - figure out passing objects
+            NotificationCenter.default.post(Notification(name: playerSentCaption, userInfo: ["gameID" : game.recordID.recordName]))
+        }
+    }
+    // TODO: - when user sends a drawing, need to update game status to waiting for caption, set own status to .sentdrawing, save game to cloud
+    // TODO: - when a user submits a caption, should update own status to sentcaption, save game to cloud, and should transition to waiting view themselves
+    // So all the above has been done by the time the function drawingSent() has been called
+    
+    // All the captions have been received
+    func receivedAllCaptions(for game: Game) {
+        print("got here to \(#function)")
+        // TODO: - show results page (leader has button to choose winner, otherwise same for all)
+    }
     
     // Winning caption selected
+    func winningCaptionSelected(for game: Game) {
+        print("got here to \(#function)")
+        
+        // Check to see if there's an overall winner of the game yet
+        if game.gameWinner != nil {
+            // Update the game's status and save the change to the cloud
+            updateStatus(of: game, to: .gameOver) { (result) in
+                switch result {
+                case .success(_):
+                    // TODO: - handle this better
+                    print("seems like game updated saved successfully")
+                case .failure(let error):
+                    // TODO: - better error handling, present alert or something
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
+            }
+        } else {
+            // Update the game's status
+            game.gameStatus = .waitingForDrawing
+            
+            // Increment the lead player, looping back to the beginning if neccessry
+            guard var index = game.players.firstIndex(of: game.leadPlayer) else { return }
+            index = (index + 1) % game.players.count
+            
+            // Reset the status of all the (active) players
+            for index in 0..<game.playersStatus.count {
+                if game.playersStatus[index] == .sentCaption || game.playersStatus[index] == .sentDrawing {
+                    game.playersStatus[index] = .accepted
+                }
+            }
+            
+            // Save the updated game to the cloud
+            update(game) { (result) in
+                switch result {
+                case .success(_):
+                    // TODO: - handle this better
+                    print("seems like game updated saved successfully")
+                case .failure(let error):
+                    // TODO: - better error handling, present alert or something
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
+            }
+        }
+    }
+    // TODO: - when player selects a winner, need to update that in meme's data, update user points in user object and game object, update game status to waitingfornextround, save changes to cloud
+    // So all the above has been done by the time the function winningCaptionSelected() has been called
     
-    // New round
+    // Game over
+    func handleFinish(for game: Game) {
+        print("got here to \(#function)")
+        
+        // TODO: - display results to users
+        // I dunno some fancy animation or something make it look pretty
+        
+        // Delete the game from the cloud
+        finishGame(game) { (result) in
+            switch result {
+            case .success(_):
+                // TODO: - handle this better
+
+                // TODO: - remove both subscriptions (update and delete) to the game at this point
+                print("seems like game deleted saved successfully")
+            case .failure(let error):
+                // TODO: - better error handling, present alert or something
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
+        // TODO: - make sure this also deletes all referenced memes and caption objects
+        
+        // TODO: - return all users to main menu view
+    }
 }

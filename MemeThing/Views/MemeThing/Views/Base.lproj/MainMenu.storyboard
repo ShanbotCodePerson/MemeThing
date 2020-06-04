@@ -30,6 +30,9 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QmY-Sk-EIK" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="114" width="331" height="106"/>
                                         <state key="normal" title="Resume Game"/>
+                                        <connections>
+                                            <segue destination="CEG-oA-vRa" kind="show" id="0hT-f5-v8d"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U25-wd-vr0" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="228" width="331" height="106"/>
@@ -381,7 +384,7 @@
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <state key="normal" title="Accept"/>
                                                             <connections>
-                                                                <action selector="friendRequestButtonTapped:" destination="ZM7-Q1-wT7" eventType="touchUpInside" id="21q-wX-kRF"/>
+                                                                <action selector="friendRequestButtonTapped:" destination="ZM7-Q1-wT7" eventType="touchUpInside" id="WyY-qX-Eie"/>
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" alpha="0.59999999999999998" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="krd-dB-ZTG">
@@ -389,7 +392,7 @@
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <state key="normal" title="Deny"/>
                                                             <connections>
-                                                                <action selector="friendRequestButtonTapped:" destination="ZM7-Q1-wT7" eventType="touchUpInside" id="DSe-kJ-EtK"/>
+                                                                <action selector="friendRequestButtonTapped:" destination="ZM7-Q1-wT7" eventType="touchUpInside" id="EBh-59-416"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
@@ -429,6 +432,93 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s7U-7b-c5f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="723" y="871"/>
+        </scene>
+        <!--Your Current Games-->
+        <scene sceneID="73X-fH-0Vj">
+            <objects>
+                <tableViewController id="CEG-oA-vRa" customClass="GamesListTableViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="rTW-CI-aHJ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="gameCell" rowHeight="82" id="Q2R-KI-GpJ" customClass="GameTableViewCell" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="82"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Q2R-KI-GpJ" id="TVI-9T-J3c">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="82"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="lfb-yj-H1P">
+                                            <rect key="frame" x="20.5" y="2" width="373" height="78"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3rG-hb-1Jh">
+                                                    <rect key="frame" x="0.0" y="0.0" width="373" height="30"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[main text]" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aha-4Z-yg0">
+                                                            <rect key="frame" x="0.0" y="0.0" width="240.5" height="30"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="hel-7E-9Gs">
+                                                            <rect key="frame" x="248.5" y="0.0" width="124.5" height="30"/>
+                                                            <subviews>
+                                                                <button opaque="NO" alpha="0.60000002384185791" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ebP-Lh-VSJ">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="61.5" height="30"/>
+                                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <state key="normal" title="Accept"/>
+                                                                    <connections>
+                                                                        <action selector="invitationResponseButtonTapped:" destination="Q2R-KI-GpJ" eventType="touchUpInside" id="rpw-oh-svL"/>
+                                                                    </connections>
+                                                                </button>
+                                                                <button opaque="NO" alpha="0.60000002384185791" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ULZ-SU-LtQ">
+                                                                    <rect key="frame" x="62.5" y="0.0" width="62" height="30"/>
+                                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <state key="normal" title="Deny"/>
+                                                                    <connections>
+                                                                        <action selector="invitationResponseButtonTapped:" destination="Q2R-KI-GpJ" eventType="touchUpInside" id="rVp-7B-Knc"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                </stackView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[secondary text]" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oqM-Uc-pZi">
+                                                    <rect key="frame" x="0.0" y="38" width="373" height="40"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <color key="backgroundColor" systemColor="systemGray4Color" red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstItem="hel-7E-9Gs" firstAttribute="width" secondItem="TVI-9T-J3c" secondAttribute="width" multiplier="0.3" id="95L-jD-veT"/>
+                                        <constraint firstItem="lfb-yj-H1P" firstAttribute="height" secondItem="TVI-9T-J3c" secondAttribute="height" multiplier="0.95" id="BiI-PB-RzK"/>
+                                        <constraint firstItem="lfb-yj-H1P" firstAttribute="centerY" secondItem="TVI-9T-J3c" secondAttribute="centerY" id="KU2-sB-hC9"/>
+                                        <constraint firstItem="lfb-yj-H1P" firstAttribute="centerX" secondItem="TVI-9T-J3c" secondAttribute="centerX" id="VcJ-Gf-iYC"/>
+                                        <constraint firstItem="lfb-yj-H1P" firstAttribute="width" secondItem="TVI-9T-J3c" secondAttribute="width" multiplier="0.9" id="woP-RF-0be"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="buttonStackView" destination="hel-7E-9Gs" id="8vo-wE-KjV"/>
+                                    <outlet property="mainTextLabel" destination="aha-4Z-yg0" id="aql-OL-sEL"/>
+                                    <outlet property="secondaryTextLabel" destination="oqM-Uc-pZi" id="cdw-gS-9R5"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="CEG-oA-vRa" id="ao0-qq-hv0"/>
+                            <outlet property="delegate" destination="CEG-oA-vRa" id="Dc1-7V-HuC"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Your Current Games" id="Syn-LM-hzb"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DvL-hK-gcW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1692.753623188406" y="870.53571428571422"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="jRk-6n-f2b">

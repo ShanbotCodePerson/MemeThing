@@ -8,7 +8,33 @@
 
 import UIKit
 
+// MARK: - Game Object Protocol
+
+protocol HasGameObject: UIViewController {
+    var game: Game? { get set }
+}
+
 extension UIViewController {
+    
+    // MARK: - Navigation
+    
+    // TODO: - find a better place to put these functions
+    func transitionToStoryboard(named: String) {
+        let storyboard = UIStoryboard(name: named, bundle: nil)
+        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
+        initialVC.modalPresentationStyle = .fullScreen
+        self.present(initialVC, animated: true)
+    }
+    
+    func transitionToStoryboard(named: String, with game: Game) {
+        let storyboard = UIStoryboard(name: named, bundle: nil)
+        guard let initialVC = storyboard.instantiateInitialViewController() as? HasGameObject else { return }
+        initialVC.game = game
+        initialVC.modalPresentationStyle = .fullScreen
+        self.present(initialVC, animated: true)
+    }
+    
+    // MARK: - Alerts
     
     // Present an alert with a simple dismiss button to display a message to the user
     func presentAlert(title: String, message: String) {
@@ -64,4 +90,15 @@ extension UIViewController {
         // Present the alert
         present(alertController, animated: true)
     }
+}
+
+// MARK: - String Constants
+
+// TODO: - find a better place to put this
+struct StoryboardNames  {
+    static let mainMenu = "MainMenu"
+    static let drawingView = "Drawing"
+    static let captionView = "AddCaption"
+    static let resultsView = "ViewResults"
+    static let waitingView = "Waiting"
 }
