@@ -33,6 +33,6 @@ class DrawingViewController: UIViewController {
         canvasView.undoDraw()
     }
     
-    @IBAction func sentButtonTapped(_ sender: UIButton) {
+    @IBAction func sendButtonTapped(_ sender: UIButton) {
     }
 }

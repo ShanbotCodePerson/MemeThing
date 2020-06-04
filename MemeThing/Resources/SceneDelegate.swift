@@ -28,21 +28,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
+        print("got here to \(#function)")
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         
         // Check for and handle any notifications that came in while the app was in the background
         UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
+            print("there are \(notifications.count) notifications")
             for notification in notifications {
-                // Parse the notification data to find out what type of notification it is
-                let category = notification.request.content.categoryIdentifier
-                let identifier = notification.request.identifier
-                guard let notificationType = NotificationHelper.Category(rawValue: category) else { return }
                 
+                // Extract the relevant data from the notification
+                let userInfo = notification.request.content.userInfo
+                 
                 // Handle the notification
-                NotificationHelper.processNotification(with: notificationType)
+                NotificationHelper.processNotification(withData: userInfo)
                 
                 // Remove the notification after it's been handled
+                let identifier = notification.request.identifier
                 UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
             }
         }

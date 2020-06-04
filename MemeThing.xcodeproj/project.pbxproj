@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401109882487FF7600E8FCE2 /* MemeImageView.swift */; };
+		4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4011098A24882AEE00E8FCE2 /* MemeController.swift */; };
 		4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365B2486B898007C2601 /* NotificationHelper.swift */; };
 		403936602486E684007C2601 /* FriendRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365F2486E684007C2601 /* FriendRequestController.swift */; };
 		4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039366124870328007C2601 /* InviteFriendsTableViewController.swift */; };
@@ -50,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		401109882487FF7600E8FCE2 /* MemeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeImageView.swift; sourceTree = "<group>"; };
+		4011098A24882AEE00E8FCE2 /* MemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeController.swift; sourceTree = "<group>"; };
 		4039365B2486B898007C2601 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationHelper.swift; path = MemeThing/NotificationHelper.swift; sourceTree = SOURCE_ROOT; };
 		4039365F2486E684007C2601 /* FriendRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestController.swift; sourceTree = "<group>"; };
 		4039366124870328007C2601 /* InviteFriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsTableViewController.swift; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 				40C21475247EE944007B7630 /* UserController.swift */,
 				4039365F2486E684007C2601 /* FriendRequestController.swift */,
 				40D003BA2483220B0046D64B /* GameController.swift */,
+				4011098A24882AEE00E8FCE2 /* MemeController.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 				40D003BB2483220B0046D64B /* GameController.swift in Sources */,
 				40C2147C247EEE9B007B7630 /* MemeThingError.swift in Sources */,
 				40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */,
+				4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */,
 				403936602486E684007C2601 /* FriendRequestController.swift in Sources */,
 				40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */,
 				401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */,

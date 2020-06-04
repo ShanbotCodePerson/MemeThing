@@ -37,15 +37,29 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Actions ?
     
     @IBAction func startGameButtonTapped(_ sender: UIButton) {
+        // Get the list of selected players
+        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
+        let friends = indexPaths.compactMap({ UserController.shared.usersFriends?[$0.row] })
+        
         // TODO: - check that enough players are selected
         
-        // TODO: - create the game object, send the invitations, etch
+        // TODO: - create the game object, send the invitations, etc
+        GameController.shared.newGame(players: friends) { (result) in
+            switch result {
+            case .success(_):
+                // TODO: - better response here
+                print("got here to \(#function) and seems to have created the game successfully")
+            case .failure(let error):
+                // TODO: - better error handling here
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
         
-        // Transition to the gameplay screen with the current user as the first lead player
-        let storyboard = UIStoryboard(name: "Drawing", bundle: nil)
-        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
-        initialVC.modalPresentationStyle = .fullScreen
-        self.present(initialVC, animated: true)
+//        // Transition to the gameplay screen with the current user as the first lead player
+//        let storyboard = UIStoryboard(name: "Drawing", bundle: nil)
+//        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
+//        initialVC.modalPresentationStyle = .fullScreen
+//        self.present(initialVC, animated: true)
     }
     
     // MARK: - Table view data source
@@ -62,10 +76,5 @@ class InviteFriendsTableViewController: UITableViewController {
         cell.detailTextLabel?.text = "Points: \(friend.points)"
 
         return cell
-    }
-    
-    // MARK: - Navigation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     }
 }

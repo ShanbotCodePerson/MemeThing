@@ -36,6 +36,7 @@ protocol CKServicing {
     func create<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func read<T: CKCompatible> (predicate: NSCompoundPredicate, completion: @escaping ArrayHandler<T>)
     func read<T: CKCompatible> (reference: CKRecord.Reference, completion: @escaping SingleItemHandler<T>)
+    func read<T: CKCompatible> (recordID: CKRecord.ID, completion: @escaping SingleItemHandler<T>)
     func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func delete<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<Bool>)
 }
@@ -84,8 +85,23 @@ extension CKServicing {
     }
     
     func read<T: CKCompatible> (reference: CKRecord.Reference, completion: @escaping SingleItemHandler<T>) {
-          // Fetch the data from the cloud
+        // Fetch the data from the cloud
         publicDB.fetch(withRecordID: reference.recordID) { (record, error) in
+            // Handle any errors
+            if let error = error { return completion(.failure(.ckError(error))) }
+            
+            // Unwrap the data
+            guard let record = record, let object = T(ckRecord: record)
+                else { return completion(.failure(.couldNotUnwrap)) }
+            
+            // Complete with the objects
+            return completion(.success(object))
+        }
+    }
+    
+    func read<T: CKCompatible> (recordID: CKRecord.ID, completion: @escaping SingleItemHandler<T>) {
+        // Fetch the data from the cloud
+        publicDB.fetch(withRecordID: recordID) { (record, error) in
             // Handle any errors
             if let error = error { return completion(.failure(.ckError(error))) }
             
