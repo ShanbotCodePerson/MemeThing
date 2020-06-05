@@ -8,21 +8,81 @@
 
 import UIKit
 
-class CaptionViewController: UIViewController, HasGameObject {
+class CaptionViewController: UIViewController, HasAGameObject {
     
     // MARK: - Outlets
+    
+    @IBOutlet weak var memeImageView: MemeImageView!
+    @IBOutlet weak var captionTextField: UITextField!
     
     // MARK: - Properties
     
     var game: Game?
+    var meme: Meme? { didSet { memeImageView.image =  meme?.photo } }
     
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setUpUI()
     }
     
     // MARK: - Set Up UI
     
+    func setUpUI() {
+        guard let game = game, let memeReference = game.memes?.last else { return }
+        
+        // Fetch the meme object
+        MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let meme):
+                    // Save the meme object
+                    self?.meme = meme
+                case .failure(let error):
+                    // TODO: - better error handling here, present alert?
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorToUser(error)
+                }
+            }
+        }
+    }
+    
     // MARK: - Actions
+    
+    @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
+        transitionToStoryboard(named: StoryboardNames.mainMenu)
+    }
+    
+    @IBAction func sendButtonTapped(_ sender: UIButton) {
+        guard let game = game, let meme = meme, let currentUser = UserController.shared.currentUser,
+            let captionText = captionTextField.text else { return }
+        
+        // Add the caption to the meme object
+        MemeController.shared.createCaption(for: meme, by: currentUser, with: captionText, in: game) { [weak self] (result) in
+            switch result {
+            case .success(_):
+                // Update the player's status
+                game.updateStatus(of: currentUser, to: .sentCaption)
+                
+                // Save the updated game to the cloud
+                GameController.shared.update(game) { (result) in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(_):
+                            // Transition back to the waiting view until all the captions have been submitted
+                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                        case .failure(let error):
+                            // TODO: - better error handling here
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        }
+                    }
+                }
+            case .failure(let error):
+                // TODO: - better error handling here
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
+    }
 }

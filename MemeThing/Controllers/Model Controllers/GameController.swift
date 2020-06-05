@@ -115,13 +115,13 @@ class GameController {
     }
     
     // Update a game
-    func update(_ game: Game, completion: @escaping resultHandler) {
+    func update(_ game: Game, completion: @escaping resultHandlerWithObject) {
         // Save the updated game to the cloud
         CKService.shared.update(object: game) { (result) in
             switch result {
-            case .success(_):
+            case .success(let game):
                 // Return the success
-                return completion(.success(true))
+                return completion(.success(game))
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -131,7 +131,7 @@ class GameController {
     }
     
     // Update a game's status
-    func updateStatus(of game: Game, to status: Game.GameStatus, completion: @escaping resultHandler) {
+    func updateStatus(of game: Game, to status: Game.GameStatus, completion: @escaping resultHandlerWithObject) {
         // Update the game's status
         game.gameStatus = status
         
@@ -159,6 +159,7 @@ class GameController {
     // Subscribe all players to notifications of invitations to games
     func subscribeToGameInvitations() {
         // TODO: - User defaults to track whether the subscription has already been saved
+        
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Form the predicate to look for new games that include the current user in the players list
@@ -184,8 +185,7 @@ class GameController {
     func subscribeToGameEndings(for game: Game) {
         // Form the predicate to look for the specific game
         let predicate = NSPredicate(format: "%K == %@", argumentArray: ["recordID", game.recordID])
-        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, options: [.firesOnRecordDeletion])
-        // FIXME: - use a subscriptionID so that the subscription can be deleted when the game is over
+        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate,  subscriptionID: "\(game.recordID.recordName)-end", options: [CKQuerySubscription.Options.firesOnRecordDeletion])
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
@@ -205,8 +205,7 @@ class GameController {
         
         // Form the predicate to look for the specific game
         let predicate = NSPredicate(format: "%K == %@", argumentArray: ["recordID", game.recordID])
-        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, options: [.firesOnRecordUpdate])
-        // FIXME: - use a subscriptionID so that the subscription can be deleted when the game is over
+        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, subscriptionID: "\(game.recordID.recordName)-update", options: [CKQuerySubscription.Options.firesOnRecordUpdate])
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
@@ -229,12 +228,18 @@ class GameController {
         // TODO: - show an alert to the user
         
         // Fetch the game record from the cloud
-        CKService.shared.read(recordID: recordID) { (result: Result<Game, MemeThingError>) in
+        CKService.shared.read(recordID: recordID) { [weak self] (result: Result<Game, MemeThingError>) in
             switch result {
             case .success(let game):
-                print("temp")
-                // TODO: - add it to the source of truth
-                // TODO: - tell the table view list of current games to update itself
+                // Update the source of truth
+                if var currentGames = self?.currentGames {
+                    currentGames.append(game)
+                    self?.currentGames = currentGames
+                } else {
+                    self?.currentGames = [game]
+                }
+                // Tell the table view list of current games to update itself
+                NotificationCenter.default.post(Notification(name: updateListOfGames))
             case .failure(let error):
                 // TODO: - better error handling here
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -244,19 +249,56 @@ class GameController {
     
     // Accept or decline an invitation to a game
     func respondToInvitation(to game: Game, accept: Bool, completion: @escaping resultHandler) {
-        // TODO: - make the change to the game object
-        // TODO: - save the updates to the cloud
-        // TODO: - if declined, remove the game from the source of truth
-        // TODO: - if accepted, subscribe to updates and ending notifications for the game
-        // TODO: - tell the table view list of current games to update itself
+        print("got here to \(#function)")
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
+        // Update the game with the user's response
+        game.updateStatus(of: currentUser, to: (accept ? .accepted : .denied))
+        
+        // Save the updated game to the cloud
+        update(game) { [weak self] (result) in
+            switch result {
+            case .success(let game):
+                // If the user accepted the invitation, subscribe them to notifications for the game
+                if accept {
+                    self?.subscribeToGameEndings(for: game)
+                    self?.subscribeToGameUpdates(for: game)
+                }
+                    // Otherwise, remove the game from the source of truth
+                else {
+                    guard let index = self?.currentGames?.firstIndex(of: game) else { return }
+                    self?.currentGames?.remove(at: index)
+                }
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+        
+        // Tell the table view list of current games to update itself
+        NotificationCenter.default.post(Notification(name: updateListOfGames))
     }
     
     // Receive a notification that a game has ended
     func receiveNotificationGameEnded(withID recordID: CKRecord.ID) {
         // TODO: - display an alert to the user
-        // TODO: - remove the game from the source of truth
-        // TODO: - remove the subscriptions to notifications for the game
-        // TODO: - tell the table view list of current games to update itself
+        
+        // Remove the game from the source of truth
+        currentGames?.removeAll(where: { $0.recordID == recordID })
+        
+        // Remove the subscriptions to notifications for the game
+        CKService.shared.publicDB.delete(withSubscriptionID: "\(recordID.recordName)-end") { (_, error) in
+            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+        }
+        CKService.shared.publicDB.delete(withSubscriptionID: "\(recordID.recordName)-update") { (_, error) in
+            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+        }
+        
+        // Tell the table view list of current games to update itself
+        NotificationCenter.default.post(Notification(name: updateListOfGames))
+        
+        // TODO: - if the user is currently in the game, transition them to the main menu
     }
     
     // Receive a notification that a game has been updated
@@ -289,9 +331,6 @@ class GameController {
     
     // MARK: - Handle Game Updates
     
-    // TODO: - handle view transitions from view controllers? or conditional based on current view?
-    // TODO: - think about cases where user is actively playing multiple games at once - how to navigate?
-    
     // Player status changed - accepted game invite
     func waitingForPlayers(for game: Game) {
         print("got here to \(#function)")
@@ -321,8 +360,8 @@ class GameController {
     func newRoundStarted(for game: Game) {
         print("got here to \(#function)")
         
-        // TODO: - if lead player, change view to drawing view
-        // TODO: - else, change view to updated waiting view
+        // Tell the view (either the waiting view or the end of round view) to transition to a new round
+        NotificationCenter.default.post(Notification(name: newRound, userInfo: ["gameID" : game.recordID.recordName]))
     }
     
     // Either the drawing has just been sent or a caption has been received
@@ -331,7 +370,7 @@ class GameController {
         
         // Check to see if all the captions have been received yet
         if game.allCaptionsSubmitted {
-            // Update the game's status and save the change to the cloud
+            // If so, update the game's status and save the change to the cloud
             updateStatus(of: game, to: .waitingForResult) { (result) in
                 switch result {
                 case .success(_):
@@ -343,8 +382,7 @@ class GameController {
                 }
             }
         } else {
-            // Tell the waiting view to update to reflect a new caption being submitted
-            // FIXME: - figure out passing objects
+            // Tell the waiting view to update to reflect that a new caption has been submitted
             NotificationCenter.default.post(Notification(name: playerSentCaption, userInfo: ["gameID" : game.recordID.recordName]))
         }
     }
@@ -355,7 +393,9 @@ class GameController {
     // All the captions have been received
     func receivedAllCaptions(for game: Game) {
         print("got here to \(#function)")
-        // TODO: - show results page (leader has button to choose winner, otherwise same for all)
+        
+        // Tell the waiting view to transition to the results page
+        NotificationCenter.default.post(Notification(name: allPlayersSentCaptions,  userInfo: ["gameID" : game.recordID.recordName]))
     }
     
     // Winning caption selected
@@ -376,31 +416,22 @@ class GameController {
                 }
             }
         } else {
-            // Update the game's status
-            game.gameStatus = .waitingForDrawing
+            // TODO: - update the games status to waiting for next round, go to end of round page
             
-            // Increment the lead player, looping back to the beginning if neccessry
-            guard var index = game.players.firstIndex(of: game.leadPlayer) else { return }
-            index = (index + 1) % game.players.count
-            
-            // Reset the status of all the (active) players
-            for index in 0..<game.playersStatus.count {
-                if game.playersStatus[index] == .sentCaption || game.playersStatus[index] == .sentDrawing {
-                    game.playersStatus[index] = .accepted
-                }
-            }
-            
-            // Save the updated game to the cloud
-            update(game) { (result) in
-                switch result {
-                case .success(_):
-                    // TODO: - handle this better
-                    print("seems like game updated saved successfully")
-                case .failure(let error):
-                    // TODO: - better error handling, present alert or something
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                }
-            }
+//            // Rest the game for a new round
+//            game.resetGame()
+//
+//            // Save the updated game to the cloud
+//            update(game) { (result) in
+//                switch result {
+//                case .success(_):
+//                    // TODO: - handle this better
+//                    print("seems like game updated saved successfully")
+//                case .failure(let error):
+//                    // TODO: - better error handling, present alert or something
+//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+//                }
+//            }
         }
     }
     // TODO: - when player selects a winner, need to update that in meme's data, update user points in user object and game object, update game status to waitingfornextround, save changes to cloud
@@ -428,6 +459,7 @@ class GameController {
         }
         // TODO: - make sure this also deletes all referenced memes and caption objects
         
-        // TODO: - return all users to main menu view
+        // Tell the view to return all users to main menu view
+        NotificationCenter.default.post(Notification(name: gameOver, userInfo: ["gameID" : game.recordID.recordName]))
     }
 }

@@ -18,6 +18,7 @@ class NotificationHelper {
         case friendRequestResponse = "FRIEND_REQUEST_RESPONSE"
         case newGameInvitation = "NEW_GAME_INVITATION"
         case gameUpdate = "GAME_UPDATE"
+        case captionWon = "CAPTION_WON"
         case gameEnded = "GAME_ENDED"
     }
     
@@ -30,7 +31,6 @@ class NotificationHelper {
             let category = ckNotification.category,
             let notificationType = NotificationHelper.Category(rawValue: category),
             let recordIDChanged = ckNotification.recordID
-//            let recordFields = ckNotification.recordFields // TODO: - uncomment this if using desiredKeys in notifications
             else { return }
         
         print("got here to \(#function) and category is \(category) and recordID is \(recordIDChanged)")
@@ -56,6 +56,15 @@ class NotificationHelper {
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
             GameController.shared.receiveUpdateToGame(withID: recordIDChanged)
+        case .captionWon:
+            print("received notification that caption won")
+            // TODO: - display an alert if app is open?
+            // TODO: - have an alert waiting next time app is opened?
+            // Parse the passed data to get the reference to the game
+            guard let recordFields = ckNotification.recordFields,
+                let gameReference = recordFields[CaptionStrings.gameKey] as? CKRecord.Reference
+                else { return }
+            MemeController.shared.receiveNotificationCaptionWon(inGame: gameReference)
         case .gameEnded:
             print("received notification that game ended")
             // TODO: - display an alert if app is open?
@@ -68,7 +77,11 @@ class NotificationHelper {
 // MARK: - Local Notification Names
 
 let friendsUpdate = Notification.Name("friendsUpdate")
-let newGameInvitation = Notification.Name("newGameInvitation")
+let updateListOfGames = Notification.Name("updateListOfGames")
 let playerRespondedToGameInvite = Notification.Name("playerRespondedToGameInvite")
+let drawingSent = Notification.Name("drawingSent")
 let playerSentCaption = Notification.Name("playerSentCaption")
-//let gameUpdate = Notification.Name("gameUpdate")
+let allPlayersSentCaptions = Notification.Name("allPlayersSentCaptions")
+let winningCaptionChosen = Notification.Name("winningCaptionChosen")
+let newRound = Notification.Name("newRound")
+let gameOver = Notification.Name("gameOver")

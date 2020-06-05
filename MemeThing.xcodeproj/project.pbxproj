@@ -144,11 +144,11 @@
 		4039366624870363007C2601 /* GamePlay */ = {
 			isa = PBXGroup;
 			children = (
+				40C2148824809A57007B7630 /* WaitingViewController.swift */,
 				4039CE032481DF5C004DA41F /* CanvasView.swift */,
 				40C2148224809A24007B7630 /* DrawingViewController.swift */,
 				40C2148424809A35007B7630 /* CaptionViewController.swift */,
 				40C2148624809A47007B7630 /* ResultsViewController.swift */,
-				40C2148824809A57007B7630 /* WaitingViewController.swift */,
 			);
 			path = GamePlay;
 			sourceTree = "<group>";
@@ -241,10 +241,10 @@
 			children = (
 				405279EA24781E1A00942A7D /* Main.storyboard */,
 				408A26E0247ED77D008CE8DC /* MainMenu.storyboard */,
+				40BA229324871F0D009A2197 /* Waiting.storyboard */,
 				40BA228B248715B3009A2197 /* Drawing.storyboard */,
 				40BA228E248715C9009A2197 /* AddCaption.storyboard */,
 				40BA229024871603009A2197 /* ViewResults.storyboard */,
-				40BA229324871F0D009A2197 /* Waiting.storyboard */,
 				40ACAB66247ECD61004516CF /* Custom Views */,
 			);
 			path = Views;
