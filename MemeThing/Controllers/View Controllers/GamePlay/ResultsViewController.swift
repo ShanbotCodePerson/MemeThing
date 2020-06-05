@@ -12,6 +12,10 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var memeImageView: UIImageView!
+    @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var chooseWinnerButton: UIButton!
+    
     // MARK: - Properties
     
     var game: Game?
@@ -37,4 +41,14 @@ class ResultsViewController: UIViewController, HasAGameObject {
     }
     
     // MARK: - Actions
+    
+    @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
+        transitionToStoryboard(named: StoryboardNames.mainMenu)
+    }
+    
+    @IBAction func chooseWinnerButtonTapped(_ sender: UIButton) {
+        // TODO: - make relevant changes to game, user, meme, caption, etc
+        // TODO: - save game object
+        // TODO: - transition to waiting view controller, present the leaderboard view
+    }
 }

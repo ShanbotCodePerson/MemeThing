@@ -26,7 +26,7 @@ class GamesListTableViewController: UITableViewController {
             else { return arrays }
         
         let unstartedGames = currentGames.filter { !$0.allPlayersResponded }
-        let pendingInvitations = unstartedGames.filter { $0.leadPlayer == currentUser.reference }
+        let pendingInvitations = unstartedGames.filter { $0.leadPlayer != currentUser.reference }
         let waitingForResponse = unstartedGames.filter { $0.leadPlayer == currentUser.reference }
         let activeGames = currentGames.filter { $0.allPlayersResponded }
         

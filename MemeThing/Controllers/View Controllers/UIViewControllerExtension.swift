@@ -19,10 +19,12 @@ protocol HasAGameObject: UIViewController {
 // TODO: - find a better place to put this
 struct StoryboardNames  {
     static let mainMenu = "MainMenu"
+    static let waitingView = "Waiting"
     static let drawingView = "Drawing"
     static let captionView = "AddCaption"
     static let resultsView = "ViewResults"
-    static let waitingView = "Waiting"
+    static let leaderboardView = "Leaderboard"
+    static let gameOverView = "GameOver"
 }
 
 extension UIViewController {
@@ -43,6 +45,15 @@ extension UIViewController {
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
         initialVC.game = game
         initialVC.modalPresentationStyle = .fullScreen
+        self.present(initialVC, animated: true)
+    }
+    
+    func presentLeaderboard(with game: Game) {
+        let storyboard = UIStoryboard(name: StoryboardNames.leaderboardView, bundle: nil)
+        guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
+        initialVC.game = game
+        initialVC.modalPresentationStyle = .overFullScreen
+        initialVC.modalTransitionStyle = .crossDissolve
         self.present(initialVC, animated: true)
     }
     

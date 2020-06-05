@@ -114,7 +114,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
         // Set up the tableview
         waitingForTableView.delegate = self
         waitingForTableView.dataSource = self
-        waitingForTableView.register(WaitingTableViewCell.self, forCellReuseIdentifier: "playerCell")
+        waitingForTableView.register(UITableViewCell.self, forCellReuseIdentifier: "playerCell")
     }
     
     // The view that non-lead players see while the lead player is drawing
@@ -136,7 +136,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
             // Set up the tableview so that non-lead players can see it
             waitingForTableView.delegate = self
             waitingForTableView.dataSource = self
-            waitingForTableView.register(WaitingTableViewCell.self, forCellReuseIdentifier: "playerCell")
+            waitingForTableView.register(UITableViewCell.self, forCellReuseIdentifier: "playerCell")
         }
     }
     
@@ -156,13 +156,13 @@ extension WaitingViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as? WaitingTableViewCell else { return UITableViewCell() }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath)
         
         guard let playerName = game?.playersNames[indexPath.row],
             let playerStatus = game?.playersStatus[indexPath.row]
             else { return cell }
-        cell.friendNameLabel.text = playerName
-        cell.statusLabel.text = playerStatus.asString
+        cell.textLabel?.text = playerName
+        cell.detailTextLabel?.text = playerStatus.asString
         
         return cell
     }

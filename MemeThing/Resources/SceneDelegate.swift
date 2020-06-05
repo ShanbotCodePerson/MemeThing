@@ -28,13 +28,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        print("got here to \(#function)")
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         
         // Check for and handle any notifications that came in while the app was in the background
         UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
-            print("there are \(notifications.count) notifications")
+            print("got here to \(#function) and there are \(notifications.count) notifications")
             for notification in notifications {
                 
                 // Extract the relevant data from the notification

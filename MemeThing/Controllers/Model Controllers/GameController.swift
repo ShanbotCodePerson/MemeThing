@@ -33,7 +33,8 @@ class GameController {
         // Create the new game with the current user as the default lead player
         var playerReferences = players.map { $0.reference }
         playerReferences.insert(currentUser.reference, at: 0)
-        let playersNames = players.map { $0.screenName }
+        var playersNames = players.map { $0.screenName }
+        playersNames.insert(currentUser.screenName, at: 0)
         let game = Game(players: playerReferences, playersNames: playersNames, leadPlayer: currentUser.reference)
         
         // Save the game to the cloud
@@ -59,27 +60,24 @@ class GameController {
     // Read (fetch) all the games the user is currently involved in
     func fetchCurrentGames(completion: @escaping resultHandler) {
         print("got here to \(#function)")
-        // Get the reference for the current user
-        UserController.shared.fetchAppleUserReference { [weak self] (reference) in
-            guard let reference = reference else { return completion(.failure(.noUserFound)) }
-            
-            // Create the query to only look for games where the current user is a player
-            let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [reference, GameStrings.playersKey])
-            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
-            
-            // Fetch the data from the cloud
-            CKService.shared.read(predicate: compoundPredicate) { (result: Result<[Game], MemeThingError>) in
-                switch result {
-                case .success(let games):
-                    print("in completion and fetched games are \(games)")
-                    // Save to the source of truth
-                    self?.currentGames = games
-                    return completion(.success(true))
-                case .failure(let error):
-                    // Print and return the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(error))
-                }
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Create the query to only look for games where the current user is a player
+        let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [currentUser.reference, GameStrings.playersKey])
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
+        
+        // Fetch the data from the cloud
+        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[Game], MemeThingError>) in
+            switch result {
+            case .success(let games):
+                print("in completion and fetched games are \(games)")
+                // Save to the source of truth
+                self?.currentGames = games
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
             }
         }
     }
@@ -231,6 +229,8 @@ class GameController {
         CKService.shared.read(recordID: recordID) { [weak self] (result: Result<Game, MemeThingError>) in
             switch result {
             case .success(let game):
+                // FIXME: - is nothing coming back??
+                print("got here to \(#function) and game is \(game)")
                 // Update the source of truth
                 if var currentGames = self?.currentGames {
                     currentGames.append(game)
@@ -386,9 +386,6 @@ class GameController {
             NotificationCenter.default.post(Notification(name: playerSentCaption, userInfo: ["gameID" : game.recordID.recordName]))
         }
     }
-    // TODO: - when user sends a drawing, need to update game status to waiting for caption, set own status to .sentdrawing, save game to cloud
-    // TODO: - when a user submits a caption, should update own status to sentcaption, save game to cloud, and should transition to waiting view themselves
-    // So all the above has been done by the time the function drawingSent() has been called
     
     // All the captions have been received
     func receivedAllCaptions(for game: Game) {
@@ -416,22 +413,22 @@ class GameController {
                 }
             }
         } else {
-            // TODO: - update the games status to waiting for next round, go to end of round page
+            // TODO: - present the leaderboard (end of round view) for a set amount of time before transitioning to a new round
             
-//            // Rest the game for a new round
-//            game.resetGame()
-//
-//            // Save the updated game to the cloud
-//            update(game) { (result) in
-//                switch result {
-//                case .success(_):
-//                    // TODO: - handle this better
-//                    print("seems like game updated saved successfully")
-//                case .failure(let error):
-//                    // TODO: - better error handling, present alert or something
-//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                }
-//            }
+            // Rest the game for a new round
+            game.resetGame()
+
+            // Save the updated game to the cloud
+            update(game) { (result) in
+                switch result {
+                case .success(_):
+                    // TODO: - handle this better
+                    print("seems like game updated saved successfully")
+                case .failure(let error):
+                    // TODO: - better error handling, present alert or something
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
+            }
         }
     }
     // TODO: - when player selects a winner, need to update that in meme's data, update user points in user object and game object, update game status to waitingfornextround, save changes to cloud
