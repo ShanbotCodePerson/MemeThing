@@ -49,6 +49,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @IBAction func chooseWinnerButtonTapped(_ sender: UIButton) {
         // TODO: - make relevant changes to game, user, meme, caption, etc
         // TODO: - save game object
+        // TODO: - check if overall winner, go to game over page if so
         // TODO: - transition to waiting view controller, present the leaderboard view
     }
 }

@@ -40,7 +40,6 @@ class WaitingViewController: UIViewController, HasAGameObject {
     // MARK: - Respond to Notifications
     
     @objc func refreshPage(_ sender: NSNotification) {
-        print(sender.name)
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
             gameID == game.recordID.recordName else { return }

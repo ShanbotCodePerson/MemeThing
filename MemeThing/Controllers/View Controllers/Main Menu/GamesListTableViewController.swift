@@ -25,10 +25,10 @@ class GamesListTableViewController: UITableViewController {
             let currentGames = GameController.shared.currentGames
             else { return arrays }
         
-        let unstartedGames = currentGames.filter { !$0.allPlayersResponded }
+        let unstartedGames = currentGames.filter { $0.gameStatus == .waitingForPlayers }
         let pendingInvitations = unstartedGames.filter { $0.leadPlayer != currentUser.reference }
         let waitingForResponse = unstartedGames.filter { $0.leadPlayer == currentUser.reference }
-        let activeGames = currentGames.filter { $0.allPlayersResponded }
+        let activeGames = currentGames.filter { $0.gameStatus != .waitingForPlayers }
         
         if pendingInvitations.count > 0 {
             arrays.append((name: .pendingInvitations, data: pendingInvitations))
@@ -107,6 +107,7 @@ class GamesListTableViewController: UITableViewController {
         else {
             let game = data[indexPath.row]
             cell.setUpViews(in: sectionName, with: game)
+            cell.delegate = self
         }
         
         return cell
@@ -159,6 +160,34 @@ class GamesListTableViewController: UITableViewController {
             print("need to create an end of round view")
         case .gameOver:
             print("need to create a game over view")
+        }
+    }
+}
+
+// MARK: - TableViewCell Button Delegate
+
+extension GamesListTableViewController: GameTableViewCellDelegate {
+    
+    func respondToGameInvitation(for cell: GameTableViewCell, accept: Bool) {
+        // Get the reference to the game that was responded to
+        guard let indexPath = tableView.indexPath(for: cell),
+            dataSource[indexPath.section].name == .pendingInvitations
+            else { return }
+        let game = dataSource[indexPath.section].data[indexPath.row]
+        
+        // Respond to the game invitation
+        GameController.shared.respondToInvitation(to: game, accept: accept) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // If the user accepted the invitation, transition them to the waiting view until all users have responded
+                    if accept { self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game) }
+                case .failure(let error):
+                    // Otherwise, display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorToUser(error)
+                }
+            }
         }
     }
 }

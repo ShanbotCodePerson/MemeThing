@@ -57,6 +57,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
                 
                 // Update the game's status
                 game.gameStatus = .waitingForCaptions
+                // FIXME: - Make sure this change is reflected in the game in the SoT too
                 
                 // Update the player's status
                 game.updateStatus(of: currentUser, to: .sentDrawing)

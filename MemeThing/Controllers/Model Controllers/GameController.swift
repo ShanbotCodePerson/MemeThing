@@ -48,6 +48,12 @@ class GameController {
                 } else {
                     self?.currentGames = [game]
                 }
+                
+                // Subscribe to updates for the game
+                self?.subscribeToGameEndings(for: game)
+                self?.subscribeToGameUpdates(for: game)
+                
+                // Return the success
                 return completion(.success(game))
             case .failure(let error):
                 // Print and return the error
@@ -203,12 +209,12 @@ class GameController {
         
         // Form the predicate to look for the specific game
         let predicate = NSPredicate(format: "%K == %@", argumentArray: ["recordID", game.recordID])
+//        let predicate = NSPredicate(value: true) // TODO: - delete this after done testing
         let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, subscriptionID: "\(game.recordID.recordName)-update", options: [CKQuerySubscription.Options.firesOnRecordUpdate])
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
-        notificationInfo.title = "New Game Invitation"
-        notificationInfo.alertBody = "You have been invited to a new game on MemeThing"
+        notificationInfo.title = "Update to game" // TODO: - figure out a better message for this
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.category = NotificationHelper.Category.gameUpdate.rawValue
         subscription.notificationInfo = notificationInfo
@@ -264,20 +270,22 @@ class GameController {
                     self?.subscribeToGameEndings(for: game)
                     self?.subscribeToGameUpdates(for: game)
                 }
-                    // Otherwise, remove the game from the source of truth
                 else {
+                    // Otherwise, remove the game from the source of truth
                     guard let index = self?.currentGames?.firstIndex(of: game) else { return }
                     self?.currentGames?.remove(at: index)
+                    
+                    // Tell the table view list of current games to update itself
+                    NotificationCenter.default.post(Notification(name: updateListOfGames))
                 }
+                // Return the success
+                return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(error))
             }
         }
-        
-        // Tell the table view list of current games to update itself
-        NotificationCenter.default.post(Notification(name: updateListOfGames))
     }
     
     // Receive a notification that a game has ended
@@ -331,7 +339,8 @@ class GameController {
     
     // MARK: - Handle Game Updates
     
-    // Player status changed - accepted game invite
+    // A player has responded to the game invitation
+    // FIXME: - is this going to run on everyone's phones every time?? Will it conflict??
     func waitingForPlayers(for game: Game) {
         print("got here to \(#function)")
         
@@ -340,12 +349,16 @@ class GameController {
         
         // Check to see if all the players have responded to the game invitation yet
         if game.allPlayersResponded {
+            // Either start the game or end it depending on enough players accepted the invitation
+            let status: Game.GameStatus = game.playersStatus.filter({ $0 == .accepted }).count >= 2 ? .waitingForDrawing : .gameOver
+            // FIXME: - change the minimum number of players back to 3 after done testing
+            
             // Update the game's status and save the change to the cloud
-            updateStatus(of: game, to: .waitingForDrawing) { (result) in
+            updateStatus(of: game, to: status) { (result) in
                 switch result {
                 case .success(_):
-                    // TODO: - handle this better
-                    print("seems like game updated saved successfully")
+                    // Tell the view to transition to the correct page
+                    NotificationCenter.default.post(Notification(name: newRound, userInfo: ["gameID" : game.recordID.recordName]))
                 case .failure(let error):
                     // TODO: - better error handling, present alert or something
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -374,8 +387,8 @@ class GameController {
             updateStatus(of: game, to: .waitingForResult) { (result) in
                 switch result {
                 case .success(_):
-                    // TODO: - handle this better
-                    print("seems like game updated saved successfully")
+                    // Tell the view to transition to the correct page
+                    NotificationCenter.default.post(Notification(name: allPlayersSentCaptions, userInfo: ["gameID" : game.recordID.recordName]))
                 case .failure(let error):
                     // TODO: - better error handling, present alert or something
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -405,8 +418,8 @@ class GameController {
             updateStatus(of: game, to: .gameOver) { (result) in
                 switch result {
                 case .success(_):
-                    // TODO: - handle this better
-                    print("seems like game updated saved successfully")
+                    // Tell the view to transition to the correct page
+                    NotificationCenter.default.post(Notification(name: newRound, userInfo: ["gameID" : game.recordID.recordName]))
                 case .failure(let error):
                     // TODO: - better error handling, present alert or something
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
