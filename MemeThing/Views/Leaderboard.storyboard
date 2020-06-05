@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="udx-0g-6jh">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Leaderboard View Controller-->
+        <scene sceneID="7tq-bA-yR6">
+            <objects>
+                <viewController id="udx-0g-6jh" customClass="LeaderboardViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="lcK-hF-0Gj">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="c34-pY-TAc">
+                                <rect key="frame" x="45.5" y="197" width="323" height="512"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NV0-bX-CdG">
+                                        <rect key="frame" x="0.0" y="0.0" width="323" height="50"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[game status]" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5T-UQ-2vA">
+                                                <rect key="frame" x="0.0" y="0.0" width="323" height="50"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstItem="y5T-UQ-2vA" firstAttribute="height" secondItem="NV0-bX-CdG" secondAttribute="height" id="2Ru-mu-5jY"/>
+                                            <constraint firstItem="y5T-UQ-2vA" firstAttribute="centerX" secondItem="NV0-bX-CdG" secondAttribute="centerX" id="RHk-Nw-jSB"/>
+                                            <constraint firstItem="y5T-UQ-2vA" firstAttribute="centerY" secondItem="NV0-bX-CdG" secondAttribute="centerY" id="Z3d-Y8-OAY"/>
+                                            <constraint firstItem="y5T-UQ-2vA" firstAttribute="width" secondItem="NV0-bX-CdG" secondAttribute="width" id="baE-j4-xpR"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UNJ-PK-rCx">
+                                        <rect key="frame" x="0.0" y="58" width="323" height="405.5"/>
+                                        <subviews>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gKL-sf-953">
+                                                <rect key="frame" x="0.0" y="0.0" width="323" height="405.5"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                <prototypes>
+                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="Cyc-cC-99U" detailTextLabel="blv-zr-Apr" style="IBUITableViewCellStyleValue1" id="1ji-NQ-c3J">
+                                                        <rect key="frame" x="0.0" y="28" width="323" height="43.5"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1ji-NQ-c3J" id="BdL-dA-5c4">
+                                                            <rect key="frame" x="0.0" y="0.0" width="323" height="43.5"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <subviews>
+                                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Cyc-cC-99U">
+                                                                    <rect key="frame" x="20" y="12" width="33.5" height="20.5"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="blv-zr-Apr">
+                                                                    <rect key="frame" x="259" y="12" width="44" height="20.5"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </tableViewCellContentView>
+                                                    </tableViewCell>
+                                                </prototypes>
+                                            </tableView>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstItem="gKL-sf-953" firstAttribute="centerX" secondItem="UNJ-PK-rCx" secondAttribute="centerX" id="JUJ-Oh-oEp"/>
+                                            <constraint firstItem="gKL-sf-953" firstAttribute="centerY" secondItem="UNJ-PK-rCx" secondAttribute="centerY" id="Orr-RW-WGP"/>
+                                            <constraint firstItem="gKL-sf-953" firstAttribute="height" secondItem="UNJ-PK-rCx" secondAttribute="height" id="RoJ-kg-Sjj"/>
+                                            <constraint firstItem="gKL-sf-953" firstAttribute="width" secondItem="UNJ-PK-rCx" secondAttribute="width" id="gdu-Io-MCg"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mmA-Fc-vb9" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="471.5" width="323" height="40.5"/>
+                                        <state key="normal" title="Close"/>
+                                        <connections>
+                                            <action selector="closeButtonTapped:" destination="udx-0g-6jh" eventType="touchUpInside" id="nwU-vR-DzO"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="c34-pY-TAc" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="7g7-Ry-Wxa"/>
+                            <constraint firstItem="c34-pY-TAc" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.625917" id="Eu1-Jn-MZI"/>
+                            <constraint firstItem="c34-pY-TAc" firstAttribute="centerY" secondItem="c9Y-8r-g0v" secondAttribute="centerY" id="VJl-B3-uJ0"/>
+                            <constraint firstItem="c34-pY-TAc" firstAttribute="width" secondItem="c9Y-8r-g0v" secondAttribute="width" multiplier="0.780193" id="sJd-DZ-d7l"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="c9Y-8r-g0v"/>
+                    </view>
+                    <connections>
+                        <outlet property="gameStatusLabel" destination="y5T-UQ-2vA" id="v7w-9A-Izo"/>
+                        <outlet property="playersTableView" destination="gKL-sf-953" id="zPT-Qe-dM6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lOH-hF-jUP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="129.91071428571428"/>
+        </scene>
+    </scenes>
+</document>

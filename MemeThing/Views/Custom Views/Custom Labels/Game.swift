@@ -83,28 +83,16 @@ class Game: CKCompatible {
     // MARK: - Helper Properties
     // Helper properties for easier interaction with the game object
     
-    // A named grouping of the player references with their relevant data
-    // TODO: - may get rid of name variable here - not sure it's necessary
-    var playerInfo: [(reference: CKRecord.Reference, name: String, status: PlayerStatus, points: Int)] {
-        get {
-            var data = [(reference: CKRecord.Reference, name: String, status: PlayerStatus, points: Int)]()
-            for index in 0..<players.count {
-                data.append((players[index], playersNames[index], playersStatus[index], playersPoints[index]))
-            }
-            return data
-        }
-        set(newData) {
-            players = newData.map { $0.reference }
-            playersNames = newData.map { $0.name }
-            playersStatus = newData.map { $0.status }
-            playersPoints = newData.map { $0.points }
-        }
-    }
-    
     // A nicely formatted list of the names of the game participants, minus the current user
     var listOfPlayerNames: String {
         guard let currentUser = UserController.shared.currentUser else { return "ERROR" }
         return playersNames.filter({ $0 != currentUser.screenName }).joined(separator: ", ")
+    }
+    
+    // The name of the lead player
+    var leadPlayerName: String {
+        guard let index = players.firstIndex(of: leadPlayer) else { return "" }
+        return playersNames[index]
     }
     
     // A nicely formatted string to tell a given user what phase the game is currently in
@@ -204,6 +192,44 @@ class Game: CKCompatible {
         }
         
         return record
+    }
+    
+    // MARK: - Helper Methods
+    
+    // Quickly get a user's status
+    func getStatus(of player: User) -> PlayerStatus {
+        guard let index = players.firstIndex(of: player.reference) else { return .quit }
+        return playersStatus[index]
+    }
+    
+    // Quickly update a player's status
+    func updateStatus(of player: User, to status: PlayerStatus) {
+        guard let index = players.firstIndex(of: player.reference) else { return }
+        playersStatus[index] = status
+    }
+    
+    // Quickly update a player's points
+    func updatePoints(of player: User) {
+        guard let index = players.firstIndex(of: player.reference) else { return }
+        playersPoints[index] += 1
+    }
+    
+    // Reset the game for a new round
+    func resetGame() {
+        // Update the game's status
+        gameStatus = .waitingForDrawing
+        
+        // Increment the lead player, looping back to the beginning if necessary
+        guard var index = players.firstIndex(of: leadPlayer) else { return }
+        index = (index + 1) % players.count
+        leadPlayer = players[index]
+        
+        // Reset the status of all the active players
+        for index in 0..<playersStatus.count {
+            if playersStatus[index] == .sentCaption || playersStatus[index] == .sentDrawing {
+                playersStatus[index] = .accepted
+            }
+        }
     }
 }
 

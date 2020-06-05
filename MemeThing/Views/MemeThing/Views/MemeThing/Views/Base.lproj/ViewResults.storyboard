@@ -50,6 +50,9 @@
                                             <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NVX-Za-Jzn" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="705" width="373" height="30"/>
                                                 <state key="normal" title="Choose as winner!"/>
+                                                <connections>
+                                                    <action selector="chooseWinnerButtonTapped:" destination="OFq-l9-Vna" eventType="touchUpInside" id="xFg-o5-pIR"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -66,7 +69,11 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <items>
                                     <navigationItem id="XPZ-v1-tvU">
-                                        <barButtonItem key="leftBarButtonItem" title="Main Menu" id="rWf-Jn-Zc9"/>
+                                        <barButtonItem key="leftBarButtonItem" title="Main Menu" id="rWf-Jn-Zc9">
+                                            <connections>
+                                                <action selector="mainMenuButtonTapped:" destination="OFq-l9-Vna" id="MjV-oh-E6j"/>
+                                            </connections>
+                                        </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" title="Item" image="ellipsis" catalog="system" id="TRQ-Lf-D8m"/>
                                     </navigationItem>
                                 </items>
@@ -85,6 +92,11 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="1UW-qO-BJN"/>
                     </view>
+                    <connections>
+                        <outlet property="captionLabel" destination="ycM-BN-aQ3" id="457-5g-fdy"/>
+                        <outlet property="chooseWinnerButton" destination="NVX-Za-Jzn" id="95q-2j-jEp"/>
+                        <outlet property="memeImageView" destination="AlU-DO-Xe3" id="piz-LP-Eie"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kqo-UI-5ow" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

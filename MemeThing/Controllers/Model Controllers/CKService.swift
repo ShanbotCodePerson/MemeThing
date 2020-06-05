@@ -114,6 +114,7 @@ extension CKServicing {
         }
     }
     
+    // TODO: - update multiple things (of different types) at once?
     func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>) {
         // Create the operation to save the updates to the object
         let operation = CKModifyRecordsOperation(recordsToSave: [object.ckRecord], recordIDsToDelete: nil)

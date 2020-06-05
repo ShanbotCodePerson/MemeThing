@@ -20,7 +20,11 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <items>
                                     <navigationItem id="npf-vo-2v7">
-                                        <barButtonItem key="leftBarButtonItem" title="Main Menu" id="LIn-io-HxE"/>
+                                        <barButtonItem key="leftBarButtonItem" title="Main Menu" id="LIn-io-HxE">
+                                            <connections>
+                                                <action selector="mainMenuButtonTapped:" destination="wv3-dL-fID" id="xfm-2U-ri9"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -47,6 +51,9 @@
                                                     <constraint firstAttribute="height" constant="50" id="am8-CB-ok0"/>
                                                 </constraints>
                                                 <state key="normal" title="Send"/>
+                                                <connections>
+                                                    <action selector="sendButtonTapped:" destination="wv3-dL-fID" eventType="touchUpInside" id="mQX-bX-p9q"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -75,6 +82,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9G1-Tm-2X0"/>
                     </view>
+                    <connections>
+                        <outlet property="captionTextField" destination="KHy-3E-I4Q" id="BVi-in-Bts"/>
+                        <outlet property="memeImageView" destination="7IK-AJ-lNo" id="IA8-Xi-3a1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bXW-Rs-L83" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -79,4 +79,17 @@ class CanvasView: UIView {
         // Update the display
         setNeedsDisplay()
     }
+    
+    func getImage() -> UIImage {
+        // Get a snapshot from the view
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, true, UIScreen.main.scale)
+        drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+        
+        // Get the image from the snapshot
+        if let image = UIGraphicsGetImageFromCurrentImageContext() {
+            UIGraphicsEndImageContext()
+            return image
+        }
+        return UIImage()
+    }
 }
