@@ -15,8 +15,8 @@ struct CaptionStrings {
     static let recordType = "Caption"
     fileprivate static let textKey = "text"
     fileprivate static let authorKey = "author"
-    fileprivate static let memeKey = "meme"
-    static let gameKey = "game"
+    static let memeKey = "meme"
+    static let gameKey = "game" // FIXME: - where is this being used?
     fileprivate static let didWinKey = "didWin"
 }
 
@@ -28,7 +28,7 @@ class Caption: CKCompatible {
     let text: String
     let author: CKRecord.Reference
     let meme: CKRecord.Reference
-    let game: CKRecord.Reference
+    let game: CKRecord.Reference // FIXME: - do I need this variable?
     var didWin: Bool
     
     // CloudKit properties

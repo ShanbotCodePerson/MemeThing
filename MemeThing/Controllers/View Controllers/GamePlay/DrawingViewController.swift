@@ -13,6 +13,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
     // MARK: - Outlets
     
     @IBOutlet weak var canvasView: CanvasView!
+    @IBOutlet weak var undoButton: UIButton!
     
     // MARK: - Properties
     
@@ -23,9 +24,6 @@ class DrawingViewController: UIViewController, HasAGameObject {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
-    // MARK: - Set Up UI
-    
     
     // MARK: - Actions
     
@@ -40,7 +38,8 @@ class DrawingViewController: UIViewController, HasAGameObject {
     @IBAction func sendButtonTapped(_ sender: UIButton) {
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
         
-        // Create an image from the canvas
+        // Create the image from the canvas (hide the undo button first so that it isn't saved in the screenshot)
+        undoButton.isHidden = true
         let image = canvasView.getImage()
         
         // Create the meme object and save it to the cloud

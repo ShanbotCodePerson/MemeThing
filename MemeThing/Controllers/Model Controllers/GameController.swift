@@ -134,6 +134,7 @@ class GameController {
         }
     }
     
+    // FIXME: - might not need this function after all
     // Update a game's status
     func updateStatus(of game: Game, to status: Game.GameStatus, completion: @escaping resultHandlerWithObject) {
         // Update the game's status
@@ -235,7 +236,6 @@ class GameController {
         CKService.shared.read(recordID: recordID) { [weak self] (result: Result<Game, MemeThingError>) in
             switch result {
             case .success(let game):
-                // FIXME: - is nothing coming back??
                 print("got here to \(#function) and game is \(game)")
                 // Update the source of truth
                 if var currentGames = self?.currentGames {
@@ -260,6 +260,14 @@ class GameController {
         
         // Update the game with the user's response
         game.updateStatus(of: currentUser, to: (accept ? .accepted : .denied))
+        
+        // If all players have responded to the invitation, update the status of the game
+        if game.allPlayersResponded {
+            // Either start the game or end it depending on enough players accepted the invitation
+            let status: Game.GameStatus = game.playersStatus.filter({ $0 == .accepted }).count >= 2 ? .waitingForDrawing : .gameOver
+            // FIXME: - change the minimum number of players back to 3 after done testing
+            game.gameStatus = status
+        }
         
         // Save the updated game to the cloud
         update(game) { [weak self] (result) in
@@ -306,170 +314,68 @@ class GameController {
         // Tell the table view list of current games to update itself
         NotificationCenter.default.post(Notification(name: updateListOfGames))
         
-        // TODO: - if the user is currently in the game, transition them to the main menu
+        // If the user is currently in the game, transition them to the main menu
+        fetchGame(from: recordID) { (result) in
+            switch result {
+            case .success(let game):
+                NotificationCenter.default.post(Notification(name: toMainMenu, userInfo: ["gameID" : game.recordID.recordName]))
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
     }
     
     // Receive a notification that a game has been updated
     func receiveUpdateToGame(withID recordID: CKRecord.ID) {
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
         // Fetch the game object from the cloud
         fetchGame(from: recordID) { [weak self] (result) in
             switch result {
             case .success(let game):
-                // Call the relevant helper method based on the status of the game
+                // Update the game in the source of truth
+                guard let index = self?.currentGames?.firstIndex(of: game) else { return }
+                self?.currentGames?.remove(at: index)
+                self?.currentGames?.insert(game, at: index)
+                
+                // Form the notification that will tell the views how to update
+                var notificationDestination: Notification.Name?
+                
+                // FIXME: - something's fishy here plz help
+                // Set the destination of the notification based on the status of the game
                 switch game.gameStatus {
                 case .waitingForPlayers:
-                    self?.waitingForPlayers(for: game)
+                    // Tell the waiting view to update to reflect the player's response
+                    notificationDestination = updateWaitingViewWithInvitationResponse
                 case .waitingForDrawing:
-                    self?.newRoundStarted(for: game)
+                    // Tell the view (either the waiting view or the end of round view) to transition to a new round
+                    notificationDestination = toNewRound
                 case .waitingForCaptions:
-                    self?.drawingSent(for: game)
+                    // If the player has not submitted a caption yet, tell their view to transition to the captions view
+                    if game.getStatus(of: currentUser) == .accepted {
+                        notificationDestination = drawingSent
+                    } else {
+                        // Otherwise, tell the waiting view to update to reflect that a new caption has been submitted
+                        notificationDestination = updateWaitingViewWithNewCaption
+                    }
                 case .waitingForResult:
-                    self?.receivedAllCaptions(for: game)
+                    // Tell the waiting view to transition to the results view
+                    notificationDestination = toResultsView
                 case .waitingForNextRound:
-                    self?.winningCaptionSelected(for: game)
+                   // Tell the results view to navigate to a new round
+                    notificationDestination = toNewRound
                 case .gameOver:
-                    self?.handleFinish(for: game)
+                    // Tell the results view to navigate to the game over view
+                    notificationDestination = toGameOver
                 }
+                
+                // Post the notification to update the view
+                guard let notificationName = notificationDestination else { return }
+                NotificationCenter.default.post(Notification(name: notificationName,  userInfo: ["gameID" : game.recordID.recordName]))
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 // TODO: - better error handling  - display an alert to the user?
             }
         }
-    }
-    
-    // MARK: - Handle Game Updates
-    
-    // A player has responded to the game invitation
-    // FIXME: - is this going to run on everyone's phones every time?? Will it conflict??
-    func waitingForPlayers(for game: Game) {
-        print("got here to \(#function)")
-        
-        // Tell the waiting view to update to reflect the player's response
-        NotificationCenter.default.post(Notification(name: playerRespondedToGameInvite, userInfo: ["gameID" : game.recordID.recordName]))
-        
-        // Check to see if all the players have responded to the game invitation yet
-        if game.allPlayersResponded {
-            // Either start the game or end it depending on enough players accepted the invitation
-            let status: Game.GameStatus = game.playersStatus.filter({ $0 == .accepted }).count >= 2 ? .waitingForDrawing : .gameOver
-            // FIXME: - change the minimum number of players back to 3 after done testing
-            
-            // Update the game's status and save the change to the cloud
-            updateStatus(of: game, to: status) { (result) in
-                switch result {
-                case .success(_):
-                    // Tell the view to transition to the correct page
-                    NotificationCenter.default.post(Notification(name: newRound, userInfo: ["gameID" : game.recordID.recordName]))
-                case .failure(let error):
-                    // TODO: - better error handling, present alert or something
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                }
-            }
-        }
-        
-        // TODO: - display a loading icon while the views load?
-    }
-    
-    // Round started
-    func newRoundStarted(for game: Game) {
-        print("got here to \(#function)")
-        
-        // Tell the view (either the waiting view or the end of round view) to transition to a new round
-        NotificationCenter.default.post(Notification(name: newRound, userInfo: ["gameID" : game.recordID.recordName]))
-    }
-    
-    // Either the drawing has just been sent or a caption has been received
-    func drawingSent(for game: Game) {
-        print("got here to \(#function)")
-        
-        // Check to see if all the captions have been received yet
-        if game.allCaptionsSubmitted {
-            // If so, update the game's status and save the change to the cloud
-            updateStatus(of: game, to: .waitingForResult) { (result) in
-                switch result {
-                case .success(_):
-                    // Tell the view to transition to the correct page
-                    NotificationCenter.default.post(Notification(name: allPlayersSentCaptions, userInfo: ["gameID" : game.recordID.recordName]))
-                case .failure(let error):
-                    // TODO: - better error handling, present alert or something
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                }
-            }
-        } else {
-            // Tell the waiting view to update to reflect that a new caption has been submitted
-            NotificationCenter.default.post(Notification(name: playerSentCaption, userInfo: ["gameID" : game.recordID.recordName]))
-        }
-    }
-    
-    // All the captions have been received
-    func receivedAllCaptions(for game: Game) {
-        print("got here to \(#function)")
-        
-        // Tell the waiting view to transition to the results page
-        NotificationCenter.default.post(Notification(name: allPlayersSentCaptions,  userInfo: ["gameID" : game.recordID.recordName]))
-    }
-    
-    // Winning caption selected
-    func winningCaptionSelected(for game: Game) {
-        print("got here to \(#function)")
-        
-        // Check to see if there's an overall winner of the game yet
-        if game.gameWinner != nil {
-            // Update the game's status and save the change to the cloud
-            updateStatus(of: game, to: .gameOver) { (result) in
-                switch result {
-                case .success(_):
-                    // Tell the view to transition to the correct page
-                    NotificationCenter.default.post(Notification(name: newRound, userInfo: ["gameID" : game.recordID.recordName]))
-                case .failure(let error):
-                    // TODO: - better error handling, present alert or something
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                }
-            }
-        } else {
-            // TODO: - present the leaderboard (end of round view) for a set amount of time before transitioning to a new round
-            
-            // Rest the game for a new round
-            game.resetGame()
-
-            // Save the updated game to the cloud
-            update(game) { (result) in
-                switch result {
-                case .success(_):
-                    // TODO: - handle this better
-                    print("seems like game updated saved successfully")
-                case .failure(let error):
-                    // TODO: - better error handling, present alert or something
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                }
-            }
-        }
-    }
-    // TODO: - when player selects a winner, need to update that in meme's data, update user points in user object and game object, update game status to waitingfornextround, save changes to cloud
-    // So all the above has been done by the time the function winningCaptionSelected() has been called
-    
-    // Game over
-    func handleFinish(for game: Game) {
-        print("got here to \(#function)")
-        
-        // TODO: - display results to users
-        // I dunno some fancy animation or something make it look pretty
-        
-        // Delete the game from the cloud
-        finishGame(game) { (result) in
-            switch result {
-            case .success(_):
-                // TODO: - handle this better
-
-                // TODO: - remove both subscriptions (update and delete) to the game at this point
-                print("seems like game deleted saved successfully")
-            case .failure(let error):
-                // TODO: - better error handling, present alert or something
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-            }
-        }
-        // TODO: - make sure this also deletes all referenced memes and caption objects
-        
-        // Tell the view to return all users to main menu view
-        NotificationCenter.default.post(Notification(name: gameOver, userInfo: ["gameID" : game.recordID.recordName]))
     }
 }

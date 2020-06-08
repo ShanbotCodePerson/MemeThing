@@ -28,8 +28,8 @@ class Meme: CKCompatible, CKPhotoAsset {
     // Meme properties
     var photo: UIImage?
     let author: CKRecord.Reference
-    var captions: [CKRecord.Reference]? // FIXME: - should this be references or caption objects?
-    var winningCaptionIndex: Int?
+    var captions: [CKRecord.Reference]? // FIXME: - should this be references or caption objects? or should it even exist?
+    var winningCaptionIndex: Int? // FIXME: - is this necessary?
     let game: CKRecord.Reference
     
     // CloudKit properties

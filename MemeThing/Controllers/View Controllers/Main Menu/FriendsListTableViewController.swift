@@ -191,7 +191,7 @@ class FriendsListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Enable swipe-to-delete functionality only for friends, not friend requests
-        if dataSource[indexPath.section].name == .friends { return true }
+        if dataSource[indexPath.section].name == .friends && dataSource[indexPath.section].data.count > 0 { return true }
         return false
     }
     

@@ -44,11 +44,32 @@ class MemeController {
     
     // Read (fetch) a meme from a reference
     func fetchMeme(from reference: CKRecord.Reference, completion: @escaping resultHandlerWithObject) {
+        // Fetch the data from the cloud
         CKService.shared.read(reference: reference) { (result: Result<Meme, MemeThingError>) in
             switch result {
             case .success(let meme):
                 // Return the success
                 return completion(.success(meme))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    // Read (fetch) a list of captions for a meme
+    func fetchCaptions(for meme: Meme, completion: @escaping (Result<[Caption], MemeThingError>) -> Void) {
+        // Form the predicate to look for all captions that reference that meme
+        let predicate = NSPredicate(format: "%K == %@", argumentArray: [CaptionStrings.memeKey, meme.reference])
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
+        
+        // Fetch the data from the cloud
+        CKService.shared.read(predicate: compoundPredicate) { (result: Result<[Caption], MemeThingError>) in
+            switch result {
+            case .success(let captions):
+                // Return the success
+                return completion(.success(captions))
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -188,18 +209,18 @@ class MemeController {
         // FIXME: - get rid of this part
         // if game updates points in itself on the lead player's side when a winner is chosen, then can delete all this, including game reference in caption object
         
-        // Fetch the game object from the passed reference
-        GameController.shared.fetchGame(from: game.recordID) { (result) in
-            switch result {
-            case .success(let game):
-                // Update the game with the user's points and save the change
-                game.updatePoints(of: currentUser)
-                GameController.shared.update(game) { (result) in }
-            case .failure(let error):
-                // TODO: - better error handling
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-            }
-        }
+//        // Fetch the game object from the passed reference
+//        GameController.shared.fetchGame(from: game.recordID) { (result) in
+//            switch result {
+//            case .success(let game):
+//                // Update the game with the user's points and save the change
+//                game.updatePoints(of: currentUser)
+//                GameController.shared.update(game) { (result) in }
+//            case .failure(let error):
+//                // TODO: - better error handling
+//                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+//            }
+//        }
 
     }
     

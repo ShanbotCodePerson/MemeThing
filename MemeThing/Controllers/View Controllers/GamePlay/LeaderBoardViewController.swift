@@ -23,12 +23,46 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setUpViews()
+    }
+    
+    // MARK: - Set Up UI
+    
+    func setUpViews() {
         view.backgroundColor = UIColor(white: 0, alpha: 0.6)
+        
+        guard let game = game else { return }
+        
+        gameStatusLabel.text = game.gameStatusDescription
+        
+        playersTableView.delegate = self
+        playersTableView.dataSource = self
+        playersTableView.register(UITableViewCell.self, forCellReuseIdentifier: "playerCell")
     }
     
     // MARK: - Actions
     
     @IBAction func closeButtonTapped(_ sender: UIButton) {
         self.dismiss(animated: true)
+    }
+}
+
+// MARK: - TableView Methods
+
+extension LeaderboardViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return game?.players.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath)
+        
+        guard let game = game else { return cell}
+        cell.textLabel?.text = game.playersNames[indexPath.row]
+        cell.detailTextLabel?.text = "Points: \(game.playersPoints[indexPath.row])"
+        
+        return cell
     }
 }

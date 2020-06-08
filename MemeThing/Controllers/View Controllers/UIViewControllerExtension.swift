@@ -32,11 +32,20 @@ extension UIViewController {
     // MARK: - Navigation
     
     // TODO: - find a better place to put these functions
-    func transitionToStoryboard(named: String) {
+    func transitionToStoryboard(named: String, direction: CATransitionSubtype = .fromLeft) {
         let storyboard = UIStoryboard(name: named, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() else { return }
         initialVC.modalPresentationStyle = .fullScreen
-        self.present(initialVC, animated: true)
+        
+        // Make the transition look like navigating back through a navigation controller
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.type = .push
+        transition.subtype = direction
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        view.window?.layer.add(transition, forKey: kCATransition)
+        
+        self.present(initialVC, animated: false)
     }
     
     // TODO: - this is actually untested so far
@@ -45,7 +54,16 @@ extension UIViewController {
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
         initialVC.game = game
         initialVC.modalPresentationStyle = .fullScreen
-        self.present(initialVC, animated: true)
+        
+        // Make the transition look like navigating forward through a navigation controller
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.type = .push
+        transition.subtype = .fromRight
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        view.window?.layer.add(transition, forKey: kCATransition)
+        
+        self.present(initialVC, animated: false)
     }
     
     func presentLeaderboard(with game: Game) {

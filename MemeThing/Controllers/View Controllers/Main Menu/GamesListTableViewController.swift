@@ -114,7 +114,7 @@ class GamesListTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if dataSource[indexPath.section].name == .games { return true }
+        if dataSource[indexPath.section].name == .games && dataSource[indexPath.section].data.count > 0 { return true }
         return false
     }
 
@@ -131,6 +131,7 @@ class GamesListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard dataSource[indexPath.section].name == .games,
+            dataSource[indexPath.section].data.count > 0,
             let currentUser = UserController.shared.currentUser
             else { return }
         

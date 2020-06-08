@@ -105,6 +105,7 @@
                     </view>
                     <connections>
                         <outlet property="canvasView" destination="7cY-5M-71c" id="LgD-Zk-BYf"/>
+                        <outlet property="undoButton" destination="hdu-03-sxy" id="0h1-Kq-7RX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

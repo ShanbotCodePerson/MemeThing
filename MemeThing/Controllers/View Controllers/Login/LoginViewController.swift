@@ -166,10 +166,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func presentMainMenuVC() {
         DispatchQueue.main.async {
-            let storyboard = UIStoryboard(name: "MainMenu", bundle: nil)
-            guard let initialVC = storyboard.instantiateInitialViewController() else { return }
-            initialVC.modalPresentationStyle = .fullScreen
-            self.present(initialVC, animated: true)
+            self.transitionToStoryboard(named: StoryboardNames.mainMenu, direction: .fromRight)
         }
     }
     
