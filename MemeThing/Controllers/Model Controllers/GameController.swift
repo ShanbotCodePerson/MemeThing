@@ -94,20 +94,6 @@ class GameController {
         CKService.shared.read(recordID: recordID) { [weak self] (result: Result<Game, MemeThingError>) in
             switch result {
             case .success(let game):
-                // Update the source of truth
-                if let index = self?.currentGames?.firstIndex(of: game) {
-                    // If the game is already in the array, replace it with this updated version
-                    self?.currentGames?.remove(at: index)
-                    self?.currentGames?.insert(game, at: index)
-                } else {
-                    // Otherwise, add the game to the array for the first time
-                    if var currentGames = self?.currentGames {
-                        currentGames.append(game)
-                        self?.currentGames = currentGames
-                    } else {
-                        self?.currentGames = [game]
-                    }
-                }
                 // Return the success
                 return completion(.success(game))
             case .failure(let error):
@@ -119,7 +105,8 @@ class GameController {
     }
     
     // Update a game
-    func update(_ game: Game, completion: @escaping resultHandlerWithObject) {
+    func saveChanges(to game: Game, completion: @escaping resultHandlerWithObject) {
+        print("got here to \(#function) and game being saved is \(game.debugging)")
         // Save the updated game to the cloud
         CKService.shared.update(object: game) { (result) in
             switch result {
@@ -132,16 +119,6 @@ class GameController {
                 return completion(.failure(error))
             }
         }
-    }
-    
-    // FIXME: - might not need this function after all
-    // Update a game's status
-    func updateStatus(of game: Game, to status: Game.GameStatus, completion: @escaping resultHandlerWithObject) {
-        // Update the game's status
-        game.gameStatus = status
-        
-        // Save the changes to the cloud
-        update(game, completion: completion)
     }
     
     // Delete a game when it's finished
@@ -269,7 +246,7 @@ class GameController {
         }
         
         // Save the updated game to the cloud
-        update(game) { [weak self] (result) in
+        saveChanges(to: game) { [weak self] (result) in
             switch result {
             case .success(let game):
                 // If the user accepted the invitation, subscribe them to notifications for the game
@@ -327,19 +304,21 @@ class GameController {
     // Receive a notification that a game has been updated
     func receiveUpdateToGame(withID recordID: CKRecord.ID) {
         guard let currentUser = UserController.shared.currentUser else { return }
+        print("got here to \(#function)")
         
         // Fetch the game object from the cloud
         fetchGame(from: recordID) { [weak self] (result) in
             switch result {
             case .success(let game):
+                print("SoT is \(self?.currentGames?.compactMap({$0.debugging})) and game is \(game.debugging)")
                 // Update the game in the source of truth
                 guard let index = self?.currentGames?.firstIndex(of: game) else { return }
                 self?.currentGames?[index] = game
+                print("SoT is now \(self?.currentGames?.compactMap({$0.debugging}))")
                 
                 // Form the notification that will tell the views how to update
                 var notificationDestination: Notification.Name?
                 
-                // FIXME: - something's fishy here plz help
                 // Set the destination of the notification based on the status of the game
                 switch game.gameStatus {
                 case .waitingForPlayers:
@@ -370,6 +349,7 @@ class GameController {
                 // Post the notification to update the view
                 guard let notificationName = notificationDestination else { return }
                 NotificationCenter.default.post(Notification(name: notificationName,  userInfo: ["gameID" : game.recordID.recordName]))
+                print("notification sent with name \(notificationName)")
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 // TODO: - better error handling  - display an alert to the user?

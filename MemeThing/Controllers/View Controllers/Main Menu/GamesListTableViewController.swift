@@ -50,7 +50,7 @@ class GamesListTableViewController: UITableViewController {
         tableView.backgroundColor = .lightGray
         
         // Load the data, if it hasn't been loaded already
-        loadData()
+        loadAllData()
         
         // Set up the observer to listen for notifications telling the view to reload its data
         NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: updateListOfGames, object: nil)
@@ -62,7 +62,7 @@ class GamesListTableViewController: UITableViewController {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
-    func loadData() {
+    func loadAllData() {
         if GameController.shared.currentGames == nil {
             GameController.shared.fetchCurrentGames { [weak self] (result) in
                 DispatchQueue.main.async {
@@ -132,7 +132,7 @@ class GamesListTableViewController: UITableViewController {
     // MARK: - Navigation
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard dataSource[indexPath.section].name == .games,
+        guard dataSource[indexPath.section].name != .pendingInvitations,
             dataSource[indexPath.section].data.count > 0,
             let currentUser = UserController.shared.currentUser
             else { return }

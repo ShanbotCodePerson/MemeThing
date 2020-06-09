@@ -83,6 +83,11 @@ class Game: CKCompatible {
     // MARK: - Helper Properties
     // Helper properties for easier interaction with the game object
     
+    // TODO: - delete this later, just helpful for testing
+    var debugging: String {
+        return "Game with \(playersNames.joined(separator: ", ")) at status \(playersStatus) and points \(playersPoints). Status is \(gameStatus). \(memes?.count) memes."
+    }
+    
     // A nicely formatted list of the names of the game participants, minus the current user
     var listOfPlayerNames: String {
         guard let currentUser = UserController.shared.currentUser else { return "ERROR" }
@@ -280,6 +285,6 @@ class Game: CKCompatible {
 extension Game: Equatable {
     
     static func == (lhs: Game, rhs: Game) -> Bool {
-        return lhs.recordID == rhs.recordID
+        return lhs.recordID.recordName == rhs.recordID.recordName
     }
 }

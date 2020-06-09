@@ -61,6 +61,7 @@ class InviteFriendsTableViewController: UITableViewController {
                 case .success(let game):
                     // Transition to the waiting view, passing along the reference to the current game
                     print("got here to \(#function) and seems to have created the game successfully")
+                    print("SoT is now \(GameController.shared.currentGames?.compactMap({$0.debugging}))")
                     self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -88,7 +89,6 @@ class InviteFriendsTableViewController: UITableViewController {
     
     // FIXME: - comment, prettify
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("got here to \(#function)")
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
             startGameButton.isEnabled = true
         } else {
@@ -97,7 +97,6 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        print("got here to \(#function)")
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
             startGameButton.isEnabled = true
         } else {

@@ -33,4 +33,14 @@ class MainMenuViewController: UIViewController {
         guard let user = UserController.shared.currentUser else { return }
         welcomeLabel.text = "Welcome, \(user.screenName)!"
     }
+    
+    // FIXME: - delete later, for debugging only
+    @IBAction func tempFakeNotifications(_ sender: UIButton) {
+        // Reload all the data as if a notification of any sort had been received (for testing on simulators) 
+        UserController.shared.fetchUser { (_) in }
+        UserController.shared.fetchUsersFriends { (_) in }
+        FriendRequestController.shared.fetchPendingFriendRequests { (_) in }
+        FriendRequestController.shared.fetchOutgoingFriendRequests { (_) in }
+        GameController.shared.fetchCurrentGames { (_) in }
+    }
 }

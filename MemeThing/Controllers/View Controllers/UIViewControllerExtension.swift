@@ -52,7 +52,7 @@ extension UIViewController {
     func transitionToStoryboard(named: String, with game: Game) {
         let storyboard = UIStoryboard(name: named, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
-        initialVC.game = game
+        initialVC.game = GameController.shared.currentGames?.first(where: { $0.recordID.recordName == game.recordID.recordName })
         initialVC.modalPresentationStyle = .fullScreen
         
         // Make the transition look like navigating forward through a navigation controller

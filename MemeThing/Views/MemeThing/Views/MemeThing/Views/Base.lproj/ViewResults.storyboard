@@ -87,7 +87,11 @@
                                                 <action selector="mainMenuButtonTapped:" destination="OFq-l9-Vna" id="MjV-oh-E6j"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="Item" image="ellipsis" catalog="system" id="TRQ-Lf-D8m"/>
+                                        <barButtonItem key="rightBarButtonItem" title="Item" image="ellipsis" catalog="system" id="TRQ-Lf-D8m">
+                                            <connections>
+                                                <action selector="dotsButtonTapped:" destination="OFq-l9-Vna" id="XmD-lV-oVP"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>

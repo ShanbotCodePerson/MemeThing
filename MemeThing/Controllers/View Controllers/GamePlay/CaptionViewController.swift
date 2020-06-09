@@ -71,7 +71,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 if game.allCaptionsSubmitted { game.gameStatus = .waitingForResult }
                 
                 // Save the updated game to the cloud
-                GameController.shared.update(game) { (result) in
+                GameController.shared.saveChanges(to: game) { (result) in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):

@@ -34,6 +34,11 @@ class WaitingViewController: UIViewController, HasAGameObject {
         // Set up the observers to listen for notifications telling the view to transition to a new page
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toCaptionsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toResultsView, object: nil)
+        
+        // Display the leaderboard on top of the screen
+//        guard let game = game else { return }
+//        transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        // FIXME: - this doesn't work and also need to call it at appropriate time and also in drawing view(?)
     }
     
     // MARK: - Set Up UI
@@ -61,16 +66,13 @@ class WaitingViewController: UIViewController, HasAGameObject {
         // Set up the tableview
         waitingForTableView.delegate = self
         waitingForTableView.dataSource = self
-        waitingForTableView.register(UITableViewCell.self, forCellReuseIdentifier: "playerCell")
+        waitingForTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")
     }
     
     // The view that non-lead players see while the lead player is drawing
     func waitingForDrawing(for game: Game) {
         // Hide the tableview
         waitingForTableView.isHidden = true
-        
-        // Display the leaderboard on top of the screen
-        transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
     
     // The view that lead players and non-lead players who have submitted captions see while waiting for all the captions to be submitted
@@ -151,9 +153,11 @@ extension WaitingViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
         guard let game = game else { return cell }
-        cell.firstLabel.text = game.playersNames[indexPath.row]
-        cell.secondLabel.text = game.playersStatus[indexPath.row].asString
-        cell.thirdLabel.text = "Points: \(game.playersPoints[indexPath.row])"
+        // FIXME: - why are the outlets nil??
+//        cell.setUpUI(game.playersNames[indexPath.row], game.playersStatus[indexPath.row].asString, "Points: \(game.playersPoints[indexPath.row])")
+//        cell.firstLabel.text = game.playersNames[indexPath.row]
+//        cell.secondLabel.text = game.playersStatus[indexPath.row].asString
+//        cell.thirdLabel.text = "Points: \(game.playersPoints[indexPath.row])"
         
         return cell
     }

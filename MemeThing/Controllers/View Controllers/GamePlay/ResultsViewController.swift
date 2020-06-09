@@ -122,7 +122,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     self.transitionToStoryboard(named: StoryboardNames.drawingView, with: game)
                 } else {
                     self.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-                }
+                } // FIXME: - fix navigation for one who just became lead player when game reset
             }
             else if sender.name == toGameOver {
                 self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
@@ -135,6 +135,11 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
         print("got here")
         transitionToStoryboard(named: StoryboardNames.mainMenu)
+    }
+    
+    @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
+        guard let game = game else { return }
+        transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
     
     @IBAction func chooseWinnerButtonTapped(_ sender: UIButton) {
@@ -155,7 +160,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     game.resetGame()
                     
                     // Save the updated game to the cloud
-                    GameController.shared.update(game) { (result) in
+                    GameController.shared.saveChanges(to: game) { (result) in
                         DispatchQueue.main.async {
                             switch result {
                             case .success(_):
@@ -164,7 +169,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                     self?.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
                                 } else {
                                     self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-                                }
+                                } // FIXME: - fix navigation for one who just became lead player
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 self?.presentErrorToUser(error)

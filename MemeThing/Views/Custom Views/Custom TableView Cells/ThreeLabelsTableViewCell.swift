@@ -16,4 +16,14 @@ class ThreeLabelsTableViewCell: UITableViewCell {
     @IBOutlet weak var secondLabel: UILabel!
     @IBOutlet weak var thirdLabel: UILabel!
     
+    
+    // MARK: - Set Up UI
+    
+    func setUpUI(_ firstText: String, _ secondText: String, _ thirdText: String?) {
+        
+        firstLabel.text = firstText
+        secondLabel.text = secondText
+        if let thirdText = thirdText { thirdLabel.text = thirdText }
+        else { thirdLabel.isHidden = true }
+    }
 }

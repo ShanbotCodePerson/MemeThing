@@ -49,7 +49,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
         let image = canvasView.getImage()
         
         // Create the meme object and save it to the cloud
-        MemeController.shared.createMeme(in: game, with: image, by: currentUser) { [weak self] (result) in
+        MemeController.shared.createMeme(with: image, by: currentUser) { [weak self] (result) in
             switch result {
             case .success(let meme):
                 // Add the meme to the game
@@ -69,7 +69,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
                 
                 // Save the game to the cloud
                 // TODO: - better way than nested completions??
-                GameController.shared.update(game) { (result) in
+                GameController.shared.saveChanges(to: game) { (result) in
                     switch result {
                     case .success(_):
                         // Transition back to the waiting view until all the captions have been submitted

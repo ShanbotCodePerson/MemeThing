@@ -60,11 +60,12 @@ class NotificationHelper {
             print("received notification that caption won")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            // Parse the passed data to get the reference to the game
-            guard let recordFields = ckNotification.recordFields,
-                let gameReference = recordFields[CaptionStrings.gameKey] as? CKRecord.Reference
-                else { return }
-            MemeController.shared.receiveNotificationCaptionWon(inGame: gameReference)
+            
+//            // Parse the passed data to get the reference to the game
+//            guard let recordFields = ckNotification.recordFields,
+//                let gameReference = recordFields[CaptionStrings.gameKey] as? CKRecord.Reference
+//                else { return }
+            MemeController.shared.receiveNotificationCaptionWon()
         case .gameEnded:
             print("received notification that game ended")
             // TODO: - display an alert if app is open?
