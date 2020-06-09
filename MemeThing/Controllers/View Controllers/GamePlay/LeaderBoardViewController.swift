@@ -12,12 +12,14 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var gameStatusView: UIView!
     @IBOutlet weak var gameStatusLabel: UILabel!
     @IBOutlet weak var playersTableView: UITableView!
     
     // MARK: - Properties
     
-    var game: Game?
+    var gameID: String?
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
     
     // MARK: - Lifecycle Methods
 
@@ -46,6 +48,10 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     @IBAction func closeButtonTapped(_ sender: UIButton) {
         self.dismiss(animated: true)
     }
+    
+    @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
+        self.dismiss(animated: true)
+    }
 }
 
 // MARK: - TableView Methods
@@ -60,9 +66,9 @@ extension LeaderboardViewController: UITableViewDelegate, UITableViewDataSource 
        guard let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
         guard let game = game else { return cell }
-        cell.firstLabel.text = game.playersNames[indexPath.row]
-        cell.secondLabel.text = game.playersStatus[indexPath.row].asString
-        cell.thirdLabel.text = "Points: \(game.playersPoints[indexPath.row])"
+        cell.setUpUI(game.playersNames[indexPath.row],
+                     game.playersStatus[indexPath.row].asString,
+                     "Points: \(game.playersPoints[indexPath.row])")
         
         return cell
     }

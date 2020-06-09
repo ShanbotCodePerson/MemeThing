@@ -20,3 +20,19 @@ extension UIView {
         layer.borderColor = color.cgColor
     }
 }
+
+extension UIColor {
+    static let background = UIColor(named: "background")!
+    static let navBar = UIColor(named: "navBar")!
+    static let purpleAccent = UIColor(named: "purpleAccent")!
+    static let greenAccent = UIColor(named: "greenAccent")!
+    static let redAccent = UIColor(named: "redAccent")!
+    static let yellowAccent = UIColor(named: "yellowAccent")!
+    static let mainText = UIColor(named: "mainText")!
+    static let accentText = UIColor(named: "accentText")!
+    static let textBackground = UIColor(named: "textBackground")!
+}
+
+struct FontNames {
+    static let mainFont = "MarkerFelt-Thin"
+}

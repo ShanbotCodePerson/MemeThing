@@ -14,10 +14,12 @@ class WaitingViewController: UIViewController, HasAGameObject {
     
     @IBOutlet weak var waitingLabel: UILabel!
     @IBOutlet weak var waitingForTableView: UITableView!
+    @IBOutlet weak var navigationBar: UINavigationBar!
     
     // MARK: - Properties
     
-    var game: Game?
+    var gameID: String?
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
     
     // MARK: - Lifecycle Methods
     
@@ -26,7 +28,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
         
         // Set up the UI
         setUpViews()
-        
+        // FIXME: - do I have to remove these observers upon deinit?
         // Set up the observers to listen for notifications telling the view to reload its data
         NotificationCenter.default.addObserver(self, selector: #selector(refreshPage(_:)), name: updateWaitingView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(gameStarting(_:)), name: toNewRound, object: nil)
@@ -36,14 +38,16 @@ class WaitingViewController: UIViewController, HasAGameObject {
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toResultsView, object: nil)
         
         // Display the leaderboard on top of the screen
-//        guard let game = game else { return }
-//        transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        guard let game = game else { return }
+        presentLeaderboard(with: game)
         // FIXME: - this doesn't work and also need to call it at appropriate time and also in drawing view(?)
     }
     
     // MARK: - Set Up UI
     
     func setUpViews() {
+        view.backgroundColor = .background
+        
         guard let game = game else { return }
         
         waitingLabel.text = game.gameStatusDescription
@@ -139,6 +143,9 @@ class WaitingViewController: UIViewController, HasAGameObject {
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
         transitionToStoryboard(named: StoryboardNames.mainMenu)
     }
+    
+    @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
+    }
 }
 
 // MARK: - TableView Delegate
@@ -154,10 +161,9 @@ extension WaitingViewController: UITableViewDelegate, UITableViewDataSource {
         
         guard let game = game else { return cell }
         // FIXME: - why are the outlets nil??
-//        cell.setUpUI(game.playersNames[indexPath.row], game.playersStatus[indexPath.row].asString, "Points: \(game.playersPoints[indexPath.row])")
-//        cell.firstLabel.text = game.playersNames[indexPath.row]
-//        cell.secondLabel.text = game.playersStatus[indexPath.row].asString
-//        cell.thirdLabel.text = "Points: \(game.playersPoints[indexPath.row])"
+        cell.setUpUI(game.playersNames[indexPath.row],
+                     game.playersStatus[indexPath.row].asString,
+                     "Points: \(game.playersPoints[indexPath.row])")
         
         return cell
     }

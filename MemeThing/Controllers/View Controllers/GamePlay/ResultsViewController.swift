@@ -16,10 +16,12 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var chooseWinnerButton: UIButton!
+    @IBOutlet weak var navigationBar: UINavigationBar!
     
     // MARK: - Properties
     
-    var game: Game?
+    var gameID: String?
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
     var meme: Meme? { didSet { memeImageView.image = meme?.photo } }
     var captions: [Caption]? { didSet { setUpPages(from: captions) } }
     
@@ -43,6 +45,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     func loadAllData() {
         guard let game = game, let memeReference = game.memes?.last else { return }
+        print("got here to \(#function) and \(game.debugging)")
         
         // Fetch the meme from the cloud
         MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
@@ -51,6 +54,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme
                     self?.meme = meme
+                    print("in completion and meme is \(meme) with \(meme.captions?.count) captions")
                     
                     // TODO: - nested completions
                     
@@ -58,7 +62,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     MemeController.shared.fetchCaptions(for: meme) { (result) in
                         DispatchQueue.main.async {
                             switch result {
-                            case .success(let captions):
+                            case .success(let captions): // FIXME: - why does this return [] the first time its run?
+                                print("in second completion and captions are \(captions)")
                                 // Save the captions
                                 self?.captions = captions
                                 self?.pageControl.numberOfPages = captions.count
@@ -79,6 +84,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
+        view.backgroundColor = .background
+        
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
         
         // Hide the button to choose the winner if the user is not the lead player
@@ -89,6 +96,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     func setUpPages(from captions: [Caption]?) {
         guard let captions = captions else { return }
+        print("got here to \(#function) and \(captions.count)")
         
         var frame = CGRect.zero
         
@@ -96,7 +104,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
             frame.origin.x = scrollView.frame.size.width * CGFloat(index)
             frame.size = scrollView.frame.size
             
-            let captionLabel = MemeThingLabel(frame: frame)
+            let captionLabel = MemeThingLabelBackground(frame: frame)
             captionLabel.text = captions[index].text
             
             self.scrollView.addSubview(captionLabel)
@@ -122,7 +130,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     self.transitionToStoryboard(named: StoryboardNames.drawingView, with: game)
                 } else {
                     self.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-                } // FIXME: - fix navigation for one who just became lead player when game reset
+                }
             }
             else if sender.name == toGameOver {
                 self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
@@ -139,7 +147,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        presentLeaderboard(with: game)
     }
     
     @IBAction func chooseWinnerButtonTapped(_ sender: UIButton) {
@@ -155,9 +163,11 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 case .success(_):
                     // TODO: - nested completions
                     
+                    // Reset the game for another round
+                    game.resetGame()
+                    
                     // Increment the points of the player who wrote that caption and update the game's status based on whether there is an overall winner or not
                     game.winningCaptionSelected(as: caption)
-                    game.resetGame()
                     
                     // Save the updated game to the cloud
                     GameController.shared.saveChanges(to: game) { (result) in
@@ -169,7 +179,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                     self?.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
                                 } else {
                                     self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-                                } // FIXME: - fix navigation for one who just became lead player
+                                }
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 self?.presentErrorToUser(error)

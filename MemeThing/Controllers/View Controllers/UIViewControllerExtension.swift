@@ -11,7 +11,7 @@ import UIKit
 // MARK: - Game Object Protocol
 
 protocol HasAGameObject: UIViewController {
-    var game: Game? { get set }
+    var gameID: String? { get set }
 }
 
 // MARK: - String Constants
@@ -52,7 +52,7 @@ extension UIViewController {
     func transitionToStoryboard(named: String, with game: Game) {
         let storyboard = UIStoryboard(name: named, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
-        initialVC.game = GameController.shared.currentGames?.first(where: { $0.recordID.recordName == game.recordID.recordName })
+        initialVC.gameID = game.recordID.recordName
         initialVC.modalPresentationStyle = .fullScreen
         
         // Make the transition look like navigating forward through a navigation controller
@@ -69,7 +69,7 @@ extension UIViewController {
     func presentLeaderboard(with game: Game) {
         let storyboard = UIStoryboard(name: StoryboardNames.leaderboardView, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
-        initialVC.game = game
+        initialVC.gameID = game.recordID.recordName
         initialVC.modalPresentationStyle = .overFullScreen
         initialVC.modalTransitionStyle = .crossDissolve
         self.present(initialVC, animated: true)

@@ -24,9 +24,9 @@ class MemeController {
     // MARK: - CRUD Methods
     
     // Create a new meme
-    func createMeme(with photo: UIImage, by author: User, completion: @escaping resultHandlerWithObject) {
+    func createMeme(in game: Game, with photo: UIImage, by author: User, completion: @escaping resultHandlerWithObject) {
         // Create the meme
-        let meme = Meme(photo: photo, author: author.reference)
+        let meme = Meme(photo: photo, author: author.reference, game: game.reference)
         
         // Save it to the cloud
         CKService.shared.create(object: meme) { (result) in

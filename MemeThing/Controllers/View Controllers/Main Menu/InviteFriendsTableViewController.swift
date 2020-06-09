@@ -19,7 +19,7 @@ class InviteFriendsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.backgroundColor = .lightGray
+        tableView.backgroundColor = .background
         
         // Load the data if it hasn't been loaded already
         loadData()

@@ -339,7 +339,7 @@ class GameController {
                     // Tell the waiting view to transition to the results view
                     notificationDestination = toResultsView
                 case .waitingForNextRound:
-                   // Tell the results view to navigate to a new round
+                    // Tell the results view to navigate to a new round
                     notificationDestination = toNewRound
                 case .gameOver:
                     // Tell the results view to navigate to the game over view
