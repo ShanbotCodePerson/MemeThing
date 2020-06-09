@@ -78,9 +78,8 @@ class NotificationHelper {
 
 let friendsUpdate = Notification.Name("friendsUpdate")
 let updateListOfGames = Notification.Name("updateListOfGames")
-let updateWaitingViewWithInvitationResponse = Notification.Name("updateWaitingViewWithInvitationResponse")
-let drawingSent = Notification.Name("drawingSent")
-let updateWaitingViewWithNewCaption = Notification.Name("updateWaitingViewWithNewCaption")
+let updateWaitingView = Notification.Name("updateWaitingView")
+let toCaptionsView = Notification.Name("toCaptionsView")
 let toResultsView = Notification.Name("toResultsView")
 let toNewRound = Notification.Name("toNewRound")
 let toGameOver = Notification.Name("toGameOver")

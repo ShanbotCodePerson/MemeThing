@@ -23,6 +23,12 @@ class DrawingViewController: UIViewController, HasAGameObject {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Display the leaderboard unless the game is just starting
+        guard let game = game else { return }
+        if game.memes?.count ?? 0 > 0 {
+            transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        }
     }
     
     // MARK: - Actions

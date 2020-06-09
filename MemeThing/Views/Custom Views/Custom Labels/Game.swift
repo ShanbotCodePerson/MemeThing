@@ -103,7 +103,8 @@ class Game: CKCompatible {
         // Describe the current phase of the game based on the game status and whether the user is currently the lead player or not
         switch gameStatus {
         case .waitingForPlayers:
-            return "The game has not started yet - still waiting for \(playersStatus.filter({ $0 == .invited}).count) players to join the game"
+            let numberWaiting = playersStatus.filter({ $0 == .invited}).count
+            return "The game has not started yet - still waiting for \(numberWaiting) player\(numberWaiting == 1 ? "" : "s") to join the game"
         case .waitingForDrawing:
             if isLeadPlayer {
                 return "The other players are waiting on you to complete a drawing"
@@ -111,10 +112,11 @@ class Game: CKCompatible {
                 return "Waiting for \(leadPlayerName) to complete a drawing"
             }
         case .waitingForCaptions:
+            let numberWaiting = playersStatus.filter({ $0 == .accepted}).count
             if isLeadPlayer {
-                return "Waiting for \(playersStatus.filter({ $0 == .accepted}).count) players to write a caption for your drawing"
+                return "Waiting for \(numberWaiting) player\(numberWaiting == 1 ? "" : "s") to write a caption for your drawing"
             } else if getStatus(of: currentUser) == .sentCaption {
-                return "Waiting for \(playersStatus.filter({ $0 == .accepted}).count) players to write a caption for \(leadPlayerName)'s drawing"
+                return "Waiting for \(numberWaiting) player\(numberWaiting == 1 ? "" : "s") to write a caption for \(leadPlayerName)'s drawing"
             } else {
                 return "The other players are waiting for you to write a caption for \(leadPlayerName)'s drawing"
             }

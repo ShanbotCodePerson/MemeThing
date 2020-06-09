@@ -20,13 +20,16 @@ class ResultsViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var game: Game?
-    var meme: Meme?
-    var captions: [Caption]?
+    var meme: Meme? { didSet { memeImageView.image = meme?.photo } }
+    var captions: [Caption]? { didSet { setUpPages(from: captions) } }
     
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Load all the data, if it hasn't been loaded already
+        loadAllData()
         
         // Set up the UI
         setUpViews()
@@ -36,36 +39,29 @@ class ResultsViewController: UIViewController, HasAGameObject {
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
     }
     
-    // MARK: - Set Up UI
+    // MARK: - Helper Method
     
-    func setUpViews() {
-        guard let game = game, let memeReference = game.memes?.last,
-            let currentUser = UserController.shared.currentUser
-            else { return }
+    func loadAllData() {
+        guard let game = game, let memeReference = game.memes?.last else { return }
         
-        // Hide the button to choose the winner if the user is not the lead player
-        if game.leadPlayer != currentUser.reference {
-            chooseWinnerButton.isHidden = true
-        }
-        
-        // Fetch the meme object and fill out the image view
+        // Fetch the meme from the cloud
         MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let meme):
+                    // Save the meme
                     self?.meme = meme
-                    self?.memeImageView.image = meme.photo
                     
-                    // TODO: - refactor this to a better location
-                    // Fetch the list of captions for that meme
+                    // TODO: - nested completions
+                    
+                    // Fetch the captions for that meme from the cloud
                     MemeController.shared.fetchCaptions(for: meme) { (result) in
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let captions):
+                                // Save the captions
                                 self?.captions = captions
                                 self?.pageControl.numberOfPages = captions.count
-                                
-                                self?.setUpPages(from: captions)
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 self?.presentErrorToUser(error)
@@ -80,7 +76,20 @@ class ResultsViewController: UIViewController, HasAGameObject {
         }
     }
     
-    func setUpPages(from captions: [Caption]) {
+    // MARK: - Set Up UI
+    
+    func setUpViews() {
+        guard let game = game, let currentUser = UserController.shared.currentUser else { return }
+        
+        // Hide the button to choose the winner if the user is not the lead player
+        if game.leadPlayer != currentUser.reference {
+            chooseWinnerButton.isHidden = true
+        }
+    }
+    
+    func setUpPages(from captions: [Caption]?) {
+        guard let captions = captions else { return }
+        
         var frame = CGRect.zero
         
         for index in 0..<captions.count {
@@ -139,12 +148,11 @@ class ResultsViewController: UIViewController, HasAGameObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
-                    // TODO: - refactor this to somewhere else, cleaner
+                    // TODO: - nested completions
                     
                     // Increment the points of the player who wrote that caption and update the game's status based on whether there is an overall winner or not
                     game.winningCaptionSelected(as: caption)
                     game.resetGame()
-                    // FIXME: - where do i update game for a new round?
                     
                     // Save the updated game to the cloud
                     GameController.shared.update(game) { (result) in
@@ -156,8 +164,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                     self?.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
                                 } else {
                                     self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-                                    // TODO: - not sure if this will work, want to present leaderboard on top of waiting screen
-                                    self?.transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
                                 }
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

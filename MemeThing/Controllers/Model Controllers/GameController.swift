@@ -210,7 +210,6 @@ class GameController {
         
         // Form the predicate to look for the specific game
         let predicate = NSPredicate(format: "%K == %@", argumentArray: ["recordID", game.recordID])
-//        let predicate = NSPredicate(value: true) // TODO: - delete this after done testing
         let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, subscriptionID: "\(game.recordID.recordName)-update", options: [CKQuerySubscription.Options.firesOnRecordUpdate])
         
         // Format the display of the notification
@@ -335,8 +334,7 @@ class GameController {
             case .success(let game):
                 // Update the game in the source of truth
                 guard let index = self?.currentGames?.firstIndex(of: game) else { return }
-                self?.currentGames?.remove(at: index)
-                self?.currentGames?.insert(game, at: index)
+                self?.currentGames?[index] = game
                 
                 // Form the notification that will tell the views how to update
                 var notificationDestination: Notification.Name?
@@ -345,18 +343,18 @@ class GameController {
                 // Set the destination of the notification based on the status of the game
                 switch game.gameStatus {
                 case .waitingForPlayers:
-                    // Tell the waiting view to update to reflect the player's response
-                    notificationDestination = updateWaitingViewWithInvitationResponse
+                    // Tell the waiting view to update itself
+                    notificationDestination = updateWaitingView
                 case .waitingForDrawing:
                     // Tell the view (either the waiting view or the end of round view) to transition to a new round
                     notificationDestination = toNewRound
                 case .waitingForCaptions:
                     // If the player has not submitted a caption yet, tell their view to transition to the captions view
                     if game.getStatus(of: currentUser) == .accepted {
-                        notificationDestination = drawingSent
+                        notificationDestination = toCaptionsView
                     } else {
-                        // Otherwise, tell the waiting view to update to reflect that a new caption has been submitted
-                        notificationDestination = updateWaitingViewWithNewCaption
+                        // Otherwise, tell the waiting view to update itself
+                        notificationDestination = updateWaitingView
                     }
                 case .waitingForResult:
                     // Tell the waiting view to transition to the results view

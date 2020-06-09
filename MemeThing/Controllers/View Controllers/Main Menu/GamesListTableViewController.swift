@@ -122,6 +122,8 @@ class GamesListTableViewController: UITableViewController {
         if editingStyle == .delete {
             // TODO: - present alert to confirm quitting game
             
+            // TODO: - allow user to quit game, check if enough players to keep playing, save the update to the cloud
+            
             // Delete the row from the data source
 //            tableView.deleteRows(at: [indexPath], with: .fade)
         }

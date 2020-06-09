@@ -28,12 +28,11 @@ class WaitingViewController: UIViewController, HasAGameObject {
         setUpViews()
         
         // Set up the observers to listen for notifications telling the view to reload its data
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshPage(_:)), name: updateWaitingViewWithInvitationResponse, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshPage(_:)), name: updateWaitingViewWithNewCaption, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshPage(_:)), name: updateWaitingView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(gameStarting(_:)), name: toNewRound, object: nil)
         
         // Set up the observers to listen for notifications telling the view to transition to a new page
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: drawingSent, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toCaptionsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toResultsView, object: nil)
     }
     
@@ -69,6 +68,9 @@ class WaitingViewController: UIViewController, HasAGameObject {
     func waitingForDrawing(for game: Game) {
         // Hide the tableview
         waitingForTableView.isHidden = true
+        
+        // Display the leaderboard on top of the screen
+        transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
     
     // The view that lead players and non-lead players who have submitted captions see while waiting for all the captions to be submitted
@@ -80,7 +82,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
             // Set up the tableview so that non-lead players can see it
             waitingForTableView.delegate = self
             waitingForTableView.dataSource = self
-            waitingForTableView.register(UITableViewCell.self, forCellReuseIdentifier: "playerCell")
+            waitingForTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")
         }
     }
     
@@ -92,16 +94,8 @@ class WaitingViewController: UIViewController, HasAGameObject {
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
             gameID == game.recordID.recordName else { return }
         
-        // Refresh the page based on the type of update
-        DispatchQueue.main.async {
-            if sender.name == updateWaitingViewWithInvitationResponse {
-                self.waitingForTableView.reloadData()
-            }
-            else if sender.name == updateWaitingViewWithNewCaption {
-                self.waitingForTableView.reloadData()
-            }
-            // TODO: - refactor to a single line, or even a single notification?
-        }
+        // Refresh the page
+        DispatchQueue.main.async { self.waitingForTableView.reloadData() }
     }
     
     // Navigate to a different view
@@ -112,7 +106,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
-            if sender.name == drawingSent {
+            if sender.name == toCaptionsView {
                 self.transitionToStoryboard(named: StoryboardNames.captionView, with: game)
             }
             else if sender.name == toResultsView {
@@ -154,13 +148,12 @@ extension WaitingViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
-        guard let playerName = game?.playersNames[indexPath.row],
-            let playerStatus = game?.playersStatus[indexPath.row]
-            else { return cell }
-        cell.textLabel?.text = playerName
-        cell.detailTextLabel?.text = "Test" //playerStatus.asString
+        guard let game = game else { return cell }
+        cell.firstLabel.text = game.playersNames[indexPath.row]
+        cell.secondLabel.text = game.playersStatus[indexPath.row].asString
+        cell.thirdLabel.text = "Points: \(game.playersPoints[indexPath.row])"
         
         return cell
     }

@@ -38,7 +38,7 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         
         playersTableView.delegate = self
         playersTableView.dataSource = self
-        playersTableView.register(UITableViewCell.self, forCellReuseIdentifier: "playerCell")
+        playersTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")
     }
     
     // MARK: - Actions
@@ -57,11 +57,12 @@ extension LeaderboardViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath)
+       guard let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
-        guard let game = game else { return cell}
-        cell.textLabel?.text = game.playersNames[indexPath.row]
-        cell.detailTextLabel?.text = "Points: \(game.playersPoints[indexPath.row])"
+        guard let game = game else { return cell }
+        cell.firstLabel.text = game.playersNames[indexPath.row]
+        cell.secondLabel.text = game.playersStatus[indexPath.row].asString
+        cell.thirdLabel.text = "Points: \(game.playersPoints[indexPath.row])"
         
         return cell
     }

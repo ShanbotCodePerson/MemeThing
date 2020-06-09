@@ -36,7 +36,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
         
         resultsTableView.delegate = self
         resultsTableView.dataSource = self
-        resultsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "playerCell")
+        resultsTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")
     }
     
     // MARK: - Actions
@@ -59,11 +59,12 @@ extension GameOverViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
-        guard let game = game else { return cell}
-        cell.textLabel?.text = game.playersNames[indexPath.row]
-        cell.detailTextLabel?.text = "Points: \(game.playersPoints[indexPath.row])"
+        guard let game = game else { return cell }
+        cell.firstLabel.text = game.playersNames[indexPath.row]
+        cell.secondLabel.text = "Points: \(game.playersPoints[indexPath.row])"
+        cell.thirdLabel.isHidden = true
         
         return cell
     }

@@ -10,6 +10,10 @@ import UIKit
 
 class InviteFriendsTableViewController: UITableViewController {
     
+    // MARK: - Outlets
+    
+    @IBOutlet weak var startGameButton: UIButton!
+    
     // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
@@ -19,6 +23,9 @@ class InviteFriendsTableViewController: UITableViewController {
         
         // Load the data if it hasn't been loaded already
         loadData()
+        
+        // Start off with the button disabled until enough players have been selected for the game
+        startGameButton.isEnabled = false
     }
     
     // MARK: - Helper Method
@@ -43,11 +50,9 @@ class InviteFriendsTableViewController: UITableViewController {
     
     @IBAction func startGameButtonTapped(_ sender: UIButton) {
         // Get the list of selected players
-        // TODO: - display an alert if user hasn't selected anything
+        // TODO: - display an alert if user hasn't selected anything?
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.usersFriends?[$0.row] }
-
-        // TODO: - check that enough players are selected
 
         // Create the game object, thus saving it to the cloud and automatically alerting the selected players
         GameController.shared.newGame(players: friends) { [weak self] (result) in
@@ -58,7 +63,6 @@ class InviteFriendsTableViewController: UITableViewController {
                     print("got here to \(#function) and seems to have created the game successfully")
                     self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                 case .failure(let error):
-                    // TODO: - better error handling here
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorToUser(error)
                 }
@@ -80,5 +84,24 @@ class InviteFriendsTableViewController: UITableViewController {
         cell.detailTextLabel?.text = "Points: \(friend.points)"
         
         return cell
+    }
+    
+    // FIXME: - comment, prettify
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("got here to \(#function)")
+        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
+            startGameButton.isEnabled = true
+        } else {
+            startGameButton.isEnabled = false
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        print("got here to \(#function)")
+        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
+            startGameButton.isEnabled = true
+        } else {
+            startGameButton.isEnabled = false
+        }
     }
 }

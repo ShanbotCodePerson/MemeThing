@@ -31,14 +31,15 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7cY-5M-71c" customClass="CanvasView" customModule="MemeThing" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" verticalHuggingPriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="7cY-5M-71c" customClass="CanvasView" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="44" width="373" height="627"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="hdu-03-sxy" customClass="CircularButton" customModule="MemeThing" customModuleProvider="target">
-                                                        <rect key="frame" x="332" y="8" width="33" height="32.5"/>
+                                                        <rect key="frame" x="328" y="8" width="37" height="36.5"/>
                                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="hdu-03-sxy" secondAttribute="height" multiplier="1:1" id="fjl-H2-bAB"/>
+                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="zRc-B7-dPN"/>
                                                         </constraints>
                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" image="arrow.counterclockwise" catalog="system"/>
@@ -94,7 +95,7 @@
                             <constraint firstItem="Zx1-JU-3wd" firstAttribute="height" relation="lessThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.03" priority="999" id="61E-6b-3ht"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="UWg-1Y-3dz" secondAttribute="trailing" id="8FJ-Wj-mRe"/>
                             <constraint firstItem="JNr-ca-bWi" firstAttribute="top" secondItem="UWg-1Y-3dz" secondAttribute="bottom" id="U00-HR-qXI"/>
-                            <constraint firstItem="hdu-03-sxy" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.04" id="ig5-Zj-UeE"/>
+                            <constraint firstItem="hdu-03-sxy" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.045" priority="999" id="ig5-Zj-UeE"/>
                             <constraint firstItem="UWg-1Y-3dz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="l74-gC-lWa"/>
                             <constraint firstItem="JNr-ca-bWi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="pzT-LQ-RI5"/>
                             <constraint firstItem="JNr-ca-bWi" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="qYq-PN-0OA"/>

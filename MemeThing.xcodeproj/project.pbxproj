@@ -27,6 +27,7 @@
 		406C5394248AE9EC004729C7 /* LeaderBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406C5393248AE9EC004729C7 /* LeaderBoardViewController.swift */; };
 		406C5396248AE9F8004729C7 /* GameOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406C5395248AE9F8004729C7 /* GameOverViewController.swift */; };
 		408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 408A26E0247ED77D008CE8DC /* MainMenu.storyboard */; };
+		408AA2A4248ED5BF00C6CB82 /* ThreeLabelsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408AA2A3248ED5BF00C6CB82 /* ThreeLabelsTableViewCell.swift */; };
 		40A777EC248966F200ADBB82 /* GameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777EB248966F200ADBB82 /* GameTableViewCell.swift */; };
 		40A777EE24896A4500ADBB82 /* GamesListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */; };
 		40BA228D248715B3009A2197 /* Drawing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA228B248715B3009A2197 /* Drawing.storyboard */; };
@@ -52,7 +53,6 @@
 		40D003BB2483220B0046D64B /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003BA2483220B0046D64B /* GameController.swift */; };
 		40D003C024844C110046D64B /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003BF24844C110046D64B /* FriendRequest.swift */; };
 		40D003C2248493470046D64B /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003C1248493470046D64B /* FriendTableViewCell.swift */; };
-		40D003C62484957C0046D64B /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003C52484957C0046D64B /* UIViewExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +78,7 @@
 		406C5393248AE9EC004729C7 /* LeaderBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderBoardViewController.swift; sourceTree = "<group>"; };
 		406C5395248AE9F8004729C7 /* GameOverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverViewController.swift; sourceTree = "<group>"; };
 		408A26E1247ED77D008CE8DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/Base.lproj/MainMenu.storyboard; sourceTree = "<group>"; };
+		408AA2A3248ED5BF00C6CB82 /* ThreeLabelsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeLabelsTableViewCell.swift; sourceTree = "<group>"; };
 		40A777EB248966F200ADBB82 /* GameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTableViewCell.swift; sourceTree = "<group>"; };
 		40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListTableViewController.swift; sourceTree = "<group>"; };
 		40BA228C248715B3009A2197 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/MemeThing/Views/Base.lproj/Drawing.storyboard; sourceTree = "<group>"; };
@@ -104,7 +105,6 @@
 		40D003BA2483220B0046D64B /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 		40D003BF24844C110046D64B /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendRequest.swift; path = MemeThing/FriendRequest.swift; sourceTree = SOURCE_ROOT; };
 		40D003C1248493470046D64B /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
-		40D003C52484957C0046D64B /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIViewExtension.swift; path = MemeThing/UIViewExtension.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +219,7 @@
 			children = (
 				40D003C1248493470046D64B /* FriendTableViewCell.swift */,
 				40A777EB248966F200ADBB82 /* GameTableViewCell.swift */,
+				408AA2A3248ED5BF00C6CB82 /* ThreeLabelsTableViewCell.swift */,
 			);
 			path = "Custom TableView Cells";
 			sourceTree = "<group>";
@@ -278,7 +279,6 @@
 				4039365B2486B898007C2601 /* NotificationHelper.swift */,
 				40C2147B247EEE9B007B7630 /* MemeThingError.swift */,
 				4039CE0B248205D4004DA41F /* StyleGuide.swift */,
-				40D003C52484957C0046D64B /* UIViewExtension.swift */,
 				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
 			);
 			path = Helpers;
@@ -407,6 +407,7 @@
 				40C2146E247EE0F4007B7630 /* MainMenuViewController.swift in Sources */,
 				40C2148324809A24007B7630 /* DrawingViewController.swift in Sources */,
 				4039CE062481E553004DA41F /* Meme.swift in Sources */,
+				408AA2A4248ED5BF00C6CB82 /* ThreeLabelsTableViewCell.swift in Sources */,
 				4039CE042481DF5C004DA41F /* CanvasView.swift in Sources */,
 				40C2146C247EE0E7007B7630 /* LoginViewController.swift in Sources */,
 				40C2148724809A47007B7630 /* ResultsViewController.swift in Sources */,
@@ -435,7 +436,6 @@
 				40D003B724831B690046D64B /* Game.swift in Sources */,
 				4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */,
 				40C2147E247EF1BE007B7630 /* CKService.swift in Sources */,
-				40D003C62484957C0046D64B /* UIViewExtension.swift in Sources */,
 				405279E724781E1A00942A7D /* SceneDelegate.swift in Sources */,
 				40C21481247F1434007B7630 /* ProfileTableViewController.swift in Sources */,
 				40C21474247EE939007B7630 /* User.swift in Sources */,

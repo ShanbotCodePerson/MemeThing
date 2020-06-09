@@ -98,7 +98,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 // Go straight to the main menu if the user was created correctly
                 self?.presentMainMenuVC()
             case .failure(let error):
-                // TODO: - better error handling, error alert
+                self?.presentErrorToUser(error)
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
         }
@@ -122,7 +122,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 // Go straight to the main menu if the user was fetched correctly
                 self?.presentMainMenuVC()
             case .failure(let error):
-                // TODO: - better error handling, error alert
+                self?.presentErrorToUser(error)
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
         }
