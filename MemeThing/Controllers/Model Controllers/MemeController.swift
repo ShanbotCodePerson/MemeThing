@@ -24,9 +24,9 @@ class MemeController {
     // MARK: - CRUD Methods
     
     // Create a new meme
-    func createMeme(in game: Game, with photo: UIImage, by author: User, completion: @escaping resultHandlerWithObject) {
+    func createMeme(with photo: UIImage, by author: User, completion: @escaping resultHandlerWithObject) {
         // Create the meme
-        let meme = Meme(photo: photo, author: author.reference, game: game.reference)
+        let meme = Meme(photo: photo, author: author.reference)
         
         // Save it to the cloud
         CKService.shared.create(object: meme) { (result) in
@@ -44,11 +44,32 @@ class MemeController {
     
     // Read (fetch) a meme from a reference
     func fetchMeme(from reference: CKRecord.Reference, completion: @escaping resultHandlerWithObject) {
+        // Fetch the data from the cloud
         CKService.shared.read(reference: reference) { (result: Result<Meme, MemeThingError>) in
             switch result {
             case .success(let meme):
                 // Return the success
                 return completion(.success(meme))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    // Read (fetch) a list of captions for a meme
+    func fetchCaptions(for meme: Meme, completion: @escaping (Result<[Caption], MemeThingError>) -> Void) {
+        // Form the predicate to look for all captions that reference that meme
+        let predicate = NSPredicate(format: "%K == %@", argumentArray: [CaptionStrings.memeKey, meme.reference])
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
+        
+        // Fetch the data from the cloud
+        CKService.shared.read(predicate: compoundPredicate) { (result: Result<[Caption], MemeThingError>) in
+            switch result {
+            case .success(let captions):
+                // Return the success
+                return completion(.success(captions))
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -76,7 +97,7 @@ class MemeController {
     // Update a meme with a new caption
     func createCaption(for meme: Meme, by author: User, with text: String, in game: Game, completion: @escaping resultHandler) {
         // Create the caption
-        let caption = Caption(text: text, author: author.reference, meme: meme.reference, game: game.reference)
+        let caption = Caption(text: text, author: author.reference, meme: meme.reference)
         
         // Save it to the cloud
         CKService.shared.create(object: caption) { [weak self] (result) in
@@ -146,7 +167,6 @@ class MemeController {
     // MARK: - Notifications
     
     // Subscribe to notifications for captions you created, in case you won
-    // TODO: - use a completion?
     func subscribeToNotifications(for caption: Caption) {
         // Set up the subscription to be alerted of any modification to the caption
         let predicate = NSPredicate(format: "recordID == %@", caption.recordID)
@@ -158,7 +178,7 @@ class MemeController {
         notificationInfo.title = "Winner"
         notificationInfo.alertBody = "Your caption won a round in MemeThing!"
         notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.desiredKeys = [CaptionStrings.gameKey]
+//        notificationInfo.desiredKeys = [CaptionStrings.gameKey] // FIXME: - how to do this??
         notificationInfo.category = NotificationHelper.Category.captionWon.rawValue
         subscription.notificationInfo = notificationInfo
         
@@ -170,7 +190,7 @@ class MemeController {
     }
     
     // Receive a notification that the current user's caption has won
-    func receiveNotificationCaptionWon(inGame game: CKRecord.Reference) {
+    func receiveNotificationCaptionWon() {
         guard let currentUser = UserController.shared.currentUser else { return }
 
         // Update the user's points and save the change
@@ -180,27 +200,9 @@ class MemeController {
                 // TODO: - better handling in here
                 print("worked")
             case .failure(let error):
-                // TODO: - better error handling
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
         }
-        
-        // FIXME: - get rid of this part
-        // if game updates points in itself on the lead player's side when a winner is chosen, then can delete all this, including game reference in caption object
-        
-        // Fetch the game object from the passed reference
-        GameController.shared.fetchGame(from: game.recordID) { (result) in
-            switch result {
-            case .success(let game):
-                // Update the game with the user's points and save the change
-                game.updatePoints(of: currentUser)
-                GameController.shared.update(game) { (result) in }
-            case .failure(let error):
-                // TODO: - better error handling
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-            }
-        }
-
     }
     
     // TODO: - remove subscriptions to captions after receiving a response or when the game is over

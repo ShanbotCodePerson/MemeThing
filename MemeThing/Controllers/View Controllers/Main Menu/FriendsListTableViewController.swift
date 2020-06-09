@@ -62,22 +62,46 @@ class FriendsListTableViewController: UITableViewController {
         
         if FriendRequestController.shared.pendingFriendRequests == nil {
             group.enter()
-            FriendRequestController.shared.fetchPendingFriendRequests { (result) in
-                // TODO: - handle completion of fetching data
+            FriendRequestController.shared.fetchPendingFriendRequests { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        print("Successfully fetched pending friend requests")
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorToUser(error)
+                    }
+                }
                 group.leave()
             }
         }
         if FriendRequestController.shared.outgoingFriendRequests == nil {
             group.enter()
-            FriendRequestController.shared.fetchOutgoingFriendRequests { (result) in
-                // TODO: - handle completion of fetching data
+            FriendRequestController.shared.fetchOutgoingFriendRequests { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        print("Successfully fetched outgoing friend requests")
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorToUser(error)
+                    }
+                }
                 group.leave()
             }
         }
         if UserController.shared.usersFriends == nil {
             group.enter()
-            UserController.shared.fetchUsersFriends { (result) in
-                // TODO: - handle completion of fetching data
+            UserController.shared.fetchUsersFriends { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        print("Successfully fetched current friends")
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorToUser(error)
+                    }
+                }
                 group.leave()
             }
         }
@@ -191,13 +215,15 @@ class FriendsListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Enable swipe-to-delete functionality only for friends, not friend requests
-        if dataSource[indexPath.section].name == .friends { return true }
+        if dataSource[indexPath.section].name == .friends && dataSource[indexPath.section].data.count > 0 { return true }
         return false
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // TODO: - first present alert to confirm unfriending someone
+            
+            // TODO: - remove friend from own list of friends, and remove self from their list of friends, save changes?
             
             // Delete the row from the data source
 //            tableView.deleteRows(at: [indexPath], with: .fade)

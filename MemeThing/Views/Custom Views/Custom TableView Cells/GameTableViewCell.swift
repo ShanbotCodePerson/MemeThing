@@ -64,8 +64,7 @@ class GameTableViewCell: UITableViewCell {
         buttonStackView.isHidden = true
         if let game = game {
             mainTextLabel.text = "You are playing a game with \(game.listOfPlayerNames)"
-            secondaryTextLabel.text = "The turn is..XXX" // TODO: - fill in the status of the game
-            // ie: "Shannon is drawing a picture" or "waiting for caption responses" or "it's your turn - pick a winner"
+            secondaryTextLabel.text = game.gameStatusDescription
         } else {
             secondaryTextLabel.isHidden = true
             mainTextLabel.text = "You are not currently playing any games"

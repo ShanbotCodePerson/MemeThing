@@ -50,7 +50,7 @@ class GamesListTableViewController: UITableViewController {
         tableView.backgroundColor = .lightGray
         
         // Load the data, if it hasn't been loaded already
-        loadData()
+        loadAllData()
         
         // Set up the observer to listen for notifications telling the view to reload its data
         NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: updateListOfGames, object: nil)
@@ -62,7 +62,7 @@ class GamesListTableViewController: UITableViewController {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
-    func loadData() {
+    func loadAllData() {
         if GameController.shared.currentGames == nil {
             GameController.shared.fetchCurrentGames { [weak self] (result) in
                 DispatchQueue.main.async {
@@ -114,13 +114,15 @@ class GamesListTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if dataSource[indexPath.section].name == .games { return true }
+        if dataSource[indexPath.section].name == .games && dataSource[indexPath.section].data.count > 0 { return true }
         return false
     }
 
    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // TODO: - present alert to confirm quitting game
+            
+            // TODO: - allow user to quit game, check if enough players to keep playing, save the update to the cloud
             
             // Delete the row from the data source
 //            tableView.deleteRows(at: [indexPath], with: .fade)
@@ -130,7 +132,8 @@ class GamesListTableViewController: UITableViewController {
     // MARK: - Navigation
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard dataSource[indexPath.section].name == .games,
+        guard dataSource[indexPath.section].name != .pendingInvitations,
+            dataSource[indexPath.section].data.count > 0,
             let currentUser = UserController.shared.currentUser
             else { return }
         

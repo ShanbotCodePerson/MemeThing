@@ -52,7 +52,6 @@ class ProfileTableViewController: UITableViewController {
         presentTextFieldAlert(title: "Edit Screen Name", message: "Edit your name as it will appear to your friends.", textFieldPlaceholder: "", textFieldText: user.screenName) { [weak self] (screenName) in
             
             UserController.shared.update(user, password: nil, screenName: screenName, email: nil) { (result) in
-                // TODO: - better handling of error and responses
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
@@ -69,9 +68,8 @@ class ProfileTableViewController: UITableViewController {
     @IBAction func showPasswordButtonTapped(_ sender: UIButton) {
         guard let user = UserController.shared.currentUser else { return }
         
-        // Either allow the user to hide the password or show it
+        // Allow the user to hide the password or show it
         if editingPassword {
-            // TODO: - need to decide if I even want to do this
             passwordLabel.text = "Password: \(repeatElement("*", count: user.password.count).joined())"
             passwordButton.setTitle("Show", for: .normal)
             editingPassword = false
@@ -89,7 +87,6 @@ class ProfileTableViewController: UITableViewController {
         presentTextFieldAlert(title: "Edit Email", message: "Edit your email (used for password recovery)", textFieldPlaceholder: "", textFieldText: user.email) { [weak self] (email) in
             
             UserController.shared.update(user, password: nil, screenName: nil, email: email) { (result) in
-                // TODO: - better handling of error and responses
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):

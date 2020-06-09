@@ -13,6 +13,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
     // MARK: - Outlets
     
     @IBOutlet weak var canvasView: CanvasView!
+    @IBOutlet weak var undoButton: UIButton!
     
     // MARK: - Properties
     
@@ -22,10 +23,13 @@ class DrawingViewController: UIViewController, HasAGameObject {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Display the leaderboard unless the game is just starting
+        guard let game = game else { return }
+        if game.memes?.count ?? 0 > 0 {
+            transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        }
     }
-    
-    // MARK: - Set Up UI
-    
     
     // MARK: - Actions
     
@@ -40,11 +44,12 @@ class DrawingViewController: UIViewController, HasAGameObject {
     @IBAction func sendButtonTapped(_ sender: UIButton) {
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
         
-        // Create an image from the canvas
+        // Create the image from the canvas (hide the undo button first so that it isn't saved in the screenshot)
+        undoButton.isHidden = true
         let image = canvasView.getImage()
         
         // Create the meme object and save it to the cloud
-        MemeController.shared.createMeme(in: game, with: image, by: currentUser) { [weak self] (result) in
+        MemeController.shared.createMeme(with: image, by: currentUser) { [weak self] (result) in
             switch result {
             case .success(let meme):
                 // Add the meme to the game
@@ -64,7 +69,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
                 
                 // Save the game to the cloud
                 // TODO: - better way than nested completions??
-                GameController.shared.update(game) { (result) in
+                GameController.shared.saveChanges(to: game) { (result) in
                     switch result {
                     case .success(_):
                         // Transition back to the waiting view until all the captions have been submitted

@@ -31,10 +31,10 @@ class Game: CKCompatible {
     var players: [CKRecord.Reference]
     var playersNames: [String]
     var playersStatus: [PlayerStatus]
-    private var playersPoints: [Int]
+    var playersPoints: [Int]
     var leadPlayer: CKRecord.Reference
     var memes: [CKRecord.Reference]? // FIXME: -should this be a reference or list of meme objects?
-    private let pointsToWin: Int
+    let pointsToWin: Int
     var gameStatus: GameStatus
     
     // CloudKit properties
@@ -83,6 +83,11 @@ class Game: CKCompatible {
     // MARK: - Helper Properties
     // Helper properties for easier interaction with the game object
     
+    // TODO: - delete this later, just helpful for testing
+    var debugging: String {
+        return "Game with \(playersNames.joined(separator: ", ")) at status \(playersStatus) and points \(playersPoints). Status is \(gameStatus). \(memes?.count) memes."
+    }
+    
     // A nicely formatted list of the names of the game participants, minus the current user
     var listOfPlayerNames: String {
         guard let currentUser = UserController.shared.currentUser else { return "ERROR" }
@@ -96,9 +101,46 @@ class Game: CKCompatible {
     }
     
     // A nicely formatted string to tell a given user what phase the game is currently in
-    // TODO: - game phase string
-    
-    // TODO: - a function telling the view controller which view to go to, based on phase of game?
+    var gameStatusDescription: String {
+        guard let currentUser = UserController.shared.currentUser else { return "ERROR" }
+        let isLeadPlayer = (leadPlayer == currentUser.reference)
+        
+        // Describe the current phase of the game based on the game status and whether the user is currently the lead player or not
+        switch gameStatus {
+        case .waitingForPlayers:
+            let numberWaiting = playersStatus.filter({ $0 == .invited}).count
+            return "The game has not started yet - still waiting for \(numberWaiting) player\(numberWaiting == 1 ? "" : "s") to join the game"
+        case .waitingForDrawing:
+            if isLeadPlayer {
+                return "The other players are waiting on you to complete a drawing"
+            } else {
+                return "Waiting for \(leadPlayerName) to complete a drawing"
+            }
+        case .waitingForCaptions:
+            let numberWaiting = playersStatus.filter({ $0 == .accepted}).count
+            if isLeadPlayer {
+                return "Waiting for \(numberWaiting) player\(numberWaiting == 1 ? "" : "s") to write a caption for your drawing"
+            } else if getStatus(of: currentUser) == .sentCaption {
+                return "Waiting for \(numberWaiting) player\(numberWaiting == 1 ? "" : "s") to write a caption for \(leadPlayerName)'s drawing"
+            } else {
+                return "The other players are waiting for you to write a caption for \(leadPlayerName)'s drawing"
+            }
+        case .waitingForResult:
+            if isLeadPlayer  {
+                return "The other players are waiting for you to select the funniest caption"
+            } else {
+                return "Waiting for \(leadPlayerName) to select the funniest caption"
+            }
+        case .waitingForNextRound:
+            if isLeadPlayer {
+                return "Starting a new round with you as the lead player"
+            } else {
+                return "Starting a new round with \(leadPlayerName) as the lead player"
+            }
+        case .gameOver:
+            return "The game is over and \(gameWinner ?? "nobody") has won"
+        }
+    }
     
     // Calculate whether all players have responded to the game invitation
     var allPlayersResponded: Bool {
@@ -115,12 +157,12 @@ class Game: CKCompatible {
     }
     
     // Figure out if a player has won the game yet
-    var gameWinner: CKRecord.Reference? {
+    var gameWinner: String? {
         // Check if the highest score has reached the points needed to win, and if so, return the reference to that player
         guard let highestScore = playersPoints.max(), highestScore == pointsToWin,
             let index = playersPoints.firstIndex(of: highestScore)
             else { return nil }
-        return players[index]
+        return playersNames[index]
     }
     
     // MARK: - Initializer
@@ -208,10 +250,15 @@ class Game: CKCompatible {
         playersStatus[index] = status
     }
     
-    // Quickly update a player's points
-    func updatePoints(of player: User) {
-        guard let index = players.firstIndex(of: player.reference) else { return }
+    // Quickly update a players points when their caption is selected as winner
+    func winningCaptionSelected(as caption: Caption) {
+        // Update the points of the player who submitted that caption
+        guard let index = players.firstIndex(of: caption.author) else { return }
         playersPoints[index] += 1
+        
+        // Check to see if this results in an overall winner of the game, and update the status of the game accordingly
+        if gameWinner != nil { gameStatus = .gameOver }
+        else { gameStatus = .waitingForDrawing }
     }
     
     // Reset the game for a new round
@@ -238,6 +285,6 @@ class Game: CKCompatible {
 extension Game: Equatable {
     
     static func == (lhs: Game, rhs: Game) -> Bool {
-        return lhs.recordID == rhs.recordID
+        return lhs.recordID.recordName == rhs.recordID.recordName
     }
 }

@@ -98,7 +98,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 // Go straight to the main menu if the user was created correctly
                 self?.presentMainMenuVC()
             case .failure(let error):
-                // TODO: - better error handling, error alert
+                self?.presentErrorToUser(error)
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
         }
@@ -122,7 +122,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 // Go straight to the main menu if the user was fetched correctly
                 self?.presentMainMenuVC()
             case .failure(let error):
-                // TODO: - better error handling, error alert
+                self?.presentErrorToUser(error)
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
         }
@@ -166,10 +166,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func presentMainMenuVC() {
         DispatchQueue.main.async {
-            let storyboard = UIStoryboard(name: "MainMenu", bundle: nil)
-            guard let initialVC = storyboard.instantiateInitialViewController() else { return }
-            initialVC.modalPresentationStyle = .fullScreen
-            self.present(initialVC, animated: true)
+            self.transitionToStoryboard(named: StoryboardNames.mainMenu, direction: .fromRight)
         }
     }
     

@@ -25,12 +25,12 @@ class CaptionViewController: UIViewController, HasAGameObject {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setUpUI()
+        setUpViews()
     }
     
     // MARK: - Set Up UI
     
-    func setUpUI() {
+    func setUpViews() {
         guard let game = game, let memeReference = game.memes?.last else { return }
         
         // Fetch the meme object
@@ -66,13 +66,22 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 // Update the player's status
                 game.updateStatus(of: currentUser, to: .sentCaption)
                 
+                // Update the game's status if this was the final caption
+                // FIXME: - this will probably break if the last two captions are submitted at the same time - need to confirm somewhere
+                if game.allCaptionsSubmitted { game.gameStatus = .waitingForResult }
+                
                 // Save the updated game to the cloud
-                GameController.shared.update(game) { (result) in
+                GameController.shared.saveChanges(to: game) { (result) in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
-                            // Transition back to the waiting view until all the captions have been submitted
-                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                            if game.allCaptionsSubmitted {
+                                // Go to the results view if all captions have been submitted already
+                                self?.transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+                            } else {
+                                // Transition back to the waiting view until all the captions have been submitted
+                                self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                            }
                         case .failure(let error):
                             // TODO: - better error handling here
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

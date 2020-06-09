@@ -20,7 +20,7 @@
                                 <rect key="frame" x="41.5" y="251" width="331" height="448"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUO-Of-2dw" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="331" height="106"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="331" height="83"/>
                                         <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="18"/>
                                         <state key="normal" title="New Game"/>
                                         <connections>
@@ -28,24 +28,31 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QmY-Sk-EIK" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="114" width="331" height="106"/>
+                                        <rect key="frame" x="0.0" y="91" width="331" height="83.5"/>
                                         <state key="normal" title="Resume Game"/>
                                         <connections>
                                             <segue destination="CEG-oA-vRa" kind="show" id="0hT-f5-v8d"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U25-wd-vr0" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="228" width="331" height="106"/>
+                                        <rect key="frame" x="0.0" y="182.5" width="331" height="83"/>
                                         <state key="normal" title="Friends"/>
                                         <connections>
                                             <segue destination="zQQ-LU-7ql" kind="show" identifier="toFriendsTVC" id="XD5-pV-uaG"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9HV-p3-eCF" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="342" width="331" height="106"/>
+                                        <rect key="frame" x="0.0" y="273.5" width="331" height="83.5"/>
                                         <state key="normal" title="Profile"/>
                                         <connections>
                                             <segue destination="Ko3-va-DOb" kind="show" id="rY2-du-ZtF"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ey-6h-7nf">
+                                        <rect key="frame" x="0.0" y="365" width="331" height="83"/>
+                                        <state key="normal" title="Fake notifications"/>
+                                        <connections>
+                                            <action selector="tempFakeNotifications:" destination="TSk-Yz-NDn" eventType="touchUpInside" id="BIM-eF-eLS"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -88,8 +95,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="XYk-h5-GXn">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select at least two friends to start a game!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iHb-Sl-1d7">
+                                    <rect key="frame" x="45.5" y="12" width="323" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="iHb-Sl-1d7" firstAttribute="centerY" secondItem="XYk-h5-GXn" secondAttribute="centerY" id="Sir-cE-3Yl"/>
+                                <constraint firstItem="iHb-Sl-1d7" firstAttribute="centerX" secondItem="XYk-h5-GXn" secondAttribute="centerX" id="Vbr-cU-z3o"/>
+                            </constraints>
+                        </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="Kgm-Me-MUc">
-                            <rect key="frame" x="0.0" y="99.5" width="414" height="60"/>
+                            <rect key="frame" x="0.0" y="143.5" width="414" height="60"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6pE-Yd-zwk" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
@@ -113,7 +137,7 @@
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="friendCell" textLabel="dTc-cO-0RV" detailTextLabel="ONJ-P1-kv4" style="IBUITableViewCellStyleValue1" id="OaQ-vD-R8S">
-                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="72" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OaQ-vD-R8S" id="5cV-Uv-YWH">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -143,6 +167,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Invite Friends" id="YzF-hQ-jXk"/>
+                    <connections>
+                        <outlet property="startGameButton" destination="6pE-Yd-zwk" id="ige-0x-5RX"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pxp-bi-jAL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
