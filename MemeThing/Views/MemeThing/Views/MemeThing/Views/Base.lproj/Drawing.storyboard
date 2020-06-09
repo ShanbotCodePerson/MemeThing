@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,13 +17,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i8k-Sa-Dqv">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+                                <color key="backgroundColor" name="navBar"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JNr-ca-bWi">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="b0C-Xq-aSa">
                                         <rect key="frame" x="20.5" y="19.5" width="373" height="735"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Draw something funny!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zx1-JU-3wd" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Draw something funny!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zx1-JU-3wd" customClass="MemeThingLabelBackground" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="373" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="cRg-mx-Epg"/>
@@ -32,10 +37,10 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" verticalHuggingPriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="7cY-5M-71c" customClass="CanvasView" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="44" width="373" height="627"/>
+                                                <rect key="frame" x="0.0" y="47" width="373" height="621"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="hdu-03-sxy" customClass="CircularButton" customModule="MemeThing" customModuleProvider="target">
-                                                        <rect key="frame" x="328" y="8" width="37" height="36.5"/>
+                                                        <rect key="frame" x="328" y="8" width="37" height="37"/>
                                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="hdu-03-sxy" secondAttribute="height" multiplier="1:1" id="fjl-H2-bAB"/>
@@ -50,6 +55,7 @@
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
+                                                    <constraint firstAttribute="width" secondItem="7cY-5M-71c" secondAttribute="height" multiplier="3:5" id="J2v-Zo-SCf"/>
                                                     <constraint firstAttribute="trailing" secondItem="hdu-03-sxy" secondAttribute="trailing" constant="8" id="KEm-R5-sGf"/>
                                                     <constraint firstItem="hdu-03-sxy" firstAttribute="top" secondItem="7cY-5M-71c" secondAttribute="top" constant="8" id="M1I-by-Gyk"/>
                                                 </constraints>
@@ -75,13 +81,20 @@
                                     <constraint firstItem="b0C-Xq-aSa" firstAttribute="centerX" secondItem="JNr-ca-bWi" secondAttribute="centerX" id="yZM-33-OWg"/>
                                 </constraints>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UWg-1Y-3dz">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UWg-1Y-3dz">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <color key="tintColor" name="purpleAccent"/>
+                                <color key="barTintColor" name="navBar"/>
                                 <items>
                                     <navigationItem id="0yv-Xm-4gS">
                                         <barButtonItem key="leftBarButtonItem" title="Main Menu" id="iOH-De-Uvz">
                                             <connections>
                                                 <action selector="mainMenuButtonTapped:" destination="BYZ-38-t0r" id="zFc-VT-1z6"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" image="ellipsis" catalog="system" id="eQU-Vz-MTh">
+                                            <connections>
+                                                <action selector="dotsButtonTapped:" destination="BYZ-38-t0r" id="9Hd-0T-2B4"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -93,19 +106,23 @@
                             <constraint firstItem="UWg-1Y-3dz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="1ce-ez-N1u"/>
                             <constraint firstItem="JNr-ca-bWi" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="2O4-35-5Et"/>
                             <constraint firstItem="Zx1-JU-3wd" firstAttribute="height" relation="lessThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.03" priority="999" id="61E-6b-3ht"/>
+                            <constraint firstItem="i8k-Sa-Dqv" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="7bD-nk-aMA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="UWg-1Y-3dz" secondAttribute="trailing" id="8FJ-Wj-mRe"/>
+                            <constraint firstItem="JNr-ca-bWi" firstAttribute="top" secondItem="i8k-Sa-Dqv" secondAttribute="bottom" id="HnX-7k-khs"/>
+                            <constraint firstItem="i8k-Sa-Dqv" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Ofo-iS-AP2"/>
                             <constraint firstItem="JNr-ca-bWi" firstAttribute="top" secondItem="UWg-1Y-3dz" secondAttribute="bottom" id="U00-HR-qXI"/>
                             <constraint firstItem="hdu-03-sxy" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.045" priority="999" id="ig5-Zj-UeE"/>
                             <constraint firstItem="UWg-1Y-3dz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="l74-gC-lWa"/>
                             <constraint firstItem="JNr-ca-bWi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="pzT-LQ-RI5"/>
                             <constraint firstItem="JNr-ca-bWi" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="qYq-PN-0OA"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="i8k-Sa-Dqv" secondAttribute="trailing" id="qnb-dz-d3T"/>
                             <constraint firstItem="4zL-R8-fD7" firstAttribute="height" relation="lessThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.06" priority="999" id="syP-T1-LZ3"/>
-                            <constraint firstItem="7cY-5M-71c" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.7" id="tZr-sc-DL3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="canvasView" destination="7cY-5M-71c" id="LgD-Zk-BYf"/>
+                        <outlet property="navigationBar" destination="UWg-1Y-3dz" id="ev9-NY-xpN"/>
                         <outlet property="undoButton" destination="hdu-03-sxy" id="0h1-Kq-7RX"/>
                     </connections>
                 </viewController>
@@ -116,5 +133,12 @@
     </scenes>
     <resources>
         <image name="arrow.counterclockwise" catalog="system" width="115" height="128"/>
+        <image name="ellipsis" catalog="system" width="128" height="37"/>
+        <namedColor name="navBar">
+            <color red="0.94901960784313721" green="0.8666666666666667" blue="0.64313725490196083" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="purpleAccent">
+            <color red="0.25490196078431371" green="0.23529411764705882" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

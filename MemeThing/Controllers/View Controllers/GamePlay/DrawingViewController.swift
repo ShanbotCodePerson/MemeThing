@@ -14,15 +14,18 @@ class DrawingViewController: UIViewController, HasAGameObject {
     
     @IBOutlet weak var canvasView: CanvasView!
     @IBOutlet weak var undoButton: UIButton!
+    @IBOutlet weak var navigationBar: UINavigationBar!
     
     // MARK: - Properties
     
-    var game: Game?
+    var gameID: String?
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
     
     // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .background
         
         // Display the leaderboard unless the game is just starting
         guard let game = game else { return }
@@ -37,6 +40,9 @@ class DrawingViewController: UIViewController, HasAGameObject {
         transitionToStoryboard(named: StoryboardNames.mainMenu)
     }
     
+    @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
+    }
+    
     @IBAction func undoButtonTapped(_ sender: UIButton) {
         canvasView.undoDraw()
     }
@@ -49,7 +55,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
         let image = canvasView.getImage()
         
         // Create the meme object and save it to the cloud
-        MemeController.shared.createMeme(with: image, by: currentUser) { [weak self] (result) in
+        MemeController.shared.createMeme(in: game, with: image, by: currentUser) { [weak self] (result) in
             switch result {
             case .success(let meme):
                 // Add the meme to the game

@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIButton {
-    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 4, borderColor: UIColor = .darkGray, backgroundColor: UIColor = .white, textColor: UIColor = .darkGray, tintColor: UIColor = .darkGray, fontSize: CGFloat = 20, fontName: String = "Marker-Felt-Thin") {
+    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 4, borderColor: UIColor = .darkGray, backgroundColor: UIColor = .white, textColor: UIColor = .darkGray, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: String = FontNames.mainFont) {
         addCornerRadius(cornerRadius)
         addBorder(width: borderWidth, color: borderColor)
         self.backgroundColor = backgroundColor
@@ -20,16 +20,29 @@ extension UIButton {
 }
 
 class MemeThingButton: UIButton {
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews()
+        setUpViews(borderColor: .purpleAccent, backgroundColor: .yellowAccent)
+    }
+    
+    override var intrinsicContentSize: CGSize { return addInsets(to: super.intrinsicContentSize) }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return addInsets(to: super.sizeThatFits(size))
+    }
+    
+    private func addInsets(to size: CGSize) -> CGSize {
+        let width = size.width + 12
+        let height = size.height + 6
+        return CGSize(width: width, height: height)
     }
 }
 
 class SubmitButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderWidth: 2, backgroundColor: .systemGreen, textColor: .white)
+        setUpViews(borderWidth: 2, backgroundColor: .greenAccent, textColor: .white)
     }
 }
 

@@ -22,7 +22,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NV0-bX-CdG">
                                         <rect key="frame" x="0.0" y="0.0" width="323" height="50"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[game status]" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5T-UQ-2vA">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[game status]" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5T-UQ-2vA" customClass="MemeThingLabelDark" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="323" height="50"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -73,6 +73,7 @@
                                 </subviews>
                             </stackView>
                         </subviews>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="c34-pY-TAc" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="7g7-Ry-Wxa"/>
                             <constraint firstItem="c34-pY-TAc" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.625917" id="Eu1-Jn-MZI"/>
@@ -80,13 +81,22 @@
                             <constraint firstItem="c34-pY-TAc" firstAttribute="width" secondItem="c9Y-8r-g0v" secondAttribute="width" multiplier="0.780193" id="sJd-DZ-d7l"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="c9Y-8r-g0v"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="1ar-aH-Gop" appends="YES" id="LEE-UO-wxi"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="gameStatusLabel" destination="y5T-UQ-2vA" id="v7w-9A-Izo"/>
+                        <outlet property="gameStatusView" destination="NV0-bX-CdG" id="N4K-3M-TUo"/>
                         <outlet property="playersTableView" destination="gKL-sf-953" id="zPT-Qe-dM6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lOH-hF-jUP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="1ar-aH-Gop">
+                    <connections>
+                        <action selector="screenTapped:" destination="udx-0g-6jh" id="uzQ-vt-DH7"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="129.91071428571428"/>
         </scene>

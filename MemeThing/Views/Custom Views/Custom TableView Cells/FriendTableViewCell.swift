@@ -21,6 +21,8 @@ class FriendTableViewCell: UITableViewCell {
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var pointsLabel: UILabel!
     @IBOutlet weak var buttonStackView: UIStackView!
+    @IBOutlet weak var rightConstraint: NSLayoutConstraint!
+    
     
     // MARK: - Properties
     
@@ -62,9 +64,12 @@ class FriendTableViewCell: UITableViewCell {
     
     private func setUpFriendView(for username: String?, points: Int?) {
         buttonStackView.isHidden = true
+        
         if let username = username {
             usernameLabel.text = username
             pointsLabel.text = "Points: \(points ?? 0)"
+            pointsLabel.textAlignment = .right
+            rightConstraint.constant = 6
         } else {
             usernameLabel.text = "You have not yet added any friends"
             pointsLabel.isHidden = true

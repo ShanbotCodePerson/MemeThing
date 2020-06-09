@@ -21,6 +21,7 @@ class GameTableViewCell: UITableViewCell {
     @IBOutlet weak var mainTextLabel: UILabel!
     @IBOutlet weak var secondaryTextLabel: UILabel!
     @IBOutlet weak var buttonStackView: UIStackView!
+    @IBOutlet weak var backgroundContainerView: UIView!
     
     // MARK: - Properties
     

@@ -14,10 +14,12 @@ class CaptionViewController: UIViewController, HasAGameObject {
     
     @IBOutlet weak var memeImageView: MemeImageView!
     @IBOutlet weak var captionTextField: UITextField!
+    @IBOutlet weak var navigationBar: UINavigationBar!
     
     // MARK: - Properties
     
-    var game: Game?
+    var gameID: String?
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
     var meme: Meme? { didSet { memeImageView.image =  meme?.photo } }
     
     // MARK: - Lifecycle Methods
@@ -31,6 +33,8 @@ class CaptionViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
+        view.backgroundColor = .background
+        
         guard let game = game, let memeReference = game.memes?.last else { return }
         
         // Fetch the meme object
@@ -53,6 +57,12 @@ class CaptionViewController: UIViewController, HasAGameObject {
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
         transitionToStoryboard(named: StoryboardNames.mainMenu)
+    }
+    
+    @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
+    }
+    
+    @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
     }
     
     @IBAction func sendButtonTapped(_ sender: UIButton) {

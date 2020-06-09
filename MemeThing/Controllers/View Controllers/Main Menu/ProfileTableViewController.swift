@@ -33,8 +33,12 @@ class ProfileTableViewController: UITableViewController {
     // MARK: - Set Up Views
     
     func setUpViews() {
+        // TODO: - refactor this to elsewhere?
         navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.backgroundColor = .lightGray
+        view.backgroundColor = .background
+        navigationController?.navigationBar.barTintColor = .navBar
+        navigationController?.navigationBar.tintColor = .purpleAccent
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.purpleAccent, NSAttributedString.Key.font: UIFont(name: FontNames.mainFont, size: 20)!]
         
         guard let user = UserController.shared.currentUser else { return }
         usernameLabel.text = "Username: \(user.username)"

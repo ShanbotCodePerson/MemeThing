@@ -47,7 +47,7 @@ class GamesListTableViewController: UITableViewController {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(false, animated: true)
         tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .lightGray
+        tableView.backgroundColor = .background
         
         // Load the data, if it hasn't been loaded already
         loadAllData()
@@ -89,6 +89,19 @@ class GamesListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return dataSource[section].name.rawValue
     }
+    
+    // FIXME: - get the background color of the section headers to change
+//    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let headerView = UIView(frame: .zero)
+//        headerView.backgroundColor = UIColor.purpleAccent.withAlphaComponent(0.5)
+//
+//       let headerTitle = UILabel(frame: .zero)
+//       headerTitle.text = dataSource[section].name.rawValue
+//       headerTitle.textColor = .mainText
+//        headerView.addSubview(headerTitle)
+//
+//        return headerView
+//    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Add a placeholder row if the user has no active games
@@ -160,9 +173,9 @@ class GamesListTableViewController: UITableViewController {
         case .waitingForResult:
             transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
         case .waitingForNextRound:
-            print("need to create an end of round view")
+            transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
         case .gameOver:
-            print("need to create a game over view")
+            transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
         }
     }
 }

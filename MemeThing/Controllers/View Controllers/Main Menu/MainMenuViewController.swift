@@ -32,6 +32,8 @@ class MainMenuViewController: UIViewController {
     func setUpViews() {
         guard let user = UserController.shared.currentUser else { return }
         welcomeLabel.text = "Welcome, \(user.screenName)!"
+        
+        view.backgroundColor = .background
     }
     
     // FIXME: - delete later, for debugging only

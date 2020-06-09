@@ -14,10 +14,12 @@ class GameOverViewController: UIViewController, HasAGameObject {
     
     @IBOutlet weak var winnerNameLabel: UILabel!
     @IBOutlet weak var resultsTableView: UITableView!
+    @IBOutlet weak var navigationBar: UINavigationItem!
     
     // MARK: - Properties
     
-    var game: Game?
+    var gameID: String?
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
     
     // MARK: - Lifecycle Methods
 
@@ -30,6 +32,8 @@ class GameOverViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
+        view.backgroundColor = .background
+        
         guard let game = game else { return }
         
         winnerNameLabel.text = game.gameStatusDescription
@@ -43,6 +47,9 @@ class GameOverViewController: UIViewController, HasAGameObject {
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
         transitionToStoryboard(named: StoryboardNames.mainMenu)
+    }
+    
+    @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
     }
     
     @IBAction func playAgainButtonTapped(_ sender: UIButton) {
@@ -62,9 +69,7 @@ extension GameOverViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
         guard let game = game else { return cell }
-        cell.firstLabel.text = game.playersNames[indexPath.row]
-        cell.secondLabel.text = "Points: \(game.playersPoints[indexPath.row])"
-        cell.thirdLabel.isHidden = true
+        cell.setUpUI(game.playersNames[indexPath.row], "Points: \(game.playersPoints[indexPath.row])", nil)
         
         return cell
     }
