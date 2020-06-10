@@ -25,10 +25,10 @@ class InviteFriendsTableViewController: UITableViewController {
         loadData()
         
         // Start off with the button disabled until enough players have been selected for the game
-        startGameButton.isEnabled = false
+        toggleStartButtonEnabled(to: false)
     }
     
-    // MARK: - Helper Method
+    // MARK: - Helper Methods
     
     func loadData() {
         if UserController.shared.usersFriends == nil {
@@ -43,6 +43,13 @@ class InviteFriendsTableViewController: UITableViewController {
                     }
                 }
             }
+        }
+    }
+    
+    func toggleStartButtonEnabled(to enabled: Bool) {
+        startGameButton.isEnabled = enabled
+        UIView.animate(withDuration: 0.1) {
+            self.startGameButton.backgroundColor = UIColor.greenAccent.withAlphaComponent(enabled ? 1 : 0.5)
         }
     }
     
@@ -61,7 +68,7 @@ class InviteFriendsTableViewController: UITableViewController {
                 case .success(let game):
                     // Transition to the waiting view, passing along the reference to the current game
                     print("got here to \(#function) and seems to have created the game successfully")
-                    print("SoT is now \(GameController.shared.currentGames?.compactMap({$0.debugging}))")
+                    print("SoT is now \(String(describing: GameController.shared.currentGames?.compactMap({$0.debugging})))")
                     self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -78,29 +85,24 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
         guard let friend = UserController.shared.usersFriends?[indexPath.row] else { return cell }
-        cell.textLabel?.text = friend.screenName
-        cell.detailTextLabel?.text = "Points: \(friend.points)"
+        cell.setUpUI(friend.screenName, "Points: \(friend.points)", nil)
         
         return cell
     }
     
     // FIXME: - comment, prettify
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
-            startGameButton.isEnabled = true
-        } else {
-            startGameButton.isEnabled = false
-        }
+        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
+        
+        toggleStartButtonEnabled(to: indexPaths.count > 0) // FIXME: - change to one after done testing
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
-            startGameButton.isEnabled = true
-        } else {
-            startGameButton.isEnabled = false
-        }
+        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
+        
+        toggleStartButtonEnabled(to: indexPaths.count > 0) // FIXME: - change to one after done testing
     }
 }

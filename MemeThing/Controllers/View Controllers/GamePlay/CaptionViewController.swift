@@ -15,6 +15,9 @@ class CaptionViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var memeImageView: MemeImageView!
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!
+    @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var sendButton: UIButton!
     
     // MARK: - Properties
     
@@ -26,14 +29,18 @@ class CaptionViewController: UIViewController, HasAGameObject {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpViews()
+        captionTextField.delegate = self
+        
+        // Add an observer for when the keyboard appears or disappears
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     // MARK: - Set Up UI
     
     func setUpViews() {
         view.backgroundColor = .background
+        view.sendSubviewToBack(mainView)
         
         guard let game = game, let memeReference = game.memes?.last else { return }
         
@@ -53,6 +60,24 @@ class CaptionViewController: UIViewController, HasAGameObject {
         }
     }
     
+    @objc func keyboardNotification(_ sender: NSNotification) {
+        guard let userInfo = sender.userInfo else { return }
+        
+        let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        let endFrameY = endFrame?.origin.y ?? 0
+        let duration:TimeInterval = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+        let animationCurveRawNSN = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+        let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
+        let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
+        if endFrameY >= UIScreen.main.bounds.size.height {
+            self.keyboardHeightLayoutConstraint?.constant = 0.0
+        } else {
+            self.keyboardHeightLayoutConstraint?.constant = -1 * (endFrame?.size.height ?? 0.0) + (sendButton.frame.height * 2)
+        }
+        
+        UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
+    }
+    
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
@@ -60,12 +85,22 @@ class CaptionViewController: UIViewController, HasAGameObject {
     }
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
+        guard let game = game else { return }
+        presentLeaderboard(with: game)
     }
     
     @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
+        // Close the keyboard
+        captionTextField.resignFirstResponder()
     }
     
     @IBAction func sendButtonTapped(_ sender: UIButton) {
+        saveCaption()
+    }
+    
+    // MARK: - Helper Method
+    
+    func saveCaption() {
         guard let game = game, let meme = meme, let currentUser = UserController.shared.currentUser,
             let captionText = captionTextField.text else { return }
         
@@ -93,15 +128,30 @@ class CaptionViewController: UIViewController, HasAGameObject {
                                 self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                             }
                         case .failure(let error):
-                            // TODO: - better error handling here
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorToUser(error)
                         }
                     }
                 }
             case .failure(let error):
-                // TODO: - better error handling here
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                DispatchQueue.main.async { self?.presentErrorToUser(error) }
             }
         }
+    }
+}
+
+// MARK: - Text Field Delegate
+
+extension CaptionViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // Dismiss the keyboard
+        textField.resignFirstResponder()
+        
+        // Save the caption
+        saveCaption()
+        
+        return true
     }
 }

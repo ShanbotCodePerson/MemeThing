@@ -38,7 +38,7 @@ class ProfileTableViewController: UITableViewController {
         view.backgroundColor = .background
         navigationController?.navigationBar.barTintColor = .navBar
         navigationController?.navigationBar.tintColor = .purpleAccent
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.purpleAccent, NSAttributedString.Key.font: UIFont(name: FontNames.mainFont, size: 20)!]
+//        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.purpleAccent, NSAttributedString.Key.font: UIFont(name: FontNames.mainFont, size: 20)!]
         
         guard let user = UserController.shared.currentUser else { return }
         usernameLabel.text = "Username: \(user.username)"

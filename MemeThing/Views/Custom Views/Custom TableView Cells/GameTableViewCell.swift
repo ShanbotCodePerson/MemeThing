@@ -69,6 +69,7 @@ class GameTableViewCell: UITableViewCell {
         } else {
             secondaryTextLabel.isHidden = true
             mainTextLabel.text = "You are not currently playing any games"
+            mainTextLabel.textAlignment = .center
         }
     }
 }

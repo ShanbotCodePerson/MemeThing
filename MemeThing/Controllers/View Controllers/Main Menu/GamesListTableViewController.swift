@@ -125,20 +125,25 @@ class GamesListTableViewController: UITableViewController {
         
         return cell
     }
-
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if dataSource[indexPath.section].name == .games { return 50 }
+        return 90
+    }
+    
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if dataSource[indexPath.section].name == .games && dataSource[indexPath.section].data.count > 0 { return true }
         return false
     }
-
-   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // TODO: - present alert to confirm quitting game
             
             // TODO: - allow user to quit game, check if enough players to keep playing, save the update to the cloud
             
             // Delete the row from the data source
-//            tableView.deleteRows(at: [indexPath], with: .fade)
+            //            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
