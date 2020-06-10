@@ -71,7 +71,7 @@ class FriendTableViewCell: UITableViewCell {
             pointsLabel.textAlignment = .right
             rightConstraint.constant = 6
         } else {
-            usernameLabel.text = "You have not yet added any friends"
+            usernameLabel.text = "You have not added any friends yet"
             usernameLabel.textAlignment = .center
             pointsLabel.isHidden = true
         }

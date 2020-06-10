@@ -161,9 +161,9 @@ extension WaitingViewController: UITableViewDelegate, UITableViewDataSource {
         
         guard let game = game else { return cell }
         // FIXME: - why are the outlets nil??
-        cell.setUpUI(game.playersNames[indexPath.row],
-                     game.playersStatus[indexPath.row].asString,
-                     "Points: \(game.playersPoints[indexPath.row])")
+//        cell.setUpUI(game.playersNames[indexPath.row],
+//                     game.playersStatus[indexPath.row].asString,
+//                     "Points: \(game.playersPoints[indexPath.row])")
         
         return cell
     }

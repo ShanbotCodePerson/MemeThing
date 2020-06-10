@@ -81,28 +81,35 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UserController.shared.usersFriends?.count ?? 0
+        return UserController.shared.usersFriends?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
-        guard let friend = UserController.shared.usersFriends?[indexPath.row] else { return cell }
-        cell.setUpUI(friend.screenName, "Points: \(friend.points)", nil)
+        // Fill in the details of the cell with the friend's information
+        if let friends = UserController.shared.usersFriends, friends.count > 0 {
+            let friend = friends[indexPath.row]
+            cell.setUpUI(firstText: friend.screenName, secondText: "Points: \(friend.points)")
+        }
+            // Insert a filler row if the user has not added any friends yet
+        else { cell.setUpUI(firstText: "You have not added any friends yet") }
         
         return cell
     }
     
     // FIXME: - comment, prettify
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
-        
-        toggleStartButtonEnabled(to: indexPaths.count > 0) // FIXME: - change to one after done testing
+        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
+            toggleStartButtonEnabled(to: true)
+        }
+        else { toggleStartButtonEnabled(to: false) }
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
-        
-        toggleStartButtonEnabled(to: indexPaths.count > 0) // FIXME: - change to one after done testing
+        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
+            toggleStartButtonEnabled(to: true)
+        }
+        else { toggleStartButtonEnabled(to: false) }
     }
 }

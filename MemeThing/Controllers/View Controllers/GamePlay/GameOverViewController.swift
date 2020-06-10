@@ -69,7 +69,7 @@ extension GameOverViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
         guard let game = game else { return cell }
-        cell.setUpUI(game.playersNames[indexPath.row], "Points: \(game.playersPoints[indexPath.row])", nil)
+//        cell.setUpUI(game.playersNames[indexPath.row], "Points: \(game.playersPoints[indexPath.row])", nil)
         
         return cell
     }
