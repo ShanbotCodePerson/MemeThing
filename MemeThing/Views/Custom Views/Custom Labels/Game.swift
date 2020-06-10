@@ -23,6 +23,14 @@ struct GameStrings {
     fileprivate static let gameStatusKey = "gameStatus"
 }
 
+// MARK: - Helper Struct
+
+struct Player {
+    var name: String
+    var status: Game.PlayerStatus
+    var points: Int
+}
+
 class Game: CKCompatible {
     
     // MARK: - Properties
@@ -32,6 +40,7 @@ class Game: CKCompatible {
     var playersNames: [String]
     var playersStatus: [PlayerStatus]
     var playersPoints: [Int]
+    private var playersInfo: [String : Player]
     var leadPlayer: CKRecord.Reference
     var memes: [CKRecord.Reference]? // FIXME: -should this be a reference or list of meme objects?
     let pointsToWin: Int
@@ -88,10 +97,31 @@ class Game: CKCompatible {
         return "Game with \(playersNames.joined(separator: ", ")) at status \(playersStatus) and points \(playersPoints). Status is \(gameStatus). \(memes?.count) memes."
     }
     
-    // A nicely formatted list of the names of the game participants, minus the current user
+    // All the active players, filtering out those who denied the invitation or quit the game
+    var activePlayers: [String : Player] {
+        return playersInfo.filter { $1.status != .denied && $1.status != .quit }
+    }
+    
+    // All the active players, sorted in descending order by points
+    var sortedPlayers: [Player] {
+        return activePlayers.values.sorted { (player1, player2) -> Bool in
+            // If the points are equal, sort by name
+            if player1.points == player2.points {
+                // If the names are equal, sort by status
+                if player1.name == player2.name {
+                    return player1.status.rawValue > player2.status.rawValue
+                }
+                return player1.name > player2.name
+            }
+            return player1.points > player2.points
+        }
+    }
+    
+    // A nicely formatted list of the names of the active game participants, minus the current user
     var listOfPlayerNames: String {
         guard let currentUser = UserController.shared.currentUser else { return "ERROR" }
-        return playersNames.filter({ $0 != currentUser.screenName }).joined(separator: ", ")
+        let otherPlayers = activePlayers.filter { $0.key != currentUser.reference.recordID.recordName }
+        return otherPlayers.compactMap({ $1.name }).joined(separator: ", ")
     }
     
     // The name of the lead player
@@ -190,6 +220,14 @@ class Game: CKCompatible {
             // By default, all players start with zero points
             self.playersPoints = Array(repeating: 0, count: players.count)
         }
+        
+        var playersInfo = [String : Player]()
+        for index in 0..<players.count {
+            let player = Player(name: playersNames[index], status: self.playersStatus[index], points: self.playersPoints[index])
+            playersInfo[players[index].recordID.recordName] = player
+        }
+        self.playersInfo = playersInfo
+        
         self.leadPlayer = leadPlayer
         self.memes = memes
         self.pointsToWin = pointsToWin
@@ -240,8 +278,7 @@ class Game: CKCompatible {
     
     // Quickly get a user's status
     func getStatus(of player: User) -> PlayerStatus {
-        guard let index = players.firstIndex(of: player.reference) else { return .quit }
-        return playersStatus[index]
+        playersInfo[player.recordID.recordName]?.status ?? .quit
     }
     
     // Quickly update a player's status

@@ -12,6 +12,7 @@ extension UILabel {
     func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 0, borderColor: UIColor = .darkGray, backgroundColor: UIColor? = .purpleAccent, opacity: CGFloat = 0.6, textColor: UIColor = .mainText, fontSize: CGFloat = 20, fontName: String = FontNames.mainFont) {
         addCornerRadius(cornerRadius)
         addBorder(width: borderWidth, color: borderColor)
+        numberOfLines = 0
         if let backgroundColor = backgroundColor {
             self.backgroundColor = backgroundColor.withAlphaComponent(opacity)
         }

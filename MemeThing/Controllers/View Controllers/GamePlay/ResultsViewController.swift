@@ -17,6 +17,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var chooseWinnerButton: UIButton!
     @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var previousButton: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
     
     // MARK: - Properties
     
@@ -54,7 +56,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme
                     self?.meme = meme
-                    print("in completion and meme is \(meme) with \(meme.captions?.count) captions")
+                    print("in completion and meme is \(meme) with \(String(describing: meme.captions?.count)) captions")
                     
                     // TODO: - nested completions
                     
@@ -106,6 +108,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
             
             let captionLabel = MemeThingLabelBackground(frame: frame)
             captionLabel.text = captions[index].text
+            captionLabel.textAlignment = .center
+            captionLabel.numberOfLines = 0
+            captionLabel.setUpViews()
             
             self.scrollView.addSubview(captionLabel)
         }
@@ -192,6 +197,17 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 }
             }
         }
+    }
+    
+    @IBAction func previousButtonTapped(_ sender: UIButton) {
+//        if pageControl.currentPage > 0 {
+//            pageControl.currentPage -= 1
+//            // FIXME: - move the scroll view
+//
+//        }
+    }
+    
+    @IBAction func nextButtonTapped(_ sender: UIButton) {
     }
 }
 

@@ -91,7 +91,7 @@ class GameController {
     // Read (fetch) a particular game from a reference
     func fetchGame(from recordID: CKRecord.ID, completion: @escaping resultHandlerWithObject) {
         // Fetch the data from the cloud
-        CKService.shared.read(recordID: recordID) { [weak self] (result: Result<Game, MemeThingError>) in
+        CKService.shared.read(recordID: recordID) { (result: Result<Game, MemeThingError>) in
             switch result {
             case .success(let game):
                 // Return the success
@@ -106,7 +106,7 @@ class GameController {
     
     // Update a game
     func saveChanges(to game: Game, completion: @escaping resultHandlerWithObject) {
-        print("got here to \(#function) and game being saved is \(game.debugging)")
+//        print("got here to \(#function) and game being saved is \(game.debugging)")
         // Save the updated game to the cloud
         CKService.shared.update(object: game) { (result) in
             switch result {
@@ -310,11 +310,11 @@ class GameController {
         fetchGame(from: recordID) { [weak self] (result) in
             switch result {
             case .success(let game):
-                print("SoT is \(self?.currentGames?.compactMap({$0.debugging})) and game is \(game.debugging)")
+//                print("SoT is \(self?.currentGames?.compactMap({$0.debugging})) and game is \(game.debugging)")
                 // Update the game in the source of truth
                 guard let index = self?.currentGames?.firstIndex(of: game) else { return }
                 self?.currentGames?[index] = game
-                print("SoT is now \(self?.currentGames?.compactMap({$0.debugging}))")
+//                print("SoT is now \(self?.currentGames?.compactMap({$0.debugging}))")
                 
                 // Form the notification that will tell the views how to update
                 var notificationDestination: Notification.Name?

@@ -20,6 +20,8 @@ class InviteFriendsTableViewController: UITableViewController {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(false, animated: true)
         tableView.backgroundColor = .background
+//        tableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "friendCell")
+        tableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "friendCell")
         
         // Load the data if it hasn't been loaded already
         loadData()

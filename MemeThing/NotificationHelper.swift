@@ -24,7 +24,7 @@ class NotificationHelper {
     
     // MARK: - Process Notifications
     
-    static func processNotification(withData data: [AnyHashable : Any]) {
+    static func processNotification(withData data: [AnyHashable : Any]) { // FIXME: - return a result of type UIBackgroundFetchResult, need completions on all these functions
         
         // Parse the notification data to find out what type of notification it is and extract any relevant data
         guard let ckNotification = CKQueryNotification(fromRemoteNotificationDictionary: data),

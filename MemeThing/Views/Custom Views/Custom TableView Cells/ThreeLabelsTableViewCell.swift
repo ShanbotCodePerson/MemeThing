@@ -39,7 +39,7 @@ class ThreeLabelsTableViewCell: UITableViewCell {
     func setUpUI(firstText: String, secondText: String? = nil, thirdText: String? = nil) {
         containerView.addCornerRadius(8)
         containerView.backgroundColor = UIColor.purpleAccent.withAlphaComponent(0.6)
-        
+ 
         // Reset all values to default (in case cell is being reused)
         firstLabel.textAlignment = .left
         secondLabel.textAlignment = .left

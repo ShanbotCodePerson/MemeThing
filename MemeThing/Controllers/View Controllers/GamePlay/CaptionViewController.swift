@@ -16,7 +16,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!
-    @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var sendButton: UIButton!
     
     // MARK: - Properties
@@ -40,7 +39,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
     
     func setUpViews() {
         view.backgroundColor = .background
-        view.sendSubviewToBack(mainView)
         
         guard let game = game, let memeReference = game.memes?.last else { return }
         
@@ -60,6 +58,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
         }
     }
     
+    // TODO: - still need to test this
     @objc func keyboardNotification(_ sender: NSNotification) {
         guard let userInfo = sender.userInfo else { return }
         
@@ -70,9 +69,9 @@ class CaptionViewController: UIViewController, HasAGameObject {
         let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
         let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
         if endFrameY >= UIScreen.main.bounds.size.height {
-            self.keyboardHeightLayoutConstraint?.constant = 0.0
+            self.keyboardHeightLayoutConstraint?.constant = 8.0
         } else {
-            self.keyboardHeightLayoutConstraint?.constant = -1 * (endFrame?.size.height ?? 0.0) + (sendButton.frame.height * 2)
+            self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 8.0 + sendButton.frame.height
         }
         
         UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
@@ -90,6 +89,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
     }
     
     @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
+        print("got here to \(#function)")
         // Close the keyboard
         captionTextField.resignFirstResponder()
     }

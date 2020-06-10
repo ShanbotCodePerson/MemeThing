@@ -5,7 +5,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,6 +20,18 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
                                 <color key="backgroundColor" name="navBar"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcm-NG-LHC" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="792.5" width="373" height="57.5"/>
+                                <state key="normal" title="Send"/>
+                                <connections>
+                                    <action selector="sendButtonTapped:" destination="wv3-dL-fID" eventType="touchUpInside" id="mQX-bX-p9q"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter funniest caption..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KHy-3E-I4Q">
+                                <rect key="frame" x="20.5" y="750.5" width="373" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="send"/>
+                            </textField>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nkK-uE-dFS">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <color key="tintColor" name="purpleAccent"/>
@@ -40,70 +51,48 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oqp-zC-yKT">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2qC-42-JGe">
+                                <rect key="frame" x="0.0" y="88" width="414" height="662.5"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="OD7-rI-H93">
-                                        <rect key="frame" x="20.5" y="19.5" width="373" height="735"/>
-                                        <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="7IK-AJ-lNo" customClass="MemeImageView" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="373" height="621"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="7IK-AJ-lNo" secondAttribute="height" multiplier="3:5" id="fHW-u9-qyE"/>
-                                                </constraints>
-                                            </imageView>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter funniest caption..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KHy-3E-I4Q">
-                                                <rect key="frame" x="0.0" y="633" width="373" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="T14-aV-BZz"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="send"/>
-                                            </textField>
-                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcm-NG-LHC" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="685" width="373" height="50"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="am8-CB-ok0"/>
-                                                </constraints>
-                                                <state key="normal" title="Send"/>
-                                                <connections>
-                                                    <action selector="sendButtonTapped:" destination="wv3-dL-fID" eventType="touchUpInside" id="mQX-bX-p9q"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="7IK-AJ-lNo">
+                                        <rect key="frame" x="20.5" y="16.5" width="373" height="629.5"/>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="OD7-rI-H93" firstAttribute="height" secondItem="oqp-zC-yKT" secondAttribute="height" multiplier="0.95" id="GE5-aA-Gpj"/>
-                                    <constraint firstItem="OD7-rI-H93" firstAttribute="width" secondItem="oqp-zC-yKT" secondAttribute="width" multiplier="0.9" id="e9b-yW-uk3"/>
-                                    <constraint firstItem="OD7-rI-H93" firstAttribute="centerY" secondItem="oqp-zC-yKT" secondAttribute="centerY" id="gcT-G6-Ohw"/>
-                                    <constraint firstItem="OD7-rI-H93" firstAttribute="centerX" secondItem="oqp-zC-yKT" secondAttribute="centerX" id="yIf-NC-trN"/>
+                                    <constraint firstItem="7IK-AJ-lNo" firstAttribute="centerX" secondItem="2qC-42-JGe" secondAttribute="centerX" id="4xQ-2m-Vr8"/>
+                                    <constraint firstItem="7IK-AJ-lNo" firstAttribute="height" secondItem="2qC-42-JGe" secondAttribute="height" multiplier="0.95" id="8Kv-ny-tP6"/>
+                                    <constraint firstItem="7IK-AJ-lNo" firstAttribute="centerY" secondItem="2qC-42-JGe" secondAttribute="centerY" id="Lj7-vI-zob"/>
+                                    <constraint firstItem="7IK-AJ-lNo" firstAttribute="width" secondItem="2qC-42-JGe" secondAttribute="width" multiplier="0.9" id="akC-Fe-QSW"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="nkK-uE-dFS" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="5SB-46-XB9"/>
-                            <constraint firstItem="oqp-zC-yKT" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="6RU-cv-ruF"/>
-                            <constraint firstItem="oqp-zC-yKT" firstAttribute="bottom" secondItem="9G1-Tm-2X0" secondAttribute="bottom" id="A5c-17-peN"/>
-                            <constraint firstItem="hmp-WS-XX3" firstAttribute="leading" secondItem="gCh-mx-hlE" secondAttribute="leading" id="Fep-gb-FwP"/>
-                            <constraint firstItem="KHy-3E-I4Q" firstAttribute="height" relation="lessThanOrEqual" secondItem="9G1-Tm-2X0" secondAttribute="height" multiplier="0.03" priority="999" id="I3d-Zb-hnc"/>
-                            <constraint firstItem="xcm-NG-LHC" firstAttribute="height" relation="lessThanOrEqual" secondItem="9G1-Tm-2X0" secondAttribute="height" multiplier="0.06" priority="999" id="KMI-aD-31n"/>
-                            <constraint firstItem="oqp-zC-yKT" firstAttribute="top" secondItem="hmp-WS-XX3" secondAttribute="bottom" id="Mne-av-eg0"/>
-                            <constraint firstItem="oqp-zC-yKT" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="OYi-cy-iCu"/>
-                            <constraint firstItem="nkK-uE-dFS" firstAttribute="top" secondItem="9G1-Tm-2X0" secondAttribute="top" id="PPz-Ku-KyE"/>
-                            <constraint firstItem="9G1-Tm-2X0" firstAttribute="trailing" secondItem="hmp-WS-XX3" secondAttribute="trailing" id="Sot-eF-Nj7"/>
-                            <constraint firstItem="hmp-WS-XX3" firstAttribute="top" secondItem="gCh-mx-hlE" secondAttribute="top" id="YRG-td-oZT"/>
-                            <constraint firstItem="nkK-uE-dFS" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="lbv-kp-mhg"/>
-                            <constraint firstItem="oqp-zC-yKT" firstAttribute="top" secondItem="nkK-uE-dFS" secondAttribute="bottom" id="tdQ-xw-Ojx"/>
+                            <constraint firstItem="nkK-uE-dFS" firstAttribute="top" secondItem="9G1-Tm-2X0" secondAttribute="top" id="0sC-zd-kj4"/>
+                            <constraint firstItem="nkK-uE-dFS" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="17t-QN-WYx"/>
+                            <constraint firstItem="9G1-Tm-2X0" firstAttribute="bottom" secondItem="xcm-NG-LHC" secondAttribute="bottom" constant="12" id="1iS-t2-Tf9"/>
+                            <constraint firstItem="hmp-WS-XX3" firstAttribute="top" secondItem="gCh-mx-hlE" secondAttribute="top" id="8Gb-wj-136"/>
+                            <constraint firstItem="xcm-NG-LHC" firstAttribute="height" secondItem="9G1-Tm-2X0" secondAttribute="height" multiplier="0.07" id="BS0-m4-LIn"/>
+                            <constraint firstItem="2qC-42-JGe" firstAttribute="top" secondItem="hmp-WS-XX3" secondAttribute="bottom" id="Dgo-g1-U45"/>
+                            <constraint firstItem="KHy-3E-I4Q" firstAttribute="top" secondItem="2qC-42-JGe" secondAttribute="bottom" id="JIm-c2-XYL"/>
+                            <constraint firstItem="xcm-NG-LHC" firstAttribute="centerX" secondItem="9G1-Tm-2X0" secondAttribute="centerX" id="KcE-KI-oLj"/>
+                            <constraint firstItem="KHy-3E-I4Q" firstAttribute="centerX" secondItem="9G1-Tm-2X0" secondAttribute="centerX" id="Xqg-4h-Y1M"/>
+                            <constraint firstItem="nkK-uE-dFS" firstAttribute="bottom" secondItem="hmp-WS-XX3" secondAttribute="bottom" id="YiD-qg-UWN"/>
+                            <constraint firstItem="9G1-Tm-2X0" firstAttribute="trailing" secondItem="2qC-42-JGe" secondAttribute="trailing" id="cru-F3-4xN"/>
+                            <constraint firstItem="hmp-WS-XX3" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="eI7-pM-E04"/>
+                            <constraint firstItem="hmp-WS-XX3" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="hFx-Ur-YO4"/>
+                            <constraint firstItem="2qC-42-JGe" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="ir9-h3-KIM"/>
+                            <constraint firstItem="nkK-uE-dFS" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="kRm-aa-SN6"/>
+                            <constraint firstItem="KHy-3E-I4Q" firstAttribute="width" secondItem="9G1-Tm-2X0" secondAttribute="width" multiplier="0.9" id="m5D-xD-GaQ"/>
+                            <constraint firstItem="xcm-NG-LHC" firstAttribute="top" secondItem="KHy-3E-I4Q" secondAttribute="bottom" constant="8" id="sb1-FW-wNU"/>
+                            <constraint firstItem="xcm-NG-LHC" firstAttribute="width" secondItem="9G1-Tm-2X0" secondAttribute="width" multiplier="0.9" id="xCQ-1I-88j"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9G1-Tm-2X0"/>
                     </view>
                     <connections>
                         <outlet property="captionTextField" destination="KHy-3E-I4Q" id="BVi-in-Bts"/>
-                        <outlet property="keyboardHeightLayoutConstraint" destination="gcT-G6-Ohw" id="Qhd-b3-Wtc"/>
-                        <outlet property="mainView" destination="oqp-zC-yKT" id="mRH-yc-D5M"/>
+                        <outlet property="keyboardHeightLayoutConstraint" destination="sb1-FW-wNU" id="SUa-GW-06J"/>
                         <outlet property="memeImageView" destination="7IK-AJ-lNo" id="IA8-Xi-3a1"/>
                         <outlet property="navigationBar" destination="nkK-uE-dFS" id="xZp-iN-6xU"/>
                         <outlet property="sendButton" destination="xcm-NG-LHC" id="YPk-ut-lNZ"/>
