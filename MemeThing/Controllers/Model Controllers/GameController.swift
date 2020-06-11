@@ -283,6 +283,7 @@ class GameController {
         }
     }
     
+    // FIXME: - major problems with ending game
     // Receive a notification that a game has ended
     func receiveNotificationGameEnded(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
         // TODO: - display an alert to the user
@@ -293,7 +294,7 @@ class GameController {
             else { return completion(2) }
         
         // Perform all the clean-up to finish the game
-        handleEnd(for: game)
+//        handleEnd(for: game)
         
         // Return the success
         return completion(0)
@@ -376,7 +377,8 @@ class GameController {
             switch result {
             case .success(let game):
                 // Handle the clean up for leaving the game
-                self?.handleEnd(for: game)
+//                self?.handleEnd(for: game)
+                // FIXME: -
                 
                 // Return the success
                 return completion(.success(true))
@@ -388,24 +390,26 @@ class GameController {
         }
     }
     
+    
+    // FIXME: - major problems with ending game
     // Perform all the cleanup to end the game, whether it's over or the user has quit
-    func handleEnd(for game: Game) {
-        // Remove the game from the source of truth
-        currentGames?.removeAll(where: { $0 == game })
-        
-        // Remove the subscriptions to notifications for the game
-        CKService.shared.publicDB.delete(withSubscriptionID: "\(game.recordID.recordName)-end") { (_, error) in
-            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
-        }
-        CKService.shared.publicDB.delete(withSubscriptionID: "\(game.recordID.recordName)-update") { (_, error) in
-            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
-        }
-        MemeController.shared.removeAllCaptionSubscriptions(for: game)
-        
-        // Tell the table view list of current games to update itself
-        NotificationCenter.default.post(Notification(name: updateListOfGames))
-        
-        // If the user is currently in the game, transition them to the main menu
-        NotificationCenter.default.post(Notification(name: toMainMenu, userInfo: ["gameID" : game.recordID.recordName]))
-    }
+//    func handleEnd(for gameID: CKRecord.ID) {
+//        // Remove the game from the source of truth
+//        currentGames?.removeAll(where: { $0.recordID.recordName == gameID.recordName })
+//
+//        // Remove the subscriptions to notifications for the game
+//        CKService.shared.publicDB.delete(withSubscriptionID: "\(recordID.recordName)-end") { (_, error) in
+//            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+//        }
+//        CKService.shared.publicDB.delete(withSubscriptionID: "\(recordID.recordName)-update") { (_, error) in
+//            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+//        }
+//        MemeController.shared.removeAllCaptionSubscriptions(for: game)
+//
+//        // Tell the table view list of current games to update itself
+//        NotificationCenter.default.post(Notification(name: updateListOfGames))
+//
+//        // If the user is currently in the game, transition them to the main menu
+//        NotificationCenter.default.post(Notification(name: toMainMenu, userInfo: ["gameID" : recordID.recordName]))
+//    }
 }
