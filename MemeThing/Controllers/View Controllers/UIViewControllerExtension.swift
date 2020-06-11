@@ -48,7 +48,6 @@ extension UIViewController {
         self.present(initialVC, animated: false)
     }
     
-    // TODO: - this is actually untested so far
     func transitionToStoryboard(named: String, with game: Game) {
         let storyboard = UIStoryboard(name: named, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
@@ -89,6 +88,21 @@ extension UIViewController {
         present(alertController, animated: true)
     }
     
+    // Present an alert with simple confirm or cancel buttons
+    func presentConfirmAlert(title: String, message: String, completion: @escaping () -> Void) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        // Add the cancel button to the alert
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // Add the confirm button to the alert
+        alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (_) in completion() }))
+        
+        // Present the alert
+        present(alertController, animated: true)
+    }
+    
     // Present an alert with a text field to get some input from the user
     func presentTextFieldAlert(title: String, message: String, textFieldPlaceholder: String, textFieldText: String? = nil, saveButtonTitle: String = "Save", completion: @escaping (String) -> Void) {
         // Create the alert controller
@@ -121,7 +135,7 @@ extension UIViewController {
     }
     
     // Present an alert at the bottom of the screen to display an error to the user
-    func presentErrorToUser(_ localizedError: LocalizedError) {
+    func presentErrorAlert(_ localizedError: LocalizedError) {
         // Create the alert controller
         let alertController = UIAlertController(title: "ERROR", message: localizedError.errorDescription, preferredStyle: .actionSheet)
         

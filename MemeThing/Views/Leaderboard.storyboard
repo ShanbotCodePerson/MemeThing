@@ -37,27 +37,39 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mmA-Fc-vb9" customClass="CloseButton" customModule="MemeThing" customModuleProvider="target">
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="MYJ-P3-iiX">
                                 <rect key="frame" x="41.5" y="561" width="331" height="41"/>
-                                <state key="normal" title="Close"/>
-                                <connections>
-                                    <action selector="closeButtonTapped:" destination="udx-0g-6jh" eventType="touchUpInside" id="nwU-vR-DzO"/>
-                                </connections>
-                            </button>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tqM-eI-L3c" customClass="QuitButton" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="159.5" height="41"/>
+                                        <state key="normal" title="Quit Game"/>
+                                        <connections>
+                                            <action selector="quitButtonTapped:" destination="udx-0g-6jh" eventType="touchUpInside" id="qef-FY-iOt"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mmA-Fc-vb9" customClass="CloseButton" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="171.5" y="0.0" width="159.5" height="41"/>
+                                        <state key="normal" title="Close"/>
+                                        <connections>
+                                            <action selector="closeButtonTapped:" destination="udx-0g-6jh" eventType="touchUpInside" id="nwU-vR-DzO"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="top" secondItem="gKL-sf-953" secondAttribute="bottom" constant="8" id="0LE-WS-94Q"/>
                             <constraint firstItem="y5T-UQ-2vA" firstAttribute="width" secondItem="c9Y-8r-g0v" secondAttribute="width" multiplier="0.8" id="9bw-cA-bPr"/>
-                            <constraint firstItem="mmA-Fc-vb9" firstAttribute="top" secondItem="gKL-sf-953" secondAttribute="bottom" constant="8" id="J8x-fQ-tzf"/>
+                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="width" secondItem="c9Y-8r-g0v" secondAttribute="width" multiplier="0.8" id="ADf-Ni-Rgn"/>
                             <constraint firstItem="gKL-sf-953" firstAttribute="width" secondItem="c9Y-8r-g0v" secondAttribute="width" multiplier="0.8" id="Ko0-95-Z1c"/>
                             <constraint firstItem="gKL-sf-953" firstAttribute="centerY" secondItem="c9Y-8r-g0v" secondAttribute="centerY" id="NQx-Ni-rHd"/>
-                            <constraint firstItem="mmA-Fc-vb9" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.05" id="Opt-6H-58K"/>
                             <constraint firstItem="gKL-sf-953" firstAttribute="top" secondItem="y5T-UQ-2vA" secondAttribute="bottom" constant="8" id="QW1-iZ-Paa"/>
                             <constraint firstItem="gKL-sf-953" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="UU3-pp-Wmn"/>
-                            <constraint firstItem="mmA-Fc-vb9" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="dK5-zm-K0Y"/>
+                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="WpU-S6-GmD"/>
                             <constraint firstItem="y5T-UQ-2vA" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.05" id="ggI-jW-vzS"/>
-                            <constraint firstItem="mmA-Fc-vb9" firstAttribute="width" secondItem="c9Y-8r-g0v" secondAttribute="width" multiplier="0.8" id="kaZ-Pv-epO"/>
                             <constraint firstItem="y5T-UQ-2vA" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="vnT-ON-WY7"/>
+                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.05" id="wxH-kB-z7m"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="c9Y-8r-g0v"/>
                         <connections>

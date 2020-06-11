@@ -46,7 +46,7 @@ class InviteFriendsTableViewController: UITableViewController {
                         self?.tableView.reloadData()
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
             }
@@ -79,7 +79,7 @@ class InviteFriendsTableViewController: UITableViewController {
                     self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorToUser(error)
+                    self?.presentErrorAlert(error)
                 }
             }
         }

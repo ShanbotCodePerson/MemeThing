@@ -76,7 +76,7 @@ class FriendsListTableViewController: UITableViewController {
                         print("Successfully fetched pending friend requests")
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
                 group.leave()
@@ -91,7 +91,7 @@ class FriendsListTableViewController: UITableViewController {
                         print("Successfully fetched outgoing friend requests")
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
                 group.leave()
@@ -106,7 +106,7 @@ class FriendsListTableViewController: UITableViewController {
                         print("Successfully fetched current friends")
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
                 group.leave()
@@ -270,7 +270,7 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorToUser(error)
+                    self?.presentErrorAlert(error)
                 }
             }
         }

@@ -75,13 +75,13 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                 self?.pageControl.numberOfPages = captions.count
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorToUser(error)
+                                self?.presentErrorAlert(error)
                             }
                         }
                     }
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorToUser(error)
+                    self?.presentErrorAlert(error)
                 }
             }
         }
@@ -152,7 +152,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        print("got here")
         transitionToStoryboard(named: StoryboardNames.mainMenu)
     }
     
@@ -193,13 +192,13 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                 }
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorToUser(error)
+                                self?.presentErrorAlert(error)
                             }
                         }
                     }
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorToUser(error)
+                    self?.presentErrorAlert(error)
                 }
             }
         }

@@ -57,7 +57,7 @@ class ProfileTableViewController: UITableViewController {
                         self?.screenNameLabel.text = "Screen Name: \(screenName)"
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
             }
@@ -92,7 +92,7 @@ class ProfileTableViewController: UITableViewController {
                         self?.emailLabel.text = "Email: \(email)"
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
             }

@@ -49,6 +49,13 @@ class SubmitButton: UIButton {
 class CloseButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
+        setUpViews(borderWidth: 2, backgroundColor: .gray, textColor: .white)
+    }
+}
+
+class QuitButton: UIButton {
+    override func awakeFromNib() {
+        super.awakeFromNib()
         setUpViews(borderWidth: 2, backgroundColor: .redAccent, textColor: .white)
     }
 }
