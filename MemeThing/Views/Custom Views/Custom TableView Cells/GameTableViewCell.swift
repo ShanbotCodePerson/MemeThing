@@ -36,6 +36,8 @@ class GameTableViewCell: UITableViewCell {
     // MARK: - Set Up UI
     
     func setUpViews(in section: GamesListTableViewController.SectionName, with game: Game?) {
+        selectionStyle = .none
+        
         switch section {
         case .pendingInvitations:
             guard let game = game else { return }
@@ -69,6 +71,7 @@ class GameTableViewCell: UITableViewCell {
         } else {
             secondaryTextLabel.isHidden = true
             mainTextLabel.text = "You are not currently playing any games"
+            mainTextLabel.textAlignment = .center
         }
     }
 }

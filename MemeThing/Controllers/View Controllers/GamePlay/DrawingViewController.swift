@@ -30,7 +30,8 @@ class DrawingViewController: UIViewController, HasAGameObject {
         // Display the leaderboard unless the game is just starting
         guard let game = game else { return }
         if game.memes?.count ?? 0 > 0 {
-            transitionToStoryboard(named: StoryboardNames.leaderboardView, with: game)
+//            presentLeaderboard(with: game)
+            // FIXME: - this doesn't work
         }
     }
     
@@ -41,6 +42,8 @@ class DrawingViewController: UIViewController, HasAGameObject {
     }
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
+        guard let game = game else { return }
+        presentLeaderboard(with: game)
     }
     
     @IBAction func undoButtonTapped(_ sender: UIButton) {

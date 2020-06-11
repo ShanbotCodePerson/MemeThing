@@ -17,7 +17,7 @@ class GameController {
     
     // MARK: - Source of Truth
     
-    var currentGames: [Game]?
+    var currentGames: [Game]? // TODO: - could replace with a dictionary to make it easier to index by game id?
     
     // MARK: - Properties
     
@@ -91,7 +91,7 @@ class GameController {
     // Read (fetch) a particular game from a reference
     func fetchGame(from recordID: CKRecord.ID, completion: @escaping resultHandlerWithObject) {
         // Fetch the data from the cloud
-        CKService.shared.read(recordID: recordID) { [weak self] (result: Result<Game, MemeThingError>) in
+        CKService.shared.read(recordID: recordID) { (result: Result<Game, MemeThingError>) in
             switch result {
             case .success(let game):
                 // Return the success
@@ -106,11 +106,17 @@ class GameController {
     
     // Update a game
     func saveChanges(to game: Game, completion: @escaping resultHandlerWithObject) {
-        print("got here to \(#function) and game being saved is \(game.debugging)")
+//        print("got here to \(#function) and game being saved is \(game.debugging)")
         // Save the updated game to the cloud
-        CKService.shared.update(object: game) { (result) in
+        CKService.shared.update(object: game) { [weak self] (result) in
             switch result {
             case .success(let game):
+                // Update the game in the source of truth
+                // FIXME: - this probably isn't necessary
+                guard let index = self?.currentGames?.firstIndex(of: game) else { return completion(.failure(.unknownError)) }
+                self?.currentGames?[index] = game
+                print("got here to \(#function)")
+                
                 // Return the success
                 return completion(.success(game))
             case .failure(let error):
@@ -192,6 +198,7 @@ class GameController {
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
         notificationInfo.title = "Update to game" // TODO: - figure out a better message for this
+        notificationInfo.alertBody =  "Update to a game you're playing"
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.category = NotificationHelper.Category.gameUpdate.rawValue
         subscription.notificationInfo = notificationInfo
@@ -203,7 +210,7 @@ class GameController {
     // MARK: - Receive Notifications
     
     // Receive a notification that you've been invited to a game
-    func receiveInvitationToGame(withID recordID: CKRecord.ID) {
+    func receiveInvitationToGame(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
         print("got here to \(#function)")
         
         // TODO: - show an alert to the user
@@ -222,9 +229,13 @@ class GameController {
                 }
                 // Tell the table view list of current games to update itself
                 NotificationCenter.default.post(Notification(name: updateListOfGames))
+                
+                // Return the success
+                return completion(0)
             case .failure(let error):
-                // TODO: - better error handling here
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(2)
             }
         }
     }
@@ -273,7 +284,7 @@ class GameController {
     }
     
     // Receive a notification that a game has ended
-    func receiveNotificationGameEnded(withID recordID: CKRecord.ID) {
+    func receiveNotificationGameEnded(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
         // TODO: - display an alert to the user
         
         // Remove the game from the source of truth
@@ -294,15 +305,21 @@ class GameController {
         fetchGame(from: recordID) { (result) in
             switch result {
             case .success(let game):
+                // Tell the view to navigate back to the main menu
                 NotificationCenter.default.post(Notification(name: toMainMenu, userInfo: ["gameID" : game.recordID.recordName]))
+                
+                // Return the success
+                return completion(0)
             case .failure(let error):
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(2)
             }
         }
     }
     
     // Receive a notification that a game has been updated
-    func receiveUpdateToGame(withID recordID: CKRecord.ID) {
+    func receiveUpdateToGame(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
         guard let currentUser = UserController.shared.currentUser else { return }
         print("got here to \(#function)")
         
@@ -310,11 +327,11 @@ class GameController {
         fetchGame(from: recordID) { [weak self] (result) in
             switch result {
             case .success(let game):
-                print("SoT is \(self?.currentGames?.compactMap({$0.debugging})) and game is \(game.debugging)")
+//                print("SoT is \(self?.currentGames?.compactMap({$0.debugging})) and game is \(game.debugging)")
                 // Update the game in the source of truth
                 guard let index = self?.currentGames?.firstIndex(of: game) else { return }
                 self?.currentGames?[index] = game
-                print("SoT is now \(self?.currentGames?.compactMap({$0.debugging}))")
+//                print("SoT is now \(self?.currentGames?.compactMap({$0.debugging}))")
                 
                 // Form the notification that will tell the views how to update
                 var notificationDestination: Notification.Name?
@@ -350,9 +367,13 @@ class GameController {
                 guard let notificationName = notificationDestination else { return }
                 NotificationCenter.default.post(Notification(name: notificationName,  userInfo: ["gameID" : game.recordID.recordName]))
                 print("notification sent with name \(notificationName)")
+                
+                // Return the success
+                return completion(0)
             case .failure(let error):
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                // TODO: - better error handling  - display an alert to the user?
+                return completion(2)
             }
         }
     }

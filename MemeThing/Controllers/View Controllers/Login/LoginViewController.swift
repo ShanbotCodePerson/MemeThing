@@ -31,11 +31,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         fetchUser()
         
-        usernameTextField.delegate = self
-        screenNameTextField.delegate = self
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
-        confirmPasswordTextField.delegate = self
+        // Set up the UI
+        setUpViews()
     }
     
     // MARK: - Actions
@@ -115,15 +112,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Helper Methods
     
+    func setUpViews() {
+        view.backgroundColor = .background
+        
+        usernameTextField.delegate = self
+        screenNameTextField.delegate = self
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        confirmPasswordTextField.delegate = self
+    }
+    
     func fetchUser() {
         UserController.shared.fetchUser { [weak self] (result) in
-            switch result {
-            case .success(_):
-                // Go straight to the main menu if the user was fetched correctly
-                self?.presentMainMenuVC()
-            case .failure(let error):
-                self?.presentErrorToUser(error)
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Go straight to the main menu if the user was fetched correctly
+                    self?.presentMainMenuVC()
+                case .failure(let error):
+                    // TODO: - don't present an error just because a user doesn't exist yet
+                    self?.presentErrorToUser(error)
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                }
             }
         }
     }

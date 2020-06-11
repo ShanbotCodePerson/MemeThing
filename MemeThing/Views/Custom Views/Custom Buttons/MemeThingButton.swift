@@ -46,9 +46,30 @@ class SubmitButton: UIButton {
     }
 }
 
+class CloseButton: UIButton {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews(borderWidth: 2, backgroundColor: .redAccent, textColor: .white)
+    }
+}
+
 class CircularButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
         setUpViews(cornerRadius: self.frame.height / 2, backgroundColor: .systemGray4, tintColor: .darkGray)
+    }
+}
+
+class AcceptButton: UIButton {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .greenAccent, textColor: .white, tintColor: .white)
+    }
+}
+
+class DenyButton: UIButton {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .redAccent, textColor: .white, tintColor: .white)
     }
 }

@@ -18,13 +18,13 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="RH0-Qc-nWr">
                                 <rect key="frame" x="109.5" y="83" width="195.5" height="61"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Meme Thing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7lZ-sP-LMr">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Meme Thing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7lZ-sP-LMr" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="195.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please sign up or log in" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozd-FJ-riY">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please sign up or log in" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozd-FJ-riY" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="40.5" width="195.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
@@ -58,27 +58,27 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="lFt-yw-6cG">
                                         <rect key="frame" x="0.0" y="50.5" width="331" height="204.5"/>
                                         <subviews>
-                                            <textField opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Username Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1fD-XS-hIB">
+                                            <textField opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Username Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1fD-XS-hIB" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="331" height="34.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="next" textContentType="username"/>
                                             </textField>
-                                            <textField opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Screen Name Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qwu-Ed-SWn">
+                                            <textField opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Screen Name Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qwu-Ed-SWn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="42.5" width="331" height="34.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
                                             </textField>
-                                            <textField opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="twx-kb-Bqy">
+                                            <textField opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="twx-kb-Bqy" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="85" width="331" height="34.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next" textContentType="email"/>
                                             </textField>
-                                            <textField opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Password Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IxU-ce-hvA">
+                                            <textField opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Password Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IxU-ce-hvA" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="127.5" width="331" height="34.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES" textContentType="password"/>
                                             </textField>
-                                            <textField opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ea3-oj-rzn">
+                                            <textField opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ea3-oj-rzn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="170" width="331" height="34.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
@@ -104,11 +104,12 @@
                             <constraint firstItem="cam-3L-kts" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.25" id="4MZ-ZF-eom"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="trailing" secondItem="Lol-Sz-ptg" secondAttribute="trailing" id="4rn-kH-aTr"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.05" id="JsU-Q5-p2S"/>
-                            <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.25" id="MBw-7A-XxJ"/>
+                            <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.25" priority="999" id="MBw-7A-XxJ"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TCl-xO-nvx" secondAttribute="leading" symbolic="YES" id="OOa-kE-wIg"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="1.75" id="Vxi-zM-2Jq"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.95" id="eqd-eO-1c3"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.8" id="hCY-QT-NOp"/>
+                            <constraint firstItem="Lol-Sz-ptg" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RH0-Qc-nWr" secondAttribute="bottom" constant="20" id="hSm-aw-eXH"/>
                             <constraint firstItem="lFt-yw-6cG" firstAttribute="height" secondItem="TCl-xO-nvx" secondAttribute="height" multiplier="0.25" id="qW3-tK-JSJ"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="r1A-6R-ZSp"/>
                             <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="z90-LU-jmu"/>

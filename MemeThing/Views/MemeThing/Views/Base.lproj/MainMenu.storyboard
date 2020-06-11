@@ -30,6 +30,7 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QmY-Sk-EIK" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="91" width="331" height="83.5"/>
+                                        <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="17"/>
                                         <state key="normal" title="Resume Game"/>
                                         <connections>
                                             <segue destination="CEG-oA-vRa" kind="show" id="0hT-f5-v8d"/>
@@ -93,7 +94,7 @@
         <scene sceneID="xTO-u0-qFl">
             <objects>
                 <tableViewController id="oRG-6L-4CO" customClass="InviteFriendsTableViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="AKO-fk-Gm5">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="AKO-fk-Gm5">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -102,21 +103,22 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select at least two friends to start a game!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iHb-Sl-1d7" customClass="MemeThingLabelBackground" customModule="MemeThing" customModuleProvider="target">
-                                    <rect key="frame" x="45.5" y="12" width="323" height="20.5"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select at least two friends to start a game!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iHb-Sl-1d7" customClass="MemeThingLabelDark" customModule="MemeThing" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="12" width="414" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" name="yellowAccent"/>
                             <constraints>
                                 <constraint firstItem="iHb-Sl-1d7" firstAttribute="centerY" secondItem="XYk-h5-GXn" secondAttribute="centerY" id="Sir-cE-3Yl"/>
                                 <constraint firstItem="iHb-Sl-1d7" firstAttribute="centerX" secondItem="XYk-h5-GXn" secondAttribute="centerX" id="Vbr-cU-z3o"/>
+                                <constraint firstItem="iHb-Sl-1d7" firstAttribute="width" secondItem="XYk-h5-GXn" secondAttribute="width" id="hW4-c5-xra"/>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="Kgm-Me-MUc">
-                            <rect key="frame" x="0.0" y="160" width="414" height="60"/>
+                            <rect key="frame" x="0.0" y="144" width="414" height="60"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6pE-Yd-zwk" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
@@ -139,28 +141,12 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="friendCell" textLabel="dTc-cO-0RV" detailTextLabel="ONJ-P1-kv4" rowHeight="60" style="IBUITableViewCellStyleValue1" id="OaQ-vD-R8S">
-                                <rect key="frame" x="0.0" y="72" width="414" height="60"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="friendCell" id="OaQ-vD-R8S" customClass="ThreeLabelsTableViewCell" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="72" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OaQ-vD-R8S" id="5cV-Uv-YWH">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dTc-cO-0RV" customClass="MemeThingLabelDark" customModule="MemeThing" customModuleProvider="target">
-                                            <rect key="frame" x="20" y="20" width="33.5" height="20.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ONJ-P1-kv4" customClass="MemeThingLabelDark" customModule="MemeThing" customModuleProvider="target">
-                                            <rect key="frame" x="350" y="20" width="44" height="20.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -455,36 +441,36 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H67-u5-oiY" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
-                                            <rect key="frame" x="10.5" y="4.5" width="393" height="51"/>
+                                            <rect key="frame" x="10.5" y="6" width="393" height="48"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bNm-WN-uDj">
-                                                    <rect key="frame" x="6" y="0.0" width="387" height="51"/>
+                                                    <rect key="frame" x="6" y="0.0" width="387" height="48"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="[main text]" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mib-ft-RxE" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="123.5" height="51"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="123.5" height="48"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[points text]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IOn-E2-g8R" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
-                                                            <rect key="frame" x="131.5" y="0.0" width="124" height="51"/>
+                                                            <rect key="frame" x="131.5" y="0.0" width="124" height="48"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="90P-XR-gps">
-                                                            <rect key="frame" x="263.5" y="0.0" width="123.5" height="51"/>
+                                                            <rect key="frame" x="263.5" y="0.0" width="123.5" height="48"/>
                                                             <subviews>
-                                                                <button opaque="NO" alpha="0.59999999999999998" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VNI-Kr-fhq">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="61.5" height="51"/>
+                                                                <button opaque="NO" alpha="0.59999999999999998" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VNI-Kr-fhq" customClass="AcceptButton" customModule="MemeThing" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="61.5" height="48"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" title="Accept"/>
                                                                     <connections>
                                                                         <action selector="friendRequestButtonTapped:" destination="ZM7-Q1-wT7" eventType="touchUpInside" id="WyY-qX-Eie"/>
                                                                     </connections>
                                                                 </button>
-                                                                <button opaque="NO" alpha="0.59999999999999998" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="krd-dB-ZTG">
-                                                                    <rect key="frame" x="62.5" y="0.0" width="61" height="51"/>
+                                                                <button opaque="NO" alpha="0.59999999999999998" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="krd-dB-ZTG" customClass="DenyButton" customModule="MemeThing" customModuleProvider="target">
+                                                                    <rect key="frame" x="62.5" y="0.0" width="61" height="48"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" title="Deny"/>
                                                                     <connections>
@@ -507,7 +493,7 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstItem="H67-u5-oiY" firstAttribute="height" secondItem="Z8R-D4-Kjf" secondAttribute="height" multiplier="0.85" id="Buc-XG-JRE"/>
+                                        <constraint firstItem="H67-u5-oiY" firstAttribute="height" secondItem="Z8R-D4-Kjf" secondAttribute="height" multiplier="0.8" id="Buc-XG-JRE"/>
                                         <constraint firstItem="H67-u5-oiY" firstAttribute="width" secondItem="Z8R-D4-Kjf" secondAttribute="width" multiplier="0.95" id="p0F-cd-xig"/>
                                         <constraint firstItem="H67-u5-oiY" firstAttribute="centerY" secondItem="Z8R-D4-Kjf" secondAttribute="centerY" id="qj6-hT-VwG"/>
                                         <constraint firstItem="H67-u5-oiY" firstAttribute="centerX" secondItem="Z8R-D4-Kjf" secondAttribute="centerX" id="ssd-ub-wAZ"/>
@@ -556,10 +542,10 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ktB-mD-9kl" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
-                                            <rect key="frame" x="10.5" y="6" width="393" height="70"/>
+                                            <rect key="frame" x="10.5" y="8" width="393" height="66"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="lfb-yj-H1P">
-                                                    <rect key="frame" x="6" y="0.0" width="387" height="70"/>
+                                                    <rect key="frame" x="6" y="0.0" width="387" height="66"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3rG-hb-1Jh">
                                                             <rect key="frame" x="0.0" y="0.0" width="387" height="30"/>
@@ -573,7 +559,7 @@
                                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="hel-7E-9Gs">
                                                                     <rect key="frame" x="197.5" y="0.0" width="189.5" height="30"/>
                                                                     <subviews>
-                                                                        <button opaque="NO" alpha="0.60000002384185791" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ebP-Lh-VSJ">
+                                                                        <button opaque="NO" alpha="0.60000002384185791" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ebP-Lh-VSJ" customClass="AcceptButton" customModule="MemeThing" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="0.0" width="94.5" height="30"/>
                                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <state key="normal" title="Accept"/>
@@ -581,7 +567,7 @@
                                                                                 <action selector="invitationResponseButtonTapped:" destination="Q2R-KI-GpJ" eventType="touchUpInside" id="rpw-oh-svL"/>
                                                                             </connections>
                                                                         </button>
-                                                                        <button opaque="NO" alpha="0.60000002384185791" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ULZ-SU-LtQ">
+                                                                        <button opaque="NO" alpha="0.60000002384185791" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ULZ-SU-LtQ" customClass="DenyButton" customModule="MemeThing" customModuleProvider="target">
                                                                             <rect key="frame" x="95.5" y="0.0" width="94" height="30"/>
                                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <state key="normal" title="Deny"/>
@@ -594,7 +580,7 @@
                                                             </subviews>
                                                         </stackView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[secondary text]" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oqM-Uc-pZi" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="38" width="387" height="32"/>
+                                                            <rect key="frame" x="0.0" y="38" width="387" height="28"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -616,7 +602,7 @@
                                         <constraint firstItem="ktB-mD-9kl" firstAttribute="centerX" secondItem="TVI-9T-J3c" secondAttribute="centerX" id="Hgk-sm-oZ4"/>
                                         <constraint firstItem="ktB-mD-9kl" firstAttribute="width" secondItem="TVI-9T-J3c" secondAttribute="width" multiplier="0.95" id="JcK-sz-xhc"/>
                                         <constraint firstItem="ktB-mD-9kl" firstAttribute="centerY" secondItem="TVI-9T-J3c" secondAttribute="centerY" id="cBT-Jg-tzh"/>
-                                        <constraint firstItem="ktB-mD-9kl" firstAttribute="height" secondItem="TVI-9T-J3c" secondAttribute="height" multiplier="0.85" id="nJf-in-nQh"/>
+                                        <constraint firstItem="ktB-mD-9kl" firstAttribute="height" secondItem="TVI-9T-J3c" secondAttribute="height" multiplier="0.8" id="nJf-in-nQh"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -666,13 +652,13 @@
     <resources>
         <image name="info.circle" catalog="system" width="128" height="121"/>
         <namedColor name="navBar">
-            <color red="0.94901960784313721" green="0.8666666666666667" blue="0.64313725490196083" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="purpleAccent">
             <color red="0.25490196078431371" green="0.23529411764705882" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="yellowAccent">
-            <color red="0.90588235294117647" green="0.93725490196078431" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.8666666666666667" green="0.93725490196078431" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

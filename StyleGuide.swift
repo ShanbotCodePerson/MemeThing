@@ -34,5 +34,6 @@ extension UIColor {
 }
 
 struct FontNames {
+    static let otherPossibleFont = "Futura-Bold"
     static let mainFont = "MarkerFelt-Thin"
 }

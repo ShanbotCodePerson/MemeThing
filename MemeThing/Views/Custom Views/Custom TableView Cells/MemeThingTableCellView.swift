@@ -15,3 +15,11 @@ class MemeThingTableCellView: UIView {
         self.backgroundColor = UIColor.purpleAccent.withAlphaComponent(0.6)
     }
 }
+
+class MemeThingViewSubtle: UIView {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        addCornerRadius(8)
+        self.backgroundColor = UIColor.darkGray.withAlphaComponent(0.4)
+    }
+}

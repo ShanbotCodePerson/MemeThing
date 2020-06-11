@@ -18,17 +18,24 @@ class InviteFriendsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.backgroundColor = .background
+       
+        // Set up the UI
+        setUpViews()
         
         // Load the data if it hasn't been loaded already
         loadData()
         
         // Start off with the button disabled until enough players have been selected for the game
-        startGameButton.isEnabled = false
+        toggleStartButtonEnabled(to: false)
     }
     
-    // MARK: - Helper Method
+    // MARK: - Helper Methods
+    
+    func setUpViews() {
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        tableView.backgroundColor = .background
+        tableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "friendCell")
+    }
     
     func loadData() {
         if UserController.shared.usersFriends == nil {
@@ -43,6 +50,13 @@ class InviteFriendsTableViewController: UITableViewController {
                     }
                 }
             }
+        }
+    }
+    
+    func toggleStartButtonEnabled(to enabled: Bool) {
+        startGameButton.isEnabled = enabled
+        UIView.animate(withDuration: 0.1) {
+            self.startGameButton.backgroundColor = UIColor.greenAccent.withAlphaComponent(enabled ? 1 : 0.5)
         }
     }
     
@@ -61,7 +75,7 @@ class InviteFriendsTableViewController: UITableViewController {
                 case .success(let game):
                     // Transition to the waiting view, passing along the reference to the current game
                     print("got here to \(#function) and seems to have created the game successfully")
-                    print("SoT is now \(GameController.shared.currentGames?.compactMap({$0.debugging}))")
+                    print("SoT is now \(String(describing: GameController.shared.currentGames?.compactMap({$0.debugging})))")
                     self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -74,15 +88,19 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UserController.shared.usersFriends?.count ?? 0
+        return UserController.shared.usersFriends?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
-        guard let friend = UserController.shared.usersFriends?[indexPath.row] else { return cell }
-        cell.textLabel?.text = friend.screenName
-        cell.detailTextLabel?.text = "Points: \(friend.points)"
+        // Fill in the details of the cell with the friend's information
+        if let friends = UserController.shared.usersFriends, friends.count > 0 {
+            let friend = friends[indexPath.row]
+            cell.setUpUI(firstText: friend.screenName, secondText: "Points: \(friend.points)")
+        }
+            // Insert a filler row if the user has not added any friends yet
+        else { cell.setUpUI(firstText: "You have not added any friends yet") }
         
         return cell
     }
@@ -90,17 +108,15 @@ class InviteFriendsTableViewController: UITableViewController {
     // FIXME: - comment, prettify
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
-            startGameButton.isEnabled = true
-        } else {
-            startGameButton.isEnabled = false
+            toggleStartButtonEnabled(to: true)
         }
+        else { toggleStartButtonEnabled(to: false) }
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
-            startGameButton.isEnabled = true
-        } else {
-            startGameButton.isEnabled = false
+            toggleStartButtonEnabled(to: true)
         }
+        else { toggleStartButtonEnabled(to: false) }
     }
 }
