@@ -24,6 +24,7 @@ class NotificationHelper {
     
     // MARK: - Process Notifications
     
+    // Handle the notification by calling the relevant function to process it
     static func processNotification(withData data: [AnyHashable : Any], completion: @escaping (UInt) -> Void) {
         
         // Parse the notification data to find out what type of notification it is and extract any relevant data
@@ -73,6 +74,21 @@ class NotificationHelper {
             // TODO: - have an alert waiting next time app is opened?
             GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged, completion: completion)
         }
+    }
+    
+    // Decide if the notification should be presented to the user
+    static func shouldPresentNotification(withData data: [AnyHashable : Any]) -> Bool {
+        guard let ckNotification = CKQueryNotification(fromRemoteNotificationDictionary: data),
+            let category = ckNotification.category,
+            let notificationType = NotificationHelper.Category(rawValue: category),
+            let recordIDChanged = ckNotification.recordID
+            else { return false }
+        
+        // Present all the notifications except for certain updates to the game
+        if notificationType != .gameUpdate { return true }
+        
+        // TODO: - need to fetch the game and look at it to determine what sort of change happened, or else include desired keys in notification?
+        return false
     }
 }
 

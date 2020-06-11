@@ -67,8 +67,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         print("got here to \(#function)")
         
+        // TODO: - find out which view the user is currently on and don't present an alert if the user is currently in the game
+        
+        let userInfo = notification.request.content.userInfo
+        let shouldPresent = NotificationHelper.shouldPresentNotification(withData: userInfo)
+        
         // FIXME: - first look at the content of the alert to decide if it's something worth using an alert for or not
         // Present the alert even when the app is open
-        completionHandler(.alert)
+        completionHandler(shouldPresent ? [.alert] : [])
     }
 }

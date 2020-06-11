@@ -61,7 +61,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     print("in completion and meme id is \(meme.reference.recordID.recordName) with \(String(describing: meme.captions?.count)) captions")
                     
                     // FIXME: - apparently there's just a delay fetching from the cloud??
-                    sleep(2)
+                    sleep(1)
                     // TODO: - nested completions
                     
                     // Fetch the captions for that meme from the cloud
@@ -206,14 +206,19 @@ class ResultsViewController: UIViewController, HasAGameObject {
     }
     
     @IBAction func previousButtonTapped(_ sender: UIButton) {
-//        if pageControl.currentPage > 0 {
+        if pageControl.currentPage > 0 {
 //            pageControl.currentPage -= 1
 //            // FIXME: - move the scroll view
-//
-//        }
+
+        }
     }
     
     @IBAction func nextButtonTapped(_ sender: UIButton) {
+        if pageControl.currentPage < pageControl.numberOfPages {
+//            pageControl.currentPage += 1
+//            // FIXME: - move the scroll view
+//            scrollView.contentOffset.x = 10
+        }
     }
 }
 
