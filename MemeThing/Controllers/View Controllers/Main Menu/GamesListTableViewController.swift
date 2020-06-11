@@ -84,6 +84,27 @@ class GamesListTableViewController: UITableViewController {
             }
         }
     }
+    
+    func quitGame(_ game: Game) {
+        // Don't allow the user to interact with the view while the change is being processed
+        tableView.isUserInteractionEnabled = false // TODO: - this needs to be tested, if it works, need to use in gameplay screens too
+        
+        GameController.shared.quit(game) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Update the tableview
+                    self?.updateData()
+                case .failure(let error):
+                    // Print and present the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+                // Turn user interaction back on
+                self?.tableView.isUserInteractionEnabled = true
+            }
+        }
+    }
 
     // MARK: - Table view data source
 
@@ -134,27 +155,15 @@ class GamesListTableViewController: UITableViewController {
             // Get the reference to the game
             let game = dataSource[indexPath.section].data[indexPath.row]
             
-            // Present an alert to confirm the user really wants to quit the game
-            presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to quit the game you're playing with \(game.playersNames)?") {
-                
-                // Don't allow the user to interact with the view while the change is being processed
-                tableView.isUserInteractionEnabled = false // TODO: - this needs to be tested, if it works, need to use in gameplay screens too
-                
-                // If the user clicks "confirm," quit the game and remove it from the tableview
-                GameController.shared.quit(game) { [weak self] (result) in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(_):
-                            // Update the tableview
-                            self?.updateData()
-                        case .failure(let error):
-                            // Print and present the error
-                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            self?.presentErrorAlert(error)
-                        }
-                        // Turn user interaction back on
-                        self?.tableView.isUserInteractionEnabled = true
-                    }
+            // If the game is already over, allow the user to delete it without confirming
+            if game.gameStatus == .gameOver {
+                quitGame(game)
+            } else {
+                // Otherwise, present an alert to confirm the user really wants to quit the game
+                presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to quit the game you're playing with \(game.listOfPlayerNames)?") {
+                    
+                    // If the user clicks "confirm," quit the game and remove it from the tableview
+                    self.quitGame(game)
                 }
             }
         }
