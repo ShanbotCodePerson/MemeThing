@@ -201,6 +201,17 @@ class UserController {
         update(user, completion: completion)
     }
     
+    // Update a user with a new blocked username
+    func update(_ user: User, usernameToBlock username: String, completion: @escaping resultHandler) {
+        // Add the username to the user's list of blocked usernames
+        user.blockedUsernames.append(username)
+        
+        // Save the changes to the cloud
+        update(user, completion: completion)
+    }
+    
+    // Update a user by removing a friend
+    
     // Delete a user
     func delete(_ user: User, completion: @escaping resultHandler) {
         CKService.shared.delete(object: user) { (result) in

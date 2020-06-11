@@ -126,12 +126,17 @@ class FriendsListTableViewController: UITableViewController {
     
     // A helper function for when the user clicks to add the friend
     func sendRequest(to username: String) {
-        guard username != UserController.shared.currentUser?.username else {
+        guard let currentUser = UserController.shared.currentUser,
+            username != currentUser.username else {
             presentAlert(title: "Invalid Username", message: "You can't send a friend request to yourself")
             return
         }
         
-        // Make sure the user hasn't already sent, received, or accepted a request from that username
+        // Make sure the user hasn't already blocked, sent, received, or accepted a request from that username
+        if currentUser.blockedUsernames.contains(username) {
+            presentAlert(title: "Blocked", message: "You have blocked \(username)")
+            return
+        }
         if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
             guard outgoingFriendRequests.filter({ $0.toUsername == username }).count == 0 else {
                 presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(username)")
@@ -155,7 +160,15 @@ class FriendsListTableViewController: UITableViewController {
         UserController.shared.searchFor(username) { [weak self] (result) in
             switch result {
             case .success(let friend):
-                // If the username exists, send them a friend request
+                // If the username exists, first make sure that the current user hasn't been blocked by that person
+                guard !friend.blockedUsernames.contains(currentUser.username) else {
+                    DispatchQueue.main.async {
+                        self?.presentAlert(title: "Blocked", message: "You have been blocked by \(username)")
+                    }
+                    return
+                }
+                
+                // Send them a friend request
                 FriendRequestController.shared.sendFriendRequest(to: friend) { (result) in // FIXME: - better way than nested functions?
                     DispatchQueue.main.async {
                         switch result {
@@ -262,8 +275,24 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
                     // Show an alert that the friend request has been accepted
                     if accept {
                         self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromUsername) as a friend!")
+                    } else {
+                        self?.presentConfirmAlert(title: "Friend Request Denied", message: "Do you want to block \(friendRequest.fromUsername) from sending you any more friend requests?", completion: {
+                            // If the user clicks "confirm," add that user to their blocked list
+                            guard let currentUser = UserController.shared.currentUser else { return }
+                            UserController.shared.update(currentUser, usernameToBlock: friendRequest.fromUsername) { (result) in
+                                DispatchQueue.main.async {
+                                    switch result {
+                                    case .success(_):
+                                        self?.presentAlert(title: "Successfully Blocked", message: "You have successfully blocked \(friendRequest.fromUsername)")
+                                    case .failure(let error):
+                                        // Print and display the error
+                                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                        self?.presentErrorAlert(error)
+                                    }
+                                }
+                            }
+                        })
                     }
-                    // TODO: - if denied, give user opportunity to block that person?
                     
                     // Refresh the tableview to reflect the changes
                     self?.tableView.reloadData()
