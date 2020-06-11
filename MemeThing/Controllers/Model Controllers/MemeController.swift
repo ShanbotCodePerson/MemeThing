@@ -61,8 +61,9 @@ class MemeController {
     // Read (fetch) a list of captions for a meme
     func fetchCaptions(for meme: Meme, completion: @escaping (Result<[Caption], MemeThingError>) -> Void) {
         // Form the predicate to look for all captions that reference that meme
-        let predicate = NSPredicate(format: "%K == %@", argumentArray: [CaptionStrings.memeKey, meme.reference])
+        let predicate = NSPredicate(format: "%K == %@", argumentArray: [CaptionStrings.memeKey, meme.reference.recordID])
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
+//        print("got here to \(#function) and predicate is \(compoundPredicate)")
         
         // Fetch the data from the cloud
         CKService.shared.read(predicate: compoundPredicate) { (result: Result<[Caption], MemeThingError>) in
@@ -118,6 +119,7 @@ class MemeController {
                 self?.update(meme) { (result) in
                     switch result {
                     case .success(_):
+                        print("got here to \(#function) and meme has \(String(describing: meme.captions?.count)) captions and id \(meme.reference.recordID.recordName)")
                         // Return the success
                         return completion(.success(true))
                     case .failure(let error):
@@ -190,7 +192,7 @@ class MemeController {
     }
     
     // Receive a notification that the current user's caption has won
-    func receiveNotificationCaptionWon() {
+    func receiveNotificationCaptionWon(completion: @escaping (UInt) -> Void) {
         guard let currentUser = UserController.shared.currentUser else { return }
 
         // Update the user's points and save the change
@@ -199,8 +201,13 @@ class MemeController {
             case .success(_):
                 // TODO: - better handling in here
                 print("worked")
+                
+                // Return the success
+                return completion(0)
             case .failure(let error):
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(2)
             }
         }
     }

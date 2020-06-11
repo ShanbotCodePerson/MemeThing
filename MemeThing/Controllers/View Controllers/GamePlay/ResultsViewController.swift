@@ -19,6 +19,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var previousButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var constraintToButton: NSLayoutConstraint!
+    @IBOutlet weak var constraintToSafeArea: NSLayoutConstraint!
     
     // MARK: - Properties
     
@@ -56,8 +58,10 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme
                     self?.meme = meme
-                    print("in completion and meme is \(meme) with \(String(describing: meme.captions?.count)) captions")
+                    print("in completion and meme id is \(meme.reference.recordID.recordName) with \(String(describing: meme.captions?.count)) captions")
                     
+                    // FIXME: - apparently there's just a delay fetching from the cloud??
+                    sleep(2)
                     // TODO: - nested completions
                     
                     // Fetch the captions for that meme from the cloud
@@ -93,6 +97,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
         // Hide the button to choose the winner if the user is not the lead player
         if game.leadPlayer != currentUser.reference {
             chooseWinnerButton.isHidden = true
+            constraintToButton.isActive = false
+            constraintToSafeArea.isActive = true
         }
     }
     

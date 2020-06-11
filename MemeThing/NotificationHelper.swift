@@ -10,9 +10,9 @@ import Foundation
 import CloudKit
 
 class NotificationHelper {
- 
+    
     // MARK: - Define Custom Notification Types
-
+    
     enum Category: String {
         case newFriendRequest = "NEW_FRIEND_REQUEST"
         case friendRequestResponse = "FRIEND_REQUEST_RESPONSE"
@@ -24,7 +24,7 @@ class NotificationHelper {
     
     // MARK: - Process Notifications
     
-    static func processNotification(withData data: [AnyHashable : Any]) { // FIXME: - return a result of type UIBackgroundFetchResult, need completions on all these functions
+    static func processNotification(withData data: [AnyHashable : Any], completion: @escaping (UInt) -> Void) {
         
         // Parse the notification data to find out what type of notification it is and extract any relevant data
         guard let ckNotification = CKQueryNotification(fromRemoteNotificationDictionary: data),
@@ -35,42 +35,43 @@ class NotificationHelper {
         
         print("got here to \(#function) and category is \(category) and recordID is \(recordIDChanged)")
         
+        // Call the relevant helper method based on the type of notification
         switch notificationType {
         case .newFriendRequest:
             print("received new friend request")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged)
+            FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged, completion: completion)
         case .friendRequestResponse:
             print("received response to friend request")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            FriendRequestController.shared.receiveResponseToFriendRequest(withID: recordIDChanged)
+            FriendRequestController.shared.receiveResponseToFriendRequest(withID: recordIDChanged, completion: completion)
         case .newGameInvitation:
             print("received new game invitation")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            GameController.shared.receiveInvitationToGame(withID: recordIDChanged)
+            GameController.shared.receiveInvitationToGame(withID: recordIDChanged, completion: completion)
         case .gameUpdate:
             print("received update to game")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            GameController.shared.receiveUpdateToGame(withID: recordIDChanged)
+            GameController.shared.receiveUpdateToGame(withID: recordIDChanged, completion: completion)
         case .captionWon:
             print("received notification that caption won")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
             
-//            // Parse the passed data to get the reference to the game
-//            guard let recordFields = ckNotification.recordFields,
-//                let gameReference = recordFields[CaptionStrings.gameKey] as? CKRecord.Reference
-//                else { return }
-            MemeController.shared.receiveNotificationCaptionWon()
+            //            // Parse the passed data to get the reference to the game
+            //            guard let recordFields = ckNotification.recordFields,
+            //                let gameReference = recordFields[CaptionStrings.gameKey] as? CKRecord.Reference
+            //                else { return }
+            MemeController.shared.receiveNotificationCaptionWon(completion: completion)
         case .gameEnded:
             print("received notification that game ended")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged)
+            GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged, completion: completion)
         }
     }
 }

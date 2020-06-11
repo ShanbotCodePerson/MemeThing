@@ -168,7 +168,11 @@ class Game: CKCompatible {
                 return "Starting a new round with \(leadPlayerName) as the lead player"
             }
         case .gameOver:
-            return "The game is over and \(gameWinner ?? "nobody") has won"
+            if gameWinner == currentUser.screenName {
+                return "The game is over and you won!"
+            } else {
+                return "The game is over and \(gameWinner ?? "nobody") has won"
+            }
         }
     }
     

@@ -46,6 +46,13 @@ class SubmitButton: UIButton {
     }
 }
 
+class CloseButton: UIButton {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews(borderWidth: 2, backgroundColor: .redAccent, textColor: .white)
+    }
+}
+
 class CircularButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()

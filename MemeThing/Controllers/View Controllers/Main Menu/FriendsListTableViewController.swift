@@ -30,7 +30,8 @@ class FriendsListTableViewController: UITableViewController {
                 arrays.append((.outgoingFriendRequests, outgoingFriendRequests))
             }
         }
-        if let userFriends = UserController.shared.usersFriends {
+        if var userFriends = UserController.shared.usersFriends {
+            userFriends = userFriends.sorted { $1.screenName > $0.screenName }
             arrays.append((.friends, userFriends))
         }
         return arrays
@@ -40,9 +41,9 @@ class FriendsListTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .background
+        
+        // Set up the UI
+        setUpViews()
         
         // Load all the data, if it hasn't been loaded already
         loadAllData()
@@ -55,6 +56,12 @@ class FriendsListTableViewController: UITableViewController {
     
     @objc func updateData() {
         DispatchQueue.main.async { print("got here to \(#function)"); self.tableView.reloadData() }
+    }
+    
+    func setUpViews() {
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .background
     }
     
     func loadAllData() {
@@ -252,7 +259,7 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
-                    // Show an alert that the friend request has been accepted or denied
+                    // Show an alert that the friend request has been accepted
                     if accept {
                         self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromUsername) as a friend!")
                     }
@@ -261,7 +268,7 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
                     // Refresh the tableview to reflect the changes
                     self?.tableView.reloadData()
                 case .failure(let error):
-                    // Otherwise, display the error
+                    // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorToUser(error)
                 }

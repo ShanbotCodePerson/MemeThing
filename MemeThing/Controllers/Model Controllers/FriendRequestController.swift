@@ -188,14 +188,11 @@ class FriendRequestController {
     
     // MARK: - Receive Notifications
     
-    func receiveFriendRequest(withID recordID: CKRecord.ID) {
-        print("got here to \(#function) and \(recordID)")
-        
+    func receiveFriendRequest(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
         // Fetch the new friend request from the cloud
         CKService.shared.read(recordID: recordID) { [weak self] (result: resultTypeOne) in
             switch result {
             case .success(let friendRequest):
-                print("in completion and friend request is \(friendRequest)")
                 // Add the friend request to the source of truth
                 if var pendingFriendRequests = self?.pendingFriendRequests {
                     pendingFriendRequests.append(friendRequest)
@@ -203,25 +200,30 @@ class FriendRequestController {
                 } else {
                     self?.pendingFriendRequests = [friendRequest]
                 }
-                print("pendingrequests SoT should now be updated, count is now \(String(describing: self?.pendingFriendRequests?.count))")
                 // Tell the friends table view to reload its data
                 NotificationCenter.default.post(Notification(name: friendsUpdate))
+                
+                // Return the success
+                return completion(0)
             case .failure(let error):
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(2)
             }
         }
     }
     
-    func receiveResponseToFriendRequest(withID recordID: CKRecord.ID) {
-        print("got here to \(#function)")
+    func receiveResponseToFriendRequest(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
         // Fetch the friend request record from the cloud
         CKService.shared.read(recordID: recordID) { [weak self] (result: resultTypeOne) in
             switch result {
             case .success(let friendRequest):
-                print("in completion and friend request is \(friendRequest)")
                 self?.handleResponse(to: friendRequest)
+                return completion(0)
             case .failure(let error):
+                // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(2)
             }
         }
     }
@@ -229,7 +231,7 @@ class FriendRequestController {
     // A helper function to handle responses to friend requests
     private func handleResponse(to friendRequest: FriendRequest) {
         guard let currentUser = UserController.shared.currentUser else { return }
-        print("got here to \(#function) and friendRequest is \(friendRequest)")
+        
         // If the friend accepted, add them to the user's list of friends
         if friendRequest.status == .accepted {
             UserController.shared.update(currentUser, friendReference: friendRequest.toReference) { (result) in
@@ -247,7 +249,6 @@ class FriendRequestController {
                 // Remove the friend request from the source of truth
                 guard let index = self?.outgoingFriendRequests?.firstIndex(of: friendRequest) else { return }
                 self?.outgoingFriendRequests?.remove(at: index)
-                print("should have removed the friend request from the server and SoT, count is now \(String(describing: self?.outgoingFriendRequests?.count))")
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }

@@ -128,6 +128,8 @@ class WaitingViewController: UIViewController, HasAGameObject {
     }
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
+        guard let game = game else { return }
+        presentLeaderboard(with: game)
     }
 }
 

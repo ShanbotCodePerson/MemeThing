@@ -40,7 +40,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let userInfo = notification.request.content.userInfo
                  
                 // Handle the notification
-                NotificationHelper.processNotification(withData: userInfo)
+                NotificationHelper.processNotification(withData: userInfo) { (_) in }
                 
                 // Remove the notification after it's been handled
                 let identifier = notification.request.identifier

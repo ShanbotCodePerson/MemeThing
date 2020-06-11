@@ -14,7 +14,7 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     
     @IBOutlet weak var gameStatusView: UIView!
     @IBOutlet weak var gameStatusLabel: UILabel!
-    @IBOutlet weak var playersTableView: UITableView!
+    @IBOutlet weak var playersTableView: SelfSizingTableView!
     
     // MARK: - Properties
     
@@ -38,6 +38,9 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         
         gameStatusLabel.text = game.gameStatusDescription
         
+        playersTableView.maxHeight = view.frame.height * 0.5
+        playersTableView.addCornerRadius()
+        playersTableView.addBorder(width: 2)
         playersTableView.delegate = self
         playersTableView.dataSource = self
         playersTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")

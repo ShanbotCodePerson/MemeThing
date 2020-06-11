@@ -45,9 +45,9 @@ class GamesListTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .background
+        
+        // Set up the UI
+        setUpViews()
         
         // Load the data, if it hasn't been loaded already
         loadAllData()
@@ -62,6 +62,12 @@ class GamesListTableViewController: UITableViewController {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
+    func setUpViews() {
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .background
+    }
+    
     func loadAllData() {
         if GameController.shared.currentGames == nil {
             GameController.shared.fetchCurrentGames { [weak self] (result) in
@@ -71,7 +77,6 @@ class GamesListTableViewController: UITableViewController {
                         // Refresh the table to show the data
                         self?.tableView.reloadData()
                     case .failure(let error):
-                        // TODO: - better error handling
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         self?.presentErrorToUser(error)
                     }
@@ -89,19 +94,6 @@ class GamesListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return dataSource[section].name.rawValue
     }
-    
-    // FIXME: - get the background color of the section headers to change
-//    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let headerView = UIView(frame: .zero)
-//        headerView.backgroundColor = UIColor.purpleAccent.withAlphaComponent(0.5)
-//
-//       let headerTitle = UILabel(frame: .zero)
-//       headerTitle.text = dataSource[section].name.rawValue
-//       headerTitle.textColor = .mainText
-//        headerView.addSubview(headerTitle)
-//
-//        return headerView
-//    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Add a placeholder row if the user has no active games

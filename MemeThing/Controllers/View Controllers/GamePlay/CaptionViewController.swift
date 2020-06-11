@@ -58,7 +58,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
         }
     }
     
-    // TODO: - still need to test this
     @objc func keyboardNotification(_ sender: NSNotification) {
         guard let userInfo = sender.userInfo else { return }
         
@@ -71,8 +70,8 @@ class CaptionViewController: UIViewController, HasAGameObject {
         if endFrameY >= UIScreen.main.bounds.size.height {
             self.keyboardHeightLayoutConstraint?.constant = 8.0
         } else {
-            self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 8.0 + sendButton.frame.height
-        }
+            self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 8.0
+        } // FIXME: - height may be off here - may need to add sendButton.frame.height
         
         UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
     }
@@ -88,6 +87,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
         presentLeaderboard(with: game)
     }
     
+    // FIXME: - why isn't the tap working??
     @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
         print("got here to \(#function)")
         // Close the keyboard

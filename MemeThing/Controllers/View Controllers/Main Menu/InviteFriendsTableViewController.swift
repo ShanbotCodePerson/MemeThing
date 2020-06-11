@@ -18,10 +18,9 @@ class InviteFriendsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.backgroundColor = .background
-//        tableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "friendCell")
-        tableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "friendCell")
+       
+        // Set up the UI
+        setUpViews()
         
         // Load the data if it hasn't been loaded already
         loadData()
@@ -31,6 +30,12 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     // MARK: - Helper Methods
+    
+    func setUpViews() {
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        tableView.backgroundColor = .background
+        tableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "friendCell")
+    }
     
     func loadData() {
         if UserController.shared.usersFriends == nil {

@@ -31,11 +31,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         fetchUser()
         
-        usernameTextField.delegate = self
-        screenNameTextField.delegate = self
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
-        confirmPasswordTextField.delegate = self
+        // Set up the UI
+        setUpViews()
     }
     
     // MARK: - Actions
@@ -114,6 +111,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     // MARK: - Helper Methods
+    
+    func setUpViews() {
+        view.backgroundColor = .background
+        
+        usernameTextField.delegate = self
+        screenNameTextField.delegate = self
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        confirmPasswordTextField.delegate = self
+    }
     
     func fetchUser() {
         UserController.shared.fetchUser { [weak self] (result) in

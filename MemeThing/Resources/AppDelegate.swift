@@ -53,7 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("got here to \(#function)")
         
         // Handle the notification
-        NotificationHelper.processNotification(withData: userInfo)
+        NotificationHelper.processNotification(withData: userInfo) { (rawValue) in
+            let result = UIBackgroundFetchResult(rawValue: rawValue) ?? UIBackgroundFetchResult.failed
+            completionHandler(result)
+        }
     }
 }
 
@@ -63,6 +66,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         print("got here to \(#function)")
+        
+        // FIXME: - first look at the content of the alert to decide if it's something worth using an alert for or not
         // Present the alert even when the app is open
         completionHandler(.alert)
     }

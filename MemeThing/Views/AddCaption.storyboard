@@ -27,8 +27,11 @@
                                     <action selector="sendButtonTapped:" destination="wv3-dL-fID" eventType="touchUpInside" id="mQX-bX-p9q"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter funniest caption..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KHy-3E-I4Q">
-                                <rect key="frame" x="20.5" y="750.5" width="373" height="34"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter funniest caption..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KHy-3E-I4Q" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="740.5" width="373" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="xbq-ej-gFg"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="send"/>
                             </textField>
@@ -52,10 +55,10 @@
                                 </items>
                             </navigationBar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2qC-42-JGe">
-                                <rect key="frame" x="0.0" y="88" width="414" height="662.5"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="652.5"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="7IK-AJ-lNo">
-                                        <rect key="frame" x="20.5" y="16.5" width="373" height="629.5"/>
+                                        <rect key="frame" x="20.5" y="16.5" width="373" height="620"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

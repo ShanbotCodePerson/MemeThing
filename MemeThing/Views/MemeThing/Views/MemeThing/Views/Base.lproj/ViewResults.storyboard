@@ -55,7 +55,7 @@
                                     <constraint firstItem="AlU-DO-Xe3" firstAttribute="width" secondItem="yf6-n3-Yte" secondAttribute="width" multiplier="0.9" id="d2y-v3-6pC"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AI8-U4-y9f" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AI8-U4-y9f" customClass="MemeThingViewSubtle" customModule="MemeThing" customModuleProvider="target">
                                 <rect key="frame" x="20.5" y="748" width="373" height="36.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="sAz-qA-P0L">
@@ -126,6 +126,7 @@
                             <constraint firstItem="NVX-Za-Jzn" firstAttribute="centerX" secondItem="1UW-qO-BJN" secondAttribute="centerX" id="Fyq-4X-lqB"/>
                             <constraint firstItem="CL9-hn-DN2" firstAttribute="height" secondItem="1UW-qO-BJN" secondAttribute="height" multiplier="0.1" id="Gf2-d2-dgj"/>
                             <constraint firstItem="NVX-Za-Jzn" firstAttribute="width" secondItem="1UW-qO-BJN" secondAttribute="width" multiplier="0.9" id="Hp3-5a-HPE"/>
+                            <constraint firstItem="1UW-qO-BJN" firstAttribute="bottom" secondItem="AI8-U4-y9f" secondAttribute="bottom" constant="12" id="Jhr-5d-b0e"/>
                             <constraint firstItem="yf6-n3-Yte" firstAttribute="leading" secondItem="1UW-qO-BJN" secondAttribute="leading" id="KYZ-Ka-233"/>
                             <constraint firstItem="f0B-nn-3yJ" firstAttribute="bottom" secondItem="qSh-vj-0xP" secondAttribute="bottom" id="Nyg-Ef-qc0"/>
                             <constraint firstItem="CL9-hn-DN2" firstAttribute="centerX" secondItem="1UW-qO-BJN" secondAttribute="centerX" id="PcE-Vb-4HU"/>
@@ -139,9 +140,16 @@
                             <constraint firstItem="f0B-nn-3yJ" firstAttribute="top" secondItem="1UW-qO-BJN" secondAttribute="top" id="ztR-NW-odc"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="1UW-qO-BJN"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Jhr-5d-b0e"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="chooseWinnerButton" destination="NVX-Za-Jzn" id="95q-2j-jEp"/>
+                        <outlet property="constraintToButton" destination="3tt-9Z-nNy" id="HIq-8z-lqR"/>
+                        <outlet property="constraintToSafeArea" destination="Jhr-5d-b0e" id="hmD-bh-TvB"/>
                         <outlet property="memeImageView" destination="AlU-DO-Xe3" id="piz-LP-Eie"/>
                         <outlet property="navigationBar" destination="f0B-nn-3yJ" id="bSU-r5-FUi"/>
                         <outlet property="nextButton" destination="7mb-DM-cl2" id="vrB-FR-Nn1"/>
