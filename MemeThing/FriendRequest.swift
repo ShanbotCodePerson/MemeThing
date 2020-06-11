@@ -37,6 +37,7 @@ class FriendRequest: CKCompatible {
         case waiting
         case accepted
         case denied
+        case removingFriend
     }
     
     // FIXME: - use an enum for the response instead, so there's three possibilities

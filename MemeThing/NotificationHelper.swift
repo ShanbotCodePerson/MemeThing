@@ -15,6 +15,7 @@ class NotificationHelper {
     
     enum Category: String {
         case newFriendRequest = "NEW_FRIEND_REQUEST"
+        case removingFriend = "REMOVING_FRIEND"
         case friendRequestResponse = "FRIEND_REQUEST_RESPONSE"
         case newGameInvitation = "NEW_GAME_INVITATION"
         case gameUpdate = "GAME_UPDATE"
@@ -43,6 +44,9 @@ class NotificationHelper {
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
             FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged, completion: completion)
+        case .removingFriend:
+            print("received request remove friend")
+            FriendRequestController.shared.receiveFriendRemoving(withID: recordIDChanged, completion: completion)
         case .friendRequestResponse:
             print("received response to friend request")
             // TODO: - display an alert if app is open?
@@ -80,8 +84,8 @@ class NotificationHelper {
     static func shouldPresentNotification(withData data: [AnyHashable : Any]) -> Bool {
         guard let ckNotification = CKQueryNotification(fromRemoteNotificationDictionary: data),
             let category = ckNotification.category,
-            let notificationType = NotificationHelper.Category(rawValue: category),
-            let recordIDChanged = ckNotification.recordID
+            let notificationType = NotificationHelper.Category(rawValue: category)
+//            let recordIDChanged = ckNotification.recordID
             else { return false }
         
         // Present all the notifications except for certain updates to the game

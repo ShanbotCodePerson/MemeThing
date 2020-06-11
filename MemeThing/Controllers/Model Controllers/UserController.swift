@@ -211,6 +211,13 @@ class UserController {
     }
     
     // Update a user by removing a friend
+    func update(_ user: User, friendToRemove friend: CKRecord.Reference, completion: @escaping resultHandler) {
+        // Remove the friend from the user's list of friends
+        user.friendsReferences.removeAll(where: { $0.recordID.recordName == friend.recordID.recordName })
+        
+        // Save the changes to the cloud
+        update(user, completion: completion)
+    }
     
     // Delete a user
     func delete(_ user: User, completion: @escaping resultHandler) {

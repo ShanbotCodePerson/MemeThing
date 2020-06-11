@@ -128,8 +128,8 @@ class FriendsListTableViewController: UITableViewController {
     func sendRequest(to username: String) {
         guard let currentUser = UserController.shared.currentUser,
             username != currentUser.username else {
-            presentAlert(title: "Invalid Username", message: "You can't send a friend request to yourself")
-            return
+                presentAlert(title: "Invalid Username", message: "You can't send a friend request to yourself")
+                return
         }
         
         // Make sure the user hasn't already blocked, sent, received, or accepted a request from that username
@@ -246,12 +246,32 @@ class FriendsListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // TODO: - first present alert to confirm unfriending someone
+            // Get the reference to the friend
+            guard let friend = dataSource[indexPath.section].data[indexPath.row] as? User else { return }
             
-            // TODO: - remove friend from own list of friends, and remove self from their list of friends, save changes?
-            
-            // Delete the row from the data source
-//            tableView.deleteRows(at: [indexPath], with: .fade)
+            // Present an alert to confirm the user really wants to remove the friend
+            presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to unfriend \(friend.screenName)?") {
+                
+                // Don't allow the user to interact with the view while the change is being processed
+                tableView.isUserInteractionEnabled = false // TODO: - this needs to be tested, if it works, need to use in gameplay screens too
+                
+                // If the user clicks "confirm," remove the friend and update the tableview
+                FriendRequestController.shared.remove(friend: friend) { [weak self] (result) in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(_):
+                            // Update the tableview
+                            self?.updateData()
+                        case .failure(let error):
+                            // Print and present the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorAlert(error)
+                        }
+                        // Turn user interaction back on
+                        self?.tableView.isUserInteractionEnabled = true
+                    }
+                }
+            }
         }
     }
 }

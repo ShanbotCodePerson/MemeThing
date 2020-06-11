@@ -153,17 +153,17 @@ class GamesListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Get the reference to the game
-            let game = dataSource[indexPath.section].data[indexPath.row]
+            let gameToQuit = dataSource[indexPath.section].data[indexPath.row]
             
             // If the game is already over, allow the user to delete it without confirming
-            if game.gameStatus == .gameOver {
-                quitGame(game)
+            if gameToQuit.gameStatus == .gameOver {
+                quitGame(gameToQuit)
             } else {
                 // Otherwise, present an alert to confirm the user really wants to quit the game
-                presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to quit the game you're playing with \(game.listOfPlayerNames)?") {
+                presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to quit the game you're playing with \(gameToQuit.listOfPlayerNames)?") {
                     
                     // If the user clicks "confirm," quit the game and remove it from the tableview
-                    self.quitGame(game)
+                    self.quitGame(gameToQuit)
                 }
             }
         }
