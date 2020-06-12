@@ -29,7 +29,7 @@ class Meme: CKCompatible, CKPhotoAsset {
     var photo: UIImage?
     let author: CKRecord.Reference
     var captions: [CKRecord.Reference]?
-    var winningCaptionIndex: Int? // FIXME: - is this necessary?
+    var winningCaptionIndex: Int?
     var game: CKRecord.Reference
     
     // CloudKit properties

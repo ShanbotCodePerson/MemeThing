@@ -26,13 +26,6 @@ class DrawingViewController: UIViewController, HasAGameObject {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .background
-        
-        // Display the leaderboard unless the game is just starting
-        guard let game = game else { return }
-        if game.memes?.count ?? 0 > 0 {
-//            presentLeaderboard(with: game)
-            // FIXME: - this doesn't work
-        }
     }
     
     // MARK: - Actions
@@ -43,7 +36,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentLeaderboard(with: game)
+        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
     
     @IBAction func undoButtonTapped(_ sender: UIButton) {

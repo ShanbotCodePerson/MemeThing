@@ -23,6 +23,7 @@ struct StoryboardNames  {
     static let drawingView = "Drawing"
     static let captionView = "AddCaption"
     static let resultsView = "ViewResults"
+    static let endOfRoundView = "EndOfRound"
     static let leaderboardView = "Leaderboard"
     static let gameOverView = "GameOver"
 }
@@ -65,8 +66,8 @@ extension UIViewController {
         self.present(initialVC, animated: false)
     }
     
-    func presentLeaderboard(with game: Game) {
-        let storyboard = UIStoryboard(name: StoryboardNames.leaderboardView, bundle: nil)
+    func presentPopoverStoryboard(named: String, with game: Game) {
+        let storyboard = UIStoryboard(name: named, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
         initialVC.gameID = game.recordID.recordName
         initialVC.modalPresentationStyle = .overFullScreen

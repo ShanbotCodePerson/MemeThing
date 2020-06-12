@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--End Of Round View Controller-->
+        <scene sceneID="WJ7-vm-EMn">
+            <objects>
+                <viewController id="UaH-bf-bqP" customClass="EndOfRoundViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YY5-JD-mE3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="poq-0W-Hh3" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="724.5" width="373" height="41"/>
+                                <state key="normal" title="Continue"/>
+                                <connections>
+                                    <action selector="continueButtonTapped:" destination="UaH-bf-bqP" eventType="touchUpInside" id="ksX-tY-eV5"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[winner]" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ejJ-2K-M7N" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="99" width="373" height="57"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ezc-7D-MKU">
+                                <rect key="frame" x="20.5" y="164" width="373" height="487"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PKS-h6-6LA">
+                                        <rect key="frame" x="0.0" y="0.0" width="373" height="487"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="PKS-h6-6LA" firstAttribute="centerY" secondItem="ezc-7D-MKU" secondAttribute="centerY" id="3gK-Jk-FNK"/>
+                                    <constraint firstItem="PKS-h6-6LA" firstAttribute="width" secondItem="ezc-7D-MKU" secondAttribute="width" id="51E-W0-csd"/>
+                                    <constraint firstItem="PKS-h6-6LA" firstAttribute="height" secondItem="ezc-7D-MKU" secondAttribute="height" id="ZNd-l7-8m2"/>
+                                    <constraint firstItem="PKS-h6-6LA" firstAttribute="centerX" secondItem="ezc-7D-MKU" secondAttribute="centerX" id="r24-7k-ww5"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="caption" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5yZ-7t-7eS" customClass="MemeThingLabelBackground" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="659" width="373" height="57.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="poq-0W-Hh3" firstAttribute="top" secondItem="5yZ-7t-7eS" secondAttribute="bottom" constant="8" id="33n-l1-WiN"/>
+                            <constraint firstItem="poq-0W-Hh3" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="Aq9-DZ-EKo"/>
+                            <constraint firstItem="ejJ-2K-M7N" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="BKK-ZJ-WPC"/>
+                            <constraint firstItem="5yZ-7t-7eS" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.07" id="Daw-qK-jfc"/>
+                            <constraint firstItem="ejJ-2K-M7N" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="HSb-WH-aeX"/>
+                            <constraint firstItem="poq-0W-Hh3" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="IVI-6g-rsh"/>
+                            <constraint firstItem="5yZ-7t-7eS" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="OrJ-AX-VwM"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="centerY" secondItem="oRY-78-WsG" secondAttribute="centerY" multiplier="0.9" id="Put-cE-g1o"/>
+                            <constraint firstItem="poq-0W-Hh3" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.05" id="XUw-KC-t83"/>
+                            <constraint firstItem="5yZ-7t-7eS" firstAttribute="top" secondItem="ezc-7D-MKU" secondAttribute="bottom" constant="8" id="ZPQ-Dj-3vX"/>
+                            <constraint firstItem="5yZ-7t-7eS" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="ev1-Bp-j0i"/>
+                            <constraint firstItem="ejJ-2K-M7N" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.07" id="fQs-Gf-eed"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="pPu-vO-uhz"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="top" secondItem="ejJ-2K-M7N" secondAttribute="bottom" constant="8" id="q5c-V4-5x1"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="rmb-Th-0Yr"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.595355" id="ugQ-H9-8ao"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="oRY-78-WsG"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="ieP-ge-z66" appends="YES" id="NFs-z1-1bM"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="captionLabel" destination="5yZ-7t-7eS" id="QPZ-Qf-nYD"/>
+                        <outlet property="memeImageView" destination="PKS-h6-6LA" id="MRP-Av-cid"/>
+                        <outlet property="winnerLabel" destination="ejJ-2K-M7N" id="jad-vH-wcI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="714-0x-zF4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="ieP-ge-z66">
+                    <connections>
+                        <action selector="screenTapped:" destination="UaH-bf-bqP" id="498-og-in4"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="205.79710144927537" y="95.758928571428569"/>
+        </scene>
+    </scenes>
+</document>

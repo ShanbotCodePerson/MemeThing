@@ -79,6 +79,27 @@ class MemeController {
         }
     }
     
+    // Read (fetch) the winning caption for a meme
+    func fetchWinningCaption(for meme: Meme, completion: @escaping (Result<Caption, MemeThingError>) -> Void) {
+        // Get the recordID of the winning caption from the meme
+        guard let index = meme.winningCaptionIndex,
+            let recordID = meme.captions?[index].recordID
+            else { return completion(.failure(.unknownError)) }
+        
+        // Fetch the data from the cloud
+        CKService.shared.read(recordID: recordID) { (result: Result<Caption, MemeThingError>) in
+            switch result {
+            case .success(let caption):
+                // Return the success
+                return completion(.success(caption))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
     // Update a meme
     private func update(_ meme: Meme, completion: @escaping resultHandler) {
         // Save the updated meme to the cloud
@@ -105,7 +126,8 @@ class MemeController {
             switch result {
             case .success(let caption):
                 // Subscribe to notifications for that caption
-                self?.subscribeToNotifications(for: caption)
+//                self?.subscribeToNotifications(for: caption)
+                // TODO: - might not need this at all!
                 
                 // Add the caption to the list of captions on the meme
                 if meme.captions != nil {

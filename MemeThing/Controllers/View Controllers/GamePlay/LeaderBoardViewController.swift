@@ -25,7 +25,6 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpViews()
     }
     
@@ -74,11 +73,11 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     }
     
     @IBAction func closeButtonTapped(_ sender: UIButton) {
-        self.dismiss(animated: true)
+        dismiss(animated: true)
     }
     
     @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
-        self.dismiss(animated: true)
+        dismiss(animated: true)
     }
 }
 
