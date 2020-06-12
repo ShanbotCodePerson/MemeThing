@@ -104,6 +104,22 @@ class GameController {
         }
     }
     
+    // Fetch all the players from the references in a game
+    func fetchPlayers(from references: [CKRecord.Reference], completion: @escaping (Result<[User], MemeThingError>) -> Void) {
+        // Fetch the data from the cloud
+        CKService.shared.read(references: references) { (result: Result<[User], MemeThingError>) in
+            switch result {
+            case .success(let players):
+                // Return the success
+                return completion(.success(players))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
     // Update a game
     func saveChanges(to game: Game, completion: @escaping resultHandlerWithObject) {
 //        print("got here to \(#function) and game being saved is \(game.debugging)")
@@ -180,6 +196,7 @@ class GameController {
         notificationInfo.title = "Game Ended"
         notificationInfo.alertBody = "Your game on MemeThing has finished"
         notificationInfo.shouldSendContentAvailable = true
+        notificationInfo.desiredKeys = [GameStrings.playersKey, GameStrings.playersNamesKey, GameStrings.playersStatusKey, GameStrings.playersPointsKey, GameStrings.pointsToWinKey]
         notificationInfo.category = NotificationHelper.Category.gameEnded.rawValue
         subscription.notificationInfo = notificationInfo
         
@@ -285,16 +302,31 @@ class GameController {
     
     // FIXME: - major problems with ending game
     // Receive a notification that a game has ended
-    func receiveNotificationGameEnded(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
+    func receiveNotificationGameEnded(withID recordID: CKRecord.ID, data: [String : Any]?, completion: @escaping (UInt) -> Void) {
+        // If the deleted game is currently in the source of truth, save it to core data
+        if let game = currentGames?.first(where: { $0.recordID.recordName == recordID.recordName }) {
+            // Create the game and save it to core data
+            _ = FinishedGame(game: game)
+            FinishedGameController.shared.saveToCoreData()
+        } else {
+            // Otherwise, parse the data from the notification
+            guard let data = data,
+                let players = data[GameStrings.playersKey] as? [CKRecord.Reference],
+                let playersNames = data[GameStrings.playersNamesKey] as? [String],
+                let playersStatus = data[GameStrings.playersNamesKey] as? [Int],
+                let playersPoints = data[GameStrings.playersPointsKey] as? [Int],
+                let pointsToWin = data[GameStrings.pointsToWinKey] as? Int
+                else { return completion(2) }
+            
+            // Create the game and save it to core data
+            _ = FinishedGame(players: players, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, pointsToWin: pointsToWin, recordID: recordID)
+            FinishedGameController.shared.saveToCoreData()
+        }
+        
         // TODO: - display an alert to the user
         
-        // Get a reference to the game
-        guard let index = currentGames?.firstIndex(where: { $0.recordID.recordName == recordID.recordName }),
-            let game = currentGames?[index]
-            else { return completion(2) }
-        
         // Perform all the clean-up to finish the game
-//        handleEnd(for: game)
+        handleEnd(for: recordID.recordName)
         
         // Return the success
         return completion(0)
@@ -377,8 +409,7 @@ class GameController {
             switch result {
             case .success(let game):
                 // Handle the clean up for leaving the game
-//                self?.handleEnd(for: game)
-                // FIXME: -
+                self?.handleEnd(for: game.recordID.recordName)
                 
                 // Return the success
                 return completion(.success(true))
@@ -393,23 +424,23 @@ class GameController {
     
     // FIXME: - major problems with ending game
     // Perform all the cleanup to end the game, whether it's over or the user has quit
-//    func handleEnd(for gameID: CKRecord.ID) {
-//        // Remove the game from the source of truth
-//        currentGames?.removeAll(where: { $0.recordID.recordName == gameID.recordName })
-//
-//        // Remove the subscriptions to notifications for the game
-//        CKService.shared.publicDB.delete(withSubscriptionID: "\(recordID.recordName)-end") { (_, error) in
-//            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
-//        }
-//        CKService.shared.publicDB.delete(withSubscriptionID: "\(recordID.recordName)-update") { (_, error) in
-//            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
-//        }
-//        MemeController.shared.removeAllCaptionSubscriptions(for: game)
-//
-//        // Tell the table view list of current games to update itself
-//        NotificationCenter.default.post(Notification(name: updateListOfGames))
-//
-//        // If the user is currently in the game, transition them to the main menu
-//        NotificationCenter.default.post(Notification(name: toMainMenu, userInfo: ["gameID" : recordID.recordName]))
-//    }
+    func handleEnd(for gameRecordName: String) {
+        // Remove the game from the source of truth
+        currentGames?.removeAll(where: { $0.recordID.recordName == gameRecordName })
+
+        // Remove the subscriptions to notifications for the game
+        CKService.shared.publicDB.delete(withSubscriptionID: "\(gameRecordName)-end") { (_, error) in
+            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+        }
+        CKService.shared.publicDB.delete(withSubscriptionID: "\(gameRecordName)-update") { (_, error) in
+            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+        }
+        MemeController.shared.removeAllCaptionSubscriptions(for: gameRecordName)
+
+        // Tell the table view list of current games to update itself
+        NotificationCenter.default.post(Notification(name: updateListOfGames))
+
+        // If the user is currently in the game, transition them to the main menu
+        NotificationCenter.default.post(Notification(name: toMainMenu, userInfo: ["gameID" : gameRecordName]))
+    }
 }
