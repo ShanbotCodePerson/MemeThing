@@ -237,13 +237,16 @@ class GameController {
             switch result {
             case .success(let game):
                 print("got here to \(#function) and game is \(game)")
-                // Update the source of truth
-                if var currentGames = self?.currentGames {
-                    currentGames.append(game)
-                    self?.currentGames = currentGames
-                } else {
-                    self?.currentGames = [game]
+                // Update the source of truth if it isn't already
+                if !(self?.currentGames?.contains(game) ?? false) {
+                    if var currentGames = self?.currentGames {
+                        currentGames.append(game)
+                        self?.currentGames = currentGames
+                    } else {
+                        self?.currentGames = [game]
+                    }
                 }
+                
                 // Tell the table view list of current games to update itself
                 NotificationCenter.default.post(Notification(name: updateListOfGames))
                 

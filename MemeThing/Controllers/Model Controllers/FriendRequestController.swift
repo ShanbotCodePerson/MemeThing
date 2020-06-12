@@ -235,13 +235,16 @@ class FriendRequestController {
         CKService.shared.read(recordID: recordID) { [weak self] (result: resultTypeOne) in
             switch result {
             case .success(let friendRequest):
-                // Add the friend request to the source of truth
-                if var pendingFriendRequests = self?.pendingFriendRequests {
-                    pendingFriendRequests.append(friendRequest)
-                    self?.pendingFriendRequests = pendingFriendRequests
-                } else {
-                    self?.pendingFriendRequests = [friendRequest]
+                // Add the friend request to the source of truth if it isn't already
+                if !(self?.pendingFriendRequests?.contains(friendRequest) ?? false) {
+                    if var pendingFriendRequests = self?.pendingFriendRequests {
+                        pendingFriendRequests.append(friendRequest)
+                        self?.pendingFriendRequests = pendingFriendRequests
+                    } else {
+                        self?.pendingFriendRequests = [friendRequest]
+                    }
                 }
+                
                 // Tell the friends table view to reload its data
                 NotificationCenter.default.post(Notification(name: friendsUpdate))
                 

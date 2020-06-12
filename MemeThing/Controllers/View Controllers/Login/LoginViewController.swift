@@ -20,6 +20,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var buttonsStackView: UIStackView!
+    @IBOutlet weak var textFieldsStackView: UIStackView!
+    @IBOutlet weak var stackViewHeightLayoutConstraint: NSLayoutConstraint!
+    @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!
     
     // MARK: - Properties
     
@@ -31,6 +35,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         fetchUser()
         setUpViews()
+        
+        // Add an observer for when the keyboard appears or disappears
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     // MARK: - Actions
@@ -57,44 +64,54 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             presentAlert(title: "Invalid Username", message: "You must choose a username")
             return
         }
+        
         // Check to see if the username is unique
         UserController.shared.searchFor(username) { [weak self] (result) in
-            switch result {
-            case .success(_):
-                // FIXME: - only run other code after checking that username is unique
-                DispatchQueue.main.async { self?.presentAlert(title: "Username Taken", message: "That username is already taken - please choose a different username") }
-                return
-            case .failure(let error):
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-            }
-        }
-        
-        // TODO: - check that the email is unique and is a valid email address
-        
-        // Check that the remaining text fields have valid information
-        guard let screenName = screenNameTextField.text,
-            let email = emailTextField.text,
-            let password = passwordTextField.text, !password.isEmpty
-            else {
-                presentAlert(title: "Invalid Password", message: "You must enter a password")
-                return
-        }
-        
-        // Check that the passwords match
-        if signingUp && password != confirmPasswordTextField.text {
-            presentAlert(title: "Passwords Don't Match", message: "The passwords you have entered don't match - make sure to enter your password carefully")
-            return
-        }
-        
-        // Create the new user
-        UserController.shared.createUser(with: username, password: password, screenName: screenName, email: email) { [weak self] (result) in
-            switch result {
-            case .success(_):
-                // Go straight to the main menu if the user was created correctly
-                self?.presentMainMenuVC()
-            case .failure(let error):
-                self?.presentErrorAlert(error)
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                   // If the username is taken, present an alert
+                    self?.presentAlert(title: "Username Taken", message: "That username is already taken - please choose a different username")
+                    return
+                case .failure(let error):
+                    // Make sure the error is that no user was found, rather than some other type of error
+                    guard case MemeThingError.noRecordsExist = error else {
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                        return
+                    }
+                    
+                    // TODO: - check that the email is unique and is a valid email address
+                    
+                    // Confirm that the remaining text fields have valid information
+                    guard let screenName = self?.screenNameTextField.text,
+                        let email = self?.emailTextField.text,
+                        let password = self?.passwordTextField.text, !password.isEmpty,
+                        let confirmPassword = self?.confirmPasswordTextField.text
+                        else {
+                            self?.presentAlert(title: "Invalid Password", message: "You must enter a password")
+                            return
+                    }
+                    
+                    // Confirm that the passwords match
+                    guard let signingUp = self?.signingUp else { return }
+                    if signingUp && password != confirmPassword {
+                        self?.presentAlert(title: "Passwords Don't Match", message: "The passwords you have entered don't match - make sure to enter your password carefully")
+                        return
+                    }
+                    
+                    // Create the new user
+                    UserController.shared.createUser(with: username, password: password, screenName: screenName, email: email) { (result) in
+                        switch result {
+                        case .success(_):
+                            // Go straight to the main menu if the user was created correctly
+                            self?.presentMainMenuVC()
+                        case .failure(let error):
+                            self?.presentErrorAlert(error)
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        }
+                    }
+                }
             }
         }
     }
@@ -112,12 +129,36 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func setUpViews() {
         view.backgroundColor = .background
+        stackViewHeightLayoutConstraint.constant = buttonsStackView.frame.height + textFieldsStackView.frame.height
         
         usernameTextField.delegate = self
         screenNameTextField.delegate = self
         emailTextField.delegate = self
         passwordTextField.delegate = self
         confirmPasswordTextField.delegate = self
+    }
+    
+    // Move the text fields out of the way if the keyboard is going to block them
+    @objc func keyboardNotification(_ sender: NSNotification) {
+        guard let userInfo = sender.userInfo else { return }
+        
+        let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        let endFrameY = endFrame?.origin.y ?? 0
+        let duration:TimeInterval = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+        let animationCurveRawNSN = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+        let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
+        let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
+        if endFrameY >= UIScreen.main.bounds.size.height {
+            self.keyboardHeightLayoutConstraint?.constant = 0.0
+        } else {
+            if let endFrame = endFrame {
+                // Calculate the correct height to shift the text fields up by
+                let currentHeight = (view.frame.height - stackViewHeightLayoutConstraint.constant) / 2
+                self.keyboardHeightLayoutConstraint?.constant = -1 * (endFrame.size.height - currentHeight + 10)
+            }
+        }
+        
+        UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
     }
     
     func fetchUser() {
@@ -130,7 +171,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 case .failure(let error):
                     // Print and display the error (unless the error is that no user has been created yet
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    if case MemeThingError.noUserFound = error { return }
+                    if case MemeThingError.noRecordsExist = error { return }
                     self?.presentErrorAlert(error)
                 }
             }
@@ -185,6 +226,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Text Field Controls
     
+    // TODO: - make "return" of last text field say "sign up" or "login" as appropriate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if signingUp {
             if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {

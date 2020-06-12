@@ -13,6 +13,7 @@ enum MemeThingError: LocalizedError {
     case ckError(Error)
     case couldNotUnwrap
     case noUserFound
+    case noRecordsExist
     case unknownError // FIXME: - need to convert this to real error, replace all instances of it
     
     var errorDescription: String? {
@@ -23,6 +24,8 @@ enum MemeThingError: LocalizedError {
             return "The cloud returned bad data"
         case .noUserFound:
             return "Unable to find user information"
+        case .noRecordsExist:
+            return "No such data exists in the cloud"
         case .unknownError:
             return "Man I have no idea your guess is as good as mine sorry bro"
         }

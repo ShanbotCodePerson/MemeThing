@@ -180,7 +180,7 @@ class UserController {
         CKService.shared.read(reference: friendReference) { [weak self] (result: resultTypeOne) in
             switch result {
             case .success(let friend):
-                // Save the friend to the source of truth
+                // Save the friend to the user's list of friends
                 if var userFriends = self?.usersFriends {
                     userFriends.append(friend)
                     self?.usersFriends = userFriends
