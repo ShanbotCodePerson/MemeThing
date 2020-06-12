@@ -90,15 +90,15 @@ extension UIViewController {
     }
     
     // Present an alert with simple confirm or cancel buttons
-    func presentConfirmAlert(title: String, message: String, completion: @escaping () -> Void) {
+    func presentConfirmAlert(title: String, message: String, cancelText: String = "Cancel", confirmText: String = "Confirm", completion: @escaping () -> Void) {
         // Create the alert controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Add the cancel button to the alert
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alertController.addAction(UIAlertAction(title: cancelText, style: .cancel))
         
         // Add the confirm button to the alert
-        alertController.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (_) in completion() }))
+        alertController.addAction(UIAlertAction(title: confirmText, style: .default, handler: { (_) in completion() }))
         
         // Present the alert
         present(alertController, animated: true)

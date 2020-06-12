@@ -174,7 +174,7 @@ class FriendRequestController {
     
     func remove(friend user: User, completion: @escaping resultHandler) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-        
+        print("got here to \(#function) ")
         // Create the friend request
         let friendRequest = FriendRequest(fromReference: currentUser.reference, fromUsername: currentUser.username, toReference: user.reference, toUsername: user.username, status: .removingFriend)
         
@@ -182,8 +182,20 @@ class FriendRequestController {
         CKService.shared.create(object: friendRequest) { (result) in
             switch result {
             case .success(_):
-                // Return the success
-                return completion(.success(true))
+                print("got here to completion and friendrequest is \(friendRequest)")
+                // Remove the friend from the user's list of friends and save the change to the cloud
+                UserController.shared.update(currentUser, friendToRemove: friendRequest.toReference) { (result) in
+                    switch result {
+                    case .success(_):
+                        print("should have deleted user friend now")
+                        // Return the success
+                        return completion(.success(true))
+                    case .failure(let error):
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                }
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -276,6 +288,7 @@ class FriendRequestController {
                             
                             // Tell the friends table view to reload its data
                             NotificationCenter.default.post(Notification(name: friendsUpdate))
+                            print("got here to \(#function) and notification to update friends table view posted")
                             
                             // Return the success
                             return completion(0)

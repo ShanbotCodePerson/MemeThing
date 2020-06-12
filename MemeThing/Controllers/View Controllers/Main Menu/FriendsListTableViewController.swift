@@ -203,7 +203,7 @@ class FriendsListTableViewController: UITableViewController {
                 DispatchQueue.main.async {
                     // Otherwise, show an alert to the user that the username doesn't exist
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentAlert(title: "Username Not Found", message: "That username does not exist - make sure to enter the username carefully.")
+                    self?.presentAlert(title: "Username Not Found", message: "The username \(username) does not exist - make sure to enter the username carefully.")
                 }
             }
         }
@@ -279,11 +279,11 @@ class FriendsListTableViewController: UITableViewController {
                         switch result {
                         case .success(_):
                             // Give the user an opportunity to block the unwanted friend request
-                            self?.presentConfirmAlert(title: "Friend Removed", message: "Do you want to block \(friend.username) from sending you any more friend requests?", completion: {
+                            self?.presentConfirmAlert(title: "Friend Removed", message: "Do you want to block \(friend.screenName) from sending you any more friend requests?", cancelText: "No", confirmText: "Yes, block \(friend.screenName)", completion: {
                                 // If the user clicks "confirm," add that user to their blocked list
                                 self?.blockUser(named: friend.username)
                             })
-                            
+                            print("got here to \(#function) and \(self?.dataSource)")
                             // Update the tableview
                             self?.updateData()
                         case .failure(let error):
@@ -321,7 +321,7 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
                         self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromUsername) as a friend!")
                     } else {
                         // Give the user an opportunity to block the unwanted friend request
-                        self?.presentConfirmAlert(title: "Friend Request Denied", message: "Do you want to block \(friendRequest.fromUsername) from sending you any more friend requests?", completion: {
+                        self?.presentConfirmAlert(title: "Friend Request Denied", message: "Do you want to block \(friendRequest.fromUsername) from sending you any more friend requests?", cancelText: "No", confirmText: "Yes, block \(friendRequest.fromUsername)", completion: {
                             // If the user clicks "confirm," add that user to their blocked list
                             self?.blockUser(named: friendRequest.fromUsername)
                         })

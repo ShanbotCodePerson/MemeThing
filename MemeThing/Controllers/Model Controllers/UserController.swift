@@ -212,8 +212,14 @@ class UserController {
     
     // Update a user by removing a friend
     func update(_ user: User, friendToRemove friend: CKRecord.Reference, completion: @escaping resultHandler) {
+//        print("got here to \(#function) and user has friends with ids \(user.friendsReferences.map({$0.recordID.recordName})) and we want to delete \(friend.recordID.recordName)")
+        
         // Remove the friend from the user's list of friends
         user.friendsReferences.removeAll(where: { $0.recordID.recordName == friend.recordID.recordName })
+        print("user now has \(user.friendsReferences) friends")
+        
+        // Update the source of truth
+        usersFriends?.removeAll(where: { $0.recordID.recordName == friend.recordID.recordName })
         
         // Save the changes to the cloud
         update(user, completion: completion)
@@ -255,6 +261,7 @@ class UserController {
     // Set up all the necessary notification subscriptions for the user
     func setUpUser() {
         FriendRequestController.shared.subscribeToFriendRequests()
+        FriendRequestController.shared.subscribeToFriendRemoving()
         FriendRequestController.shared.subscribeToFriendRequestResponses()
         GameController.shared.subscribeToGameInvitations()
     }
