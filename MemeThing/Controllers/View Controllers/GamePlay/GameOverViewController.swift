@@ -59,15 +59,38 @@ class GameOverViewController: UIViewController, HasAGameObject {
     }
     
     @IBAction func playAgainButtonTapped(_ sender: UIButton) {
-        // TODO: - delete the current game object but not before using its player data to create a new game
+        guard let finishedGame = game else { return }
+        
+        // TODO: - only the active players?
+        
         // Fetch the players who participated in the previous game
-        // TODO: - active players only?
-        
-        // Delete the game from CoreData
-        guard let game = game else { return }
-        
-        // Transition to the waiting view
-//        transitionToStoryboard(named: StoryboardNames.waitingView, with: <#T##Game#>)
+       GameController.shared.fetchPlayers(from: finishedGame.activePlayers) { [weak self] (result) in
+            switch result {
+            case .success(let players):
+                // Create a new game with all the previous (active) players
+                // FIXME: - need some way to prevent multiple users clicking this button at the same time
+                GameController.shared.newGame(players: players) { (result) in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let game):
+                            // Delete the finished game from the CoreData
+                            FinishedGameController.shared.delete(finishedGame)
+                            
+                            // Transition to the waiting view
+                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                        case .failure(let error):
+                            // Print and display the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorAlert(error)
+                        }
+                    }
+                }
+            case .failure(let error):
+                // Print and display the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                DispatchQueue.main.async { self?.presentErrorAlert(error) }
+            }
+        }
     }
 }
 

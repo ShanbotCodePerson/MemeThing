@@ -105,9 +105,9 @@ class GameController {
     }
     
     // Fetch all the players from the references in a game
-    func fetchPlayers(from references: [CKRecord.Reference], completion: @escaping (Result<[User], MemeThingError>) -> Void) {
+    func fetchPlayers(from recordIDs: [CKRecord.ID], completion: @escaping (Result<[User], MemeThingError>) -> Void) {
         // Fetch the data from the cloud
-        CKService.shared.read(references: references) { (result: Result<[User], MemeThingError>) in
+        CKService.shared.read(recordIDs: recordIDs) { (result: Result<[User], MemeThingError>) in
             switch result {
             case .success(let players):
                 // Return the success
