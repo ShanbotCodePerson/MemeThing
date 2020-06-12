@@ -19,13 +19,12 @@ class GameOverViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
+    var game: FinishedGame? { FinishedGameController.shared.finishedGames.first(where: { $0.recordID == gameID }) }
     
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpViews()
     }
     
@@ -50,11 +49,25 @@ class GameOverViewController: UIViewController, HasAGameObject {
         transitionToStoryboard(named: StoryboardNames.mainMenu)
     }
     
-    @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
+    @IBAction func exitGameButtonTapped(_ sender: UIButton) {
+        // Delete the game from CoreData
+        guard let game = game else { return }
+        FinishedGameController.shared.delete(game)
+        
+        // Return to the main menu
+        transitionToStoryboard(named: StoryboardNames.mainMenu)
     }
     
     @IBAction func playAgainButtonTapped(_ sender: UIButton) {
         // TODO: - delete the current game object but not before using its player data to create a new game
+        // Fetch the players who participated in the previous game
+        // TODO: - active players only?
+        
+        // Delete the game from CoreData
+        guard let game = game else { return }
+        
+        // Transition to the waiting view
+//        transitionToStoryboard(named: StoryboardNames.waitingView, with: <#T##Game#>)
     }
 }
 
@@ -63,7 +76,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
 extension GameOverViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return game?.activePlayers.values.count ?? 0
+        return game?.numActivePlayers ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

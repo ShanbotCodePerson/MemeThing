@@ -71,6 +71,7 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="nkK-uE-dFS" firstAttribute="top" secondItem="9G1-Tm-2X0" secondAttribute="top" id="0sC-zd-kj4"/>
                             <constraint firstItem="nkK-uE-dFS" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="17t-QN-WYx"/>
@@ -92,6 +93,9 @@
                             <constraint firstItem="xcm-NG-LHC" firstAttribute="width" secondItem="9G1-Tm-2X0" secondAttribute="width" multiplier="0.9" id="xCQ-1I-88j"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9G1-Tm-2X0"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="tTp-Tu-K0X" appends="YES" id="WP6-KC-F3c"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="captionTextField" destination="KHy-3E-I4Q" id="BVi-in-Bts"/>
@@ -102,9 +106,9 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bXW-Rs-L83" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="fkm-VB-NSO">
+                <tapGestureRecognizer id="tTp-Tu-K0X">
                     <connections>
-                        <action selector="screenTapped:" destination="wv3-dL-fID" id="WZF-dA-brk"/>
+                        <action selector="screenTapped:" destination="wv3-dL-fID" id="lE1-Dm-dNH"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

@@ -31,11 +31,6 @@
                                                 <action selector="mainMenuButtonTapped:" destination="vF3-GY-91v" id="xXG-XE-VOm"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" image="ellipsis" catalog="system" id="3ma-9S-c3Y">
-                                            <connections>
-                                                <action selector="dotsButtonTapped:" destination="vF3-GY-91v" id="Jnf-Pi-bPJ"/>
-                                            </connections>
-                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -57,10 +52,10 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WDd-WB-wEb">
-                                <rect key="frame" x="0.0" y="132" width="414" height="660.5"/>
+                                <rect key="frame" x="0.0" y="132" width="414" height="603.5"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="edL-Y1-kIt">
-                                        <rect key="frame" x="20.5" y="16.5" width="373" height="627.5"/>
+                                        <rect key="frame" x="20.5" y="15" width="373" height="573.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="playerCell" id="b4t-Cw-5fr" customClass="ThreeLabelsTableViewCell" customModule="MemeThing" customModuleProvider="target">
@@ -83,17 +78,27 @@
                                     <constraint firstItem="edL-Y1-kIt" firstAttribute="centerX" secondItem="WDd-WB-wEb" secondAttribute="centerX" id="lE9-tX-xXY"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1eo-go-cSN" customClass="CloseButton" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="735.5" width="373" height="49"/>
+                                <state key="normal" title="Exit Game"/>
+                                <connections>
+                                    <action selector="exitGameButtonTapped:" destination="vF3-GY-91v" eventType="touchUpInside" id="XNY-La-gkb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="1eo-go-cSN" firstAttribute="top" secondItem="WDd-WB-wEb" secondAttribute="bottom" id="2l4-hm-UQB"/>
                             <constraint firstItem="Fvu-tI-e4F" firstAttribute="top" secondItem="fJE-8X-ex2" secondAttribute="bottom" id="2yW-ho-67t"/>
                             <constraint firstItem="fJE-8X-ex2" firstAttribute="top" secondItem="dKz-gp-v3E" secondAttribute="bottom" constant="-10" id="6vK-0p-0ve"/>
+                            <constraint firstItem="1eo-go-cSN" firstAttribute="height" secondItem="qoa-2s-lxQ" secondAttribute="height" multiplier="0.06" id="AL8-aC-HIr"/>
                             <constraint firstItem="qoa-2s-lxQ" firstAttribute="trailing" secondItem="Fvu-tI-e4F" secondAttribute="trailing" id="Blh-nt-9yT"/>
                             <constraint firstAttribute="trailing" secondItem="fJE-8X-ex2" secondAttribute="trailing" id="Ee0-3X-agv"/>
+                            <constraint firstItem="C6x-WJ-hoh" firstAttribute="top" secondItem="1eo-go-cSN" secondAttribute="bottom" constant="8" id="Imy-GZ-8h5"/>
                             <constraint firstItem="qoa-2s-lxQ" firstAttribute="trailing" secondItem="dKz-gp-v3E" secondAttribute="trailing" id="MZa-im-Xhf"/>
                             <constraint firstItem="C6x-WJ-hoh" firstAttribute="centerX" secondItem="qoa-2s-lxQ" secondAttribute="centerX" id="Oal-tK-KxD"/>
                             <constraint firstItem="WDd-WB-wEb" firstAttribute="leading" secondItem="qoa-2s-lxQ" secondAttribute="leading" id="Rwl-vP-ypv"/>
-                            <constraint firstItem="C6x-WJ-hoh" firstAttribute="top" secondItem="WDd-WB-wEb" secondAttribute="bottom" id="Vec-95-aK9"/>
+                            <constraint firstItem="1eo-go-cSN" firstAttribute="centerX" secondItem="qoa-2s-lxQ" secondAttribute="centerX" id="TQ5-Gv-AeS"/>
                             <constraint firstItem="WDd-WB-wEb" firstAttribute="trailing" secondItem="qoa-2s-lxQ" secondAttribute="trailing" id="aXg-jJ-vCi"/>
                             <constraint firstItem="WDd-WB-wEb" firstAttribute="top" secondItem="Fvu-tI-e4F" secondAttribute="bottom" id="an4-nX-kuH"/>
                             <constraint firstItem="C6x-WJ-hoh" firstAttribute="height" secondItem="qoa-2s-lxQ" secondAttribute="height" multiplier="0.07" id="dzn-3K-yOe"/>
@@ -101,6 +106,7 @@
                             <constraint firstItem="fJE-8X-ex2" firstAttribute="leading" secondItem="qoa-2s-lxQ" secondAttribute="leading" id="fuQ-JT-Ftb"/>
                             <constraint firstItem="dKz-gp-v3E" firstAttribute="leading" secondItem="1WI-hM-gnU" secondAttribute="leading" id="lVc-pk-E4Y"/>
                             <constraint firstItem="C6x-WJ-hoh" firstAttribute="width" secondItem="qoa-2s-lxQ" secondAttribute="width" multiplier="0.9" id="mSD-uV-cjc"/>
+                            <constraint firstItem="1eo-go-cSN" firstAttribute="width" secondItem="qoa-2s-lxQ" secondAttribute="width" multiplier="0.9" id="nzb-gc-5O2"/>
                             <constraint firstItem="Fvu-tI-e4F" firstAttribute="leading" secondItem="qoa-2s-lxQ" secondAttribute="leading" id="tGq-Ef-zBK"/>
                             <constraint firstItem="qoa-2s-lxQ" firstAttribute="bottom" secondItem="C6x-WJ-hoh" secondAttribute="bottom" constant="12" id="vS9-Sh-KBX"/>
                             <constraint firstItem="dKz-gp-v3E" firstAttribute="top" secondItem="1WI-hM-gnU" secondAttribute="top" id="w8Q-ar-Y8e"/>
@@ -119,7 +125,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ellipsis" catalog="system" width="128" height="37"/>
         <namedColor name="navBar">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

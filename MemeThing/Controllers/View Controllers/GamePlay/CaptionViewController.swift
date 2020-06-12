@@ -52,7 +52,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 case .failure(let error):
                     // TODO: - better error handling here, present alert?
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorToUser(error)
+                    self?.presentErrorAlert(error)
                 }
             }
         }
@@ -129,13 +129,13 @@ class CaptionViewController: UIViewController, HasAGameObject {
                             }
                         case .failure(let error):
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            self?.presentErrorToUser(error)
+                            self?.presentErrorAlert(error)
                         }
                     }
                 }
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                DispatchQueue.main.async { self?.presentErrorToUser(error) }
+                DispatchQueue.main.async { self?.presentErrorAlert(error) }
             }
         }
     }

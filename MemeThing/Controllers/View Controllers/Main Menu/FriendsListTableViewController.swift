@@ -76,7 +76,7 @@ class FriendsListTableViewController: UITableViewController {
                         print("Successfully fetched pending friend requests")
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
                 group.leave()
@@ -91,7 +91,7 @@ class FriendsListTableViewController: UITableViewController {
                         print("Successfully fetched outgoing friend requests")
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
                 group.leave()
@@ -106,7 +106,7 @@ class FriendsListTableViewController: UITableViewController {
                         print("Successfully fetched current friends")
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
                 group.leave()
@@ -118,6 +118,24 @@ class FriendsListTableViewController: UITableViewController {
         }
     }
     
+    func blockUser(named username: String) {
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
+        // Add the username to the current user's list of blocked people and save the change to the cloud
+        UserController.shared.update(currentUser, usernameToBlock: username) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    self?.presentAlert(title: "Successfully Blocked", message: "You have successfully blocked \(username)")
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
+    }
+    
     // MARK: - Actions
     
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
@@ -126,12 +144,17 @@ class FriendsListTableViewController: UITableViewController {
     
     // A helper function for when the user clicks to add the friend
     func sendRequest(to username: String) {
-        guard username != UserController.shared.currentUser?.username else {
-            presentAlert(title: "Invalid Username", message: "You can't send a friend request to yourself")
-            return
+        guard let currentUser = UserController.shared.currentUser,
+            username != currentUser.username else {
+                presentAlert(title: "Invalid Username", message: "You can't send a friend request to yourself")
+                return
         }
         
-        // Make sure the user hasn't already sent, received, or accepted a request from that username
+        // Make sure the user hasn't already blocked, sent, received, or accepted a request from that username
+        if currentUser.blockedUsernames.contains(username) {
+            presentAlert(title: "Blocked", message: "You have blocked \(username)")
+            return
+        }
         if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
             guard outgoingFriendRequests.filter({ $0.toUsername == username }).count == 0 else {
                 presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(username)")
@@ -155,7 +178,15 @@ class FriendsListTableViewController: UITableViewController {
         UserController.shared.searchFor(username) { [weak self] (result) in
             switch result {
             case .success(let friend):
-                // If the username exists, send them a friend request
+                // If the username exists, first make sure that the current user hasn't been blocked by that person
+                guard !friend.blockedUsernames.contains(currentUser.username) else {
+                    DispatchQueue.main.async {
+                        self?.presentAlert(title: "Blocked", message: "You have been blocked by \(username)")
+                    }
+                    return
+                }
+                
+                // Send them a friend request
                 FriendRequestController.shared.sendFriendRequest(to: friend) { (result) in // FIXME: - better way than nested functions?
                     DispatchQueue.main.async {
                         switch result {
@@ -233,12 +264,38 @@ class FriendsListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // TODO: - first present alert to confirm unfriending someone
+            // Get the reference to the friend
+            guard let friend = dataSource[indexPath.section].data[indexPath.row] as? User else { return }
             
-            // TODO: - remove friend from own list of friends, and remove self from their list of friends, save changes?
-            
-            // Delete the row from the data source
-//            tableView.deleteRows(at: [indexPath], with: .fade)
+            // Present an alert to confirm the user really wants to remove the friend
+            presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to unfriend \(friend.screenName)?") {
+                
+                // Don't allow the user to interact with the view while the change is being processed
+                tableView.isUserInteractionEnabled = false // TODO: - this needs to be tested, if it works, need to use in gameplay screens too
+                
+                // If the user clicks "confirm," remove the friend and update the tableview
+                FriendRequestController.shared.remove(friend: friend) { [weak self] (result) in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(_):
+                            // Give the user an opportunity to block the unwanted friend request
+                            self?.presentConfirmAlert(title: "Friend Removed", message: "Do you want to block \(friend.username) from sending you any more friend requests?", completion: {
+                                // If the user clicks "confirm," add that user to their blocked list
+                                self?.blockUser(named: friend.username)
+                            })
+                            
+                            // Update the tableview
+                            self?.updateData()
+                        case .failure(let error):
+                            // Print and present the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorAlert(error)
+                        }
+                        // Turn user interaction back on
+                        self?.tableView.isUserInteractionEnabled = true
+                    }
+                }
+            }
         }
     }
 }
@@ -262,15 +319,20 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
                     // Show an alert that the friend request has been accepted
                     if accept {
                         self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromUsername) as a friend!")
+                    } else {
+                        // Give the user an opportunity to block the unwanted friend request
+                        self?.presentConfirmAlert(title: "Friend Request Denied", message: "Do you want to block \(friendRequest.fromUsername) from sending you any more friend requests?", completion: {
+                            // If the user clicks "confirm," add that user to their blocked list
+                            self?.blockUser(named: friendRequest.fromUsername)
+                        })
                     }
-                    // TODO: - if denied, give user opportunity to block that person?
                     
                     // Refresh the tableview to reflect the changes
                     self?.tableView.reloadData()
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorToUser(error)
+                    self?.presentErrorAlert(error)
                 }
             }
         }

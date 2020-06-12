@@ -78,9 +78,30 @@ class GamesListTableViewController: UITableViewController {
                         self?.tableView.reloadData()
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorToUser(error)
+                        self?.presentErrorAlert(error)
                     }
                 }
+            }
+        }
+    }
+    
+    func quitGame(_ game: Game) {
+        // Don't allow the user to interact with the view while the change is being processed
+        tableView.isUserInteractionEnabled = false // TODO: - this needs to be tested, if it works, need to use in gameplay screens too
+        
+        GameController.shared.quit(game) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Update the tableview
+                    self?.updateData()
+                case .failure(let error):
+                    // Print and present the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+                // Turn user interaction back on
+                self?.tableView.isUserInteractionEnabled = true
             }
         }
     }
@@ -131,12 +152,20 @@ class GamesListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // TODO: - present alert to confirm quitting game
+            // Get the reference to the game
+            let gameToQuit = dataSource[indexPath.section].data[indexPath.row]
             
-            // TODO: - allow user to quit game, check if enough players to keep playing, save the update to the cloud
-            
-            // Delete the row from the data source
-            //            tableView.deleteRows(at: [indexPath], with: .fade)
+            // If the game is already over, allow the user to delete it without confirming
+            if gameToQuit.gameStatus == .gameOver {
+                quitGame(gameToQuit)
+            } else {
+                // Otherwise, present an alert to confirm the user really wants to quit the game
+                presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to quit the game you're playing with \(gameToQuit.listOfPlayerNames)?") {
+                    
+                    // If the user clicks "confirm," quit the game and remove it from the tableview
+                    self.quitGame(gameToQuit)
+                }
+            }
         }
     }
     
@@ -199,7 +228,7 @@ extension GamesListTableViewController: GameTableViewCellDelegate {
                 case .failure(let error):
                     // Otherwise, display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorToUser(error)
+                    self?.presentErrorAlert(error)
                 }
             }
         }

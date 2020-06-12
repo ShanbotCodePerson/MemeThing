@@ -14,12 +14,12 @@ import CloudKit
 struct GameStrings {
     static let recordType = "Game"
     static let playersKey = "players"
-    fileprivate static let playersNamesKey = "playersNames"
-    fileprivate static let playersStatusKey = "playersStatus"
-    fileprivate static let playersPointsKey = "playersPoints"
+    static let playersNamesKey = "playersNames"
+    static let playersStatusKey = "playersStatus"
+    static let playersPointsKey = "playersPoints"
     fileprivate static let leadPlayerKey = "leadPlayer"
     fileprivate static let memesKey = "memes"
-    fileprivate static let pointsToWinKey = "pointsLimit"
+    static let pointsToWinKey = "pointsLimit"
     fileprivate static let gameStatusKey = "gameStatus"
 }
 
@@ -168,10 +168,11 @@ class Game: CKCompatible {
                 return "Starting a new round with \(leadPlayerName) as the lead player"
             }
         case .gameOver:
-            if gameWinner == currentUser.screenName {
+            let winnerName = gameWinner
+            if winnerName == currentUser.screenName {
                 return "The game is over and you won!"
             } else {
-                return "The game is over and \(gameWinner ?? "nobody") has won"
+                return "The game is over and \(winnerName ?? "nobody") has won"
             }
         }
     }

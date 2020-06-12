@@ -95,7 +95,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 // Go straight to the main menu if the user was created correctly
                 self?.presentMainMenuVC()
             case .failure(let error):
-                self?.presentErrorToUser(error)
+                self?.presentErrorAlert(error)
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
         }
@@ -131,7 +131,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     self?.presentMainMenuVC()
                 case .failure(let error):
                     // TODO: - don't present an error just because a user doesn't exist yet
-                    self?.presentErrorToUser(error)
+                    self?.presentErrorAlert(error)
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 }
             }

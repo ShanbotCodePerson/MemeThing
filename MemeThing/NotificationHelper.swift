@@ -15,6 +15,7 @@ class NotificationHelper {
     
     enum Category: String {
         case newFriendRequest = "NEW_FRIEND_REQUEST"
+        case removingFriend = "REMOVING_FRIEND"
         case friendRequestResponse = "FRIEND_REQUEST_RESPONSE"
         case newGameInvitation = "NEW_GAME_INVITATION"
         case gameUpdate = "GAME_UPDATE"
@@ -24,6 +25,7 @@ class NotificationHelper {
     
     // MARK: - Process Notifications
     
+    // Handle the notification by calling the relevant function to process it
     static func processNotification(withData data: [AnyHashable : Any], completion: @escaping (UInt) -> Void) {
         
         // Parse the notification data to find out what type of notification it is and extract any relevant data
@@ -42,6 +44,9 @@ class NotificationHelper {
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
             FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged, completion: completion)
+        case .removingFriend:
+            print("received request remove friend")
+            FriendRequestController.shared.receiveFriendRemoving(withID: recordIDChanged, completion: completion)
         case .friendRequestResponse:
             print("received response to friend request")
             // TODO: - display an alert if app is open?
@@ -71,8 +76,23 @@ class NotificationHelper {
             print("received notification that game ended")
             // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged, completion: completion)
+            GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged, data: ckNotification.recordFields, completion: completion)
         }
+    }
+    
+    // Decide if the notification should be presented to the user
+    static func shouldPresentNotification(withData data: [AnyHashable : Any]) -> Bool {
+        guard let ckNotification = CKQueryNotification(fromRemoteNotificationDictionary: data),
+            let category = ckNotification.category,
+            let notificationType = NotificationHelper.Category(rawValue: category)
+//            let recordIDChanged = ckNotification.recordID
+            else { return false }
+        
+        // Present all the notifications except for certain updates to the game
+        if notificationType != .gameUpdate { return true }
+        
+        // TODO: - need to fetch the game and look at it to determine what sort of change happened, or else include desired keys in notification?
+        return false
     }
 }
 

@@ -49,6 +49,30 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     
     // MARK: - Actions
     
+    @IBAction func quitButtonTapped(_ sender: UIButton) {
+        guard let game = game else { return }
+        
+        // Present an alert to confirm the user really wants to quit the game
+        presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to quit the game?") {
+            // TODO: - lock user interaction?
+            
+            // If the user clicks "confirm," quit the game and return to the main menu
+            GameController.shared.quit(game) { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Return to the main menu
+                        self?.transitionToStoryboard(named: StoryboardNames.mainMenu)
+                    case .failure(let error):
+                        // Print and present the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        }
+    }
+    
     @IBAction func closeButtonTapped(_ sender: UIButton) {
         self.dismiss(animated: true)
     }

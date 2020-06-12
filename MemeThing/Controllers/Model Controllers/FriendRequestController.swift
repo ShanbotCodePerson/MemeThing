@@ -82,8 +82,10 @@ class FriendRequestController {
         // TODO: - User defaults to track whether the subscription has already been saved
         guard let currentUser = UserController.shared.currentUser else { return }
         
-        // Form the predicate to look for friend requests directed at the current user
-        let predicate = NSPredicate(format: "%K == %@", argumentArray: [FriendRequestStrings.toUsernameKey, currentUser.username])
+        // Form the predicate to look for positive friend requests directed at the current user
+        let predicateToSelf = NSPredicate(format: "%K == %@", argumentArray: [FriendRequestStrings.toUsernameKey, currentUser.username])
+        let predicateNotRemoving = NSPredicate(format: "%K != %@", argumentArray: [FriendRequestStrings.statusKey, FriendRequest.Status.removingFriend.rawValue])
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicateToSelf, predicateNotRemoving])
         let subscription = CKQuerySubscription(recordType: FriendRequestStrings.recordType, predicate: predicate, options: [.firesOnRecordCreation])
         
         // Format the display of the notification
@@ -91,8 +93,27 @@ class FriendRequestController {
         notificationInfo.title = "New Friend Request"
         notificationInfo.alertBody = "You have received a friend request on MemeThing"
         notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.desiredKeys = [FriendRequestStrings.fromUsernameKey]
         notificationInfo.category = NotificationHelper.Category.newFriendRequest.rawValue
+        subscription.notificationInfo = notificationInfo
+        
+        // Save the subscription to the cloud
+        CKService.shared.publicDB.save(subscription) { (_, _) in }
+    }
+    
+    func subscribeToFriendRemoving() {
+        // TODO: - User defaults to track whether the subscription has already been saved
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
+        // Form the predicate to look for negative friend requests directed at the current user
+        let predicateToSelf = NSPredicate(format: "%K == %@", argumentArray: [FriendRequestStrings.toUsernameKey, currentUser.username])
+        let predicateRemoving = NSPredicate(format: "%K == %@", argumentArray: [FriendRequestStrings.statusKey, FriendRequest.Status.removingFriend.rawValue])
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicateToSelf, predicateRemoving])
+        let subscription = CKQuerySubscription(recordType: FriendRequestStrings.recordType, predicate: predicate, options: [.firesOnRecordCreation])
+        
+        // Set up the information without having an alert for the notification
+        let notificationInfo = CKQuerySubscription.NotificationInfo()
+        notificationInfo.shouldSendContentAvailable = true
+        notificationInfo.category = NotificationHelper.Category.removingFriend.rawValue
         subscription.notificationInfo = notificationInfo
         
         // Save the subscription to the cloud
@@ -151,6 +172,27 @@ class FriendRequestController {
         }
     }
     
+    func remove(friend user: User, completion: @escaping resultHandler) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Create the friend request
+        let friendRequest = FriendRequest(fromReference: currentUser.reference, fromUsername: currentUser.username, toReference: user.reference, toUsername: user.username, status: .removingFriend)
+        
+        // Save the friend request to the cloud
+        CKService.shared.create(object: friendRequest) { (result) in
+            switch result {
+            case .success(_):
+                // Return the success
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+        
+    }
+    
     func sendResponse(to friendRequest: FriendRequest, accept: Bool, completion: @escaping resultHandler) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
@@ -204,6 +246,43 @@ class FriendRequestController {
                 NotificationCenter.default.post(Notification(name: friendsUpdate))
                 
                 // Return the success
+                return completion(0)
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(2)
+            }
+        }
+    }
+    
+    func receiveFriendRemoving(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
+        // Fetch the relevant friend request object from the cloud
+        CKService.shared.read(recordID: recordID) { (result: resultTypeOne) in
+            switch result {
+            case .success(let friendRequest):
+                // Remove the friend from the users list of friends and save the changes to the cloud
+                // TODO: - need to make sure this is getting called even when the app is in the background
+                if let currentUser = UserController.shared.currentUser {
+                    UserController.shared.update(currentUser, friendToRemove: friendRequest.fromReference) { (result) in
+                        switch result {
+                        case .success(_):
+                            // Delete the friend request now that it's no longer necessary
+                            CKService.shared.delete(object: friendRequest) { (result) in
+                                // TODO: - need something here
+                            }
+                            
+                            // Tell the friends table view to reload its data
+                            NotificationCenter.default.post(Notification(name: friendsUpdate))
+                            
+                            // Return the success
+                            return completion(0)
+                        case .failure(let error):
+                            // Print and return the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return completion(2)
+                        }
+                    }
+                }
                 return completion(0)
             case .failure(let error):
                 // Print and return the error

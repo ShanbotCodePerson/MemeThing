@@ -98,14 +98,14 @@ class MemeController {
     // Update a meme with a new caption
     func createCaption(for meme: Meme, by author: User, with text: String, in game: Game, completion: @escaping resultHandler) {
         // Create the caption
-        let caption = Caption(text: text, author: author.reference, meme: meme.reference)
+        let caption = Caption(text: text, author: author.reference, meme: meme.reference, game: game.reference)
         
         // Save it to the cloud
         CKService.shared.create(object: caption) { [weak self] (result) in
             switch result {
             case .success(let caption):
                 // Subscribe to notifications for that caption
-//                subscribeToNotifications(for: caption) // FIXME: - figure out proper subscriptionID first
+                self?.subscribeToNotifications(for: caption)
                 
                 // Add the caption to the list of captions on the meme
                 if meme.captions != nil {
@@ -172,15 +172,14 @@ class MemeController {
     func subscribeToNotifications(for caption: Caption) {
         // Set up the subscription to be alerted of any modification to the caption
         let predicate = NSPredicate(format: "recordID == %@", caption.recordID)
-        let subscription = CKQuerySubscription(recordType: CaptionStrings.recordType, predicate: predicate, subscriptionID: caption.recordID.recordName, options: [CKQuerySubscription.Options.firesOnRecordUpdate])
-        // FIXME: - proper subscriptionID to use? figure out where to delete
+        let subscription = CKQuerySubscription(recordType: CaptionStrings.recordType, predicate: predicate, subscriptionID: "\(caption.game.recordID.recordName)-\(Int.random(in: 0...100000))", options: [CKQuerySubscription.Options.firesOnRecordUpdate])
+        print("got here to \(#function) and \(subscription)")
         
         // Configure the display of the notifications
         let notificationInfo = CKQuerySubscription.NotificationInfo()
         notificationInfo.title = "Winner"
         notificationInfo.alertBody = "Your caption won a round in MemeThing!"
         notificationInfo.shouldSendContentAvailable = true
-//        notificationInfo.desiredKeys = [CaptionStrings.gameKey] // FIXME: - how to do this??
         notificationInfo.category = NotificationHelper.Category.captionWon.rawValue
         subscription.notificationInfo = notificationInfo
         
@@ -194,7 +193,7 @@ class MemeController {
     // Receive a notification that the current user's caption has won
     func receiveNotificationCaptionWon(completion: @escaping (UInt) -> Void) {
         guard let currentUser = UserController.shared.currentUser else { return }
-
+        
         // Update the user's points and save the change
         UserController.shared.update(currentUser, points: 1) { (result) in
             switch result {
@@ -212,5 +211,23 @@ class MemeController {
         }
     }
     
-    // TODO: - remove subscriptions to captions after receiving a response or when the game is over
+    // Remove all the subscriptions to captions for a given game
+    func removeAllCaptionSubscriptions(for gameID: String) {
+        CKService.shared.publicDB.fetchAllSubscriptions { (subscriptions, error) in
+            // Handle any errors
+            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+            
+            // Find all the caption subscriptions whose IDs contain the gameID
+            guard let subscriptions = subscriptions else { return }
+            for subscription in subscriptions {
+                if subscription.notificationInfo?.category == NotificationHelper.Category.captionWon.rawValue && subscription.subscriptionID.contains(gameID) {
+                    
+                    // Delete the subscriptions from the cloud
+                    CKService.shared.publicDB.delete(withSubscriptionID: subscription.subscriptionID) { (_, error) in
+                        if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+                    }
+                }
+            }
+        }
+    }
 }
