@@ -78,11 +78,7 @@ extension CKServicing {
 //            print("inside completion and records are \(records)")
             
             // Check that actual data was returned
-            guard let records = records, records.count > 0 else { return completion(.failure(.noRecordsExist)) }
-            
-            // Unwrap the data
-            let objects = records.compactMap({ T(ckRecord: $0) })
-            guard objects.count > 0 else { return completion(.failure(.couldNotUnwrap)) }
+            guard let objects = records?.compactMap({ T(ckRecord: $0) }) else { return completion(.failure(.couldNotUnwrap)) }
 //            print("unwrapped objects are \(objects)")
             
             // Complete with the objects

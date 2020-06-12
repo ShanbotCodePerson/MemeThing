@@ -75,7 +75,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     return
                 case .failure(let error):
                     // Make sure the error is that no user was found, rather than some other type of error
-                    guard case MemeThingError.noRecordsExist = error else {
+                    guard case MemeThingError.noUserFound = error else {
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         self?.presentErrorAlert(error)
                         return
@@ -169,9 +169,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     // Go straight to the main menu if the user was fetched correctly
                     self?.presentMainMenuVC()
                 case .failure(let error):
-                    // Print and display the error (unless the error is that no user has been created yet
+                    // Print and display the error (unless the error is that no user has been created yet)
+                    if case MemeThingError.noUserFound = error { return }
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    if case MemeThingError.noRecordsExist = error { return }
                     self?.presentErrorAlert(error)
                 }
             }
