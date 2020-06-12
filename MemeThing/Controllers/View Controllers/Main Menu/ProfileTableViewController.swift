@@ -34,6 +34,7 @@ class ProfileTableViewController: UITableViewController {
     
     func setUpViews() {
         navigationController?.setNavigationBarHidden(false, animated: true)
+        view.backgroundColor = .background
         
         guard let user = UserController.shared.currentUser else { return }
         usernameLabel.text = "Username: \(user.username)"

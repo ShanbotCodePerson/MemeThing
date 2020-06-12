@@ -27,11 +27,24 @@ class DrawingViewController: UIViewController, HasAGameObject {
         super.viewDidLoad()
         view.backgroundColor = .background
         
-        // Display the leaderboard unless the game is just starting
-        guard let game = game else { return }
-        if game.memes?.count ?? 0 > 0 {
-//            presentLeaderboard(with: game)
-            // FIXME: - this doesn't work
+        // Set up the observer to transition to the game over view in case the game ends prematurely
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+    }
+    
+    // MARK: - Respond to Notifications
+    
+    @objc func transitionToNewPage(_ sender: NSNotification) {
+        print("got here to \(#function) in drawingview and \(sender.name)")
+        // Only change the view if the update is for the game that the user currently has open
+        guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
+            gameID == game.recordID.recordName else { return }
+        
+        // Transition to the relevant view based on the type of update
+        DispatchQueue.main.async {
+            if sender.name == toGameOver {
+                print("should be going to game over view now")
+                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+            }
         }
     }
     
@@ -43,7 +56,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentLeaderboard(with: game)
+        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
     
     @IBAction func undoButtonTapped(_ sender: UIButton) {

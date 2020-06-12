@@ -36,7 +36,7 @@ protocol CKServicing {
     func create<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func read<T: CKCompatible> (predicate: NSCompoundPredicate, completion: @escaping ArrayHandler<T>)
     func read<T: CKCompatible> (reference: CKRecord.Reference, completion: @escaping SingleItemHandler<T>)
-    func read<T: CKCompatible> (references: [CKRecord.Reference], completion: @escaping ArrayHandler<T>)
+    func read<T: CKCompatible> (recordIDs: [CKRecord.ID], completion: @escaping ArrayHandler<T>)
     func read<T: CKCompatible> (recordID: CKRecord.ID, completion: @escaping SingleItemHandler<T>)
     func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func delete<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<Bool>)
@@ -76,7 +76,8 @@ extension CKServicing {
             // Handle any errors
             if let error = error { return completion(.failure(.ckError(error))) }
 //            print("inside completion and records are \(records)")
-            // Unwrap the data
+            
+            // Check that actual data was returned
             guard let objects = records?.compactMap({ T(ckRecord: $0) }) else { return completion(.failure(.couldNotUnwrap)) }
 //            print("unwrapped objects are \(objects)")
             
@@ -100,9 +101,9 @@ extension CKServicing {
         }
     }
     
-    func read<T: CKCompatible> (references: [CKRecord.Reference], completion: @escaping ArrayHandler<T>) {
+    func read<T: CKCompatible> (recordIDs: [CKRecord.ID], completion: @escaping ArrayHandler<T>) {
         // Create the operation to pull the data from the cloud
-        let operation = CKFetchRecordsOperation(recordIDs: references.map({ $0.recordID }))
+        let operation = CKFetchRecordsOperation(recordIDs: recordIDs)
         
         // Handle the completion of the operation
         operation.fetchRecordsCompletionBlock = { (recordDictionary, error) in

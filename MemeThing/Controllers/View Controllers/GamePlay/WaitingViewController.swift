@@ -36,11 +36,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
         // Set up the observers to listen for notifications telling the view to transition to a new page
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toCaptionsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toResultsView, object: nil)
-        
-//        // Display the leaderboard on top of the screen
-//        guard let game = game else { return }
-//        presentLeaderboard(with: game)
-        // FIXME: - this doesn't work and also need to call it at appropriate time and also in drawing view(?)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
     }
     
     // MARK: - Set Up UI
@@ -84,7 +80,10 @@ class WaitingViewController: UIViewController, HasAGameObject {
             gameID == game.recordID.recordName else { return }
         
         // Refresh the page
-        DispatchQueue.main.async { self.waitingForTableView.reloadData() }
+        DispatchQueue.main.async {
+            self.waitingLabel.text = game.gameStatusDescription
+            self.waitingForTableView.reloadData()
+        }
     }
     
     // Navigate to a different view
@@ -100,6 +99,9 @@ class WaitingViewController: UIViewController, HasAGameObject {
             }
             else if sender.name == toResultsView {
                 self.transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+            }
+            else if sender.name == toGameOver {
+                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
             }
         }
     }
@@ -129,7 +131,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentLeaderboard(with: game)
+        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
 }
 

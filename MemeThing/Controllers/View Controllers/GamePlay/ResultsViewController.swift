@@ -28,13 +28,14 @@ class ResultsViewController: UIViewController, HasAGameObject {
     var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
     var meme: Meme? { didSet { memeImageView.image = meme?.photo } }
     var captions: [Caption]? { didSet { setUpPages(from: captions) } }
+    var nextDestination: String?
     
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Load all the data, if it hasn't been loaded already
+        // Load all the data
         loadAllData()
         
         // Set up the UI
@@ -60,10 +61,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     self?.meme = meme
                     print("in completion and meme id is \(meme.reference.recordID.recordName) with \(String(describing: meme.captions?.count)) captions")
                     
-                    // FIXME: - apparently there's just a delay fetching from the cloud??
-                    sleep(1)
-                    // TODO: - nested completions
-                    
                     // Fetch the captions for that meme from the cloud
                     MemeController.shared.fetchCaptions(for: meme) { (result) in
                         DispatchQueue.main.async {
@@ -71,6 +68,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                             case .success(let captions): // FIXME: - why does this return [] the first time its run?
                                 print("in second completion and captions are \(captions)")
                                 // Save the captions
+                                print("captions were set")
                                 self?.captions = captions
                                 self?.pageControl.numberOfPages = captions.count
                             case .failure(let error):
@@ -103,8 +101,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
     }
     
     func setUpPages(from captions: [Caption]?) {
+        print("setting up scroll view")
         guard let captions = captions else { return }
-        print("got here to \(#function) and \(captions.count)")
+        print("got here to \(#function) and \(captions.count) captions have loaded")
         
         var frame = CGRect.zero
         
@@ -134,18 +133,27 @@ class ResultsViewController: UIViewController, HasAGameObject {
             let currentUser = UserController.shared.currentUser
             else { return }
         
-        // Transition to the relevant view based on the type of update
+        // Decide on the next destination view controller based on the type of update
         DispatchQueue.main.async {
             if sender.name == toNewRound {
                 if game.leadPlayer == currentUser.reference {
-                    self.transitionToStoryboard(named: StoryboardNames.drawingView, with: game)
+                    self.nextDestination = StoryboardNames.drawingView
                 } else {
-                    self.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                    self.nextDestination = StoryboardNames.waitingView
                 }
             }
             else if sender.name == toGameOver {
-                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+                self.nextDestination = StoryboardNames.gameOverView
             }
+            
+            // Before transitioning to the next view, first show everyone the results of this round
+            let storyboard = UIStoryboard(name: StoryboardNames.endOfRoundView, bundle: nil)
+            guard let initialVC = storyboard.instantiateInitialViewController() as? EndOfRoundViewController else { return }
+            initialVC.gameID = game.recordID.recordName
+            initialVC.nextDestination = self.nextDestination
+            initialVC.modalPresentationStyle = .overFullScreen
+            initialVC.modalTransitionStyle = .crossDissolve
+            self.present(initialVC, animated: true)
         }
     }
     
@@ -157,7 +165,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentLeaderboard(with: game)
+        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
     
     @IBAction func chooseWinnerButtonTapped(_ sender: UIButton) {
@@ -184,12 +192,30 @@ class ResultsViewController: UIViewController, HasAGameObject {
                         DispatchQueue.main.async {
                             switch result {
                             case .success(_):
-                                // Navigate back to the waiting view if a new round is starting, or the game over page
+                                // Decide on the next view to go to (back to the waiting view if a new round is starting, or the game over page)
                                 if game.gameStatus == .gameOver {
-                                    self?.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+                                    self?.nextDestination = StoryboardNames.gameOverView
+                                    
+                                    print("got here to \(#function) and about to save finished game")
+                                    // Create the finished game object and save it to the core data
+                                    FinishedGameController.shared.newFinishedGame(from: game)
+                                    print("finished game should be saved, \(FinishedGameController.shared.finishedGames.count)")
+                                    
+                                    // Delete the game from 
                                 } else {
-                                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                                    // Set the next destination view controller
+                                    self?.nextDestination = StoryboardNames.waitingView
                                 }
+                                
+                                // TODO: - refactor this code chunk
+                                // Before transitioning to the next view, first show everyone the results of this round
+                                let storyboard = UIStoryboard(name: StoryboardNames.endOfRoundView, bundle: nil)
+                                guard let initialVC = storyboard.instantiateInitialViewController() as? EndOfRoundViewController else { return }
+                                initialVC.gameID = game.recordID.recordName
+                                initialVC.nextDestination = self?.nextDestination
+                                initialVC.modalPresentationStyle = .overFullScreen
+                                initialVC.modalTransitionStyle = .crossDissolve
+                                self?.present(initialVC, animated: true)
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 self?.presentErrorAlert(error)

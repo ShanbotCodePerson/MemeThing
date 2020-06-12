@@ -88,7 +88,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UserController.shared.usersFriends?.count ?? 1
+        return max(UserController.shared.usersFriends?.count ?? 0, 1)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -100,13 +100,16 @@ class InviteFriendsTableViewController: UITableViewController {
             cell.setUpUI(firstText: friend.screenName, secondText: "Points: \(friend.points)")
         }
             // Insert a filler row if the user has not added any friends yet
-        else { cell.setUpUI(firstText: "You have not added any friends yet") }
+        else {
+            cell.setUpUI(firstText: "You have not added any friends yet")
+            cell.isUserInteractionEnabled = false
+        }
         
         return cell
     }
     
-    // FIXME: - comment, prettify
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Check how many rows are selected and enable or disable the start game button accordingly
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
             toggleStartButtonEnabled(to: true)
         }
@@ -114,6 +117,7 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        // Check how many rows are selected and enable or disable the start game button accordingly
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
             toggleStartButtonEnabled(to: true)
         }

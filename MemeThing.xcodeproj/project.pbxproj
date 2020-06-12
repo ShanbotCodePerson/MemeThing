@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401109882487FF7600E8FCE2 /* MemeImageView.swift */; };
 		4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4011098A24882AEE00E8FCE2 /* MemeController.swift */; };
-		40225F7C2492BFFE00573B28 /* FinishedGame.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 40225F7A2492BFFE00573B28 /* FinishedGame.xcdatamodeld */; };
+		40225F7C2492BFFE00573B28 /* MemeThing.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 40225F7A2492BFFE00573B28 /* MemeThing.xcdatamodeld */; };
 		4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365B2486B898007C2601 /* NotificationHelper.swift */; };
 		403936602486E684007C2601 /* FriendRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365F2486E684007C2601 /* FriendRequestController.swift */; };
 		4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039366124870328007C2601 /* InviteFriendsTableViewController.swift */; };
@@ -33,6 +33,8 @@
 		406C5392248AE9CE004729C7 /* Leaderboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 406C5391248AE9CE004729C7 /* Leaderboard.storyboard */; };
 		406C5394248AE9EC004729C7 /* LeaderBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406C5393248AE9EC004729C7 /* LeaderBoardViewController.swift */; };
 		406C5396248AE9F8004729C7 /* GameOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406C5395248AE9F8004729C7 /* GameOverViewController.swift */; };
+		407681DE2493D21F009D0C15 /* EndOfRound.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 407681DD2493D21F009D0C15 /* EndOfRound.storyboard */; };
+		407681E02493D446009D0C15 /* EndOfRoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407681DF2493D446009D0C15 /* EndOfRoundViewController.swift */; };
 		408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 408A26E0247ED77D008CE8DC /* MainMenu.storyboard */; };
 		40A777EC248966F200ADBB82 /* GameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777EB248966F200ADBB82 /* GameTableViewCell.swift */; };
 		40A777EE24896A4500ADBB82 /* GamesListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */; };
@@ -93,6 +95,8 @@
 		406C5391248AE9CE004729C7 /* Leaderboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Leaderboard.storyboard; sourceTree = "<group>"; };
 		406C5393248AE9EC004729C7 /* LeaderBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderBoardViewController.swift; sourceTree = "<group>"; };
 		406C5395248AE9F8004729C7 /* GameOverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverViewController.swift; sourceTree = "<group>"; };
+		407681DD2493D21F009D0C15 /* EndOfRound.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = EndOfRound.storyboard; sourceTree = "<group>"; };
+		407681DF2493D446009D0C15 /* EndOfRoundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRoundViewController.swift; sourceTree = "<group>"; };
 		408A26E1247ED77D008CE8DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/Base.lproj/MainMenu.storyboard; sourceTree = "<group>"; };
 		40A777EB248966F200ADBB82 /* GameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTableViewCell.swift; sourceTree = "<group>"; };
 		40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListTableViewController.swift; sourceTree = "<group>"; };
@@ -173,6 +177,7 @@
 				40C2148224809A24007B7630 /* DrawingViewController.swift */,
 				40C2148424809A35007B7630 /* CaptionViewController.swift */,
 				40C2148624809A47007B7630 /* ResultsViewController.swift */,
+				407681DF2493D446009D0C15 /* EndOfRoundViewController.swift */,
 				406C5393248AE9EC004729C7 /* LeaderBoardViewController.swift */,
 				406C5395248AE9F8004729C7 /* GameOverViewController.swift */,
 			);
@@ -283,6 +288,7 @@
 				40BA228B248715B3009A2197 /* Drawing.storyboard */,
 				40BA228E248715C9009A2197 /* AddCaption.storyboard */,
 				40BA229024871603009A2197 /* ViewResults.storyboard */,
+				407681DD2493D21F009D0C15 /* EndOfRound.storyboard */,
 				406C5391248AE9CE004729C7 /* Leaderboard.storyboard */,
 				406C538F248AE9BF004729C7 /* GameOver.storyboard */,
 				40ACAB66247ECD61004516CF /* Custom Views */,
@@ -298,7 +304,7 @@
 				40D003B624831B690046D64B /* Game.swift */,
 				4039CE052481E553004DA41F /* Meme.swift */,
 				40D003B824831B700046D64B /* Caption.swift */,
-				40225F7A2492BFFE00573B28 /* FinishedGame.xcdatamodeld */,
+				40225F7A2492BFFE00573B28 /* MemeThing.xcdatamodeld */,
 				4046433F2492A62B00C1961D /* FinishedGame+Convenience.swift */,
 				404643432492A67900C1961D /* CoreDataStack.swift */,
 			);
@@ -420,6 +426,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				406C5392248AE9CE004729C7 /* Leaderboard.storyboard in Resources */,
+				407681DE2493D21F009D0C15 /* EndOfRound.storyboard in Resources */,
 				406C5390248AE9BF004729C7 /* GameOver.storyboard in Resources */,
 				40DC058E24901B7400EE02AC /* Colors.xcassets in Resources */,
 				408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */,
@@ -441,10 +448,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				407681E02493D446009D0C15 /* EndOfRoundViewController.swift in Sources */,
 				40C2146E247EE0F4007B7630 /* MainMenuViewController.swift in Sources */,
 				4060899F2491ABF8009635DA /* SelfSizingTableView.swift in Sources */,
 				40C2148324809A24007B7630 /* DrawingViewController.swift in Sources */,
-				40225F7C2492BFFE00573B28 /* FinishedGame.xcdatamodeld in Sources */,
+				40225F7C2492BFFE00573B28 /* MemeThing.xcdatamodeld in Sources */,
 				4039CE062481E553004DA41F /* Meme.swift in Sources */,
 				404A7D092491766500984BB7 /* ThreeLabelsTableViewCell.swift in Sources */,
 				4039CE042481DF5C004DA41F /* CanvasView.swift in Sources */,
@@ -708,13 +716,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		40225F7A2492BFFE00573B28 /* FinishedGame.xcdatamodeld */ = {
+		40225F7A2492BFFE00573B28 /* MemeThing.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				40225F7B2492BFFE00573B28 /* FinishedGame.xcdatamodel */,
 			);
 			currentVersion = 40225F7B2492BFFE00573B28 /* FinishedGame.xcdatamodel */;
-			path = FinishedGame.xcdatamodeld;
+			path = MemeThing.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

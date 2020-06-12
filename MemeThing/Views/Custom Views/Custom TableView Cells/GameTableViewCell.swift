@@ -52,6 +52,7 @@ class GameTableViewCell: UITableViewCell {
     
     private func setUpPendingInvitationView(for game: Game) {
         secondaryTextLabel.isHidden = true
+        buttonStackView.isHidden = false
         mainTextLabel.text = "\(game.playersNames[0]) has invited you to a game with \(game.listOfPlayerNames)"
         contentView.backgroundColor = .systemGreen
     }
@@ -65,9 +66,11 @@ class GameTableViewCell: UITableViewCell {
     
     private func setUpActiveGameView(for game: Game?) {
         buttonStackView.isHidden = true
+        contentView.backgroundColor = .clear
         if let game = game {
             mainTextLabel.text = "You are playing a game with \(game.listOfPlayerNames)"
             secondaryTextLabel.text = game.gameStatusDescription
+            secondaryTextLabel.isHidden = false
         } else {
             secondaryTextLabel.isHidden = true
             mainTextLabel.text = "You are not currently playing any games"

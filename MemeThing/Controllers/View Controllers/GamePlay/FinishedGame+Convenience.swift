@@ -38,11 +38,16 @@ extension FinishedGame {
     
     // MARK: - Convenience properties
     
-    // Convert the record names of other players to CKReference objects
-    var players: [CKRecord.Reference] {
-        var result: [CKRecord.Reference] = []
-        if let playersIDs = playersIDs {
-            result = playersIDs.compactMap { CKRecord.Reference(recordID: CKRecord.ID(recordName: $0), action: .none) }
+    // Convert the record names of the active players to CKRecord ID's
+    var activePlayers: [CKRecord.ID] {
+        var result: [CKRecord.ID] = []
+        guard let playersIDs = playersIDs else { return result }
+        
+        for index in 0..<playersStatus.count {
+            let status = playersStatus[index]
+            if status != .denied && status != .quit {
+                result.append(CKRecord.ID(recordName: playersIDs[index]))
+            }
         }
         return result
     }
@@ -83,7 +88,14 @@ extension FinishedGame {
     // All the active players sorted in descending order by number of points
     var sortedPlayers: [Player] {
         var result: [Player] = []
-        // TODO: -
+        guard let playersNames = playersNames, let playersPoints = playersPoints else { return result }
+        
+        for index in 0..<playersStatus.count {
+            let status = playersStatus[index]
+            if status != .denied && status != .quit {
+                result.append(Player(name: playersNames[index], status: status, points: playersPoints[index]))
+            }
+        }
         return result
     }
 }

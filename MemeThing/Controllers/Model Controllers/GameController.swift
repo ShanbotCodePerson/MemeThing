@@ -50,8 +50,8 @@ class GameController {
                 }
                 
                 // Subscribe to updates for the game
-                self?.subscribeToGameEndings(for: game)
-                self?.subscribeToGameUpdates(for: game)
+                self?.subscribeToGameEndings(for: game, user: currentUser)
+                self?.subscribeToGameUpdates(for: game, user: currentUser)
                 
                 // Return the success
                 return completion(.success(game))
@@ -105,9 +105,9 @@ class GameController {
     }
     
     // Fetch all the players from the references in a game
-    func fetchPlayers(from references: [CKRecord.Reference], completion: @escaping (Result<[User], MemeThingError>) -> Void) {
+    func fetchPlayers(from recordIDs: [CKRecord.ID], completion: @escaping (Result<[User], MemeThingError>) -> Void) {
         // Fetch the data from the cloud
-        CKService.shared.read(references: references) { (result: Result<[User], MemeThingError>) in
+        CKService.shared.read(recordIDs: recordIDs) { (result: Result<[User], MemeThingError>) in
             switch result {
             case .success(let players):
                 // Return the success
@@ -186,31 +186,34 @@ class GameController {
     }
     
     // Subscribe all players to notifications of games they're participating in being deleted
-    func subscribeToGameEndings(for game: Game) {
+    func subscribeToGameEndings(for game: Game, user: User) {
         // Form the predicate to look for the specific game
         let predicate = NSPredicate(format: "%K == %@", argumentArray: ["recordID", game.recordID])
-        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate,  subscriptionID: "\(game.recordID.recordName)-end", options: [CKQuerySubscription.Options.firesOnRecordDeletion])
+        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate,  subscriptionID: "\(game.recordID.recordName)-\(user.recordID.recordName)-end", options: [CKQuerySubscription.Options.firesOnRecordDeletion])
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
         notificationInfo.title = "Game Ended"
         notificationInfo.alertBody = "Your game on MemeThing has finished"
         notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.desiredKeys = [GameStrings.playersKey, GameStrings.playersNamesKey, GameStrings.playersStatusKey, GameStrings.playersPointsKey, GameStrings.pointsToWinKey]
+//        notificationInfo.desiredKeys = [GameStrings.playersKey, GameStrings.playersNamesKey, GameStrings.playersStatusKey, GameStrings.playersPointsKey, GameStrings.pointsToWinKey]
+        notificationInfo.desiredKeys = [GameStrings.pointsToWinKey]
         notificationInfo.category = NotificationHelper.Category.gameEnded.rawValue
         subscription.notificationInfo = notificationInfo
         
         // Save the subscription to the cloud
-        CKService.shared.publicDB.save(subscription) { (_, _) in }
+        CKService.shared.publicDB.save(subscription) { (sub, error) in
+            print("got here to \(#function) and \(error)")
+        }
     }
     
     // Subscribe all players to notifications of all updates to games they're participating in
-    func subscribeToGameUpdates(for game: Game) {
+    func subscribeToGameUpdates(for game: Game, user: User) {
         // TODO: - User defaults to track whether the subscription has already been saved
         
         // Form the predicate to look for the specific game
         let predicate = NSPredicate(format: "%K == %@", argumentArray: ["recordID", game.recordID])
-        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, subscriptionID: "\(game.recordID.recordName)-update", options: [CKQuerySubscription.Options.firesOnRecordUpdate])
+        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, subscriptionID: "\(game.recordID.recordName)-\(user.recordID.recordName)-update", options: [CKQuerySubscription.Options.firesOnRecordUpdate])
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
@@ -221,7 +224,9 @@ class GameController {
         subscription.notificationInfo = notificationInfo
         
         // Save the subscription to the cloud
-        CKService.shared.publicDB.save(subscription) { (_, _) in }
+        CKService.shared.publicDB.save(subscription) { (sub, error) in
+             print("got here to \(#function) and \(error)")
+        }
     }
     
     // MARK: - Receive Notifications
@@ -237,13 +242,16 @@ class GameController {
             switch result {
             case .success(let game):
                 print("got here to \(#function) and game is \(game)")
-                // Update the source of truth
-                if var currentGames = self?.currentGames {
-                    currentGames.append(game)
-                    self?.currentGames = currentGames
-                } else {
-                    self?.currentGames = [game]
+                // Update the source of truth if it isn't already
+                if !(self?.currentGames?.contains(game) ?? false) {
+                    if var currentGames = self?.currentGames {
+                        currentGames.append(game)
+                        self?.currentGames = currentGames
+                    } else {
+                        self?.currentGames = [game]
+                    }
                 }
+                
                 // Tell the table view list of current games to update itself
                 NotificationCenter.default.post(Notification(name: updateListOfGames))
                 
@@ -279,8 +287,8 @@ class GameController {
             case .success(let game):
                 // If the user accepted the invitation, subscribe them to notifications for the game
                 if accept {
-                    self?.subscribeToGameEndings(for: game)
-                    self?.subscribeToGameUpdates(for: game)
+                    self?.subscribeToGameEndings(for: game, user: currentUser)
+                    self?.subscribeToGameUpdates(for: game, user: currentUser)
                 }
                 else {
                     // Otherwise, remove the game from the source of truth
@@ -303,12 +311,15 @@ class GameController {
     // FIXME: - major problems with ending game
     // Receive a notification that a game has ended
     func receiveNotificationGameEnded(withID recordID: CKRecord.ID, data: [String : Any]?, completion: @escaping (UInt) -> Void) {
+        print("got here to \(#function)")
         // If the deleted game is currently in the source of truth, save it to core data
         if let game = currentGames?.first(where: { $0.recordID.recordName == recordID.recordName }) {
             // Create the game and save it to core data
             _ = FinishedGame(game: game)
             FinishedGameController.shared.saveToCoreData()
+            print("created finished game from game and there are now \(FinishedGameController.shared.finishedGames.count) finished games")
         } else {
+            print("using notification data to create finished game")
             // Otherwise, parse the data from the notification
             guard let data = data,
                 let players = data[GameStrings.playersKey] as? [CKRecord.Reference],
@@ -321,6 +332,7 @@ class GameController {
             // Create the game and save it to core data
             _ = FinishedGame(players: players, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, pointsToWin: pointsToWin, recordID: recordID)
             FinishedGameController.shared.saveToCoreData()
+             print("created finished game from notification data and there are now \(FinishedGameController.shared.finishedGames.count) finished games")
         }
         
         // TODO: - display an alert to the user
@@ -402,45 +414,62 @@ class GameController {
         game.updateStatus(of: currentUser, to: .quit)
         
         // Check to see if there are enough remaining active players, and if not, end the game
-        if game.activePlayers.values.count < 3 { game.gameStatus = .gameOver }
-        
-        // Save the updates to the game
-        saveChanges(to: game) { [weak self] (result) in
-            switch result {
-            case .success(let game):
-                // Handle the clean up for leaving the game
-                self?.handleEnd(for: game.recordID.recordName)
-                
-                // Return the success
-                return completion(.success(true))
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
+        if game.activePlayers.values.count < 3 {
+            finishGame(game) { [weak self] (result) in
+                switch result {
+                case .success(_):
+                    // Handle the clean up for leaving the game
+                    self?.handleEnd(for: game.recordID.recordName)
+                    
+                    // Return the success
+                    return completion(.success(true))
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            }
+        } else {
+            // FIXME: - need to handle flow of gameplay, for example, if user quit in middle of drawing or caption
+            // Otherwise, save the update to the game
+            saveChanges(to: game) { [weak self] (result) in
+                switch result {
+                case .success(let game):
+                    // Handle the clean up for leaving the game
+                    self?.handleEnd(for: game.recordID.recordName)
+                    
+                    // Return the success
+                    return completion(.success(true))
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
             }
         }
     }
     
-    
-    // FIXME: - major problems with ending game
     // Perform all the cleanup to end the game, whether it's over or the user has quit
     func handleEnd(for gameRecordName: String) {
+        guard let user = UserController.shared.currentUser else { return }
+        
+        // If the user is currently in the game, transition them to the game over view
+        NotificationCenter.default.post(Notification(name: toGameOver, userInfo: ["gameID" : gameRecordName]))
+        
+        // Remove the subscriptions to notifications for the game
+        CKService.shared.publicDB.delete(withSubscriptionID: "\(gameRecordName)-\(user.recordID.recordName)-end") { (_, error) in
+            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+        }
+        CKService.shared.publicDB.delete(withSubscriptionID: "\(gameRecordName)-\(user.recordID.recordName)-update") { (_, error) in
+            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+        }
+         
+        print("got here to \(#function) and SoT has \(String(describing: currentGames?.count)) games")
         // Remove the game from the source of truth
         currentGames?.removeAll(where: { $0.recordID.recordName == gameRecordName })
-
-        // Remove the subscriptions to notifications for the game
-        CKService.shared.publicDB.delete(withSubscriptionID: "\(gameRecordName)-end") { (_, error) in
-            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
-        }
-        CKService.shared.publicDB.delete(withSubscriptionID: "\(gameRecordName)-update") { (_, error) in
-            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
-        }
-        MemeController.shared.removeAllCaptionSubscriptions(for: gameRecordName)
-
+        print("Now has \(String(describing: currentGames?.count)) games")
+        
         // Tell the table view list of current games to update itself
         NotificationCenter.default.post(Notification(name: updateListOfGames))
-
-        // If the user is currently in the game, transition them to the main menu
-        NotificationCenter.default.post(Notification(name: toMainMenu, userInfo: ["gameID" : gameRecordName]))
     }
 }

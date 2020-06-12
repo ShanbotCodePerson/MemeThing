@@ -33,6 +33,42 @@ class CaptionViewController: UIViewController, HasAGameObject {
         
         // Add an observer for when the keyboard appears or disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        
+        // Set up the observer to transition to the game over view in case the game ends prematurely
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+    }
+    
+    // MARK: - Respond to Notifications
+    
+    @objc func keyboardNotification(_ sender: NSNotification) {
+        guard let userInfo = sender.userInfo else { return }
+        
+        let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        let endFrameY = endFrame?.origin.y ?? 0
+        let duration:TimeInterval = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+        let animationCurveRawNSN = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+        let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
+        let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
+        if endFrameY >= UIScreen.main.bounds.size.height {
+            self.keyboardHeightLayoutConstraint?.constant = 8.0
+        } else {
+            self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 8.0
+        } // FIXME: - height may be off here - may need to add sendButton.frame.height
+        
+        UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
+    }
+    
+    @objc func transitionToNewPage(_ sender: NSNotification) {
+        // Only change the view if the update is for the game that the user currently has open
+        guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
+            gameID == game.recordID.recordName else { return }
+        
+        // Transition to the relevant view based on the type of update
+        DispatchQueue.main.async {
+            if sender.name == toGameOver {
+                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+            }
+        }
     }
     
     // MARK: - Set Up UI
@@ -58,24 +94,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
         }
     }
     
-    @objc func keyboardNotification(_ sender: NSNotification) {
-        guard let userInfo = sender.userInfo else { return }
-        
-        let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-        let endFrameY = endFrame?.origin.y ?? 0
-        let duration:TimeInterval = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
-        let animationCurveRawNSN = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
-        let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
-        let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
-        if endFrameY >= UIScreen.main.bounds.size.height {
-            self.keyboardHeightLayoutConstraint?.constant = 8.0
-        } else {
-            self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 8.0
-        } // FIXME: - height may be off here - may need to add sendButton.frame.height
-        
-        UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
-    }
-    
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
@@ -84,10 +102,9 @@ class CaptionViewController: UIViewController, HasAGameObject {
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentLeaderboard(with: game)
+        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
     
-    // FIXME: - why isn't the tap working??
     @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
         print("got here to \(#function)")
         // Close the keyboard
@@ -103,6 +120,11 @@ class CaptionViewController: UIViewController, HasAGameObject {
     func saveCaption() {
         guard let game = game, let meme = meme, let currentUser = UserController.shared.currentUser,
             let captionText = captionTextField.text else { return }
+        
+        // Don't allow the user to interact with the screen while the save is in progress
+        // TODO: - loading icon?
+        captionTextField.isUserInteractionEnabled = false
+        sendButton.isUserInteractionEnabled = false
         
         // Add the caption to the meme object
         MemeController.shared.createCaption(for: meme, by: currentUser, with: captionText, in: game) { [weak self] (result) in
@@ -121,6 +143,9 @@ class CaptionViewController: UIViewController, HasAGameObject {
                         switch result {
                         case .success(_):
                             if game.allCaptionsSubmitted {
+                                // Give some time for Cloudkit to catch up
+                                sleep(2)
+                                
                                 // Go to the results view if all captions have been submitted already
                                 self?.transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
                             } else {
@@ -129,13 +154,19 @@ class CaptionViewController: UIViewController, HasAGameObject {
                             }
                         case .failure(let error):
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.captionTextField.isUserInteractionEnabled = true
+                            self?.sendButton.isUserInteractionEnabled = true
                             self?.presentErrorAlert(error)
                         }
                     }
                 }
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                DispatchQueue.main.async { self?.presentErrorAlert(error) }
+                DispatchQueue.main.async {
+                    self?.captionTextField.isUserInteractionEnabled = true
+                    self?.sendButton.isUserInteractionEnabled = true
+                    self?.presentErrorAlert(error)
+                }
             }
         }
     }

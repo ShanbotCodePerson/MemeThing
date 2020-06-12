@@ -303,6 +303,12 @@ class Game: CKCompatible {
         else { gameStatus = .waitingForDrawing }
     }
     
+    // Quickly get the name of a player from their CKReference
+    func getName(of reference: CKRecord.Reference) -> String {
+        guard let index = players.firstIndex(of: reference) else { return "ERROR" }
+        return playersNames[index]
+    }
+    
     // Reset the game for a new round
     func resetGame() {
         // Update the game's status

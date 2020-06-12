@@ -79,6 +79,27 @@ class MemeController {
         }
     }
     
+    // Read (fetch) the winning caption for a meme
+    func fetchWinningCaption(for meme: Meme, completion: @escaping (Result<Caption, MemeThingError>) -> Void) {
+        // Get the recordID of the winning caption from the meme
+        guard let index = meme.winningCaptionIndex,
+            let recordID = meme.captions?[index].recordID
+            else { return completion(.failure(.unknownError)) }
+        
+        // Fetch the data from the cloud
+        CKService.shared.read(recordID: recordID) { (result: Result<Caption, MemeThingError>) in
+            switch result {
+            case .success(let caption):
+                // Return the success
+                return completion(.success(caption))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
     // Update a meme
     private func update(_ meme: Meme, completion: @escaping resultHandler) {
         // Save the updated meme to the cloud
@@ -104,9 +125,6 @@ class MemeController {
         CKService.shared.create(object: caption) { [weak self] (result) in
             switch result {
             case .success(let caption):
-                // Subscribe to notifications for that caption
-                self?.subscribeToNotifications(for: caption)
-                
                 // Add the caption to the list of captions on the meme
                 if meme.captions != nil {
                     meme.captions!.append(caption.reference)
@@ -166,68 +184,68 @@ class MemeController {
         }
     }
     
-    // MARK: - Notifications
-    
-    // Subscribe to notifications for captions you created, in case you won
-    func subscribeToNotifications(for caption: Caption) {
-        // Set up the subscription to be alerted of any modification to the caption
-        let predicate = NSPredicate(format: "recordID == %@", caption.recordID)
-        let subscription = CKQuerySubscription(recordType: CaptionStrings.recordType, predicate: predicate, subscriptionID: "\(caption.game.recordID.recordName)-\(Int.random(in: 0...100000))", options: [CKQuerySubscription.Options.firesOnRecordUpdate])
-        print("got here to \(#function) and \(subscription)")
-        
-        // Configure the display of the notifications
-        let notificationInfo = CKQuerySubscription.NotificationInfo()
-        notificationInfo.title = "Winner"
-        notificationInfo.alertBody = "Your caption won a round in MemeThing!"
-        notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.category = NotificationHelper.Category.captionWon.rawValue
-        subscription.notificationInfo = notificationInfo
-        
-        // Save the subscription to the cloud
-        CKService.shared.publicDB.save(subscription) { (sub, error) in
-//            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//            // TODO: - delete this fluff later
-        }
-    }
-    
-    // Receive a notification that the current user's caption has won
-    func receiveNotificationCaptionWon(completion: @escaping (UInt) -> Void) {
-        guard let currentUser = UserController.shared.currentUser else { return }
-        
-        // Update the user's points and save the change
-        UserController.shared.update(currentUser, points: 1) { (result) in
-            switch result {
-            case .success(_):
-                // TODO: - better handling in here
-                print("worked")
-                
-                // Return the success
-                return completion(0)
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(2)
-            }
-        }
-    }
-    
-    // Remove all the subscriptions to captions for a given game
-    func removeAllCaptionSubscriptions(for gameID: String) {
-        CKService.shared.publicDB.fetchAllSubscriptions { (subscriptions, error) in
-            // Handle any errors
-            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
-            
-            // Find all the caption subscriptions whose IDs contain the gameID
-            guard let subscriptions = subscriptions else { return }
-            for subscription in subscriptions {
-                if subscription.notificationInfo?.category == NotificationHelper.Category.captionWon.rawValue && subscription.subscriptionID.contains(gameID) {
-                    
-                    // Delete the subscriptions from the cloud
-                    CKService.shared.publicDB.delete(withSubscriptionID: subscription.subscriptionID) { (_, error) in
-                        if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
-                    }
-                }
-            }
-        }
-    }
+//    // MARK: - Notifications
+//    
+//    // Subscribe to notifications for captions you created, in case you won
+//    func subscribeToNotifications(for caption: Caption) {
+//        // Set up the subscription to be alerted of any modification to the caption
+//        let predicate = NSPredicate(format: "recordID == %@", caption.recordID)
+//        let subscription = CKQuerySubscription(recordType: CaptionStrings.recordType, predicate: predicate, subscriptionID: "\(caption.game.recordID.recordName)-\(Int.random(in: 0...100000))", options: [CKQuerySubscription.Options.firesOnRecordUpdate])
+//        print("got here to \(#function) and \(subscription)")
+//        
+//        // Configure the display of the notifications
+//        let notificationInfo = CKQuerySubscription.NotificationInfo()
+//        notificationInfo.title = "Winner"
+//        notificationInfo.alertBody = "Your caption won a round in MemeThing!"
+//        notificationInfo.shouldSendContentAvailable = true
+//        notificationInfo.category = NotificationHelper.Category.captionWon.rawValue
+//        subscription.notificationInfo = notificationInfo
+//        
+//        // Save the subscription to the cloud
+//        CKService.shared.publicDB.save(subscription) { (sub, error) in
+////            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+////            // TODO: - delete this fluff later
+//        }
+//    }
+//    
+//    // Receive a notification that the current user's caption has won
+//    func receiveNotificationCaptionWon(completion: @escaping (UInt) -> Void) {
+//        guard let currentUser = UserController.shared.currentUser else { return }
+//        
+//        // Update the user's points and save the change
+//        UserController.shared.update(currentUser, points: 1) { (result) in
+//            switch result {
+//            case .success(_):
+//                // TODO: - better handling in here
+//                print("worked")
+//                
+//                // Return the success
+//                return completion(0)
+//            case .failure(let error):
+//                // Print and return the error
+//                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+//                return completion(2)
+//            }
+//        }
+//    }
+//    
+//    // Remove all the subscriptions to captions for a given game
+//    func removeAllCaptionSubscriptions(for gameID: String) {
+//        CKService.shared.publicDB.fetchAllSubscriptions { (subscriptions, error) in
+//            // Handle any errors
+//            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+//            
+//            // Find all the caption subscriptions whose IDs contain the gameID
+//            guard let subscriptions = subscriptions else { return }
+//            for subscription in subscriptions {
+//                if subscription.notificationInfo?.category == NotificationHelper.Category.captionWon.rawValue && subscription.subscriptionID.contains(gameID) {
+//                    
+//                    // Delete the subscriptions from the cloud
+//                    CKService.shared.publicDB.delete(withSubscriptionID: subscription.subscriptionID) { (_, error) in
+//                        if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

@@ -29,7 +29,7 @@ class Caption: CKCompatible {
     let author: CKRecord.Reference
     let meme: CKRecord.Reference // FIXME: - do I need this?
     let game: CKRecord.Reference
-    var didWin: Bool
+    var didWin: Bool // FIXME: - remove this
     
     // CloudKit properties
     var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .deleteSelf) }

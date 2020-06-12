@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[game status]" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5T-UQ-2vA" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="41.5" y="304" width="331" height="41"/>
+                                <rect key="frame" x="41.5" y="324.5" width="331" height="20.5"/>
                                 <color key="backgroundColor" name="yellowAccent"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -67,7 +67,6 @@
                             <constraint firstItem="gKL-sf-953" firstAttribute="top" secondItem="y5T-UQ-2vA" secondAttribute="bottom" constant="8" id="QW1-iZ-Paa"/>
                             <constraint firstItem="gKL-sf-953" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="UU3-pp-Wmn"/>
                             <constraint firstItem="MYJ-P3-iiX" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="WpU-S6-GmD"/>
-                            <constraint firstItem="y5T-UQ-2vA" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.05" id="ggI-jW-vzS"/>
                             <constraint firstItem="y5T-UQ-2vA" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="vnT-ON-WY7"/>
                             <constraint firstItem="MYJ-P3-iiX" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.05" id="wxH-kB-z7m"/>
                         </constraints>

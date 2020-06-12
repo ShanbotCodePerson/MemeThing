@@ -78,10 +78,11 @@ class User: CKCompatible {
             let email = ckRecord[UserStrings.emailKey] as? String,
             let points = ckRecord[UserStrings.pointsKey] as? Int,
             let blockedUsernames = ckRecord[UserStrings.blockedUsernamesKey] as? [String],
-            let friendsReferences = ckRecord[UserStrings.friendsReferenceKey] as? [CKRecord.Reference],
+            var friendsReferences = ckRecord[UserStrings.friendsReferenceKey] as? [CKRecord.Reference],
             let appleUserReference = ckRecord[UserStrings.appleUserReferenceKey] as? CKRecord.Reference
             else { return nil }
         
+        friendsReferences = Array(Set(friendsReferences))
         self.init(username: username, password: password, screenName: screenName, email: email, points: points, blockedUsernames: blockedUsernames, friendsReferences: friendsReferences, appleUserReference: appleUserReference, recordID: ckRecord.recordID)
     }
     
