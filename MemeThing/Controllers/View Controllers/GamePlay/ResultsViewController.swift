@@ -62,7 +62,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     print("in completion and meme id is \(meme.reference.recordID.recordName) with \(String(describing: meme.captions?.count)) captions")
                     
                     // FIXME: - apparently there's just a delay fetching from the cloud?? How to handle?
-                    sleep(1.5)
+                    sleep(2)
                     // TODO: - nested completions
                     
                     // Fetch the captions for that meme from the cloud
