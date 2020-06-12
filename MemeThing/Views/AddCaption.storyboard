@@ -69,6 +69,10 @@
                                     <constraint firstItem="7IK-AJ-lNo" firstAttribute="width" secondItem="2qC-42-JGe" secondAttribute="width" multiplier="0.9" id="akC-Fe-QSW"/>
                                 </constraints>
                             </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="GQi-c7-ih1">
+                                <rect key="frame" x="133" y="793" width="149" height="57"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>

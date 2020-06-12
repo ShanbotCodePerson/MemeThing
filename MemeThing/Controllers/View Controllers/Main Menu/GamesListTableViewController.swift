@@ -139,11 +139,11 @@ class GamesListTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if dataSource[indexPath.section].name == .games && dataSource[indexPath.section].data.count == 0 { return 50 }
-        else if dataSource[indexPath.section].name == .games { return 100 }
-        return 120
-    }
+//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        if dataSource[indexPath.section].name == .games && dataSource[indexPath.section].data.count == 0 { return 50 }
+//        else if dataSource[indexPath.section].name == .games { return 100 }
+//        return 120
+//    }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if dataSource[indexPath.section].name == .games && dataSource[indexPath.section].data.count > 0 { return true }

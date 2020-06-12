@@ -71,7 +71,8 @@ class NotificationHelper {
             //            guard let recordFields = ckNotification.recordFields,
             //                let gameReference = recordFields[CaptionStrings.gameKey] as? CKRecord.Reference
             //                else { return }
-            MemeController.shared.receiveNotificationCaptionWon(completion: completion)
+            // FIXME: - refactor this away
+//            MemeController.shared.receiveNotificationCaptionWon(completion: completion)
         case .gameEnded:
             print("received notification that game ended")
             // TODO: - display an alert if app is open?
@@ -105,4 +106,5 @@ let toCaptionsView = Notification.Name("toCaptionsView")
 let toResultsView = Notification.Name("toResultsView")
 let toNewRound = Notification.Name("toNewRound")
 let toGameOver = Notification.Name("toGameOver")
-let toMainMenu = Notification.Name("toMainMenu")
+//let toMainMenu = Notification.Name("toMainMenu")
+// TODO: - get rid of main menu notification

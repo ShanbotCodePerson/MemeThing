@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401109882487FF7600E8FCE2 /* MemeImageView.swift */; };
 		4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4011098A24882AEE00E8FCE2 /* MemeController.swift */; };
-		40225F7C2492BFFE00573B28 /* FinishedGame.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 40225F7A2492BFFE00573B28 /* FinishedGame.xcdatamodeld */; };
+		40225F7C2492BFFE00573B28 /* MemeThing.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 40225F7A2492BFFE00573B28 /* MemeThing.xcdatamodeld */; };
 		4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365B2486B898007C2601 /* NotificationHelper.swift */; };
 		403936602486E684007C2601 /* FriendRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365F2486E684007C2601 /* FriendRequestController.swift */; };
 		4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039366124870328007C2601 /* InviteFriendsTableViewController.swift */; };
@@ -304,7 +304,7 @@
 				40D003B624831B690046D64B /* Game.swift */,
 				4039CE052481E553004DA41F /* Meme.swift */,
 				40D003B824831B700046D64B /* Caption.swift */,
-				40225F7A2492BFFE00573B28 /* FinishedGame.xcdatamodeld */,
+				40225F7A2492BFFE00573B28 /* MemeThing.xcdatamodeld */,
 				4046433F2492A62B00C1961D /* FinishedGame+Convenience.swift */,
 				404643432492A67900C1961D /* CoreDataStack.swift */,
 			);
@@ -452,7 +452,7 @@
 				40C2146E247EE0F4007B7630 /* MainMenuViewController.swift in Sources */,
 				4060899F2491ABF8009635DA /* SelfSizingTableView.swift in Sources */,
 				40C2148324809A24007B7630 /* DrawingViewController.swift in Sources */,
-				40225F7C2492BFFE00573B28 /* FinishedGame.xcdatamodeld in Sources */,
+				40225F7C2492BFFE00573B28 /* MemeThing.xcdatamodeld in Sources */,
 				4039CE062481E553004DA41F /* Meme.swift in Sources */,
 				404A7D092491766500984BB7 /* ThreeLabelsTableViewCell.swift in Sources */,
 				4039CE042481DF5C004DA41F /* CanvasView.swift in Sources */,
@@ -716,13 +716,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		40225F7A2492BFFE00573B28 /* FinishedGame.xcdatamodeld */ = {
+		40225F7A2492BFFE00573B28 /* MemeThing.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				40225F7B2492BFFE00573B28 /* FinishedGame.xcdatamodel */,
 			);
 			currentVersion = 40225F7B2492BFFE00573B28 /* FinishedGame.xcdatamodel */;
-			path = FinishedGame.xcdatamodeld;
+			path = MemeThing.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

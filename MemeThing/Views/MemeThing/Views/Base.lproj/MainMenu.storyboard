@@ -534,18 +534,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="gameCell" rowHeight="82" id="Q2R-KI-GpJ" customClass="GameTableViewCell" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="82"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="gameCell" id="Q2R-KI-GpJ" customClass="GameTableViewCell" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="73"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Q2R-KI-GpJ" id="TVI-9T-J3c">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="82"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="73"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ktB-mD-9kl" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
-                                            <rect key="frame" x="10.5" y="8" width="393" height="66"/>
+                                            <rect key="frame" x="10.5" y="7.5" width="393" height="58"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="lfb-yj-H1P">
-                                                    <rect key="frame" x="6" y="0.0" width="387" height="66"/>
+                                                    <rect key="frame" x="6" y="0.0" width="387" height="58"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3rG-hb-1Jh">
                                                             <rect key="frame" x="0.0" y="0.0" width="387" height="30"/>
@@ -580,7 +580,7 @@
                                                             </subviews>
                                                         </stackView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[secondary text]" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oqM-Uc-pZi" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="38" width="387" height="28"/>
+                                                            <rect key="frame" x="0.0" y="38" width="387" height="20"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>

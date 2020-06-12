@@ -21,6 +21,12 @@ class FinishedGameController{
     
     // MARK: - CRUD Methods
     
+    // Create a finished game from a game object
+    func newFinishedGame(from game: Game) {
+        _ = FinishedGame(game: game)
+        saveToCoreData()
+    }
+    
     // Delete a finished game from the core data
     func delete(_ finishedGame: FinishedGame) {
         if let moc = finishedGame.managedObjectContext {

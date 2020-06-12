@@ -51,6 +51,7 @@ class FriendTableViewCell: UITableViewCell {
     
     private func setUpPendingFriendRequestView(for username: String) {
         pointsLabel.isHidden = true
+        buttonStackView.isHidden = false
         usernameLabel.text = "\(username) has sent you a friend request"
         contentView.backgroundColor = .systemGreen
     }
@@ -64,12 +65,14 @@ class FriendTableViewCell: UITableViewCell {
     
     private func setUpFriendView(for username: String?, points: Int?) {
         buttonStackView.isHidden = true
+        contentView.backgroundColor = .clear
         
         if let username = username {
             usernameLabel.text = username
             pointsLabel.text = "Points: \(points ?? 0)"
             pointsLabel.textAlignment = .right
             rightConstraint.constant = 6
+            pointsLabel.isHidden = false
         } else {
             usernameLabel.text = "You have not added any friends yet"
             usernameLabel.textAlignment = .center
