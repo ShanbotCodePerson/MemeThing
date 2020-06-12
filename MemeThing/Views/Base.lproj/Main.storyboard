@@ -3,7 +3,9 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -32,22 +34,25 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Lol-Sz-ptg">
-                                <rect key="frame" x="41.5" y="303" width="331" height="255"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="Lol-Sz-ptg">
+                                <rect key="frame" x="41.5" y="287" width="331" height="286.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="53Q-PZ-Azf">
-                                        <rect key="frame" x="0.0" y="0.0" width="331" height="30.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="331" height="45"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TA2-Zb-LEP">
-                                                <rect key="frame" x="0.0" y="0.0" width="165.5" height="30.5"/>
-                                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="165.5" height="45"/>
+                                                <color key="backgroundColor" systemColor="systemGray4Color" red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" name="purpleAccent"/>
                                                 <state key="normal" title="Sign Up"/>
                                                 <connections>
                                                     <action selector="signUpToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="q6s-ln-sVF"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Asi-DS-fLW">
-                                                <rect key="frame" x="165.5" y="0.0" width="165.5" height="30.5"/>
+                                                <rect key="frame" x="165.5" y="0.0" width="165.5" height="45"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" title="Log In"/>
                                                 <connections>
                                                     <action selector="loginToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="QHd-jT-mRK"/>
@@ -55,36 +60,47 @@
                                             </button>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="lFt-yw-6cG">
-                                        <rect key="frame" x="0.0" y="50.5" width="331" height="204.5"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TyY-uG-08h">
+                                        <rect key="frame" x="0.0" y="45" width="331" height="241.5"/>
                                         <subviews>
-                                            <textField opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Username Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1fD-XS-hIB" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="331" height="34.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="next" textContentType="username"/>
-                                            </textField>
-                                            <textField opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Screen Name Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qwu-Ed-SWn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="42.5" width="331" height="34.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
-                                            </textField>
-                                            <textField opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="twx-kb-Bqy" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="85" width="331" height="34.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next" textContentType="email"/>
-                                            </textField>
-                                            <textField opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Password Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IxU-ce-hvA" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="127.5" width="331" height="34.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES" textContentType="password"/>
-                                            </textField>
-                                            <textField opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ea3-oj-rzn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="170" width="331" height="34.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
-                                            </textField>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="lFt-yw-6cG">
+                                                <rect key="frame" x="8" y="20" width="315" height="202"/>
+                                                <subviews>
+                                                    <textField opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Username Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1fD-XS-hIB" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="315" height="34"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" returnKeyType="next" textContentType="username"/>
+                                                    </textField>
+                                                    <textField opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Screen Name Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qwu-Ed-SWn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="42" width="315" height="34"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
+                                                    </textField>
+                                                    <textField opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="twx-kb-Bqy" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="84" width="315" height="34"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next" textContentType="email"/>
+                                                    </textField>
+                                                    <textField opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Password Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IxU-ce-hvA" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="126" width="315" height="34"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES" textContentType="password"/>
+                                                    </textField>
+                                                    <textField opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ea3-oj-rzn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="168" width="315" height="34"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
+                                                    </textField>
+                                                </subviews>
+                                            </stackView>
                                         </subviews>
-                                    </stackView>
+                                        <color key="backgroundColor" systemColor="systemGray4Color" red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="lFt-yw-6cG" firstAttribute="centerX" secondItem="TyY-uG-08h" secondAttribute="centerX" id="2Bv-iX-UQQ"/>
+                                            <constraint firstItem="lFt-yw-6cG" firstAttribute="width" secondItem="TyY-uG-08h" secondAttribute="width" multiplier="0.95" id="891-Cf-JUc"/>
+                                            <constraint firstItem="lFt-yw-6cG" firstAttribute="centerY" secondItem="TyY-uG-08h" secondAttribute="centerY" id="JPu-cW-3hy"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cam-3L-kts" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
@@ -103,14 +119,15 @@
                         <constraints>
                             <constraint firstItem="cam-3L-kts" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.25" id="4MZ-ZF-eom"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="trailing" secondItem="Lol-Sz-ptg" secondAttribute="trailing" id="4rn-kH-aTr"/>
+                            <constraint firstItem="53Q-PZ-Azf" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.05" id="Iht-sb-58d"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.05" id="JsU-Q5-p2S"/>
                             <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.25" priority="999" id="MBw-7A-XxJ"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TCl-xO-nvx" secondAttribute="leading" symbolic="YES" id="OOa-kE-wIg"/>
+                            <constraint firstItem="Lol-Sz-ptg" firstAttribute="height" secondItem="TCl-xO-nvx" secondAttribute="height" multiplier="0.35" id="VZs-4P-vP6"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="1.75" id="Vxi-zM-2Jq"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.95" id="eqd-eO-1c3"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.8" id="hCY-QT-NOp"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RH0-Qc-nWr" secondAttribute="bottom" constant="20" id="hSm-aw-eXH"/>
-                            <constraint firstItem="lFt-yw-6cG" firstAttribute="height" secondItem="TCl-xO-nvx" secondAttribute="height" multiplier="0.25" id="qW3-tK-JSJ"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="r1A-6R-ZSp"/>
                             <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="z90-LU-jmu"/>
                         </constraints>
@@ -140,4 +157,9 @@
             <point key="canvasLocation" x="-61" y="194"/>
         </scene>
     </scenes>
+    <resources>
+        <namedColor name="purpleAccent">
+            <color red="0.25490196078431371" green="0.23529411764705882" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
 </document>

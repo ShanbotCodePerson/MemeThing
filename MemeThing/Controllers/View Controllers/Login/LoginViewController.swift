@@ -30,8 +30,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchUser()
-        
-        // Set up the UI
         setUpViews()
     }
     
@@ -130,9 +128,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     // Go straight to the main menu if the user was fetched correctly
                     self?.presentMainMenuVC()
                 case .failure(let error):
-                    // TODO: - don't present an error just because a user doesn't exist yet
-                    self?.presentErrorAlert(error)
+                    // Print and display the error (unless the error is that no user has been created yet
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    if case MemeThingError.noUserFound = error { return }
+                    self?.presentErrorAlert(error)
                 }
             }
         }
@@ -141,8 +140,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func toggleToLogin() {
         UIView.animate(withDuration: 0.2) {
             // Toggle which of the buttons is highlighted
-            self.loginToggleButton.tintColor = .lightGray
-            self.signUpToggleButton.tintColor = .systemBlue
+            self.loginToggleButton.tintColor = .purpleAccent
+            self.loginToggleButton.backgroundColor = .systemGray4
+            self.signUpToggleButton.tintColor = .lightGray
+            self.signUpToggleButton.backgroundColor = .clear
             
             // Hide all but the necessary text fields
             self.screenNameTextField.isHidden = true
@@ -159,8 +160,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func toggleToSignUp() {
         UIView.animate(withDuration: 0.2) {
             // Toggle which of the buttons is highlighted
-            self.loginToggleButton.tintColor = .systemBlue
-            self.signUpToggleButton.tintColor = .lightGray
+            self.loginToggleButton.tintColor = .lightGray
+            self.loginToggleButton.backgroundColor = .clear
+            self.signUpToggleButton.tintColor = .purpleAccent
+            self.signUpToggleButton.backgroundColor = .systemGray4
             
             // Show all the text fields
             self.screenNameTextField.isHidden = false
