@@ -19,7 +19,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var gameID: String?
-    var game: FinishedGame? { FinishedGameController.shared.finishedGames.first(where: { $0.recordID == gameID }) }
+    var game: Game? { SavedGameController.finishedGames.first(where: { $0.recordID.recordName == gameID }) }
     
     // MARK: - Lifecycle Methods
 
@@ -52,19 +52,17 @@ class GameOverViewController: UIViewController, HasAGameObject {
     @IBAction func exitGameButtonTapped(_ sender: UIButton) {
         // Delete the game from CoreData
         guard let game = game else { return }
-        FinishedGameController.shared.delete(game)
+        SavedGameController.delete(game)
         
         // Return to the main menu
         transitionToStoryboard(named: StoryboardNames.mainMenu)
     }
     
     @IBAction func playAgainButtonTapped(_ sender: UIButton) {
-        guard let finishedGame = game else { return }
-        
-        // TODO: - only the active players?
+        guard let game = game else { return }
         
         // Fetch the players who participated in the previous game
-       GameController.shared.fetchPlayers(from: finishedGame.activePlayers) { [weak self] (result) in
+        GameController.shared.fetchPlayers(from: game.activePlayersIDs) { [weak self] (result) in
             switch result {
             case .success(let players):
                 // Create a new game with all the previous (active) players
@@ -74,10 +72,10 @@ class GameOverViewController: UIViewController, HasAGameObject {
                         switch result {
                         case .success(let game):
                             // Delete the finished game from the CoreData
-                            FinishedGameController.shared.delete(finishedGame)
+                            SavedGameController.delete(game)
                             
                             // Transition to the waiting view
-                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
+                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                         case .failure(let error):
                             // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -99,7 +97,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
 extension GameOverViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return game?.numActivePlayers ?? 0
+        return game?.activePlayers.values.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

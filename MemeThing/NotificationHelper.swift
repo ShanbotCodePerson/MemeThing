@@ -19,7 +19,6 @@ class NotificationHelper {
         case friendRequestResponse = "FRIEND_REQUEST_RESPONSE"
         case newGameInvitation = "NEW_GAME_INVITATION"
         case gameUpdate = "GAME_UPDATE"
-        case captionWon = "CAPTION_WON"
         case gameEnded = "GAME_ENDED"
     }
     
@@ -41,7 +40,6 @@ class NotificationHelper {
         switch notificationType {
         case .newFriendRequest:
             print("received new friend request")
-            // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
             FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged, completion: completion)
         case .removingFriend:
@@ -49,35 +47,20 @@ class NotificationHelper {
             FriendRequestController.shared.receiveFriendRemoving(withID: recordIDChanged, completion: completion)
         case .friendRequestResponse:
             print("received response to friend request")
-            // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
             FriendRequestController.shared.receiveResponseToFriendRequest(withID: recordIDChanged, completion: completion)
         case .newGameInvitation:
             print("received new game invitation")
-            // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
             GameController.shared.receiveInvitationToGame(withID: recordIDChanged, completion: completion)
         case .gameUpdate:
             print("received update to game")
-            // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
             GameController.shared.receiveUpdateToGame(withID: recordIDChanged, completion: completion)
-        case .captionWon:
-            print("received notification that caption won")
-            // TODO: - display an alert if app is open?
-            // TODO: - have an alert waiting next time app is opened?
-            
-            //            // Parse the passed data to get the reference to the game
-            //            guard let recordFields = ckNotification.recordFields,
-            //                let gameReference = recordFields[CaptionStrings.gameKey] as? CKRecord.Reference
-            //                else { return }
-            // FIXME: - refactor this away
-//            MemeController.shared.receiveNotificationCaptionWon(completion: completion)
         case .gameEnded:
             print("received notification that game ended")
-            // TODO: - display an alert if app is open?
             // TODO: - have an alert waiting next time app is opened?
-            GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged, data: ckNotification.recordFields, completion: completion)
+            GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged, completion: completion)
         }
     }
     
@@ -106,5 +89,3 @@ let toCaptionsView = Notification.Name("toCaptionsView")
 let toResultsView = Notification.Name("toResultsView")
 let toNewRound = Notification.Name("toNewRound")
 let toGameOver = Notification.Name("toGameOver")
-//let toMainMenu = Notification.Name("toMainMenu")
-// TODO: - get rid of main menu notification

@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="FinishedGame" representedClassName="FinishedGame" syncable="YES" codeGenerationType="class">
-        <attribute name="playersIDs" attributeType="Transformable" customClassName="[String]"/>
-        <attribute name="playersNames" attributeType="Transformable" customClassName="[String]"/>
-        <attribute name="playersPoints" attributeType="Transformable" customClassName="[Int]"/>
-        <attribute name="playersStatusRawValues" attributeType="Transformable" customClassName="[Int]"/>
-        <attribute name="pointsToWin" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="recordID" attributeType="String"/>
-    </entity>
-    <entity name="Game" representedClassName="Game" syncable="YES" codeGenerationType="class">
+    <entity name="SavedGame" representedClassName="SavedGame" syncable="YES" codeGenerationType="class">
         <attribute name="gameStatusRawValue" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="leadPlayerRecordName" attributeType="String"/>
         <attribute name="memesData" optional="YES" attributeType="Binary"/>
@@ -20,7 +12,6 @@
         <attribute name="recordName" attributeType="String"/>
     </entity>
     <elements>
-        <element name="FinishedGame" positionX="-366.88671875" positionY="-132.16015625" width="128" height="133"/>
-        <element name="Game" positionX="-62.4453125" positionY="-158.39453125" width="128" height="178"/>
+        <element name="SavedGame" positionX="-62.4453125" positionY="-158.39453125" width="128" height="178"/>
     </elements>
 </model>

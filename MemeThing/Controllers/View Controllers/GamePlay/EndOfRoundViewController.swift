@@ -43,10 +43,10 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         // Transition to the captions view if the game has moved on, or to the main menu if the game has ended
         DispatchQueue.main.async {
             if sender.name == toCaptionsView {
-                self.transitionToStoryboard(named: StoryboardNames.captionView, with: game.recordID.recordName)
+                self.transitionToStoryboard(named: StoryboardNames.captionView, with: game)
             }
             else if sender.name == toGameOver {
-                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game.recordID.recordName)
+                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
             }
         }
     }
@@ -115,11 +115,11 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     
     @IBAction func continueButtonTapped(_ sender: UIButton) {
         guard let game = game, let nextDestination = nextDestination else { return }
-        transitionToStoryboard(named: nextDestination, with: game.recordID.recordName)
+        transitionToStoryboard(named: nextDestination, with: game)
     }
     
     @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
          guard let game = game, let nextDestination = nextDestination else { return }
-        transitionToStoryboard(named: nextDestination, with: game.recordID.recordName)
+        transitionToStoryboard(named: nextDestination, with: game)
     }
 }

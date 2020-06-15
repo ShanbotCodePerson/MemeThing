@@ -59,6 +59,8 @@ class InviteFriendsTableViewController: UITableViewController {
         // Get the list of selected players
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.usersFriends?[$0.row] }
+        
+        // FIXME: - lock interaction & show loading icon while game is started
 
         // Create the game object, thus saving it to the cloud and thus automatically alerting the selected players
         GameController.shared.newGame(players: friends) { [weak self] (result) in
@@ -68,7 +70,7 @@ class InviteFriendsTableViewController: UITableViewController {
                     // Transition to the waiting view, passing along the reference to the current game
                     print("got here to \(#function) and seems to have created the game successfully")
                     print("SoT is now \(String(describing: GameController.shared.currentGames?.compactMap({$0.debugging})))")
-                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
+                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)

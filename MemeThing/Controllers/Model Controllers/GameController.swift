@@ -35,7 +35,7 @@ class GameController {
         playerReferences.insert(currentUser.reference, at: 0)
         var playersNames = players.map { $0.screenName }
         playersNames.insert(currentUser.screenName, at: 0)
-        let game = Game(players: playerReferences, playersNames: playersNames, leadPlayer: currentUser.reference)
+        let game = Game(playersReferences: playerReferences, playersNames: playersNames, leadPlayer: currentUser.reference)
         
         // Save the game to the cloud
         CKService.shared.create(object: game) { [weak self] (result) in
@@ -53,6 +53,9 @@ class GameController {
                 self?.subscribeToGameEndings(for: game, user: currentUser)
                 self?.subscribeToGameUpdates(for: game, user: currentUser)
                 
+                // Save a record of the game to the Core Data
+                SavedGameController.save(game)
+                
                 // Return the success
                 return completion(.success(game))
             case .failure(let error):
@@ -69,7 +72,7 @@ class GameController {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Create the query to only look for games where the current user is a player
-        let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [currentUser.reference, GameStrings.playersKey])
+        let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [currentUser.reference, GameStrings.playersReferencesKey])
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
         
         // Fetch the data from the cloud
@@ -127,6 +130,9 @@ class GameController {
         CKService.shared.update(object: game) { [weak self] (result) in
             switch result {
             case .success(let game):
+                // Update the game in the Core Data
+                SavedGameController.update(game)
+                
                 // Update the game in the source of truth
                 // FIXME: - this probably isn't necessary
                 guard let index = self?.currentGames?.firstIndex(of: game) else { return completion(.failure(.unknownError)) }
@@ -167,7 +173,7 @@ class GameController {
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Form the predicate to look for new games that include the current user in the players list
-        let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [currentUser.reference, GameStrings.playersKey])
+        let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [currentUser.reference, GameStrings.playersReferencesKey])
         let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, options: [.firesOnRecordCreation])
         
         // Format the display of the notification
@@ -271,6 +277,8 @@ class GameController {
         // Update the game with the user's response
         game.updateStatus(of: currentUser, to: (accept ? .accepted : .denied))
         
+        // FIXME: - check that there's still enough players to be able to have a game if the rest accept
+        
         // If all players have responded to the invitation, update the status of the game
         if game.allPlayersResponded {
             // Either start the game or end it depending on enough players accepted the invitation
@@ -283,10 +291,11 @@ class GameController {
         saveChanges(to: game) { [weak self] (result) in
             switch result {
             case .success(let game):
-                // If the user accepted the invitation, subscribe them to notifications for the game
+                // If the user accepted the invitation, subscribe them to notifications for the game and save the game to the Core Data
                 if accept {
                     self?.subscribeToGameEndings(for: game, user: currentUser)
                     self?.subscribeToGameUpdates(for: game, user: currentUser)
+                    SavedGameController.save(game)
                 }
                 else {
                     // Otherwise, remove the game from the source of truth
@@ -308,34 +317,8 @@ class GameController {
     
     // FIXME: - major problems with ending game
     // Receive a notification that a game has ended
-    func receiveNotificationGameEnded(withID recordID: CKRecord.ID, data: [String : Any]?, completion: @escaping (UInt) -> Void) {
+    func receiveNotificationGameEnded(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
         print("got here to \(#function)")
-        // If the deleted game is currently in the source of truth, save it to core data
-        if let game = currentGames?.first(where: { $0.recordID.recordName == recordID.recordName }) {
-            // Create the game and save it to core data
-            _ = FinishedGame(game: game)
-            FinishedGameController.shared.saveToCoreData()
-            print("created finished game from game and there are now \(FinishedGameController.shared.finishedGames.count) finished games")
-        } else {
-            print("using notification data to create finished game")
-//            // Otherwise, parse the data from the notification
-//            guard let data = data,
-//                let players = data[GameStrings.playersKey] as? [CKRecord.Reference],
-//                let playersNames = data[GameStrings.playersNamesKey] as? [String],
-//                let playersStatus = data[GameStrings.playersNamesKey] as? [Int],
-//                let playersPoints = data[GameStrings.playersPointsKey] as? [Int],
-//                let pointsToWin = data[GameStrings.pointsToWinKey] as? Int
-//                else { return completion(2) }
-            // FIXME: - this doesn't work - need alternate solution
-//            
-//            // Create the game and save it to core data
-//            _ = FinishedGame(players: players, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, pointsToWin: pointsToWin, recordID: recordID)
-//            FinishedGameController.shared.saveToCoreData()
-//             print("created finished game from notification data and there are now \(FinishedGameController.shared.finishedGames.count) finished games")
-        }
-        
-        // TODO: - display an alert to the user
-        
         // Perform all the clean-up to finish the game
         handleEnd(for: recordID.recordName)
         
@@ -352,11 +335,12 @@ class GameController {
         fetchGame(from: recordID) { [weak self] (result) in
             switch result {
             case .success(let game):
-//                print("SoT is \(self?.currentGames?.compactMap({$0.debugging})) and game is \(game.debugging)")
                 // Update the game in the source of truth
                 guard let index = self?.currentGames?.firstIndex(of: game) else { return }
                 self?.currentGames?[index] = game
-//                print("SoT is now \(self?.currentGames?.compactMap({$0.debugging}))")
+
+                // Update the game in the Core Data
+                SavedGameController.update(game)
                 
                 // Form the notification that will tell the views how to update
                 var notificationDestination: Notification.Name?
@@ -417,6 +401,9 @@ class GameController {
             finishGame(game) { [weak self] (result) in
                 switch result {
                 case .success(_):
+                    // Delete the game from the Core Data
+                    SavedGameController.delete(game)
+                    
                     // Handle the clean up for leaving the game
                     self?.handleEnd(for: game.recordID.recordName)
                     
@@ -448,7 +435,7 @@ class GameController {
         }
     }
     
-    // Perform all the cleanup to end the game, whether it's over or the user has quit
+    // Perform all the cleanup for the user to exit the game, whether it's over or the user has quit
     func handleEnd(for gameRecordName: String) {
         guard let user = UserController.shared.currentUser else { return }
         

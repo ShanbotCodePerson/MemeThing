@@ -32,45 +32,15 @@ struct GameStrings {
 //    var points: Int
 //}
 
-extension Game: CKCompatible {
+class Game: CKCompatible {
     
     // MARK: - Properties
     
     // Game properties
-    var playersReferences: [CKRecord.Reference] {
-        get {
-            guard let playersRecordNames = playersReferencesData else { return [] }
-            let recordNames = try! JSONDecoder().decode([String].self, from: playersRecordNames)
-            return recordNames.compactMap { CKRecord.Reference(recordID: CKRecord.ID(recordName: $0), action: .none) }
-        }
-        set {
-            let arrayAsString = newValue.map({ $0.recordID.recordName }).description
-            playersReferencesData = arrayAsString.data(using: String.Encoding.utf16)
-        }
-    }
-    var playersNames: [String] {
-        get {
-            guard let playersNamesData = playersNamesData else { return [] }
-            return try! JSONDecoder().decode([String].self, from: playersNamesData)
-        }
-        set { playersNamesData = newValue.description.data(using: String.Encoding.utf16) }
-    }
-    var playersStatus: [PlayerStatus] {
-        get {
-            guard let playersStatusData = playersStatusData else { return [] }
-            let playersStatusStrings  = try! JSONDecoder().decode([String].self, from: playersStatusData)
-            return playersStatusStrings.compactMap { PlayerStatus(rawValue: Int($0)!) }
-        }
-        set { playersStatusData = newValue.description.data(using: String.Encoding.utf16) }
-    }
-    var playersPoints: [Int] {
-        get {
-            guard let playersPointsData = playersPointsData else { return [] }
-            let playersPointsStrings =  try! JSONDecoder().decode([String].self, from: playersPointsData)
-            return playersPointsStrings.compactMap { Int($0)! }
-        }
-        set { playersPointsData = newValue.description.data(using: String.Encoding.utf16) }
-    }
+    var playersReferences: [CKRecord.Reference]
+    var playersNames: [String]
+    var playersStatus: [PlayerStatus]
+    var playersPoints: [Int]
     private var playersInfo: [String : Player] {
         var result = [String : Player]()
         for index in 0..<playersReferences.count {
@@ -79,36 +49,21 @@ extension Game: CKCompatible {
         }
         return result
     }
-    var leadPlayer: CKRecord.Reference {
-        get { CKRecord.Reference(recordID: CKRecord.ID(recordName: leadPlayerRecordName!), action: .none) }
-        set { leadPlayerRecordName = newValue.recordID.recordName }
-    }
-    var memes: [CKRecord.Reference]? {
-        get {
-            guard let memesData = memesData else { return nil }
-            let recordNames = try! JSONDecoder().decode([String].self, from: memesData)
-            return recordNames.compactMap { CKRecord.Reference(recordID: CKRecord.ID(recordName: $0), action: .none) }
-        }
-        set { memesData = newValue?.description.data(using: String.Encoding.utf16) }
-    }
-    var gameStatus: GameStatus {
-        get { GameStatus(rawValue: Int(gameStatusRawValue)) ?? .gameOver }
-        set { gameStatusRawValue = Int16(newValue.rawValue) }
-    }
-
+    var leadPlayer: CKRecord.Reference
+    var memes: [CKRecord.Reference]?
+    var pointsToWin: Int
+    var gameStatus: GameStatus
+    
     // CloudKit properties
     var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .deleteSelf) }
     static var recordType: CKRecord.RecordType { GameStrings.recordType }
     var ckRecord: CKRecord { createCKRecord() }
-    var recordID: CKRecord.ID {
-        get { CKRecord.ID(recordName: recordName!) }
-        set { recordName = newValue.recordName }
-    }
+    var recordID: CKRecord.ID
     
     // Player Struct
     struct Player {
         var name: String
-        var status: Game.PlayerStatus
+        var status: PlayerStatus
         var points: Int
     }
     
@@ -160,6 +115,11 @@ extension Game: CKCompatible {
     // All the active players, filtering out those who denied the invitation or quit the game
     var activePlayers: [String : Player] {
         return playersInfo.filter { $1.status != .denied && $1.status != .quit }
+    }
+    
+    // All the references for the active players
+    var activePlayersIDs: [CKRecord.ID] {
+        return playersReferences.filter({ activePlayers.keys.contains($0.recordID.recordName) }).compactMap({ $0.recordID })
     }
     
     // All the active players, sorted in descending order by points
@@ -260,9 +220,9 @@ extension Game: CKCompatible {
         return playersNames[index]
     }
     
-    // MARK: - Initializer
+    // MARK: - Initializers
     
-    convenience init(playersReferences: [CKRecord.Reference],
+    init(playersReferences: [CKRecord.Reference],
          playersNames: [String],
          playersStatus: [PlayerStatus]? = nil,
          playersPoints: [Int]? = nil,
@@ -270,9 +230,7 @@ extension Game: CKCompatible {
          memes: [CKRecord.Reference]? = nil,
          pointsToWin: Int = 3,
          gameStatus: GameStatus = .waitingForPlayers,
-         recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString),
-         context: NSManagedObjectContext = CoreDataStack.context) {
-        self.init(context: context)
+         recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
         
         self.playersReferences = playersReferences
         self.playersNames = playersNames
@@ -289,14 +247,51 @@ extension Game: CKCompatible {
         }
         self.leadPlayer = leadPlayer
         self.memes = memes
-        self.pointsToWin = Int16(pointsToWin)
+        self.pointsToWin = pointsToWin
         self.gameStatus = gameStatus
         self.recordID = recordID
     }
     
+    convenience init?(savedGame: SavedGame) {
+        guard let playersReferenceData = savedGame.playersReferencesData,
+            let playersNamesData = savedGame.playersNamesData,
+            let playersStatusData = savedGame.playersStatusData,
+            let playersPointsData = savedGame.playersPointsData,
+            let leadPlayerRecordName = savedGame.leadPlayerRecordName,
+            let gameStatus = GameStatus(rawValue: Int(savedGame.gameStatusRawValue)),
+            let recordName = savedGame.recordName
+            else { return nil }
+        
+        do {
+            let playersReferencesStrings = try JSONDecoder().decode([String].self, from: playersReferenceData)
+            let playersReferences = playersReferencesStrings.compactMap { CKRecord.Reference(recordID: CKRecord.ID(recordName: $0), action: .none) }
+            
+            let playersNames = try JSONDecoder().decode([String].self, from: playersNamesData)
+            
+            let playersStatusStrings = try JSONDecoder().decode([String].self, from: playersStatusData)
+            let playersStatus = playersStatusStrings.compactMap { PlayerStatus(rawValue: Int($0)!) }
+            
+            let playersPointsStrings = try JSONDecoder().decode([String].self, from: playersPointsData)
+            let playersPoints = playersPointsStrings.compactMap { Int($0)! }
+            
+            let leadPlayer = CKRecord.Reference(recordID: CKRecord.ID(recordName: leadPlayerRecordName), action: .none)
+            
+            var memes: [CKRecord.Reference]?
+            if let memesData = savedGame.memesData {
+                let memesStrings = try JSONDecoder().decode([String].self, from: memesData)
+                memes = memesStrings.compactMap { CKRecord.Reference(recordID: CKRecord.ID(recordName: $0), action: .deleteSelf)
+                }
+            } else { memes = nil }
+            
+            let recordID = CKRecord.ID(recordName: recordName)
+            
+            self.init(playersReferences: playersReferences, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, leadPlayer: leadPlayer, memes: memes, pointsToWin: Int(savedGame.pointsToWin), gameStatus: gameStatus, recordID: recordID)
+        } catch { return nil }
+    }
+    
     // MARK: - Convert from CKRecord
     
-    convenience init?(ckRecord: CKRecord) {
+    required convenience init?(ckRecord: CKRecord) {
         guard let playersReferences = ckRecord[GameStrings.playersReferencesKey] as? [CKRecord.Reference],
             let playersNames = ckRecord[GameStrings.playersNamesKey] as? [String],
             let playersStatusRawValues = ckRecord[GameStrings.playersStatusKey] as? [Int],
@@ -384,9 +379,9 @@ extension Game: CKCompatible {
 
 // MARK: - Equatable
 
-extension Game {
+extension Game: Equatable {
     // Override the default equatable function
     static func == (lhs: Game, rhs: Game) -> Bool {
-        return lhs.recordName == rhs.recordName
+        return lhs.recordID.recordName == rhs.recordID.recordName
     }
 }
