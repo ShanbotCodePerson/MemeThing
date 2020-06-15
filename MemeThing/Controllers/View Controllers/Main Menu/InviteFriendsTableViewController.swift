@@ -90,6 +90,7 @@ class InviteFriendsTableViewController: UITableViewController {
         if let friends = UserController.shared.usersFriends, friends.count > 0 {
             let friend = friends[indexPath.row]
             cell.setUpUI(firstText: friend.screenName, secondText: "Points: \(friend.points)")
+            cell.isUserInteractionEnabled = true
         }
             // Insert a filler row if the user has not added any friends yet
         else {

@@ -35,7 +35,7 @@ class MemeThingButton: UIButton {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderColor: .purpleAccent, backgroundColor: .yellowAccent)
+        setUpViews(borderColor: .purpleAccent, backgroundColor: .lightBlueAccent)
     }
     
     override var intrinsicContentSize: CGSize { return addInsets(to: super.intrinsicContentSize) }

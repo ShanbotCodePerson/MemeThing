@@ -110,7 +110,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" name="yellowAccent"/>
+                            <color key="backgroundColor" name="lightBlueAccent"/>
                             <constraints>
                                 <constraint firstItem="iHb-Sl-1d7" firstAttribute="centerY" secondItem="XYk-h5-GXn" secondAttribute="centerY" id="Sir-cE-3Yl"/>
                                 <constraint firstItem="iHb-Sl-1d7" firstAttribute="centerX" secondItem="XYk-h5-GXn" secondAttribute="centerX" id="Vbr-cU-z3o"/>
@@ -651,6 +651,9 @@
     </scenes>
     <resources>
         <image name="info.circle" catalog="system" width="128" height="121"/>
+        <namedColor name="lightBlueAccent">
+            <color red="0.8666666666666667" green="0.93725490196078431" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="navBar">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

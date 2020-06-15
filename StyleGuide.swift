@@ -27,7 +27,7 @@ extension UIColor {
     static let purpleAccent = UIColor(named: "purpleAccent")!
     static let greenAccent = UIColor(named: "greenAccent")!
     static let redAccent = UIColor(named: "redAccent")!
-    static let yellowAccent = UIColor(named: "yellowAccent")!
+    static let lightBlueAccent = UIColor(named: "lightBlueAccent")!
     static let mainText = UIColor(named: "mainText")!
     static let accentText = UIColor(named: "accentText")!
     static let textBackground = UIColor(named: "textBackground")!

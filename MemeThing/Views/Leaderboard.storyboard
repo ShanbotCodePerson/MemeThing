@@ -18,7 +18,7 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[game status]" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5T-UQ-2vA" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
                                 <rect key="frame" x="41.5" y="324.5" width="331" height="20.5"/>
-                                <color key="backgroundColor" name="yellowAccent"/>
+                                <color key="backgroundColor" name="lightBlueAccent"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -91,7 +91,7 @@
         </scene>
     </scenes>
     <resources>
-        <namedColor name="yellowAccent">
+        <namedColor name="lightBlueAccent">
             <color red="0.8666666666666667" green="0.93725490196078431" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
