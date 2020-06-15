@@ -19,7 +19,10 @@ class SelfSizingTableView: UITableView {
     }
     
     override var intrinsicContentSize: CGSize {
-        let height = min(contentSize.height + 20, maxHeight) // FIXME: - need a proper height for this based on number of cells
+        let height = min(contentSize.height * 1.2, maxHeight) // FIXME: - need a proper height for this based on number of cells
+        if contentSize.height * 1.2 < maxHeight {
+            isScrollEnabled = false
+        }
         return CGSize(width: contentSize.width, height: height)
     }
 }

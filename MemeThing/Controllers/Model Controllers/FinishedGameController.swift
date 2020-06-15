@@ -41,7 +41,7 @@ class FinishedGameController{
     // MARK: - Persistence
     
     func loadFromCoreData() -> [FinishedGame] {
-        // Get the playlists from the Core Data
+        // Get the finished games from the Core Data
         let moc = CoreDataStack.context
         let fetchRequest: NSFetchRequest<FinishedGame> = FinishedGame.fetchRequest()
         let fetchResults = try? moc.fetch(fetchRequest)

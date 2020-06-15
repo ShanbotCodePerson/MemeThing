@@ -39,9 +39,8 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[waiting label]" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2uS-Iu-RsD" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[waiting label]" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2uS-Iu-RsD" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
                                 <rect key="frame" x="153.5" y="171" width="107.5" height="20.5"/>
-                                <color key="backgroundColor" name="yellowAccent"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -66,16 +65,16 @@
                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="2uS-Iu-RsD" firstAttribute="centerX" secondItem="KnZ-49-nEF" secondAttribute="centerX" id="769-XK-xvB"/>
+                            <constraint firstItem="fVo-U2-gzk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="2uS-Iu-RsD" secondAttribute="bottom" constant="12" id="7hZ-6k-kt1"/>
                             <constraint firstItem="B3v-Lj-bVa" firstAttribute="trailing" secondItem="KnZ-49-nEF" secondAttribute="trailing" id="DkW-8E-AYF"/>
                             <constraint firstItem="2zm-D0-H3U" firstAttribute="top" secondItem="VjZ-lY-irn" secondAttribute="top" id="Efl-st-KFg"/>
                             <constraint firstItem="KnZ-49-nEF" firstAttribute="trailing" secondItem="2zm-D0-H3U" secondAttribute="trailing" id="SKU-Le-5kW"/>
                             <constraint firstItem="fVo-U2-gzk" firstAttribute="height" secondItem="VjZ-lY-irn" secondAttribute="height" multiplier="0.4" id="UiJ-05-tK6"/>
                             <constraint firstItem="fVo-U2-gzk" firstAttribute="width" secondItem="VjZ-lY-irn" secondAttribute="width" multiplier="0.8" id="gR4-zT-k8F"/>
-                            <constraint firstItem="fVo-U2-gzk" firstAttribute="centerY" secondItem="KnZ-49-nEF" secondAttribute="centerY" id="gTI-cS-PDe"/>
+                            <constraint firstItem="fVo-U2-gzk" firstAttribute="centerY" secondItem="KnZ-49-nEF" secondAttribute="centerY" priority="999" id="gTI-cS-PDe"/>
                             <constraint firstItem="B3v-Lj-bVa" firstAttribute="top" secondItem="KnZ-49-nEF" secondAttribute="top" id="hPO-6r-y3f"/>
                             <constraint firstItem="B3v-Lj-bVa" firstAttribute="top" secondItem="2zm-D0-H3U" secondAttribute="bottom" constant="-10" id="ib4-m5-2x8"/>
                             <constraint firstItem="fVo-U2-gzk" firstAttribute="centerX" secondItem="KnZ-49-nEF" secondAttribute="centerX" id="li3-tj-viK"/>
-                            <constraint firstItem="fVo-U2-gzk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="2uS-Iu-RsD" secondAttribute="bottom" constant="40" id="mhM-Gx-RZ0"/>
                             <constraint firstItem="B3v-Lj-bVa" firstAttribute="leading" secondItem="KnZ-49-nEF" secondAttribute="leading" id="pwu-aJ-mCi"/>
                             <constraint firstItem="2uS-Iu-RsD" firstAttribute="centerY" secondItem="KnZ-49-nEF" secondAttribute="centerY" multiplier="0.4" priority="999" id="pz8-kn-4cF"/>
                             <constraint firstItem="2uS-Iu-RsD" firstAttribute="width" relation="lessThanOrEqual" secondItem="fVo-U2-gzk" secondAttribute="width" id="rjh-a0-QfO"/>
@@ -101,9 +100,6 @@
         </namedColor>
         <namedColor name="purpleAccent">
             <color red="0.25490196078431371" green="0.23529411764705882" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="yellowAccent">
-            <color red="0.8666666666666667" green="0.93725490196078431" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

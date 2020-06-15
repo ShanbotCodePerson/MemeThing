@@ -17,13 +17,25 @@ extension UIButton {
         self.tintColor = tintColor
         titleLabel?.font = UIFont(name: fontName, size: fontSize)
     }
+    
+    func deactivate() {
+        isUserInteractionEnabled = false
+        isEnabled = false
+        backgroundColor = backgroundColor?.withAlphaComponent(0.5)
+    }
+    
+    func activate() {
+        isUserInteractionEnabled = true
+        isEnabled = true
+        backgroundColor = backgroundColor?.withAlphaComponent(1)
+    }
 }
 
 class MemeThingButton: UIButton {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderColor: .purpleAccent, backgroundColor: .yellowAccent)
+        setUpViews(borderColor: .purpleAccent, backgroundColor: .lightBlueAccent)
     }
     
     override var intrinsicContentSize: CGSize { return addInsets(to: super.intrinsicContentSize) }

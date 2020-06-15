@@ -16,14 +16,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="poq-0W-Hh3" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="20.5" y="724.5" width="373" height="41"/>
+                                <rect key="frame" x="20.5" y="687.5" width="373" height="41"/>
                                 <state key="normal" title="Continue"/>
                                 <connections>
                                     <action selector="continueButtonTapped:" destination="UaH-bf-bqP" eventType="touchUpInside" id="ksX-tY-eV5"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[winner]" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ejJ-2K-M7N" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="20.5" y="99" width="373" height="57"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ejJ-2K-M7N" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="135.5" width="373" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -43,8 +43,8 @@
                                     <constraint firstItem="PKS-h6-6LA" firstAttribute="centerX" secondItem="ezc-7D-MKU" secondAttribute="centerX" id="r24-7k-ww5"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="caption" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5yZ-7t-7eS" customClass="MemeThingLabelBackground" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="20.5" y="659" width="373" height="57.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5yZ-7t-7eS" customClass="MemeThingCaption" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="659" width="373" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -55,7 +55,6 @@
                             <constraint firstItem="poq-0W-Hh3" firstAttribute="top" secondItem="5yZ-7t-7eS" secondAttribute="bottom" constant="8" id="33n-l1-WiN"/>
                             <constraint firstItem="poq-0W-Hh3" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="Aq9-DZ-EKo"/>
                             <constraint firstItem="ejJ-2K-M7N" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="BKK-ZJ-WPC"/>
-                            <constraint firstItem="5yZ-7t-7eS" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.07" id="Daw-qK-jfc"/>
                             <constraint firstItem="ejJ-2K-M7N" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="HSb-WH-aeX"/>
                             <constraint firstItem="poq-0W-Hh3" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="IVI-6g-rsh"/>
                             <constraint firstItem="5yZ-7t-7eS" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="OrJ-AX-VwM"/>
@@ -63,7 +62,6 @@
                             <constraint firstItem="poq-0W-Hh3" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.05" id="XUw-KC-t83"/>
                             <constraint firstItem="5yZ-7t-7eS" firstAttribute="top" secondItem="ezc-7D-MKU" secondAttribute="bottom" constant="8" id="ZPQ-Dj-3vX"/>
                             <constraint firstItem="5yZ-7t-7eS" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="ev1-Bp-j0i"/>
-                            <constraint firstItem="ejJ-2K-M7N" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.07" id="fQs-Gf-eed"/>
                             <constraint firstItem="ezc-7D-MKU" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="pPu-vO-uhz"/>
                             <constraint firstItem="ezc-7D-MKU" firstAttribute="top" secondItem="ejJ-2K-M7N" secondAttribute="bottom" constant="8" id="q5c-V4-5x1"/>
                             <constraint firstItem="ezc-7D-MKU" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="rmb-Th-0Yr"/>

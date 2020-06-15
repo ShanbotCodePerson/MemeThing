@@ -9,6 +9,7 @@
 import UIKit
 
 extension UILabel {
+    // TODO: - refactor - probably don't need border here
     func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 0, borderColor: UIColor = .purpleAccent, backgroundColor: UIColor? = .purpleAccent, opacity: CGFloat = 0.6, textColor: UIColor = .mainText, fontSize: CGFloat = 20, fontName: String = FontNames.mainFont) {
         addCornerRadius(cornerRadius)
         addBorder(width: borderWidth, color: borderColor)
@@ -45,27 +46,17 @@ class MemeThingLabelBackground: UILabel {
     }
 }
 
-class MemeThingLabelBackgroundLight: UILabel {
+class MemeThingLabelBackgroundLight: MemeThingLabelBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderWidth: 2, backgroundColor: .yellowAccent, opacity: 1, textColor: .purpleAccent)
+        setUpViews(borderWidth: 2, backgroundColor: .lightBlueAccent, opacity: 1, textColor: .purpleAccent)
     }
-    
-    override func drawText(in rect: CGRect) {
-        let insets = UIEdgeInsets(top: 3, left: 6, bottom: 3, right: 6)
-        super.drawText(in: rect.inset(by: insets))
-    }
-    
-    override var intrinsicContentSize: CGSize { return addInsets(to: super.intrinsicContentSize) }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return addInsets(to: super.sizeThatFits(size))
-    }
-    
-    private func addInsets(to size: CGSize) -> CGSize {
-        let width = size.width + 12
-        let height = size.height + 6
-        return CGSize(width: width, height: height)
+}
+
+class MemeThingCaption: MemeThingLabelBackground {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        addBorder()
     }
 }
 

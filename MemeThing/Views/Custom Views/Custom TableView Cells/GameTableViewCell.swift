@@ -35,18 +35,21 @@ class GameTableViewCell: UITableViewCell {
     
     // MARK: - Set Up UI
     
-    func setUpViews(in section: GamesListTableViewController.SectionName, with game: Game?) {
+    func setUpViews(in section: GamesListTableViewController.SectionName, with game: Any?) {
         selectionStyle = .none
         
         switch section {
         case .pendingInvitations:
-            guard let game = game else { return }
+            guard let game = game as? Game else { return }
             setUpPendingInvitationView(for: game)
         case .waitingForResponses:
-            guard let game = game else { return }
+            guard let game = game as? Game else { return }
             setUpWaitingForResponseView(for: game)
         case .games:
             setUpActiveGameView(for: game)
+        case .finishedGames:
+            guard let game = game as? FinishedGame else { return }
+            setUpFinishedGameView(for: game)
         }
     }
     
@@ -64,10 +67,10 @@ class GameTableViewCell: UITableViewCell {
         contentView.backgroundColor = .systemRed
     }
     
-    private func setUpActiveGameView(for game: Game?) {
+    private func setUpActiveGameView(for game: Any?) {
         buttonStackView.isHidden = true
         contentView.backgroundColor = .clear
-        if let game = game {
+        if let game = game as? Game {
             mainTextLabel.text = "You are playing a game with \(game.listOfPlayerNames)"
             secondaryTextLabel.text = game.gameStatusDescription
             secondaryTextLabel.isHidden = false
@@ -76,5 +79,12 @@ class GameTableViewCell: UITableViewCell {
             mainTextLabel.text = "You are not currently playing any games"
             mainTextLabel.textAlignment = .center
         }
+    }
+    
+    private func setUpFinishedGameView(for game: FinishedGame) {
+        buttonStackView.isHidden = true
+        contentView.backgroundColor = .lightGray
+        mainTextLabel.text = "You played a game with \(game.listOfPlayerNames)"
+        secondaryTextLabel.text = game.gameStatusDescription
     }
 }

@@ -77,7 +77,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
                             FinishedGameController.shared.delete(finishedGame)
                             
                             // Transition to the waiting view
-                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
                         case .failure(let error):
                             // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

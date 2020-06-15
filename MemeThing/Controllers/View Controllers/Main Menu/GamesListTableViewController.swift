@@ -16,10 +16,11 @@ class GamesListTableViewController: UITableViewController {
         case pendingInvitations = "Pending Invitations to Games"
         case waitingForResponses = "Waiting for Responses"
         case games = "Active Games"
+        case finishedGames = "Finished Games"
     }
     
-    var dataSource: [(name: SectionName, data: [Game])] {
-        var arrays = [(SectionName, [Game])]()
+    var dataSource: [(name: SectionName, data: [Any])] {
+        var arrays = [(SectionName, [Any])]()
         
         guard let currentUser = UserController.shared.currentUser,
             let currentGames = GameController.shared.currentGames
@@ -30,13 +31,12 @@ class GamesListTableViewController: UITableViewController {
         let waitingForResponse = unstartedGames.filter { $0.leadPlayer == currentUser.reference }
         let activeGames = currentGames.filter { $0.gameStatus != .waitingForPlayers }
         
-        if pendingInvitations.count > 0 {
-            arrays.append((name: .pendingInvitations, data: pendingInvitations))
-        }
-        if waitingForResponse.count > 0 {
-            arrays.append((name: .waitingForResponses, data: waitingForResponse))
-        }
+        if pendingInvitations.count > 0 { arrays.append((name: .pendingInvitations, data: pendingInvitations)) }
+        if waitingForResponse.count > 0 { arrays.append((name: .waitingForResponses, data: waitingForResponse)) }
         arrays.append((name: .games, data: activeGames))
+        
+        let finishedGames = FinishedGameController.shared.finishedGames
+        if finishedGames.count > 0 { arrays.append((name: .finishedGames, data: finishedGames)) }
         
         return arrays
     }
@@ -139,14 +139,9 @@ class GamesListTableViewController: UITableViewController {
         return cell
     }
     
-//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if dataSource[indexPath.section].name == .games && dataSource[indexPath.section].data.count == 0 { return 50 }
-//        else if dataSource[indexPath.section].name == .games { return 100 }
-//        return 120
-//    }
-    
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if dataSource[indexPath.section].name == .games && dataSource[indexPath.section].data.count > 0 { return true }
+        if dataSource[indexPath.section].name == .finishedGames { return true }
         return false
     }
     
@@ -155,10 +150,12 @@ class GamesListTableViewController: UITableViewController {
             // Get the reference to the game
             let gameToQuit = dataSource[indexPath.section].data[indexPath.row]
             
-            // If the game is already over, allow the user to delete it without confirming
-            if gameToQuit.gameStatus == .gameOver {
-                quitGame(gameToQuit)
-            } else {
+            if let gameToQuit = gameToQuit as? Game {
+                // If the game is already over, allow the user to delete it without confirming
+                if gameToQuit.gameStatus == .gameOver {
+                    quitGame(gameToQuit)
+                }
+                
                 // Otherwise, present an alert to confirm the user really wants to quit the game
                 presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to quit the game you're playing with \(gameToQuit.listOfPlayerNames)?") {
                     
@@ -166,6 +163,14 @@ class GamesListTableViewController: UITableViewController {
                     self.quitGame(gameToQuit)
                 }
             }
+            
+            // If the game is one of the old finished games, delete it without showing an alert
+            if let gameToQuit = gameToQuit as? FinishedGame {
+                FinishedGameController.shared.delete(gameToQuit)
+            }
+            
+            // Refresh the tableview
+            tableView.reloadData()
         }
     }
     
@@ -181,28 +186,34 @@ class GamesListTableViewController: UITableViewController {
         let game = dataSource[indexPath.section].data[indexPath.row]
         
         // Go to the correct page of the gameplay based on the status of the game and whether or not the user is the lead player
-        switch game.gameStatus {
-        case .waitingForPlayers:
-            transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-        case .waitingForDrawing:
-            if (game.leadPlayer == currentUser.reference) {
-                transitionToStoryboard(named: StoryboardNames.drawingView, with: game)
+        if let game = game as? Game {
+            switch game.gameStatus {
+            case .waitingForPlayers:
+                transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
+            case .waitingForDrawing:
+                if (game.leadPlayer == currentUser.reference) {
+                    transitionToStoryboard(named: StoryboardNames.drawingView, with: game.recordID.recordName)
+                }
+                else {
+                    transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
+                }
+            case .waitingForCaptions:
+                if (game.leadPlayer == currentUser.reference) || game.getStatus(of: currentUser) == .sentCaption {
+                    transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
+                } else {
+                    transitionToStoryboard(named: StoryboardNames.captionView, with: game.recordID.recordName)
+                }
+            case .waitingForResult:
+                transitionToStoryboard(named: StoryboardNames.resultsView, with: game.recordID.recordName)
+            case .waitingForNextRound:
+                transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
+            case .gameOver:
+                transitionToStoryboard(named: StoryboardNames.gameOverView, with: game.recordID.recordName)
             }
-            else {
-                transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-            }
-        case .waitingForCaptions:
-            if (game.leadPlayer == currentUser.reference) || game.getStatus(of: currentUser) == .sentCaption {
-                transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-            } else {
-                transitionToStoryboard(named: StoryboardNames.captionView, with: game)
-            }
-        case .waitingForResult:
-            transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
-        case .waitingForNextRound:
-            transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-        case .gameOver:
-            transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+        }
+        else if let game = game as? FinishedGame {
+            guard let recordName = game.recordID else { return }
+            transitionToStoryboard(named: StoryboardNames.gameOverView, with: recordName)
         }
     }
 }
@@ -214,9 +225,9 @@ extension GamesListTableViewController: GameTableViewCellDelegate {
     func respondToGameInvitation(for cell: GameTableViewCell, accept: Bool) {
         // Get the reference to the game that was responded to
         guard let indexPath = tableView.indexPath(for: cell),
-            dataSource[indexPath.section].name == .pendingInvitations
+            dataSource[indexPath.section].name == .pendingInvitations,
+        let game = dataSource[indexPath.section].data[indexPath.row] as? Game
             else { return }
-        let game = dataSource[indexPath.section].data[indexPath.row]
         
         // Respond to the game invitation
         GameController.shared.respondToInvitation(to: game, accept: accept) { [weak self] (result) in
@@ -224,7 +235,7 @@ extension GamesListTableViewController: GameTableViewCellDelegate {
                 switch result {
                 case .success(_):
                     // If the user accepted the invitation, transition them to the waiting view until all users have responded
-                    if accept { self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game) }
+                    if accept { self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName) }
                 case .failure(let error):
                     // Otherwise, display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
