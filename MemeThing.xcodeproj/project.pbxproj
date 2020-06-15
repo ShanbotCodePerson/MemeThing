@@ -302,10 +302,10 @@
 				40C21473247EE939007B7630 /* User.swift */,
 				40D003BF24844C110046D64B /* FriendRequest.swift */,
 				40D003B624831B690046D64B /* Game.swift */,
+				4046433F2492A62B00C1961D /* FinishedGame+Convenience.swift */,
+				40225F7A2492BFFE00573B28 /* MemeThing.xcdatamodeld */,
 				4039CE052481E553004DA41F /* Meme.swift */,
 				40D003B824831B700046D64B /* Caption.swift */,
-				40225F7A2492BFFE00573B28 /* MemeThing.xcdatamodeld */,
-				4046433F2492A62B00C1961D /* FinishedGame+Convenience.swift */,
 				404643432492A67900C1961D /* CoreDataStack.swift */,
 			);
 			path = Models;

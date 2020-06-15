@@ -17,7 +17,7 @@ class CKService: CKServicing {
 // MARK: - CKCompatible Protocol
 
 // Define the characteristics of a generic type that can be saved to CloudKit
-protocol CKCompatible {
+protocol CKCompatible: class {
     static var recordType: CKRecord.RecordType { get }
     var ckRecord: CKRecord { get }
     var recordID: CKRecord.ID { get set }

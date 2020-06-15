@@ -8,12 +8,13 @@
 
 import Foundation
 import CloudKit
+import CoreData
 
 // MARK: - String Constants
 
 struct GameStrings {
     static let recordType = "Game"
-    static let playersKey = "players"
+    static let playersReferencesKey = "playersReferences"
     static let playersNamesKey = "playersNames"
     static let playersStatusKey = "playersStatus"
     static let playersPointsKey = "playersPoints"
@@ -25,32 +26,91 @@ struct GameStrings {
 
 // MARK: - Helper Struct
 
-struct Player {
-    var name: String
-    var status: Game.PlayerStatus
-    var points: Int
-}
+//struct Player {
+//    var name: String
+//    var status: Game.PlayerStatus
+//    var points: Int
+//}
 
-class Game: CKCompatible {
+extension Game: CKCompatible {
     
     // MARK: - Properties
     
     // Game properties
-    var players: [CKRecord.Reference]
-    var playersNames: [String]
-    var playersStatus: [PlayerStatus]
-    var playersPoints: [Int]
-    private var playersInfo: [String : Player]
-    var leadPlayer: CKRecord.Reference
-    var memes: [CKRecord.Reference]? // FIXME: -should this be a reference or list of meme objects?
-    let pointsToWin: Int
-    var gameStatus: GameStatus
-    
+    var playersReferences: [CKRecord.Reference] {
+        get {
+            guard let playersRecordNames = playersReferencesData else { return [] }
+            let recordNames = try! JSONDecoder().decode([String].self, from: playersRecordNames)
+            return recordNames.compactMap { CKRecord.Reference(recordID: CKRecord.ID(recordName: $0), action: .none) }
+        }
+        set {
+            let arrayAsString = newValue.map({ $0.recordID.recordName }).description
+            playersReferencesData = arrayAsString.data(using: String.Encoding.utf16)
+        }
+    }
+    var playersNames: [String] {
+        get {
+            guard let playersNamesData = playersNamesData else { return [] }
+            return try! JSONDecoder().decode([String].self, from: playersNamesData)
+        }
+        set { playersNamesData = newValue.description.data(using: String.Encoding.utf16) }
+    }
+    var playersStatus: [PlayerStatus] {
+        get {
+            guard let playersStatusData = playersStatusData else { return [] }
+            let playersStatusStrings  = try! JSONDecoder().decode([String].self, from: playersStatusData)
+            return playersStatusStrings.compactMap { PlayerStatus(rawValue: Int($0)!) }
+        }
+        set { playersStatusData = newValue.description.data(using: String.Encoding.utf16) }
+    }
+    var playersPoints: [Int] {
+        get {
+            guard let playersPointsData = playersPointsData else { return [] }
+            let playersPointsStrings =  try! JSONDecoder().decode([String].self, from: playersPointsData)
+            return playersPointsStrings.compactMap { Int($0)! }
+        }
+        set { playersPointsData = newValue.description.data(using: String.Encoding.utf16) }
+    }
+    private var playersInfo: [String : Player] {
+        var result = [String : Player]()
+        for index in 0..<playersReferences.count {
+            let player = Player(name: playersNames[index], status: self.playersStatus[index], points: self.playersPoints[index])
+            result[playersReferences[index].recordID.recordName] = player
+        }
+        return result
+    }
+    var leadPlayer: CKRecord.Reference {
+        get { CKRecord.Reference(recordID: CKRecord.ID(recordName: leadPlayerRecordName!), action: .none) }
+        set { leadPlayerRecordName = newValue.recordID.recordName }
+    }
+    var memes: [CKRecord.Reference]? {
+        get {
+            guard let memesData = memesData else { return nil }
+            let recordNames = try! JSONDecoder().decode([String].self, from: memesData)
+            return recordNames.compactMap { CKRecord.Reference(recordID: CKRecord.ID(recordName: $0), action: .none) }
+        }
+        set { memesData = newValue?.description.data(using: String.Encoding.utf16) }
+    }
+    var gameStatus: GameStatus {
+        get { GameStatus(rawValue: Int(gameStatusRawValue)) ?? .gameOver }
+        set { gameStatusRawValue = Int16(newValue.rawValue) }
+    }
+
     // CloudKit properties
     var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .deleteSelf) }
     static var recordType: CKRecord.RecordType { GameStrings.recordType }
     var ckRecord: CKRecord { createCKRecord() }
-    var recordID: CKRecord.ID
+    var recordID: CKRecord.ID {
+        get { CKRecord.ID(recordName: recordName!) }
+        set { recordName = newValue.recordName }
+    }
+    
+    // Player Struct
+    struct Player {
+        var name: String
+        var status: Game.PlayerStatus
+        var points: Int
+    }
     
     // Player Status
     enum PlayerStatus: Int {
@@ -94,7 +154,7 @@ class Game: CKCompatible {
     
     // TODO: - delete this later, just helpful for testing
     var debugging: String {
-        return "Game with \(playersNames.joined(separator: ", ")) at status \(playersStatus) and points \(playersPoints). Status is \(gameStatus). \(memes?.count) memes."
+        return "Game with \(playersNames.joined(separator: ", ")) at status \(playersStatus) and points \(playersPoints). Status is \(gameStatus). \(String(describing: memes?.count)) memes."
     }
     
     // All the active players, filtering out those who denied the invitation or quit the game
@@ -126,7 +186,7 @@ class Game: CKCompatible {
     
     // The name of the lead player
     var leadPlayerName: String {
-        guard let index = players.firstIndex(of: leadPlayer) else { return "" }
+        guard let index = playersReferences.firstIndex(of: leadPlayer) else { return "" }
         return playersNames[index]
     }
     
@@ -202,7 +262,7 @@ class Game: CKCompatible {
     
     // MARK: - Initializer
     
-    init(players: [CKRecord.Reference],
+    convenience init(playersReferences: [CKRecord.Reference],
          playersNames: [String],
          playersStatus: [PlayerStatus]? = nil,
          playersPoints: [Int]? = nil,
@@ -210,40 +270,34 @@ class Game: CKCompatible {
          memes: [CKRecord.Reference]? = nil,
          pointsToWin: Int = 3,
          gameStatus: GameStatus = .waitingForPlayers,
-         recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+         recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString),
+         context: NSManagedObjectContext = CoreDataStack.context) {
+        self.init(context: context)
         
-        self.players = players
+        self.playersReferences = playersReferences
         self.playersNames = playersNames
         if let playersStatus = playersStatus { self.playersStatus = playersStatus }
         else {
             // By default, the initial status of all players is waiting, except for the lead player (who starts off at the first index)
-            self.playersStatus = Array(repeating: .invited, count: players.count - 1)
+            self.playersStatus = Array(repeating: .invited, count: playersReferences.count - 1)
             self.playersStatus.insert(.accepted, at: 0)
         }
         if let playersPoints = playersPoints { self.playersPoints = playersPoints }
         else {
             // By default, all players start with zero points
-            self.playersPoints = Array(repeating: 0, count: players.count)
+            self.playersPoints = Array(repeating: 0, count: playersReferences.count)
         }
-        
-        var playersInfo = [String : Player]()
-        for index in 0..<players.count {
-            let player = Player(name: playersNames[index], status: self.playersStatus[index], points: self.playersPoints[index])
-            playersInfo[players[index].recordID.recordName] = player
-        }
-        self.playersInfo = playersInfo
-        
         self.leadPlayer = leadPlayer
         self.memes = memes
-        self.pointsToWin = pointsToWin
+        self.pointsToWin = Int16(pointsToWin)
         self.gameStatus = gameStatus
         self.recordID = recordID
     }
     
     // MARK: - Convert from CKRecord
     
-    required convenience init?(ckRecord: CKRecord) {
-        guard let players = ckRecord[GameStrings.playersKey] as? [CKRecord.Reference],
+    convenience init?(ckRecord: CKRecord) {
+        guard let playersReferences = ckRecord[GameStrings.playersReferencesKey] as? [CKRecord.Reference],
             let playersNames = ckRecord[GameStrings.playersNamesKey] as? [String],
             let playersStatusRawValues = ckRecord[GameStrings.playersStatusKey] as? [Int],
             let playersPoints = ckRecord[GameStrings.playersPointsKey] as? [Int],
@@ -255,7 +309,7 @@ class Game: CKCompatible {
         let memes = ckRecord[GameStrings.memesKey] as? [CKRecord.Reference]
         let playersStatus = playersStatusRawValues.compactMap({ PlayerStatus(rawValue: $0) })
         
-        self.init(players: players, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, leadPlayer: leadPlayer, memes: memes, pointsToWin: pointsToWin, gameStatus: gameStatus, recordID: ckRecord.recordID)
+        self.init(playersReferences: playersReferences, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, leadPlayer: leadPlayer, memes: memes, pointsToWin: pointsToWin, gameStatus: gameStatus, recordID: ckRecord.recordID)
     }
     
     // MARK: - Convert to CKRecord
@@ -264,7 +318,7 @@ class Game: CKCompatible {
         let record = CKRecord(recordType: GameStrings.recordType, recordID: recordID)
         
         record.setValuesForKeys([
-            GameStrings.playersKey : players,
+            GameStrings.playersReferencesKey : playersReferences,
             GameStrings.playersNamesKey : playersNames,
             GameStrings.playersStatusKey : playersStatus.compactMap({ $0.rawValue }),
             GameStrings.playersPointsKey : playersPoints,
@@ -288,14 +342,14 @@ class Game: CKCompatible {
     
     // Quickly update a player's status
     func updateStatus(of player: User, to status: PlayerStatus) {
-        guard let index = players.firstIndex(of: player.reference) else { return }
+        guard let index = playersReferences.firstIndex(of: player.reference) else { return }
         playersStatus[index] = status
     }
     
     // Quickly update a players points when their caption is selected as winner
     func winningCaptionSelected(as caption: Caption) {
         // Update the points of the player who submitted that caption
-        guard let index = players.firstIndex(of: caption.author) else { return }
+        guard let index = playersReferences.firstIndex(of: caption.author) else { return }
         playersPoints[index] += 1
         
         // Check to see if this results in an overall winner of the game, and update the status of the game accordingly
@@ -305,7 +359,7 @@ class Game: CKCompatible {
     
     // Quickly get the name of a player from their CKReference
     func getName(of reference: CKRecord.Reference) -> String {
-        guard let index = players.firstIndex(of: reference) else { return "ERROR" }
+        guard let index = playersReferences.firstIndex(of: reference) else { return "ERROR" }
         return playersNames[index]
     }
     
@@ -315,9 +369,9 @@ class Game: CKCompatible {
         gameStatus = .waitingForDrawing
         
         // Increment the lead player, looping back to the beginning if necessary
-        guard var index = players.firstIndex(of: leadPlayer) else { return }
-        index = (index + 1) % players.count
-        leadPlayer = players[index]
+        guard var index = playersReferences.firstIndex(of: leadPlayer) else { return }
+        index = (index + 1) % playersReferences.count
+        leadPlayer = playersReferences[index]
         
         // Reset the status of all the active players
         for index in 0..<playersStatus.count {
@@ -330,9 +384,9 @@ class Game: CKCompatible {
 
 // MARK: - Equatable
 
-extension Game: Equatable {
-    
+extension Game {
+    // Override the default equatable function
     static func == (lhs: Game, rhs: Game) -> Bool {
-        return lhs.recordID.recordName == rhs.recordID.recordName
+        return lhs.recordName == rhs.recordName
     }
 }

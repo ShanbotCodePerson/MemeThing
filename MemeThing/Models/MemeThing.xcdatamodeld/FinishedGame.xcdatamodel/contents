@@ -8,7 +8,19 @@
         <attribute name="pointsToWin" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="recordID" attributeType="String"/>
     </entity>
+    <entity name="Game" representedClassName="Game" syncable="YES" codeGenerationType="class">
+        <attribute name="gameStatusRawValue" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="leadPlayerRecordName" attributeType="String"/>
+        <attribute name="memesData" optional="YES" attributeType="Binary"/>
+        <attribute name="playersNamesData" attributeType="Binary"/>
+        <attribute name="playersPointsData" attributeType="Binary"/>
+        <attribute name="playersReferencesData" attributeType="Binary"/>
+        <attribute name="playersStatusData" attributeType="Binary"/>
+        <attribute name="pointsToWin" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="recordName" attributeType="String"/>
+    </entity>
     <elements>
-        <element name="FinishedGame" positionX="-63" positionY="-18" width="128" height="133"/>
+        <element name="FinishedGame" positionX="-366.88671875" positionY="-132.16015625" width="128" height="133"/>
+        <element name="Game" positionX="-62.4453125" positionY="-158.39453125" width="128" height="178"/>
     </elements>
 </model>
