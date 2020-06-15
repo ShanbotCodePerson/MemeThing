@@ -17,6 +17,18 @@ extension UIButton {
         self.tintColor = tintColor
         titleLabel?.font = UIFont(name: fontName, size: fontSize)
     }
+    
+    func deactivate() {
+        isUserInteractionEnabled = false
+        isEnabled = false
+        backgroundColor = backgroundColor?.withAlphaComponent(0.5)
+    }
+    
+    func activate() {
+        isUserInteractionEnabled = true
+        isEnabled = true
+        backgroundColor = backgroundColor?.withAlphaComponent(1)
+    }
 }
 
 class MemeThingButton: UIButton {

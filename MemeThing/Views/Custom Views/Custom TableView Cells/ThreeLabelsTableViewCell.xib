@@ -47,7 +47,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="IMy-6n-dg6" firstAttribute="leading" secondItem="77y-AD-EAl" secondAttribute="leading" constant="6" id="JUL-Gu-MM9"/>
-                            <constraint firstAttribute="height" constant="40" id="ll5-73-aLm"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="Ucg-Cc-Ngy"/>
                             <constraint firstAttribute="bottom" secondItem="IMy-6n-dg6" secondAttribute="bottom" id="ozo-R2-6Lx"/>
                             <constraint firstItem="IMy-6n-dg6" firstAttribute="top" secondItem="77y-AD-EAl" secondAttribute="top" id="yRr-8x-6uX"/>
                             <constraint firstAttribute="trailing" secondItem="IMy-6n-dg6" secondAttribute="trailing" constant="6" id="zIp-7f-9Fm"/>

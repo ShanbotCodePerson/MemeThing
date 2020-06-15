@@ -26,7 +26,7 @@ class InviteFriendsTableViewController: UITableViewController {
         loadData()
         
         // Start off with the button disabled until enough players have been selected for the game
-        toggleStartButtonEnabled(to: false)
+        startGameButton.deactivate()
     }
     
     // MARK: - Helper Methods
@@ -53,22 +53,14 @@ class InviteFriendsTableViewController: UITableViewController {
         }
     }
     
-    func toggleStartButtonEnabled(to enabled: Bool) {
-        startGameButton.isEnabled = enabled
-        UIView.animate(withDuration: 0.1) {
-            self.startGameButton.backgroundColor = UIColor.greenAccent.withAlphaComponent(enabled ? 1 : 0.5)
-        }
-    }
-    
     // MARK: - Actions
     
     @IBAction func startGameButtonTapped(_ sender: UIButton) {
         // Get the list of selected players
-        // TODO: - display an alert if user hasn't selected anything?
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.usersFriends?[$0.row] }
 
-        // Create the game object, thus saving it to the cloud and automatically alerting the selected players
+        // Create the game object, thus saving it to the cloud and thus automatically alerting the selected players
         GameController.shared.newGame(players: friends) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
@@ -76,7 +68,7 @@ class InviteFriendsTableViewController: UITableViewController {
                     // Transition to the waiting view, passing along the reference to the current game
                     print("got here to \(#function) and seems to have created the game successfully")
                     print("SoT is now \(String(describing: GameController.shared.currentGames?.compactMap({$0.debugging})))")
-                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
@@ -111,16 +103,16 @@ class InviteFriendsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Check how many rows are selected and enable or disable the start game button accordingly
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
-            toggleStartButtonEnabled(to: true)
+            startGameButton.activate()
         }
-        else { toggleStartButtonEnabled(to: false) }
+        else  { startGameButton.deactivate() }
     }
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         // Check how many rows are selected and enable or disable the start game button accordingly
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
-            toggleStartButtonEnabled(to: true)
+            startGameButton.activate()
         }
-        else { toggleStartButtonEnabled(to: false) }
+        else { startGameButton.deactivate() }
     }
 }

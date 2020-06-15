@@ -196,8 +196,6 @@ class GameController {
         notificationInfo.title = "Game Ended"
         notificationInfo.alertBody = "Your game on MemeThing has finished"
         notificationInfo.shouldSendContentAvailable = true
-//        notificationInfo.desiredKeys = [GameStrings.playersKey, GameStrings.playersNamesKey, GameStrings.playersStatusKey, GameStrings.playersPointsKey, GameStrings.pointsToWinKey]
-        notificationInfo.desiredKeys = [GameStrings.pointsToWinKey]
         notificationInfo.category = NotificationHelper.Category.gameEnded.rawValue
         subscription.notificationInfo = notificationInfo
         
@@ -320,19 +318,20 @@ class GameController {
             print("created finished game from game and there are now \(FinishedGameController.shared.finishedGames.count) finished games")
         } else {
             print("using notification data to create finished game")
-            // Otherwise, parse the data from the notification
-            guard let data = data,
-                let players = data[GameStrings.playersKey] as? [CKRecord.Reference],
-                let playersNames = data[GameStrings.playersNamesKey] as? [String],
-                let playersStatus = data[GameStrings.playersNamesKey] as? [Int],
-                let playersPoints = data[GameStrings.playersPointsKey] as? [Int],
-                let pointsToWin = data[GameStrings.pointsToWinKey] as? Int
-                else { return completion(2) }
-            
-            // Create the game and save it to core data
-            _ = FinishedGame(players: players, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, pointsToWin: pointsToWin, recordID: recordID)
-            FinishedGameController.shared.saveToCoreData()
-             print("created finished game from notification data and there are now \(FinishedGameController.shared.finishedGames.count) finished games")
+//            // Otherwise, parse the data from the notification
+//            guard let data = data,
+//                let players = data[GameStrings.playersKey] as? [CKRecord.Reference],
+//                let playersNames = data[GameStrings.playersNamesKey] as? [String],
+//                let playersStatus = data[GameStrings.playersNamesKey] as? [Int],
+//                let playersPoints = data[GameStrings.playersPointsKey] as? [Int],
+//                let pointsToWin = data[GameStrings.pointsToWinKey] as? Int
+//                else { return completion(2) }
+            // FIXME: - this doesn't work - need alternate solution
+//            
+//            // Create the game and save it to core data
+//            _ = FinishedGame(players: players, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, pointsToWin: pointsToWin, recordID: recordID)
+//            FinishedGameController.shared.saveToCoreData()
+//             print("created finished game from notification data and there are now \(FinishedGameController.shared.finishedGames.count) finished games")
         }
         
         // TODO: - display an alert to the user

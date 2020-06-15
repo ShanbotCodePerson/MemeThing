@@ -61,6 +61,13 @@ extension FinishedGame {
         return result
     }
     
+    // A nicely formatted list of the names of the active game participants, minus the current user
+    var listOfPlayerNames: String {
+        guard let currentUser = UserController.shared.currentUser else { return "ERROR" }
+        let otherPlayers = playersNames?.filter({ $0 != currentUser.screenName })
+        return otherPlayers?.joined(separator: ", ") ?? "ERROR"
+    }
+    
     // The name of the game winner
     private var gameWinner: String? {
         // Check if the highest score has reached the points needed to win, and if so, return the reference to that player

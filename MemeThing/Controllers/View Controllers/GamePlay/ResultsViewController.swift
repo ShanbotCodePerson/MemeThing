@@ -21,6 +21,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var constraintToButton: NSLayoutConstraint!
     @IBOutlet weak var constraintToSafeArea: NSLayoutConstraint!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -89,6 +90,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     func setUpViews() {
         view.backgroundColor = .background
+        loadingIndicator.isHidden = true
         
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
         
@@ -165,7 +167,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game.recordID.recordName)
     }
     
     @IBAction func chooseWinnerButtonTapped(_ sender: UIButton) {
@@ -174,57 +176,80 @@ class ResultsViewController: UIViewController, HasAGameObject {
         // Get the caption based on which "page" the view is on at the time the button is clicked
         let caption = captions[pageControl.currentPage]
         
+        // Display the loading icon while the image saves
+        loadingIndicator.startAnimating()
+        loadingIndicator.isHidden = false
+        
+        // Don't allow the user to interact with the screen while the save is in progress
+        chooseWinnerButton.deactivate()
+        nextButton.deactivate()
+        previousButton.deactivate()
+        
         // Update the data in the meme and the caption
         MemeController.shared.setWinningCaption(to: caption, for: meme) { [weak self] (result) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(_):
-                    // TODO: - nested completions
-                    
-                    // Reset the game for another round
-                    game.resetGame()
-                    
-                    // Increment the points of the player who wrote that caption and update the game's status based on whether there is an overall winner or not
-                    game.winningCaptionSelected(as: caption)
-                    
-                    // Save the updated game to the cloud
-                    GameController.shared.saveChanges(to: game) { (result) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(_):
-                                // Decide on the next view to go to (back to the waiting view if a new round is starting, or the game over page)
-                                if game.gameStatus == .gameOver {
-                                    self?.nextDestination = StoryboardNames.gameOverView
-                                    
-                                    print("got here to \(#function) and about to save finished game")
-                                    // Create the finished game object and save it to the core data
-                                    FinishedGameController.shared.newFinishedGame(from: game)
-                                    print("finished game should be saved, \(FinishedGameController.shared.finishedGames.count)")
-                                    
-                                    // Delete the game from 
-                                } else {
-                                    // Set the next destination view controller
-                                    self?.nextDestination = StoryboardNames.waitingView
-                                }
+            switch result {
+            case .success(_):
+                // Reset the game for another round
+                game.resetGame()
+                
+                // Increment the points of the player who wrote that caption and update the game's status based on whether there is an overall winner or not
+                game.winningCaptionSelected(as: caption)
+                
+                // Save the updated game to the cloud
+                GameController.shared.saveChanges(to: game) { (result) in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(_):
+                            // Decide on the next view to go to (back to the waiting view if a new round is starting, or the game over page)
+                            if game.gameStatus == .gameOver {
+                                self?.nextDestination = StoryboardNames.gameOverView
                                 
-                                // TODO: - refactor this code chunk
-                                // Before transitioning to the next view, first show everyone the results of this round
-                                let storyboard = UIStoryboard(name: StoryboardNames.endOfRoundView, bundle: nil)
-                                guard let initialVC = storyboard.instantiateInitialViewController() as? EndOfRoundViewController else { return }
-                                initialVC.gameID = game.recordID.recordName
-                                initialVC.nextDestination = self?.nextDestination
-                                initialVC.modalPresentationStyle = .overFullScreen
-                                initialVC.modalTransitionStyle = .crossDissolve
-                                self?.present(initialVC, animated: true)
-                            case .failure(let error):
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorAlert(error)
+                                print("got here to \(#function) and about to save finished game")
+                                // Create the finished game object and save it to the core data
+                                FinishedGameController.shared.newFinishedGame(from: game)
+                                print("finished game should be saved, \(FinishedGameController.shared.finishedGames.count)")
+                                
+                                // Delete the game from
+                            } else {
+                                // Set the next destination view controller
+                                self?.nextDestination = StoryboardNames.waitingView
                             }
+                            
+                            // TODO: - refactor this code chunk
+                            // Before transitioning to the next view, first show everyone the results of this round
+                            let storyboard = UIStoryboard(name: StoryboardNames.endOfRoundView, bundle: nil)
+                            guard let initialVC = storyboard.instantiateInitialViewController() as? EndOfRoundViewController else { return }
+                            initialVC.gameID = game.recordID.recordName
+                            initialVC.nextDestination = self?.nextDestination
+                            initialVC.modalPresentationStyle = .overFullScreen
+                            initialVC.modalTransitionStyle = .crossDissolve
+                            self?.present(initialVC, animated: true)
+                        case .failure(let error):
+                            // Print and display the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorAlert(error)
+                            
+                            // Reset the UI
+                            // TODO: - refactor to helper method
+                            self?.loadingIndicator.stopAnimating()
+                            self?.chooseWinnerButton.activate()
+                            self?.nextButton.activate()
+                            self?.previousButton.activate()
                         }
                     }
-                case .failure(let error):
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
+                    
+                    // Reset the UI
+                    // TODO: - refactor to helper method
+                    self?.loadingIndicator.stopAnimating()
+                    self?.chooseWinnerButton.activate()
+                    self?.nextButton.activate()
+                    self?.previousButton.activate()
                 }
             }
         }
@@ -232,6 +257,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     @IBAction func previousButtonTapped(_ sender: UIButton) {
         if pageControl.currentPage > 0 {
+            print(pageControl)
+            print(scrollView)
 //            pageControl.currentPage -= 1
 //            // FIXME: - move the scroll view
 
@@ -240,6 +267,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     @IBAction func nextButtonTapped(_ sender: UIButton) {
         if pageControl.currentPage < pageControl.numberOfPages {
+            print(pageControl)
+            print(scrollView)
 //            pageControl.currentPage += 1
 //            // FIXME: - move the scroll view
 //            scrollView.contentOffset.x = 10
