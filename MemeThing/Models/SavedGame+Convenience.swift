@@ -24,7 +24,8 @@ extension SavedGame {
         self.playersStatusData = game.playersStatus.map({ $0.rawValue }).description.data(using: String.Encoding.utf16)
         self.playersPointsData = game.playersPoints.description.data(using: String.Encoding.utf16)
         self.leadPlayerRecordName = game.leadPlayer.recordID.recordName
-        self.memesData = game.memes?.description.data(using: String.Encoding.utf16)
+        self.memesData = game.memes?.map({ $0.recordID.recordName }).description.data(using: String.Encoding.utf16)
+        self.pointsToWin = Int16(game.pointsToWin)
         self.gameStatusRawValue = Int16(game.gameStatus.rawValue)
         self.recordName = game.recordID.recordName
     }

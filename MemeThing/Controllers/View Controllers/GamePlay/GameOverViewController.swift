@@ -62,7 +62,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
         guard let game = game else { return }
         
         // Fetch the players who participated in the previous game
-        GameController.shared.fetchPlayers(from: game.activePlayersIDs) { [weak self] (result) in
+        GameController.shared.fetchPlayers(from: game.activePlayersReferences.map({ $0.recordID })) { [weak self] (result) in
             switch result {
             case .success(let players):
                 // Create a new game with all the previous (active) players

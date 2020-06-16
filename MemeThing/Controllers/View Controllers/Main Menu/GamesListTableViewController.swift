@@ -36,6 +36,7 @@ class GamesListTableViewController: UITableViewController {
         arrays.append((name: .games, data: activeGames))
         
         let finishedGames = SavedGameController.finishedGames
+//        print("got here to \(#function) and there are \(finishedGames.count) finished games")
         if finishedGames.count > 0 { arrays.append((name: .finishedGames, data: finishedGames)) }
         
         return arrays

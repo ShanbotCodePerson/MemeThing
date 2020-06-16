@@ -38,7 +38,7 @@ protocol CKServicing {
     func read<T: CKCompatible> (reference: CKRecord.Reference, completion: @escaping SingleItemHandler<T>)
     func read<T: CKCompatible> (recordIDs: [CKRecord.ID], completion: @escaping ArrayHandler<T>)
     func read<T: CKCompatible> (recordID: CKRecord.ID, completion: @escaping SingleItemHandler<T>)
-    func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
+    func update<T: CKCompatible> (object: T, overwrite: Bool, completion: @escaping SingleItemHandler<T>)
     func delete<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<Bool>)
 }
 
@@ -111,6 +111,7 @@ extension CKServicing {
             if let error = error { return completion(.failure(.ckError(error))) }
             
             // Unwrap the data
+            // FIXME: - this probably won't work
             guard let recordDictionary = recordDictionary,
                 let records = recordDictionary.values as? [CKRecord]
                 else { return completion(.failure(.couldNotUnwrap)) }
@@ -141,16 +142,27 @@ extension CKServicing {
     }
     
     // TODO: - update multiple things (of different types) at once?
-    func update<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>) {
+    func update<T: CKCompatible> (object: T, overwrite: Bool = true, completion: @escaping SingleItemHandler<T>) {
         // Create the operation to save the updates to the object
         let operation = CKModifyRecordsOperation(recordsToSave: [object.ckRecord], recordIDsToDelete: nil)
-        operation.savePolicy = .changedKeys
+        print("got here to \(#function) and records change tag is \(object.ckRecord.recordChangeTag)")
+        operation.savePolicy = overwrite ? .changedKeys : .ifServerRecordUnchanged
         operation.qualityOfService = .userInteractive
         
         // Handle the completion of the operation
         operation.modifyRecordsCompletionBlock = { (records, _, error) in
             // Handle any errors
-            if let error = error { return completion(.failure(.ckError(error))) }
+            if let error = error as? CKError {
+                // If the error is that the cloud has been updated in the meantime, return a notice to handle the merge
+                
+                let data = error.userInfo[CKPartialErrorsByItemIDKey] as! NSDictionary
+                print(data)
+                let test = data.allValues[0] as! CKError
+                if case CKError.Code.serverRecordChanged = test.code { return completion(.failure(.mergeNeeded)) }
+                
+                // Otherwise, return the error
+                return completion(.failure(.ckError(error)))
+            }
             
             // Unwrap the data
             guard let object = records?.compactMap({ T(ckRecord: $0) }).first else { return completion(.failure(.couldNotUnwrap)) }

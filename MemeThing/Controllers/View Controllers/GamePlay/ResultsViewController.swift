@@ -245,49 +245,48 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 // Increment the points of the player who wrote that caption and update the game's status based on whether there is an overall winner or not
                 game.winningCaptionSelected(as: caption)
                 
-                // If the game is over, delete it from the cloud so everyone transitions to the game over view
-                if game.gameStatus == .gameOver {
-                    GameController.shared.finishGame(game) { [weak self] (result) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(_):
-                                // Set the next destination as the game over view
-                                self?.nextDestination = StoryboardNames.gameOverView
-                                
-                                // Before transitioning to the next view, first display the results of this round
-                                self?.loadingIndicator.stopAnimating()
-                                self?.presentEndOFRoundView(with: game)
-                            case .failure(let error):
-                                // Print and display the error
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorAlert(error)
-                                
-                                // Reset the UI
-                                self?.enableUI()
-                            }
-                        }
-                    }
-                }
-                    // Otherwise, save the updated game to the cloud and go on to the next round
-                else {
-                    GameController.shared.saveChanges(to: game) { (result) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(_):
-                                // Set the next destination as the waiting view
+                // Save the updated game to the cloud
+                GameController.shared.saveChanges(to: game) { (result) in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(_):
+                            // If the game is over, delete it from the cloud and go to the game over view
+                            if game.gameStatus == .gameOver {
+                                GameController.shared.finishGame(game) { (result) in
+                                    DispatchQueue.main.async {
+                                        switch result {
+                                        case .success(_):
+                                            // Set the next destination as the game over view
+                                            self?.nextDestination = StoryboardNames.gameOverView
+                                            
+                                            // Before transitioning to the next view, first display the results of this round
+                                            self?.loadingIndicator.stopAnimating()
+                                            self?.presentEndOFRoundView(with: game)
+                                        case .failure(let error):
+                                            // Print and display the error
+                                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                            self?.presentErrorAlert(error)
+                                            
+                                            // Reset the UI
+                                            self?.enableUI()
+                                        }
+                                    }
+                                }
+                            } else {
+                                // Otherwise, set the next destination as the waiting view
                                 self?.nextDestination = StoryboardNames.waitingView
                                 
                                 // Before transitioning to the next view, first display the results of this round
                                 self?.loadingIndicator.stopAnimating()
                                 self?.presentEndOFRoundView(with: game)
-                            case .failure(let error):
-                                // Print and display the error
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorAlert(error)
-                                
-                                // Reset the UI
-                                self?.enableUI()
                             }
+                        case .failure(let error):
+                            // Print and display the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorAlert(error)
+                            
+                            // Reset the UI
+                            self?.enableUI()
                         }
                     }
                 }

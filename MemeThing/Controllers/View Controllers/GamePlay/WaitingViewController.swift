@@ -58,6 +58,8 @@ class WaitingViewController: UIViewController, HasAGameObject {
             if game.leadPlayer == UserController.shared.currentUser?.reference {
                 waitingForTableView.isHidden = true
             } else { setUpTableView() }
+        case .waitingForResult:
+            transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
         default:
             print("In waiting view and game status is \(game.gameStatus). This shouldn't happen - check what went wrong")
         }

@@ -26,6 +26,8 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
+        
+        // FIXME: - need to have all observers in here so that user continues with game as needed even if viewing leaderboard while notification comes in
     }
     
     // MARK: - Set Up UI

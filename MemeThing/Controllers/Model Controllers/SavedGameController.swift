@@ -35,6 +35,18 @@ class SavedGameController {
 //        return fetchResults?.first
 //    }
     
+    // Mark a game's status as over
+    static func setToFinished(game recordName: String) {
+        // Get the relevant game
+        guard let savedGame = savedGames.first(where: { $0.recordName == recordName }) else { return }
+        
+        // Update the values in the Core Data
+        savedGame.gameStatusRawValue = Int16(Game.GameStatus.gameOver.rawValue)
+        
+        // Save the changes
+        saveToCoreData()
+    }
+    
     // Update a game in the Core Data
     static func update(_ game: Game) {
         // Get the relevant game
@@ -69,7 +81,7 @@ class SavedGameController {
         let moc = CoreDataStack.context
         let fetchRequest: NSFetchRequest<SavedGame> = SavedGame.fetchRequest()
         let fetchResults = try? moc.fetch(fetchRequest)
-        print("got here to \(#function) and there are \(fetchResults?.count) saved games")
+//        print("got here to \(#function) and there are \(fetchResults?.count) saved games")
         return fetchResults ?? []
     }
     

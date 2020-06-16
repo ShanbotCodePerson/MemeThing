@@ -260,9 +260,12 @@ class UserController {
     
     // Set up all the necessary notification subscriptions for the user
     func setUpUser() {
+        print("got here to \(#function)")
         FriendRequestController.shared.subscribeToFriendRequests()
         FriendRequestController.shared.subscribeToFriendRemoving()
         FriendRequestController.shared.subscribeToFriendRequestResponses()
         GameController.shared.subscribeToGameInvitations()
+        GameController.shared.subscribeToGameEndings()
+        GameController.shared.subscribeToGameUpdates()
     }
 }

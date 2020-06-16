@@ -56,7 +56,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     func setUpViews() {
         view.backgroundColor = UIColor(white: 0, alpha: 0.6)
         captionLabel.backgroundColor = .purpleAccent
-        
+        // FIXME: - alternative source of game object if already over and deleted from cloud
         guard let game = game, let memeReference = game.memes?.last else { return }
         
         // Fetch the meme

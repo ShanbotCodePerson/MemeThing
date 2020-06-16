@@ -14,6 +14,7 @@ enum MemeThingError: LocalizedError {
     case couldNotUnwrap
     case noUserFound
     case unknownError // FIXME: - need to convert this to real error, replace all instances of it
+    case mergeNeeded
     
     var errorDescription: String? {
         switch self {
@@ -25,6 +26,8 @@ enum MemeThingError: LocalizedError {
             return "Unable to find user information"
         case .unknownError:
             return "Man I have no idea your guess is as good as mine sorry bro"
+        case .mergeNeeded:
+            return "The Cloud has been updated in the meantime - a merge is needed"
         }
     }
 }
