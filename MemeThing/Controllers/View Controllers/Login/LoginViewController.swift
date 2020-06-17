@@ -139,7 +139,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func setUpViews() {
         view.backgroundColor = .background
-        stackViewHeightLayoutConstraint.constant = buttonsStackView.frame.height + textFieldsStackView.frame.height
+        // TODO: - need to test this in other device sizes
+        stackViewHeightLayoutConstraint.constant = buttonsStackView.frame.height + textFieldsStackView.frame.height + 20
         loadingIndictor.isHidden = true
         
         usernameTextField.delegate = self
@@ -246,8 +247,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         loadingIndictor.startAnimating()
         loadingIndictor.isHidden = false
         
-        signUpToggleButton.deactivate()
-        loginToggleButton.deactivate()
+        signUpToggleButton.isUserInteractionEnabled = false
+        loginToggleButton.isUserInteractionEnabled = false
         
         usernameTextField.isUserInteractionEnabled = false
         screenNameTextField.isUserInteractionEnabled = false
@@ -259,8 +260,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     func enableUI() {
-        signUpToggleButton.activate()
-        loginToggleButton.activate()
+        signUpToggleButton.isUserInteractionEnabled = true
+        loginToggleButton.isUserInteractionEnabled = true
         
         usernameTextField.isUserInteractionEnabled = true
         screenNameTextField.isUserInteractionEnabled = true

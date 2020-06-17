@@ -190,6 +190,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
             gameID == game.recordID.recordName,
             let currentUser = UserController.shared.currentUser
             else { return }
+
+        // If the leaderboard is open, close it
+        NotificationCenter.default.post(Notification(name: closeLeaderboard, userInfo: ["gameID" : game.recordID.recordName]))
         
         // Decide on the next destination view controller based on the type of update
         DispatchQueue.main.async {

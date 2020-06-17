@@ -264,7 +264,7 @@ class UserController {
         FriendRequestController.shared.subscribeToFriendRemoving()
         FriendRequestController.shared.subscribeToFriendRequestResponses()
         GameController.shared.subscribeToGameInvitations()
-        GameController.shared.subscribeToGameEndings()
+//        GameController.shared.subscribeToGameEndings()
         GameController.shared.subscribeToGameUpdates()
     }
 }
