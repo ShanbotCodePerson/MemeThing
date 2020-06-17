@@ -80,12 +80,11 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                                 let name = game.getName(of: caption.author)
                                 self?.winnerLabel.text = "Congratulations \(name) for having the best caption!"
                                 
-                                // TODO: - don't need subscriptions to captions, just handle points here?
                                 guard let currentUser = UserController.shared.currentUser else { return }
                                 if caption.author.recordID.recordName == currentUser.reference.recordID.recordName {
                                     print("got here to updating current user's points")
                                     UserController.shared.update(currentUser, points: 1) { (result) in
-                                        // TODO: - show alerts?
+                                        // TODO: - show alerts? tell winning user they earned a point?
                                         switch result {
                                         case .success(_):
                                             print("should have incremented users points, now is \(currentUser.points)")

@@ -88,7 +88,6 @@ class UserController {
         guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
         // Return an empty array if the user has no friends
-        // FIXME: - CHECK THIS
         if currentUser.friendsReferences.count == 0 {
             self.usersFriends = []
             return completion(.success(false))

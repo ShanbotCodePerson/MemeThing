@@ -116,6 +116,9 @@
                                     <action selector="doneButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="xTo-2U-eNt"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="qAH-Yi-Yiv">
+                                <rect key="frame" x="298.5" y="770.5" width="45" height="44.5"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <gestureRecognizers/>
@@ -123,10 +126,14 @@
                             <constraint firstItem="cam-3L-kts" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.25" id="4MZ-ZF-eom"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="trailing" secondItem="Lol-Sz-ptg" secondAttribute="trailing" id="4rn-kH-aTr"/>
                             <constraint firstItem="53Q-PZ-Azf" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.05" id="Iht-sb-58d"/>
+                            <constraint firstItem="qAH-Yi-Yiv" firstAttribute="centerY" secondItem="cam-3L-kts" secondAttribute="centerY" id="Iqr-vg-Jp2"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.05" id="JsU-Q5-p2S"/>
                             <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.25" priority="999" id="MBw-7A-XxJ"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TCl-xO-nvx" secondAttribute="leading" symbolic="YES" id="OOa-kE-wIg"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="1.75" id="Vxi-zM-2Jq"/>
+                            <constraint firstItem="qAH-Yi-Yiv" firstAttribute="height" secondItem="cam-3L-kts" secondAttribute="height" id="XCf-tz-9Pz"/>
+                            <constraint firstItem="qAH-Yi-Yiv" firstAttribute="width" secondItem="cam-3L-kts" secondAttribute="height" multiplier="1:1" id="boV-yt-khN"/>
+                            <constraint firstItem="qAH-Yi-Yiv" firstAttribute="centerX" secondItem="cam-3L-kts" secondAttribute="centerX" id="dBf-Zi-3Zj"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.95" id="eqd-eO-1c3"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.8" id="hCY-QT-NOp"/>
                             <constraint firstItem="Lol-Sz-ptg" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RH0-Qc-nWr" secondAttribute="bottom" constant="20" id="hSm-aw-eXH"/>
@@ -144,6 +151,7 @@
                         <outlet property="doneButton" destination="cam-3L-kts" id="SAk-I6-a2L"/>
                         <outlet property="emailTextField" destination="twx-kb-Bqy" id="f5Q-Dq-d9U"/>
                         <outlet property="keyboardHeightLayoutConstraint" destination="eqd-eO-1c3" id="C1k-sw-Dw3"/>
+                        <outlet property="loadingIndictor" destination="qAH-Yi-Yiv" id="0QQ-hM-9uI"/>
                         <outlet property="loginToggleButton" destination="Asi-DS-fLW" id="eSc-Hz-h9l"/>
                         <outlet property="passwordTextField" destination="IxU-ce-hvA" id="lzg-3M-IKU"/>
                         <outlet property="screenNameTextField" destination="qwu-Ed-SWn" id="yEY-gX-Uaq"/>

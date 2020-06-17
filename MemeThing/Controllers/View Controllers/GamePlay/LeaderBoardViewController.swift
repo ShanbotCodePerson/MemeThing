@@ -55,8 +55,6 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         
         // Present an alert to confirm the user really wants to quit the game
         presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to quit the game?") {
-            // TODO: - lock user interaction?
-            
             // If the user clicks "confirm," quit the game and return to the main menu
             GameController.shared.quit(game) { [weak self] (result) in
                 DispatchQueue.main.async {

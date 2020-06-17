@@ -53,8 +53,10 @@ class CaptionViewController: UIViewController, HasAGameObject {
         if endFrameY >= UIScreen.main.bounds.size.height {
             self.keyboardHeightLayoutConstraint?.constant = 8.0
         } else {
-            self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 8.0
-        } // FIXME: - height may be off here - may need to add sendButton.frame.height
+            if let height = endFrame?.size.height {
+                self.keyboardHeightLayoutConstraint?.constant = height - sendButton.frame.height
+            }
+        }
         
         UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
     }
@@ -88,12 +90,29 @@ class CaptionViewController: UIViewController, HasAGameObject {
                     // Save the meme object
                     self?.meme = meme
                 case .failure(let error):
-                    // TODO: - better error handling here, present alert?
+                    // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
                 }
             }
         }
+    }
+    
+    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
+    func disableUI() {
+        loadingIndicator.startAnimating()
+        loadingIndicator.isHidden = false
+        
+        captionTextField.isUserInteractionEnabled = false
+        sendButton.deactivate()
+    }
+    
+    func enableUI() {
+        captionTextField.isUserInteractionEnabled = true
+        sendButton.activate()
+        
+        loadingIndicator.isHidden = true
+        loadingIndicator.stopAnimating()
     }
     
     // MARK: - Actions
@@ -123,13 +142,8 @@ class CaptionViewController: UIViewController, HasAGameObject {
         guard let game = game, let meme = meme, let currentUser = UserController.shared.currentUser,
             let captionText = captionTextField.text else { return }
         
-        // Display the loading icon while the image saves
-        loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
-        
         // Don't allow the user to interact with the screen while the save is in progress
-        captionTextField.isUserInteractionEnabled = false
-        sendButton.deactivate()
+        disableUI()
         
         // Add the caption to the meme object
         MemeController.shared.createCaption(for: meme, by: currentUser, with: captionText, in: game) { [weak self] (result) in
@@ -139,7 +153,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 game.updateStatus(of: currentUser, to: .sentCaption)
                 
                 // Update the game's status if this was the final caption
-                // FIXME: - this will probably break if the last two captions are submitted at the same time - need to confirm somewhere
                 if game.allCaptionsSubmitted { game.gameStatus = .waitingForResult }
                 
                 // Save the updated game to the cloud
@@ -158,33 +171,19 @@ class CaptionViewController: UIViewController, HasAGameObject {
                                 self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                             }
                         case .failure(let error):
-                            // Print and display the error
+                            // Print and display the error and reset the UI
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             self?.presentErrorAlert(error)
-                            
-                            // Reset the UI
-                            // TODO: - refactor to a helper method
-                            self?.captionTextField.isUserInteractionEnabled = true
-                            self?.sendButton.activate()
-                            self?.loadingIndicator.stopAnimating()
-                            self?.loadingIndicator.isHidden = true
-                            self?.presentErrorAlert(error)
+                            self?.enableUI()
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    // Print and display the error
+                    // Print and display the error and reset the UI
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
-                    
-                    // Reset the UI
-                    // TODO: - refactor to a helper method
-                    self?.captionTextField.isUserInteractionEnabled = true
-                    self?.sendButton.activate()
-                    self?.loadingIndicator.stopAnimating()
-                    self?.loadingIndicator.isHidden = true
-                    self?.presentErrorAlert(error)
+                    self?.enableUI()
                 }
             }
         }

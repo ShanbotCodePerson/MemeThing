@@ -462,7 +462,7 @@ class GameController {
                 }
             }
         } else {
-            // FIXME: - need to handle flow of gameplay, for example, if user quit in middle of drawing or caption
+            // FIXME: - handle the flow of gameplay, for example, if user quit in middle of drawing or caption
             if game.leadPlayer.recordID.recordName == currentUser.recordID.recordName {
                 game.resetGame()
             }

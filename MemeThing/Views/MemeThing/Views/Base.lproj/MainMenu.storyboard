@@ -132,11 +132,18 @@
                                         <action selector="startGameButtonTapped:" destination="oRG-6L-4CO" eventType="touchUpInside" id="hX7-wP-oke"/>
                                     </connections>
                                 </button>
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="sCG-W1-Bjh">
+                                    <rect key="frame" x="324.5" y="12.5" width="35" height="35"/>
+                                </activityIndicatorView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
+                                <constraint firstItem="sCG-W1-Bjh" firstAttribute="height" secondItem="6pE-Yd-zwk" secondAttribute="height" id="DbK-Qu-IW1"/>
+                                <constraint firstItem="sCG-W1-Bjh" firstAttribute="centerY" secondItem="6pE-Yd-zwk" secondAttribute="centerY" id="ERD-RP-mtZ"/>
+                                <constraint firstItem="sCG-W1-Bjh" firstAttribute="width" secondItem="6pE-Yd-zwk" secondAttribute="height" multiplier="1:1" id="LWl-Vc-hdS"/>
                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="6pE-Yd-zwk" secondAttribute="trailing" constant="12" id="O5G-ga-yrw"/>
                                 <constraint firstItem="6pE-Yd-zwk" firstAttribute="centerX" secondItem="Kgm-Me-MUc" secondAttribute="centerX" multiplier="1.7" priority="999" id="UYQ-eX-qXi"/>
+                                <constraint firstItem="sCG-W1-Bjh" firstAttribute="centerX" secondItem="6pE-Yd-zwk" secondAttribute="centerX" id="fcI-Vx-vdL"/>
                                 <constraint firstItem="6pE-Yd-zwk" firstAttribute="centerY" secondItem="Kgm-Me-MUc" secondAttribute="centerY" id="m4c-R6-K9s"/>
                             </constraints>
                         </view>
@@ -159,6 +166,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Invite Friends" id="YzF-hQ-jXk"/>
                     <connections>
+                        <outlet property="loadingIndicator" destination="sCG-W1-Bjh" id="9hl-F7-BAD"/>
                         <outlet property="startGameButton" destination="6pE-Yd-zwk" id="ige-0x-5RX"/>
                     </connections>
                 </tableViewController>

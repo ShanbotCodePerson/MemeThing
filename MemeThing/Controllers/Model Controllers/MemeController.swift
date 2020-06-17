@@ -81,7 +81,7 @@ class MemeController {
     
     // Read (fetch) the winning caption for a meme
     func fetchWinningCaption(for meme: Meme, completion: @escaping (Result<Caption, MemeThingError>) -> Void) {
-        print("got here to \(#function) and meme is \(meme) with winning caption index \(String(describing: meme.winningCaptionIndex)) that has an id of \(meme.captions?[meme.winningCaptionIndex ?? 0].recordID)")
+        print("got here to \(#function) and meme is \(meme) with winning caption index \(String(describing: meme.winningCaptionIndex)) that has an id of \(String(describing: meme.captions?[meme.winningCaptionIndex ?? 0].recordID))")
         // Get the recordID of the winning caption from the meme
         guard let index = meme.winningCaptionIndex,
             let recordID = meme.captions?[index].recordID
@@ -133,7 +133,6 @@ class MemeController {
                     meme.captions = [caption.reference]
                 }
                 
-                // FIXME: - refactor this elsewhere
                 // Save the change to the meme
                 self?.update(meme) { (result) in
                     switch result {

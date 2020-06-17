@@ -66,7 +66,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     MemeController.shared.fetchCaptions(for: meme) { (result) in
                         DispatchQueue.main.async {
                             switch result {
-                            case .success(let captions): // FIXME: - why does this return [] the first time its run?
+                            case .success(let captions):
                                 print("in second completion and captions are \(captions)")
                                 // Save the captions
                                 print("captions were set")

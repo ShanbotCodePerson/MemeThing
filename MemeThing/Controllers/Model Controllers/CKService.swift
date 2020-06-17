@@ -157,8 +157,8 @@ extension CKServicing {
                 
                 let data = error.userInfo[CKPartialErrorsByItemIDKey] as! NSDictionary
                 print(data)
-                let test = data.allValues[0] as! CKError
-                if case CKError.Code.serverRecordChanged = test.code { return completion(.failure(.mergeNeeded)) }
+                let ckError = data.allValues[0] as! CKError
+                if case CKError.Code.serverRecordChanged = ckError.code { return completion(.failure(.mergeNeeded)) }
                 
                 // Otherwise, return the error
                 return completion(.failure(.ckError(error)))

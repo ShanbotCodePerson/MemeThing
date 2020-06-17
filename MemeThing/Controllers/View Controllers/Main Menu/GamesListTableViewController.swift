@@ -88,7 +88,7 @@ class GamesListTableViewController: UITableViewController {
     
     func quitGame(_ game: Game) {
         // Don't allow the user to interact with the view while the change is being processed
-        tableView.isUserInteractionEnabled = false // TODO: - this needs to be tested, if it works, need to use in gameplay screens too
+        tableView.isUserInteractionEnabled = false
         
         GameController.shared.quit(game) { [weak self] (result) in
             DispatchQueue.main.async {
