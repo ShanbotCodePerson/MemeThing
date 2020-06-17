@@ -29,14 +29,12 @@ class GamesListTableViewController: UITableViewController {
         let unstartedGames = currentGames.filter { $0.gameStatus == .waitingForPlayers }
         let pendingInvitations = unstartedGames.filter { $0.leadPlayer != currentUser.reference }
         let waitingForResponse = unstartedGames.filter { $0.leadPlayer == currentUser.reference }
-        let activeGames = currentGames.filter { $0.gameStatus != .waitingForPlayers }
+        let activeGames = currentGames.filter { $0.gameStatus != .waitingForPlayers && $0.gameStatus != .gameOver }
+        let finishedGames = currentGames.filter { $0.gameStatus == .gameOver }
         
         if pendingInvitations.count > 0 { arrays.append((name: .pendingInvitations, data: pendingInvitations)) }
         if waitingForResponse.count > 0 { arrays.append((name: .waitingForResponses, data: waitingForResponse)) }
         arrays.append((name: .games, data: activeGames))
-        
-        let finishedGames = SavedGameController.finishedGames
-//        print("got here to \(#function) and there are \(finishedGames.count) finished games")
         if finishedGames.count > 0 { arrays.append((name: .finishedGames, data: finishedGames)) }
         
         return arrays
@@ -151,12 +149,8 @@ class GamesListTableViewController: UITableViewController {
             // Get the reference to the game
             let gameToQuit = dataSource[indexPath.section].data[indexPath.row]
             
-            // If the game is one of the old finished games, delete it without showing an alert
-            if dataSource[indexPath.section].name == .finishedGames {
-                SavedGameController.delete(gameToQuit)
-            }
-                // If the game is already over, allow the user to delete it without confirming
-            else if gameToQuit.gameStatus == .gameOver {
+            // If the game is already over, allow the user to delete it without confirming
+            if gameToQuit.gameStatus == .gameOver {
                 quitGame(gameToQuit)
             }
             else {

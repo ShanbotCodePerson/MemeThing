@@ -102,7 +102,7 @@ class Game: CKCompatible {
     
     // TODO: - delete this later, just helpful for testing
     var debugging: String {
-        return "Game with \(playersNames.joined(separator: ", ")) at status \(playersStatus) and points \(playersPoints). Status is \(gameStatus). \(String(describing: memes?.count)) memes. Change Tag is \(originalRecord?.recordChangeTag)"
+        return "Game with \(playersNames.joined(separator: ", ")) at status \(playersStatus) and points \(playersPoints). Status is \(gameStatus). \(String(describing: memes?.count)) memes. Change Tag is \(String(describing: originalRecord?.recordChangeTag))"
     }
     
     // All the active players, filtering out those who denied the invitation or quit the game
@@ -113,6 +113,11 @@ class Game: CKCompatible {
     // All the references for the active players
     var activePlayersReferences: [CKRecord.Reference] {
         return playersReferences.filter({ activePlayers.keys.contains($0.recordID.recordName) })
+    }
+    
+    // ALl the names for the active players
+    var activePlayersNames: [String] {
+        return activePlayers.map { $1.name }
     }
     
     // All the active players, sorted in descending order by points
@@ -255,39 +260,6 @@ class Game: CKCompatible {
         self.gameStatus = gameStatus
         self.recordID = recordID
 //        print("got here to init in Game model and record change tag is \(recordChangeTag)")
-    }
-    
-    convenience init?(savedGame: SavedGame) {
-        guard let playersReferenceData = savedGame.playersReferencesData,
-            let playersNamesData = savedGame.playersNamesData,
-            let playersStatusData = savedGame.playersStatusData,
-            let playersPointsData = savedGame.playersPointsData,
-            let leadPlayerRecordName = savedGame.leadPlayerRecordName,
-            let gameStatus = GameStatus(rawValue: Int(savedGame.gameStatusRawValue)),
-            let recordName = savedGame.recordName
-            else { return nil }
-        
-        do {
-            let playersReferencesStrings = try JSONDecoder().decode([String].self, from: playersReferenceData)
-            let playersReferences = playersReferencesStrings.compactMap { CKRecord.Reference(recordID: CKRecord.ID(recordName: $0), action: .none) }
-            
-            let playersNames = try JSONDecoder().decode([String].self, from: playersNamesData)
-            let playersStatusRawValues = try JSONDecoder().decode([Int].self, from: playersStatusData)
-            let playersStatus = playersStatusRawValues.compactMap { PlayerStatus(rawValue: $0) }
-            let playersPoints = try JSONDecoder().decode([Int].self, from: playersPointsData)
-            let leadPlayer = CKRecord.Reference(recordID: CKRecord.ID(recordName: leadPlayerRecordName), action: .none)
-            
-            var memes: [CKRecord.Reference]?
-            if let memesData = savedGame.memesData {
-                let memesStrings = try JSONDecoder().decode([String].self, from: memesData)
-                memes = memesStrings.compactMap { CKRecord.Reference(recordID: CKRecord.ID(recordName: $0), action: .deleteSelf)
-                }
-            } else { memes = nil }
-            
-            let recordID = CKRecord.ID(recordName: recordName)
-//            print("got here to \(#function) and \(savedGame.pointsToWin) and \(Int(savedGame.pointsToWin))")
-            self.init(playersReferences: playersReferences, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, leadPlayer: leadPlayer, memes: memes, pointsToWin: Int(savedGame.pointsToWin), gameStatus: gameStatus, recordID: recordID)
-        } catch { return nil }
     }
     
     // MARK: - Convert from CKRecord

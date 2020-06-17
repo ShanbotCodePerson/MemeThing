@@ -156,9 +156,6 @@ class MemeController {
     
     // Update a meme with a winning caption
     func setWinningCaption(to caption: Caption, for meme: Meme, completion: @escaping resultHandler) {
-        // Update the caption's status
-        caption.didWin = true
-        
         // Save the change to the cloud
         CKService.shared.update(object: caption) { [weak self] (result) in
             switch result {

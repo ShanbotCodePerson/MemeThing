@@ -26,11 +26,11 @@ class GameController {
     
     // MARK: - CRUD Methods
     
-    // Create a new game
+    // Create a new game from scratch
     func newGame(players: [User], completion: @escaping resultHandlerWithObject) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
-        // Create the new game with the current user as the default lead player
+        // Create the new game with the current user as the first lead player
         var playerReferences = players.map { $0.reference }
         playerReferences.insert(currentUser.reference, at: 0)
         var playersNames = players.map { $0.screenName }
@@ -49,9 +49,6 @@ class GameController {
                     self?.currentGames = [game]
                 }
                 
-                // Save a record of the game to the Core Data
-                SavedGameController.save(game)
-                
                 // Return the success
                 return completion(.success(game))
             case .failure(let error):
@@ -60,6 +57,20 @@ class GameController {
                 return completion(.failure(error))
             }
         }
+    }
+    
+    // Create a new game from an old game
+    func newGame(from oldGame: Game, completion: @escaping resultHandlerWithObject) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Remove the old game from the cloud
+        // FIXME: - think about this
+        
+        // Use the data from the old game to start a new game, with the current user as the first lead player
+        let newGame = Game(playersReferences: oldGame.activePlayersReferences, playersNames: oldGame.activePlayersNames, leadPlayer: currentUser.reference, pointsToWin: oldGame.pointsToWin, recordID: CKRecord.ID(recordName: "\(oldGame.recordID)-2"))
+        
+        // Save the game to the cloud
+        // FIXME: - need to handle a merge if someone else has already tried to restart the game
     }
     
     // Read (fetch) all the games the user is currently involved in
@@ -75,9 +86,9 @@ class GameController {
         CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[Game], MemeThingError>) in
             switch result {
             case .success(let games):
-                print("in completion and fetched games are \(games)")
-                // Save to the source of truth
-                self?.currentGames = games
+                // Save to the source of truth, filtering out the games that the user has declined to join or has quit
+                self?.currentGames = games.filter { $0.getStatus(of: currentUser) != .denied && $0.getStatus(of: currentUser) != .quit }
+                print("in completion and SoT contains \(games.count) games")
                 return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
@@ -103,23 +114,6 @@ class GameController {
         }
     }
     
-    // TODO: - don't really need this function, can create a new game from all the information in the old game
-    // Fetch all the players from the references in a game
-    func fetchPlayers(from recordIDs: [CKRecord.ID], completion: @escaping (Result<[User], MemeThingError>) -> Void) {
-        // Fetch the data from the cloud
-        CKService.shared.read(recordIDs: recordIDs) { (result: Result<[User], MemeThingError>) in
-            switch result {
-            case .success(let players):
-                // Return the success
-                return completion(.success(players))
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
-        }
-    }
-    
     // Update a game
     func saveChanges(to game: Game, completion: @escaping resultHandlerWithObject) {
         print("got here to \(#function) and game being saved is \(game.debugging)")
@@ -127,9 +121,6 @@ class GameController {
         CKService.shared.update(object: game, overwrite: false) { [weak self] (result) in
             switch result {
             case .success(let game):
-                // Update the game in the Core Data
-                SavedGameController.update(game)
-                
                 // Update the game in the source of truth
                 // FIXME: - this probably isn't necessary
                 guard let index = self?.currentGames?.firstIndex(of: game) else { return completion(.failure(.unknownError)) }
@@ -259,8 +250,6 @@ class GameController {
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
-//        notificationInfo.title = "Game Ended"
-//        notificationInfo.alertBody = "Your game on MemeThing has finished"
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.category = NotificationHelper.Category.gameEnded.rawValue
         subscription.notificationInfo = notificationInfo
@@ -344,16 +333,12 @@ class GameController {
         saveChanges(to: game) { [weak self] (result) in
             switch result {
             case .success(let game):
-                // If the user accepted the invitation, save the game to the Core Data
-//                if accept { SavedGameController.save(game) }
-//                else {
-                    // Otherwise, remove the game from the source of truth
-                    guard let index = self?.currentGames?.firstIndex(of: game) else { return }
-                    self?.currentGames?.remove(at: index)
+                // If the user declined the invitation, remove the game from the source of truth
+                if !accept { self?.handleEnd(for: game.recordID.recordName) }
                     
-                    // Tell the table view list of current games to update itself
-                    NotificationCenter.default.post(Notification(name: updateListOfGames))
-//                }
+                // Tell the table view list of current games to update itself
+                NotificationCenter.default.post(Notification(name: updateListOfGames))
+                
                 // Return the success
                 return completion(.success(true))
             case .failure(let error):
@@ -367,9 +352,6 @@ class GameController {
     // Receive a notification that a game has ended
     func receiveNotificationGameEnded(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
         print("got here to \(#function)")
-//        // Mark the change to the copy of the game in the core data
-//        SavedGameController.setToFinished(game: recordID.recordName)
-        
         // Perform all the clean-up to finish the game
         handleEnd(for: recordID.recordName)
         
@@ -393,9 +375,6 @@ class GameController {
                 // Update the game in the source of truth
                 guard let index = self?.currentGames?.firstIndex(of: game) else { return completion(0) }
                 self?.currentGames?[index] = game
-
-                // Update the game in the Core Data
-                SavedGameController.update(game)
                 
                 // Form the notification that will tell the views how to update
                 var notificationDestination: Notification.Name?
@@ -444,21 +423,18 @@ class GameController {
     
     // MARK: - Helper Method
     
-    // Allow the user the quit the game before it ends
+    // Allow the user the quit the game at any time
     func quit(_ game: Game, completion: @escaping resultHandler) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Update the user's status
         game.updateStatus(of: currentUser, to: .quit)
         
-        // Check to see if there are enough remaining active players, and if not, end the game
-        if game.activePlayers.values.count < 3 {
+        // If the user is the last one to leave the game, remove it from the cloud
+        if game.allPlayersDone {
             delete(game) { [weak self] (result) in
                 switch result {
                 case .success(_):
-                    // Delete the game from the Core Data
-                    SavedGameController.delete(game)
-                    
                     // Handle the clean up for leaving the game
                     self?.handleEnd(for: game.recordID.recordName)
                     
@@ -471,12 +447,14 @@ class GameController {
                 }
             }
         } else {
-            // FIXME: - handle the flow of gameplay, for example, if user quit in middle of drawing or caption
+            // FIXME: - need to confirm this works
+            // Handle the flow of the gameplay, for example, if user quit in middle of a drawing or caption
             if game.leadPlayer.recordID.recordName == currentUser.recordID.recordName {
                 game.resetGame()
             }
+            game.resetGameStatus()
             
-            // Otherwise, save the update to the game
+            // Save the update to the game
             saveChanges(to: game) { [weak self] (result) in
                 switch result {
                 case .success(let game):
@@ -496,9 +474,6 @@ class GameController {
     
     // Perform all the cleanup for the user to exit the game, whether it's over or the user has quit
     func handleEnd(for gameRecordName: String) {
-        // If the user is currently in the game, transition them to the game over view
-        NotificationCenter.default.post(Notification(name: toGameOver, userInfo: ["gameID" : gameRecordName]))
-         
         print("got here to \(#function) and SoT has \(String(describing: currentGames?.count)) games")
         // Remove the game from the source of truth
         currentGames?.removeAll(where: { $0.recordID.recordName == gameRecordName })

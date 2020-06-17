@@ -144,7 +144,7 @@ extension CKServicing {
     func update<T: CKCompatible> (object: T, overwrite: Bool = true, completion: @escaping SingleItemHandler<T>) {
         // Create the operation to save the updates to the object
         let operation = CKModifyRecordsOperation(recordsToSave: [object.ckRecord], recordIDsToDelete: nil)
-        print("got here to \(#function) and records change tag is \(object.ckRecord.recordChangeTag)")
+        print("got here to \(#function) and records change tag is \(String(describing: object.ckRecord.recordChangeTag))")
         operation.savePolicy = overwrite ? .changedKeys : .ifServerRecordUnchanged
         operation.qualityOfService = .userInteractive
         
