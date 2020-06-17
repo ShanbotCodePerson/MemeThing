@@ -26,7 +26,7 @@ class Caption: CKCompatible {
     // Caption properties
     let text: String
     let author: CKRecord.Reference
-    let meme: CKRecord.Reference // FIXME: - do I need this?
+    let meme: CKRecord.Reference
     let game: CKRecord.Reference
     
     // CloudKit properties

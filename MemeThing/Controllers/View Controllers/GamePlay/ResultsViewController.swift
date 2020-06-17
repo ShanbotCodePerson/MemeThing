@@ -60,7 +60,11 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme
                     self?.meme = meme
-                    print("in completion and meme id is \(meme.reference.recordID.recordName) with \(String(describing: meme.captions?.count)) captions")
+                    
+                    // TODO: - show a loading indicator, hide buttons and page control while loading
+                    // Give some time for CloudKit to catch up
+                    sleep(2)
+                    // FIXME: - better solution, like rerunning fetch captions function if returns empty?
                     
                     // Fetch the captions for that meme from the cloud
                     MemeController.shared.fetchCaptions(for: meme) { (result) in
@@ -70,6 +74,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                 print("in second completion and captions are \(captions)")
                                 // Save the captions
                                 print("captions were set")
+                                // TODO: - shuffle order of captions so not in order of who submitted
                                 self?.captions = captions
                                 self?.pageControl.numberOfPages = captions.count
                             case .failure(let error):
@@ -250,36 +255,14 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
-                            // If the game is over, delete it from the cloud and go to the game over view
-                            if game.gameStatus == .gameOver {
-                                GameController.shared.delete(game) { (result) in
-                                    DispatchQueue.main.async {
-                                        switch result {
-                                        case .success(_):
-                                            // Set the next destination as the game over view
-                                            self?.nextDestination = StoryboardNames.gameOverView
-                                            
-                                            // Before transitioning to the next view, first display the results of this round
-                                            self?.loadingIndicator.stopAnimating()
-                                            self?.presentEndOFRoundView(with: game)
-                                        case .failure(let error):
-                                            // Print and display the error
-                                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                            self?.presentErrorAlert(error)
-                                            
-                                            // Reset the UI
-                                            self?.enableUI()
-                                        }
-                                    }
-                                }
-                            } else {
+                            // If the game is over, go to the game over view
+                            if game.gameStatus == .gameOver { self?.nextDestination = StoryboardNames.gameOverView }
                                 // Otherwise, set the next destination as the waiting view
-                                self?.nextDestination = StoryboardNames.waitingView
-                                
-                                // Before transitioning to the next view, first display the results of this round
-                                self?.loadingIndicator.stopAnimating()
-                                self?.presentEndOFRoundView(with: game)
-                            }
+                            else { self?.nextDestination = StoryboardNames.waitingView }
+                            
+                            // Before transitioning to the next view, first display the results of this round
+                            self?.loadingIndicator.stopAnimating()
+                            self?.presentEndOFRoundView(with: game)
                         case .failure(let error):
                             // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

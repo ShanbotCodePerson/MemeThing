@@ -64,10 +64,16 @@ class GameController {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Remove the old game from the cloud
-        // FIXME: - think about this
+        delete(oldGame) { (_) in }
         
-        // Use the data from the old game to start a new game, with the current user as the first lead player
-        let newGame = Game(playersReferences: oldGame.activePlayersReferences, playersNames: oldGame.activePlayersNames, leadPlayer: currentUser.reference, pointsToWin: oldGame.pointsToWin, recordID: CKRecord.ID(recordName: "\(oldGame.recordID)-2"))
+//        // Use the data from the old game to start a new game, with the current user as the first lead player
+//        var playerReferences = oldGame.activePlayersReferences
+//        playerReferences.removeAll(where: { $0 == currentUser.reference })
+//        playerReferences.insert(currentUser.reference, at: 0)
+//        
+////        playersNames
+//        
+//        let newGame = Game(playersReferences: playerReferences, playersNames: playerNames, leadPlayer: currentUser.reference, pointsToWin: oldGame.pointsToWin, recordID: CKRecord.ID(recordName: "\(oldGame.recordID)-2"))
         
         // Save the game to the cloud
         // FIXME: - need to handle a merge if someone else has already tried to restart the game
@@ -86,8 +92,8 @@ class GameController {
         CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[Game], MemeThingError>) in
             switch result {
             case .success(let games):
-                // Save to the source of truth, filtering out the games that the user has declined to join or has quit
-                self?.currentGames = games.filter { $0.getStatus(of: currentUser) != .denied && $0.getStatus(of: currentUser) != .quit }
+                // Save to the source of truth, filtering out the games that the user has declined, quit, or finished
+                self?.currentGames = games.filter { $0.getStatus(of: currentUser) != .denied && $0.getStatus(of: currentUser) != .quit && $0.getStatus(of: currentUser) != .done }
                 print("in completion and SoT contains \(games.count) games")
                 return completion(.success(true))
             case .failure(let error):
@@ -430,6 +436,37 @@ class GameController {
         // Update the user's status
         game.updateStatus(of: currentUser, to: .quit)
         
+        // FIXME: - need to confirm this works
+        // Handle the flow of the gameplay, for example, if user quit in middle of a drawing or caption
+        if game.leadPlayer.recordID.recordName == currentUser.recordID.recordName {
+            game.resetGame()
+        }
+        game.resetGameStatus()
+        
+        // Save the update to the game
+        saveChanges(to: game) { [weak self] (result) in
+            switch result {
+            case .success(let game):
+                // Handle the clean up for leaving the game
+                self?.handleEnd(for: game.recordID.recordName)
+                
+                // Return the success
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    // Allow the user to leave the game after it's finished
+    func leave(_ game: Game, completion: @escaping resultHandler) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Update the user's status
+        game.updateStatus(of: currentUser, to: .done)
+        
         // If the user is the last one to leave the game, remove it from the cloud
         if game.allPlayersDone {
             delete(game) { [weak self] (result) in
@@ -447,17 +484,10 @@ class GameController {
                 }
             }
         } else {
-            // FIXME: - need to confirm this works
-            // Handle the flow of the gameplay, for example, if user quit in middle of a drawing or caption
-            if game.leadPlayer.recordID.recordName == currentUser.recordID.recordName {
-                game.resetGame()
-            }
-            game.resetGameStatus()
-            
-            // Save the update to the game
+            // Otherwise, save the changes to the game
             saveChanges(to: game) { [weak self] (result) in
                 switch result {
-                case .success(let game):
+                case .success(_):
                     // Handle the clean up for leaving the game
                     self?.handleEnd(for: game.recordID.recordName)
                     

@@ -68,6 +68,7 @@ class Game: CKCompatible {
         case quit
         case sentDrawing
         case sentCaption
+        case done
         
         var asString: String {
             switch self {
@@ -83,6 +84,8 @@ class Game: CKCompatible {
                 return "Submitted Caption"
             case .sentDrawing:
                 return "Submitted Drawing"
+            case .done:
+                return "Done"
             }
         }
     }
@@ -113,11 +116,6 @@ class Game: CKCompatible {
     // All the references for the active players
     var activePlayersReferences: [CKRecord.Reference] {
         return playersReferences.filter({ activePlayers.keys.contains($0.recordID.recordName) })
-    }
-    
-    // ALl the names for the active players
-    var activePlayersNames: [String] {
-        return activePlayers.map { $1.name }
     }
     
     // All the active players, sorted in descending order by points
@@ -217,7 +215,8 @@ class Game: CKCompatible {
     
     // Calculate whether all players have seen the finished game and it's ready to be deleted
     var allPlayersDone: Bool {
-        return Set(playersStatus) == [.denied, .quit] || Set(playersStatus) == [.quit]
+        let activeStatus = activePlayers.map { $1.status }
+        return Set(activeStatus) == [.done]
     }
     
     // Figure out if a player has won the game yet

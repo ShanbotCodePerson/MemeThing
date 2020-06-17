@@ -161,9 +161,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
                         switch result {
                         case .success(_):
                             if game.allCaptionsSubmitted {
-                                // Give some time for CloudKit to catch up
-                                sleep(2)
-                                
                                 // Go to the results view if all captions have been submitted already
                                 self?.transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
                             } else {

@@ -68,14 +68,29 @@ class GameOverViewController: UIViewController, HasAGameObject {
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        transitionToStoryboard(named: StoryboardNames.mainMenu)
+        guard let game = game else { return transitionToStoryboard(named: StoryboardNames.mainMenu) }
+        
+        // Remove the user from the game
+        GameController.shared.leave(game) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Return to the main menu
+                    self?.transitionToStoryboard(named: StoryboardNames.mainMenu)
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
     }
     
     @IBAction func exitGameButtonTapped(_ sender: UIButton) {
         guard let game = game else { return }
         
         // Remove the user from the game
-        GameController.shared.quit(game) { [weak self] (result) in
+        GameController.shared.leave(game) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
@@ -96,13 +111,26 @@ class GameOverViewController: UIViewController, HasAGameObject {
         // Don't allow the user to interact with the screen while the data is loading
         disableUI()
         
-        // Fetch the players who participated in the previous game
-        GameController.shared.newGame(from: oldGame) { [weak self] (result) in
+        // Leave the previous game
+        GameController.shared.leave(oldGame) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let game):
-                    // Transition to the waiting view
-                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                case .success(_):
+                    // Start a new game from the data in the old game
+                    GameController.shared.newGame(from: oldGame) { (result) in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let game):
+                                // Transition to the waiting view
+                                self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                            case .failure(let error):
+                                // Print and display the error and reset the UI
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                self?.presentErrorAlert(error)
+                                self?.enableUI()
+                            }
+                        }
+                    }
                 case .failure(let error):
                     // Print and display the error and reset the UI
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

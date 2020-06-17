@@ -81,11 +81,9 @@ class MemeController {
     
     // Read (fetch) the winning caption for a meme
     func fetchWinningCaption(for meme: Meme, completion: @escaping (Result<Caption, MemeThingError>) -> Void) {
-        print("got here to \(#function) and meme is \(meme) with winning caption index \(String(describing: meme.winningCaptionIndex)) that has an id of \(String(describing: meme.captions?[meme.winningCaptionIndex ?? 0].recordID))")
+        print("got here to \(#function) and meme is \(meme) with winning caption is \(String(describing: meme.winningCaption))")
         // Get the recordID of the winning caption from the meme
-        guard let index = meme.winningCaptionIndex,
-            let recordID = meme.captions?[index].recordID
-            else { return completion(.failure(.unknownError)) }
+        guard let recordID = meme.winningCaption?.recordID else { return completion(.failure(.unknownError)) }
         
         // Fetch the data from the cloud
         CKService.shared.read(recordID: recordID) { (result: Result<Caption, MemeThingError>) in
@@ -123,29 +121,11 @@ class MemeController {
         let caption = Caption(text: text, author: author.reference, meme: meme.reference, game: game.reference)
         
         // Save it to the cloud
-        CKService.shared.create(object: caption) { [weak self] (result) in
+        CKService.shared.create(object: caption) { (result) in
             switch result {
-            case .success(let caption):
-                // Add the caption to the list of captions on the meme
-                if meme.captions != nil {
-                    meme.captions!.append(caption.reference)
-                } else {
-                    meme.captions = [caption.reference]
-                }
-                
-                // Save the change to the meme
-                self?.update(meme) { (result) in
-                    switch result {
-                    case .success(_):
-                        print("got here to \(#function) and meme has \(String(describing: meme.captions?.count)) captions and id \(meme.reference.recordID.recordName)")
-                        // Return the success
-                        return completion(.success(true))
-                    case .failure(let error):
-                        // Print and return the error
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        return completion(.failure(error))
-                    }
-                }
+            case .success(_):
+                // Return the success
+                return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -160,8 +140,8 @@ class MemeController {
         CKService.shared.update(object: caption) { [weak self] (result) in
             switch result {
             case .success(let caption):
-                // Update the meme with the with the index of the winning caption
-                meme.winningCaptionIndex = meme.captions?.firstIndex(of: caption.reference)
+                // Update the meme with the with the reference to the winning caption
+                meme.winningCaption = caption.reference
                 self?.update(meme, completion: { (result) in
                     switch result {
                     case .success(_):
