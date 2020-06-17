@@ -167,14 +167,30 @@ class GameController {
                 remoteGame.updatePoints(of: currentUser, to: localGame.getPoints(of: currentUser))
                 print("now remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
                 
-                // Using the newly merged data, recalculate the game's status
-                if remoteGame.allPlayersResponded { remoteGame.gameStatus = .waitingForDrawing }
-                if remoteGame.allCaptionsSubmitted { remoteGame.gameStatus = .waitingForResult }
-                if remoteGame.gameWinner != nil { remoteGame.gameStatus = .gameOver }
-                print("finally, remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
-                
-                // Try to save the newly merged and updated game again
-                self?.saveChanges(to: remoteGame, completion: completion)
+                // If all players have seen the game, delete it from the cloud
+                if remoteGame.allPlayersDone {
+                    self?.delete(remoteGame, completion: { (result) in
+                        switch result {
+                        case .success(_):
+                            // Return the success
+                            return completion(.success(remoteGame))
+                        case .failure(let error):
+                            // Print and return the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return completion(.failure(error))
+                        }
+                    })
+                } else {
+                    // Otherwise, use the newly merged data to recalculate the game's status
+                    remoteGame.resetGameStatus()
+                    //                if remoteGame.allPlayersResponded { remoteGame.gameStatus = .waitingForDrawing }
+                    //                if remoteGame.allCaptionsSubmitted { remoteGame.gameStatus = .waitingForResult }
+                    //                if remoteGame.gameWinner != nil { remoteGame.gameStatus = .gameOver }
+                    print("finally, remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
+                    
+                    // Try again to save the newly merged and updated game
+                    self?.saveChanges(to: remoteGame, completion: completion)
+                }
             case .failure(let error):
                 // If the error is that a merge is needed again, handle that
                 if case MemeThingError.mergeNeeded = error {
@@ -190,7 +206,7 @@ class GameController {
     }
     
     // Delete a game when it's finished
-    func finishGame(_ game: Game, completion: @escaping resultHandler) {
+    func delete(_ game: Game, completion: @escaping resultHandler) {
         CKService.shared.delete(object: game) { (result) in
             switch result {
             case .success(_):
@@ -243,8 +259,8 @@ class GameController {
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
-        notificationInfo.title = "Game Ended"
-        notificationInfo.alertBody = "Your game on MemeThing has finished"
+//        notificationInfo.title = "Game Ended"
+//        notificationInfo.alertBody = "Your game on MemeThing has finished"
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.category = NotificationHelper.Category.gameEnded.rawValue
         subscription.notificationInfo = notificationInfo
@@ -321,30 +337,23 @@ class GameController {
         // Update the game with the user's response
         game.updateStatus(of: currentUser, to: (accept ? .accepted : .denied))
         
-        // FIXME: - check that there's still enough players to be able to have a game if the rest accept
-        
-        // If all players have responded to the invitation, update the status of the game
-        if game.allPlayersResponded {
-            // Either start the game or end it depending on enough players accepted the invitation
-            let status: Game.GameStatus = game.playersStatus.filter({ $0 == .accepted }).count >= 2 ? .waitingForDrawing : .gameOver
-            // FIXME: - change the minimum number of players back to 3 after done testing
-            game.gameStatus = status
-        }
+        // Check that there's still enough players to be able to have a game, or start the game if everyone has responded
+        game.resetGameStatus()
         
         // Save the updated game to the cloud
         saveChanges(to: game) { [weak self] (result) in
             switch result {
             case .success(let game):
                 // If the user accepted the invitation, save the game to the Core Data
-                if accept { SavedGameController.save(game) }
-                else {
+//                if accept { SavedGameController.save(game) }
+//                else {
                     // Otherwise, remove the game from the source of truth
                     guard let index = self?.currentGames?.firstIndex(of: game) else { return }
                     self?.currentGames?.remove(at: index)
                     
                     // Tell the table view list of current games to update itself
                     NotificationCenter.default.post(Notification(name: updateListOfGames))
-                }
+//                }
                 // Return the success
                 return completion(.success(true))
             case .failure(let error):
@@ -358,8 +367,8 @@ class GameController {
     // Receive a notification that a game has ended
     func receiveNotificationGameEnded(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
         print("got here to \(#function)")
-        // Mark the change to the copy of the game in the core data
-        SavedGameController.setToFinished(game: recordID.recordName)
+//        // Mark the change to the copy of the game in the core data
+//        SavedGameController.setToFinished(game: recordID.recordName)
         
         // Perform all the clean-up to finish the game
         handleEnd(for: recordID.recordName)
@@ -444,7 +453,7 @@ class GameController {
         
         // Check to see if there are enough remaining active players, and if not, end the game
         if game.activePlayers.values.count < 3 {
-            finishGame(game) { [weak self] (result) in
+            delete(game) { [weak self] (result) in
                 switch result {
                 case .success(_):
                     // Delete the game from the Core Data

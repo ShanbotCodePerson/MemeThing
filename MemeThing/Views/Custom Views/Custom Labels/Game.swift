@@ -112,7 +112,7 @@ class Game: CKCompatible {
     
     // All the references for the active players
     var activePlayersReferences: [CKRecord.Reference] {
-        return playersReferences.filter({ activePlayers.keys.contains($0.recordID.recordName) }).compactMap({ $0 })
+        return playersReferences.filter({ activePlayers.keys.contains($0.recordID.recordName) })
     }
     
     // All the active players, sorted in descending order by points
@@ -190,6 +190,12 @@ class Game: CKCompatible {
         }
     }
     
+    // Calculate whether there are enough players available to continue the game
+    var enoughPlayers: Bool {
+        // A minimum of three players is required to play the game
+        return activePlayers.count > 2
+    }
+    
     // Calculate whether all players have responded to the game invitation
     var allPlayersResponded: Bool {
         // A player's status will only be "invited" if they haven't responded to the invitation yet
@@ -202,6 +208,11 @@ class Game: CKCompatible {
         let currentPlayers = playersStatus.filter { ($0 != .denied) && ($0 != .quit) }
         // Every other should have either sent a drawing (the lead player) or sent a caption (all other players)
         return Set(currentPlayers) == [.sentDrawing, .sentCaption]
+    }
+    
+    // Calculate whether all players have seen the finished game and it's ready to be deleted
+    var allPlayersDone: Bool {
+        return Set(playersStatus) == [.denied, .quit] || Set(playersStatus) == [.quit]
     }
     
     // Figure out if a player has won the game yet
@@ -346,7 +357,7 @@ class Game: CKCompatible {
         playersPoints[index] = points
     }
     
-    // Quickly update a players points when their caption is selected as winner
+    // Quickly update a the game when a caption is selected as winner
     func winningCaptionSelected(as caption: Caption) {
         // Update the points of the player who submitted that caption
         guard let index = playersReferences.firstIndex(of: caption.author) else { return }
@@ -379,6 +390,13 @@ class Game: CKCompatible {
                 playersStatus[index] = .accepted
             }
         }
+    }
+    
+    // Reset the game's status based on the players status
+    func resetGameStatus() {
+        if !enoughPlayers || gameWinner != nil { gameStatus = .gameOver }
+        else if allCaptionsSubmitted { gameStatus = .waitingForResult }
+        else if allPlayersResponded { gameStatus = .waitingForDrawing }
     }
 }
 

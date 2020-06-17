@@ -252,7 +252,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                         case .success(_):
                             // If the game is over, delete it from the cloud and go to the game over view
                             if game.gameStatus == .gameOver {
-                                GameController.shared.finishGame(game) { (result) in
+                                GameController.shared.delete(game) { (result) in
                                     DispatchQueue.main.async {
                                         switch result {
                                         case .success(_):
