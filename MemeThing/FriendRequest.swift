@@ -40,8 +40,6 @@ class FriendRequest: CKCompatible {
         case removingFriend
     }
     
-    // FIXME: - use an enum for the response instead, so there's three possibilities
-    
     // CloudKit properties
     static var recordType: CKRecord.RecordType { FriendRequestStrings.recordType }
     var ckRecord: CKRecord { createCKRecord() }
@@ -94,6 +92,6 @@ class FriendRequest: CKCompatible {
 extension FriendRequest: Equatable {
     
     static func == (lhs: FriendRequest, rhs: FriendRequest) -> Bool {
-        return lhs.recordID.recordName == rhs.recordID.recordName // TODO: - best way to do this?
+        return lhs.recordID.recordName == rhs.recordID.recordName
     }
 }

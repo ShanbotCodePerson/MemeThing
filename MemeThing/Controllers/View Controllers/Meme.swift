@@ -41,7 +41,6 @@ class Meme: CKCompatible, CKPhotoAsset {
     // MARK: - Initializer
     
     init(photo: UIImage, author: CKRecord.Reference, captions: [CKRecord.Reference]? = nil, winningCaptionIndex: Int? = nil, game: CKRecord.Reference, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
-        // FIXME: - gameID needs to not have a default - comes from game
         self.photo = photo
         self.author = author
         self.captions = captions

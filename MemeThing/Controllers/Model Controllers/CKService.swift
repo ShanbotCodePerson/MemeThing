@@ -141,7 +141,6 @@ extension CKServicing {
         }
     }
     
-    // TODO: - update multiple things (of different types) at once?
     func update<T: CKCompatible> (object: T, overwrite: Bool = true, completion: @escaping SingleItemHandler<T>) {
         // Create the operation to save the updates to the object
         let operation = CKModifyRecordsOperation(recordsToSave: [object.ckRecord], recordIDsToDelete: nil)
@@ -154,7 +153,6 @@ extension CKServicing {
             // Handle any errors
             if let error = error as? CKError {
                 // If the error is that the cloud has been updated in the meantime, return a notice to handle the merge
-                
                 let data = error.userInfo[CKPartialErrorsByItemIDKey] as! NSDictionary
                 print(data)
                 let ckError = data.allValues[0] as! CKError

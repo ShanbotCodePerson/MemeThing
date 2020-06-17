@@ -16,7 +16,6 @@ protocol HasAGameObject: UIViewController {
 
 // MARK: - String Constants
 
-// TODO: - find a better place to put this
 struct StoryboardNames  {
     static let mainMenu = "MainMenu"
     static let waitingView = "Waiting"
@@ -32,7 +31,6 @@ extension UIViewController {
     
     // MARK: - Navigation
     
-    // TODO: - find a better place to put these functions
     func transitionToStoryboard(named: String, direction: CATransitionSubtype = .fromLeft) {
         let storyboard = UIStoryboard(name: named, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() else { return }

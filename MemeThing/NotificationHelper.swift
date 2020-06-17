@@ -40,26 +40,21 @@ class NotificationHelper {
         switch notificationType {
         case .newFriendRequest:
             print("received new friend request")
-            // TODO: - have an alert waiting next time app is opened?
             FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged, completion: completion)
         case .removingFriend:
             print("received request remove friend")
             FriendRequestController.shared.receiveFriendRemoving(withID: recordIDChanged, completion: completion)
         case .friendRequestResponse:
             print("received response to friend request")
-            // TODO: - have an alert waiting next time app is opened?
             FriendRequestController.shared.receiveResponseToFriendRequest(withID: recordIDChanged, completion: completion)
         case .newGameInvitation:
             print("received new game invitation")
-            // TODO: - have an alert waiting next time app is opened?
             GameController.shared.receiveInvitationToGame(withID: recordIDChanged, completion: completion)
         case .gameUpdate:
             print("received update to game")
-            // TODO: - have an alert waiting next time app is opened?
             GameController.shared.receiveUpdateToGame(withID: recordIDChanged, completion: completion)
         case .gameEnded:
             print("received notification that game ended")
-            // TODO: - have an alert waiting next time app is opened?
             GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged, completion: completion)
         }
     }
