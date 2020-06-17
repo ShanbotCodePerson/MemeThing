@@ -41,7 +41,7 @@ class GameController {
         CKService.shared.create(object: newGame) { [weak self] (result) in
             switch result {
             case .success(let game):
-                // Update the source of truth
+                // Add the game to the source of truth
                 if var currentGames = self?.currentGames {
                     currentGames.append(game)
                     self?.currentGames = currentGames
@@ -66,17 +66,35 @@ class GameController {
         // Remove the old game from the cloud
         delete(oldGame) { (_) in }
         
-//        // Use the data from the old game to start a new game, with the current user as the first lead player
-//        var playerReferences = oldGame.activePlayersReferences
-//        playerReferences.removeAll(where: { $0 == currentUser.reference })
-//        playerReferences.insert(currentUser.reference, at: 0)
-//        
-////        playersNames
-//        
-//        let newGame = Game(playersReferences: playerReferences, playersNames: playerNames, leadPlayer: currentUser.reference, pointsToWin: oldGame.pointsToWin, recordID: CKRecord.ID(recordName: "\(oldGame.recordID)-2"))
+        // Use the data from the old game to start a new game, with the current user as the first lead player
+        let activePlayers = oldGame.activePlayers
+        var playerReferences = oldGame.playersReferences.filter { $0 != currentUser.reference && activePlayers.keys.contains($0.recordID.recordName) }
+        playerReferences.insert(currentUser.reference, at: 0)
+        let playerNames = playerReferences.compactMap { activePlayers[$0.recordID.recordName]?.name }
+        
+        let newGame = Game(playersReferences: playerReferences, playersNames: playerNames, leadPlayer: currentUser.reference, pointsToWin: oldGame.pointsToWin, recordID: CKRecord.ID(recordName: "\(oldGame.recordID)-2"))
         
         // Save the game to the cloud
         // FIXME: - need to handle a merge if someone else has already tried to restart the game
+        saveChanges(to: newGame) { [weak self] (result) in
+            switch result {
+            case .success(let game):
+                // Add the game to the source of truth
+                if var currentGames = self?.currentGames {
+                    currentGames.append(game)
+                    self?.currentGames = currentGames
+                } else {
+                    self?.currentGames = [game]
+                }
+                
+                // Return the success
+                return completion(.success(game))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
     }
     
     // Read (fetch) all the games the user is currently involved in
@@ -278,7 +296,7 @@ class GameController {
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
-        notificationInfo.title = "Update to game" // TODO: - figure out a better message for this
+        notificationInfo.title = "Update to game"
         notificationInfo.alertBody =  "Update to a game you're playing"
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.category = NotificationHelper.Category.gameUpdate.rawValue

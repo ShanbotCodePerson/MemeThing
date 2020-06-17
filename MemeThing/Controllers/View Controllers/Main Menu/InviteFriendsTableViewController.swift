@@ -127,7 +127,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Check how many rows are selected and enable or disable the start game button accordingly
-        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
+        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 1 {
             startGameButton.activate()
         }
         else  { startGameButton.deactivate() }
@@ -135,7 +135,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         // Check how many rows are selected and enable or disable the start game button accordingly
-        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
+        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 1 {
             startGameButton.activate()
         }
         else { startGameButton.deactivate() }
