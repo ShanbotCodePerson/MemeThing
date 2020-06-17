@@ -26,6 +26,8 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
+        
+        // FIXME: - need to have all observers in here so that user continues with game as needed even if viewing leaderboard while notification comes in
     }
     
     // MARK: - Set Up UI
@@ -53,8 +55,6 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         
         // Present an alert to confirm the user really wants to quit the game
         presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to quit the game?") {
-            // TODO: - lock user interaction?
-            
             // If the user clicks "confirm," quit the game and return to the main menu
             GameController.shared.quit(game) { [weak self] (result) in
                 DispatchQueue.main.async {

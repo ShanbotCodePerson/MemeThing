@@ -16,8 +16,7 @@ struct MemeStrings {
     fileprivate static let recordType = "Meme"
     fileprivate static let photoKey = "photo"
     fileprivate static let authorKey = "author"
-    fileprivate static let captionsKey = "captions"
-    fileprivate static let winningCaptionIndexKey = "winningCaptionIndexKey"
+    fileprivate static let winningCaptionKey = "winningCaptionKey"
     fileprivate static let gameKey = "game"
 }
 
@@ -28,8 +27,7 @@ class Meme: CKCompatible, CKPhotoAsset {
     // Meme properties
     var photo: UIImage?
     let author: CKRecord.Reference
-    var captions: [CKRecord.Reference]?
-    var winningCaptionIndex: Int?
+    var winningCaption: CKRecord.Reference?
     var game: CKRecord.Reference
     
     // CloudKit properties
@@ -40,12 +38,10 @@ class Meme: CKCompatible, CKPhotoAsset {
     
     // MARK: - Initializer
     
-    init(photo: UIImage, author: CKRecord.Reference, captions: [CKRecord.Reference]? = nil, winningCaptionIndex: Int? = nil, game: CKRecord.Reference, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
-        // FIXME: - gameID needs to not have a default - comes from game
+    init(photo: UIImage, author: CKRecord.Reference, winningCaption: CKRecord.Reference? = nil, game: CKRecord.Reference, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
         self.photo = photo
         self.author = author
-        self.captions = captions
-        self.winningCaptionIndex = winningCaptionIndex
+        self.winningCaption = winningCaption
         self.game = game
         self.recordID = recordID
     }
@@ -56,8 +52,7 @@ class Meme: CKCompatible, CKPhotoAsset {
         guard let author = ckRecord[MemeStrings.authorKey] as? CKRecord.Reference,
             let game = ckRecord[MemeStrings.gameKey] as? CKRecord.Reference
             else { return nil }
-        let captions = ckRecord[MemeStrings.captionsKey] as? [CKRecord.Reference]
-        let winningCaptionIndex = ckRecord[MemeStrings.winningCaptionIndexKey] as? Int
+        let winningCaption = ckRecord[MemeStrings.winningCaptionKey] as? CKRecord.Reference
         
         var photo: UIImage?
         if let photoAsset = ckRecord[MemeStrings.photoKey] as? CKAsset {
@@ -70,7 +65,7 @@ class Meme: CKCompatible, CKPhotoAsset {
         }
         guard let unwrappedPhoto = photo else { return nil }
         
-        self.init(photo: unwrappedPhoto, author: author, captions: captions, winningCaptionIndex: winningCaptionIndex, game: game, recordID: ckRecord.recordID)
+        self.init(photo: unwrappedPhoto, author: author, winningCaption: winningCaption, game: game, recordID: ckRecord.recordID)
     }
     
     // MARK: - Convert to CKRecord
@@ -80,8 +75,7 @@ class Meme: CKCompatible, CKPhotoAsset {
         
         if let photoAsset = photoAsset { record.setValue(photoAsset, forKey: MemeStrings.photoKey) }
         record.setValue(author, forKey: MemeStrings.authorKey)
-        if let captions = captions { record.setValue(captions, forKey: MemeStrings.captionsKey) }
-        if let winningCaptionIndex = winningCaptionIndex { record.setValue(winningCaptionIndex, forKey: MemeStrings.winningCaptionIndexKey) }
+        if let winningCaption = winningCaption { record.setValue(winningCaption, forKey: MemeStrings.winningCaptionKey) }
         record.setValue(game, forKey: MemeStrings.gameKey)
         
         return record

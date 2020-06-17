@@ -24,6 +24,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var textFieldsStackView: UIStackView!
     @IBOutlet weak var stackViewHeightLayoutConstraint: NSLayoutConstraint!
     @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!
+    @IBOutlet weak var loadingIndictor: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -65,6 +66,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
+        // Don't allow the user to interact with the screen while the data is processing
+        disableUI()
+        
         // Check to see if the username is unique
         UserController.shared.searchFor(username) { [weak self] (result) in
             DispatchQueue.main.async {
@@ -72,12 +76,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 case .success(_):
                    // If the username is taken, present an alert
                     self?.presentAlert(title: "Username Taken", message: "That username is already taken - please choose a different username")
+                    self?.enableUI()
                     return
                 case .failure(let error):
                     // Make sure the error is that no user was found, rather than some other type of error
                     guard case MemeThingError.noUserFound = error else {
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         self?.presentErrorAlert(error)
+                        self?.enableUI()
                         return
                     }
                     
@@ -90,6 +96,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         let confirmPassword = self?.confirmPasswordTextField.text
                         else {
                             self?.presentAlert(title: "Invalid Password", message: "You must enter a password")
+                            self?.enableUI()
                             return
                     }
                     
@@ -97,6 +104,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     guard let signingUp = self?.signingUp else { return }
                     if signingUp && password != confirmPassword {
                         self?.presentAlert(title: "Passwords Don't Match", message: "The passwords you have entered don't match - make sure to enter your password carefully")
+                        self?.enableUI()
                         return
                     }
                     
@@ -107,8 +115,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                             // Go straight to the main menu if the user was created correctly
                             self?.presentMainMenuVC()
                         case .failure(let error):
-                            self?.presentErrorAlert(error)
+                            // Print and return the error and allow the user to interact with the UI again
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorAlert(error)
+                            self?.enableUI()
                         }
                     }
                 }
@@ -130,6 +140,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func setUpViews() {
         view.backgroundColor = .background
         stackViewHeightLayoutConstraint.constant = buttonsStackView.frame.height + textFieldsStackView.frame.height
+        loadingIndictor.isHidden = true
         
         usernameTextField.delegate = self
         screenNameTextField.delegate = self
@@ -162,6 +173,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     func fetchUser() {
+        // Don't allow the user to interact with the screen while the data is loading
+        disableUI()
+        
         UserController.shared.fetchUser { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
@@ -169,6 +183,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     // Go straight to the main menu if the user was fetched correctly
                     self?.presentMainMenuVC()
                 case .failure(let error):
+                    // Allow the user to interact with the UI again
+                    self?.enableUI()
+                    
                     // Print and display the error (unless the error is that no user has been created yet)
                     if case MemeThingError.noUserFound = error { return }
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -222,6 +239,39 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         DispatchQueue.main.async {
             self.transitionToStoryboard(named: StoryboardNames.mainMenu, direction: .fromRight)
         }
+    }
+    
+    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
+    func disableUI() {
+        loadingIndictor.startAnimating()
+        loadingIndictor.isHidden = false
+        
+        signUpToggleButton.deactivate()
+        loginToggleButton.deactivate()
+        
+        usernameTextField.isUserInteractionEnabled = false
+        screenNameTextField.isUserInteractionEnabled = false
+        emailTextField.isUserInteractionEnabled = false
+        passwordTextField.isUserInteractionEnabled = false
+        confirmPasswordTextField.isUserInteractionEnabled = false
+        
+        doneButton.deactivate()
+    }
+    
+    func enableUI() {
+        signUpToggleButton.activate()
+        loginToggleButton.activate()
+        
+        usernameTextField.isUserInteractionEnabled = true
+        screenNameTextField.isUserInteractionEnabled = true
+        emailTextField.isUserInteractionEnabled = true
+        passwordTextField.isUserInteractionEnabled = true
+        confirmPasswordTextField.isUserInteractionEnabled = true
+        
+        doneButton.activate()
+        
+        loadingIndictor.stopAnimating()
+        loadingIndictor.isHidden = true
     }
     
     // MARK: - Text Field Controls

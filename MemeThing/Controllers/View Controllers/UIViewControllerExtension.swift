@@ -16,7 +16,6 @@ protocol HasAGameObject: UIViewController {
 
 // MARK: - String Constants
 
-// TODO: - find a better place to put this
 struct StoryboardNames  {
     static let mainMenu = "MainMenu"
     static let waitingView = "Waiting"
@@ -32,7 +31,6 @@ extension UIViewController {
     
     // MARK: - Navigation
     
-    // TODO: - find a better place to put these functions
     func transitionToStoryboard(named: String, direction: CATransitionSubtype = .fromLeft) {
         let storyboard = UIStoryboard(name: named, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() else { return }
@@ -49,10 +47,10 @@ extension UIViewController {
         self.present(initialVC, animated: false)
     }
     
-    func transitionToStoryboard(named: String, with gameID: String) {
+    func transitionToStoryboard(named: String, with game: Game) {
         let storyboard = UIStoryboard(name: named, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
-        initialVC.gameID = gameID
+        initialVC.gameID = game.recordID.recordName
         initialVC.modalPresentationStyle = .fullScreen
         
         // Make the transition look like navigating forward through a navigation controller
@@ -66,10 +64,10 @@ extension UIViewController {
         self.present(initialVC, animated: false)
     }
     
-    func presentPopoverStoryboard(named: String, with gameID: String) {
+    func presentPopoverStoryboard(named: String, with game: Game) {
         let storyboard = UIStoryboard(name: named, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
-        initialVC.gameID = gameID
+        initialVC.gameID = game.recordID.recordName
         initialVC.modalPresentationStyle = .overFullScreen
         initialVC.modalTransitionStyle = .crossDissolve
         self.present(initialVC, animated: true)

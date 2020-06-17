@@ -46,9 +46,29 @@ class DrawingViewController: UIViewController, HasAGameObject {
         DispatchQueue.main.async {
             if sender.name == toGameOver {
                 print("should be going to game over view now")
-                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game.recordID.recordName)
+                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
             }
         }
+    }
+    
+    // MARK: - Helper Methods
+    
+    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
+    func disableUI() {
+        loadingIndicator.startAnimating()
+        loadingIndicator.isHidden = false
+        
+        canvasView.isUserInteractionEnabled = false
+        sendButton.deactivate()
+    }
+    
+    func enableUI() {
+        canvasView.isUserInteractionEnabled = true
+        sendButton.activate()
+        undoButton.isHidden = false
+        
+        loadingIndicator.isHidden = true
+        loadingIndicator.stopAnimating()
     }
     
     // MARK: - Actions
@@ -59,7 +79,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game.recordID.recordName)
+        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
     
     @IBAction func undoButtonTapped(_ sender: UIButton) {
@@ -73,13 +93,8 @@ class DrawingViewController: UIViewController, HasAGameObject {
         undoButton.isHidden = true
         let image = canvasView.getImage()
         
-        // Display the loading icon while the image saves
-        loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
-        
         // Don't allow the user to continue drawing or resubmit the drawing while the image saves
-        canvasView.isUserInteractionEnabled = false
-        sendButton.deactivate()
+        disableUI()
         
         // Create the meme object and save it to the cloud
         MemeController.shared.createMeme(in: game, with: image, by: currentUser) { [weak self] (result) in
@@ -95,45 +110,31 @@ class DrawingViewController: UIViewController, HasAGameObject {
                 
                 // Update the game's status
                 game.gameStatus = .waitingForCaptions
-                // FIXME: - Make sure this change is reflected in the game in the SoT too
                 
                 // Update the player's status
                 game.updateStatus(of: currentUser, to: .sentDrawing)
                 
                 // Save the game to the cloud
-                // TODO: - better way than nested completions??
-                GameController.shared.saveChanges(to: game) { (result) in
+                 GameController.shared.saveChanges(to: game) { (result) in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
                             // Transition back to the waiting view until all the captions have been submitted
-                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
+                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                         case .failure(let error):
-                            // Print and display the error
+                            // Print and display the error and reset the UI
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             self?.presentErrorAlert(error)
-                            
-                            // Reset the UI
-                            // FIXME: - refactor to helper method
-                            self?.loadingIndicator.stopAnimating()
-                            self?.undoButton.isHidden = false
-                            self?.canvasView.isUserInteractionEnabled = true
-                            self?.sendButton.activate()
+                            self?.enableUI()
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    // Print and display the error
+                    // Print and display the error and reset the UI
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
-                    
-                    // Reset the UI
-                    // FIXME: - refactor to helper method
-                    self?.loadingIndicator.stopAnimating()
-                    self?.undoButton.isHidden = false
-                    self?.canvasView.isUserInteractionEnabled = true
-                    self?.sendButton.activate()
+                    self?.enableUI()
                 }
             }
         }

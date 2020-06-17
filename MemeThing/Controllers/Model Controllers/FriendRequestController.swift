@@ -133,9 +133,9 @@ class FriendRequestController {
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
         notificationInfo.title = "Response to Friend Request"
-        notificationInfo.alertBody = "New response to friend request on MemeThing" // FIXME: - be able to change this based on status of friend request
+        notificationInfo.alertBody = "New response to friend request on MemeThing" // TODO: - be able to change this based on status of friend request
         notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.desiredKeys = [FriendRequestStrings.fromUsernameKey] // TODO: - replace with actually useful data
+        notificationInfo.desiredKeys = [FriendRequestStrings.fromUsernameKey] // TODO: - replace with actually useful data or remove
         notificationInfo.category = NotificationHelper.Category.friendRequestResponse.rawValue
         subscription.notificationInfo = notificationInfo
         
@@ -276,14 +276,13 @@ class FriendRequestController {
             switch result {
             case .success(let friendRequest):
                 // Remove the friend from the users list of friends and save the changes to the cloud
-                // TODO: - need to make sure this is getting called even when the app is in the background
                 if let currentUser = UserController.shared.currentUser {
                     UserController.shared.update(currentUser, friendToRemove: friendRequest.fromReference) { (result) in
                         switch result {
                         case .success(_):
                             // Delete the friend request now that it's no longer necessary
                             CKService.shared.delete(object: friendRequest) { (result) in
-                                // TODO: - need something here
+                                // TODO: - need something here, nested completions being weird again
                             }
                             
                             // Tell the friends table view to reload its data
@@ -335,7 +334,7 @@ class FriendRequestController {
             }
         }
         
-        // TODO: - display an alert to the user with the result of the friend request?? How would I do that?
+        // TODO: - display an alert to the user with the result of the friend request?
         
         // Delete the friend request from the cloud now that it's no longer needed
         CKService.shared.delete(object: friendRequest) { [weak self] (result) in

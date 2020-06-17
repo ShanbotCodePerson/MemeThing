@@ -35,20 +35,20 @@ class GameTableViewCell: UITableViewCell {
     
     // MARK: - Set Up UI
     
-    func setUpViews(in section: GamesListTableViewController.SectionName, with game: Any?) {
+    func setUpViews(in section: GamesListTableViewController.SectionName, with game: Game?) {
         selectionStyle = .none
         
         switch section {
         case .pendingInvitations:
-            guard let game = game as? Game else { return }
+            guard let game = game else { return }
             setUpPendingInvitationView(for: game)
         case .waitingForResponses:
-            guard let game = game as? Game else { return }
+            guard let game = game else { return }
             setUpWaitingForResponseView(for: game)
         case .games:
             setUpActiveGameView(for: game)
         case .finishedGames:
-            guard let game = game as? FinishedGame else { return }
+            guard let game = game else { return }
             setUpFinishedGameView(for: game)
         }
     }
@@ -81,7 +81,7 @@ class GameTableViewCell: UITableViewCell {
         }
     }
     
-    private func setUpFinishedGameView(for game: FinishedGame) {
+    private func setUpFinishedGameView(for game: Game) {
         buttonStackView.isHidden = true
         contentView.backgroundColor = .lightGray
         mainTextLabel.text = "You played a game with \(game.listOfPlayerNames)"

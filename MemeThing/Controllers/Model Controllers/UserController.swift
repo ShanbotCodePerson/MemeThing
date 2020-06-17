@@ -88,7 +88,6 @@ class UserController {
         guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
         // Return an empty array if the user has no friends
-        // FIXME: - CHECK THIS
         if currentUser.friendsReferences.count == 0 {
             self.usersFriends = []
             return completion(.success(false))
@@ -260,9 +259,12 @@ class UserController {
     
     // Set up all the necessary notification subscriptions for the user
     func setUpUser() {
+        print("got here to \(#function)")
         FriendRequestController.shared.subscribeToFriendRequests()
         FriendRequestController.shared.subscribeToFriendRemoving()
         FriendRequestController.shared.subscribeToFriendRequestResponses()
         GameController.shared.subscribeToGameInvitations()
+        GameController.shared.subscribeToGameEndings()
+        GameController.shared.subscribeToGameUpdates()
     }
 }

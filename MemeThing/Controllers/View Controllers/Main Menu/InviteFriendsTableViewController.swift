@@ -13,6 +13,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Outlets
     
     @IBOutlet weak var startGameButton: UIButton!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Lifecycle Methods
     
@@ -35,6 +36,7 @@ class InviteFriendsTableViewController: UITableViewController {
         navigationController?.setNavigationBarHidden(false, animated: true)
         tableView.backgroundColor = .background
         tableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "friendCell")
+        loadingIndicator.isHidden = true
     }
     
     func loadData() {
@@ -53,12 +55,32 @@ class InviteFriendsTableViewController: UITableViewController {
         }
     }
     
+    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
+    func disableUI() {
+        loadingIndicator.startAnimating()
+        loadingIndicator.isHidden = false
+        
+        tableView.isUserInteractionEnabled = false
+        startGameButton.deactivate()
+    }
+    
+    func enableUI() {
+        tableView.isUserInteractionEnabled = true
+        startGameButton.activate()
+        
+        loadingIndicator.isHidden = true
+        loadingIndicator.stopAnimating()
+    }
+    
     // MARK: - Actions
     
     @IBAction func startGameButtonTapped(_ sender: UIButton) {
         // Get the list of selected players
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.usersFriends?[$0.row] }
+        
+        // Don't allow the user to interact with the screen while the data is loading
+        disableUI()
 
         // Create the game object, thus saving it to the cloud and thus automatically alerting the selected players
         GameController.shared.newGame(players: friends) { [weak self] (result) in
@@ -68,10 +90,12 @@ class InviteFriendsTableViewController: UITableViewController {
                     // Transition to the waiting view, passing along the reference to the current game
                     print("got here to \(#function) and seems to have created the game successfully")
                     print("SoT is now \(String(describing: GameController.shared.currentGames?.compactMap({$0.debugging})))")
-                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
+                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                 case .failure(let error):
+                    // Print and display the error and reset the UI
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
+                    self?.enableUI()
                 }
             }
         }

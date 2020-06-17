@@ -187,15 +187,17 @@ class FriendsListTableViewController: UITableViewController {
                 }
                 
                 // Send them a friend request
-                FriendRequestController.shared.sendFriendRequest(to: friend) { (result) in // FIXME: - better way than nested functions?
+                FriendRequestController.shared.sendFriendRequest(to: friend) { (result) in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
+                            // Display an alert showing the success, and refresh the tableview to show the pending friend request
                             self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.username)")
                             self?.tableView.reloadData()
                         case .failure(let error):
+                            // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            self?.presentAlert(title: "Uh-oh", message: "something went wrong - this shouldn't happen") // TODO: - replace with proper error message
+                            self?.presentErrorAlert(error)
                         }
                     }
                 }
@@ -271,7 +273,7 @@ class FriendsListTableViewController: UITableViewController {
             presentConfirmAlert(title: "Are you sure?", message: "Are you sure you want to unfriend \(friend.screenName)?") {
                 
                 // Don't allow the user to interact with the view while the change is being processed
-                tableView.isUserInteractionEnabled = false // TODO: - this needs to be tested, if it works, need to use in gameplay screens too
+                tableView.isUserInteractionEnabled = false
                 
                 // If the user clicks "confirm," remove the friend and update the tableview
                 FriendRequestController.shared.remove(friend: friend) { [weak self] (result) in
@@ -283,7 +285,7 @@ class FriendsListTableViewController: UITableViewController {
                                 // If the user clicks "confirm," add that user to their blocked list
                                 self?.blockUser(named: friend.username)
                             })
-                            print("got here to \(#function) and \(self?.dataSource)")
+                            print("got here to \(#function) and \(String(describing: self?.dataSource))")
                             // Update the tableview
                             self?.updateData()
                         case .failure(let error):

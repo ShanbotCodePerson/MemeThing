@@ -8,12 +8,13 @@
 
 import Foundation
 import CloudKit
+import CoreData
 
 // MARK: - String Constants
 
 struct GameStrings {
     static let recordType = "Game"
-    static let playersKey = "players"
+    static let playersReferencesKey = "playersReferences"
     static let playersNamesKey = "playersNames"
     static let playersStatusKey = "playersStatus"
     static let playersPointsKey = "playersPoints"
@@ -23,27 +24,26 @@ struct GameStrings {
     fileprivate static let gameStatusKey = "gameStatus"
 }
 
-// MARK: - Helper Struct
-
-struct Player {
-    var name: String
-    var status: Game.PlayerStatus
-    var points: Int
-}
-
 class Game: CKCompatible {
     
     // MARK: - Properties
     
     // Game properties
-    var players: [CKRecord.Reference]
+    var playersReferences: [CKRecord.Reference]
     var playersNames: [String]
     var playersStatus: [PlayerStatus]
     var playersPoints: [Int]
-    private var playersInfo: [String : Player]
+    private var playersInfo: [String : Player] {
+        var result = [String : Player]()
+        for index in 0..<playersReferences.count {
+            let player = Player(name: playersNames[index], status: self.playersStatus[index], points: self.playersPoints[index])
+            result[playersReferences[index].recordID.recordName] = player
+        }
+        return result
+    }
     var leadPlayer: CKRecord.Reference
-    var memes: [CKRecord.Reference]? // FIXME: -should this be a reference or list of meme objects?
-    let pointsToWin: Int
+    var memes: [CKRecord.Reference]?
+    var pointsToWin: Int
     var gameStatus: GameStatus
     
     // CloudKit properties
@@ -51,6 +51,14 @@ class Game: CKCompatible {
     static var recordType: CKRecord.RecordType { GameStrings.recordType }
     var ckRecord: CKRecord { createCKRecord() }
     var recordID: CKRecord.ID
+    var originalRecord: CKRecord?
+    
+    // Player Struct
+    struct Player {
+        var name: String
+        var status: PlayerStatus
+        var points: Int
+    }
     
     // Player Status
     enum PlayerStatus: Int {
@@ -60,6 +68,7 @@ class Game: CKCompatible {
         case quit
         case sentDrawing
         case sentCaption
+        case done
         
         var asString: String {
             switch self {
@@ -75,6 +84,8 @@ class Game: CKCompatible {
                 return "Submitted Caption"
             case .sentDrawing:
                 return "Submitted Drawing"
+            case .done:
+                return "Done"
             }
         }
     }
@@ -94,12 +105,17 @@ class Game: CKCompatible {
     
     // TODO: - delete this later, just helpful for testing
     var debugging: String {
-        return "Game with \(playersNames.joined(separator: ", ")) at status \(playersStatus) and points \(playersPoints). Status is \(gameStatus). \(memes?.count) memes."
+        return "Game with \(playersNames.joined(separator: ", ")) at status \(playersStatus) and points \(playersPoints). Status is \(gameStatus). \(String(describing: memes?.count)) memes. Change Tag is \(String(describing: originalRecord?.recordChangeTag))"
     }
     
     // All the active players, filtering out those who denied the invitation or quit the game
     var activePlayers: [String : Player] {
         return playersInfo.filter { $1.status != .denied && $1.status != .quit }
+    }
+    
+    // All the references for the active players
+    var activePlayersReferences: [CKRecord.Reference] {
+        return playersReferences.filter({ activePlayers.keys.contains($0.recordID.recordName) })
     }
     
     // All the active players, sorted in descending order by points
@@ -126,7 +142,7 @@ class Game: CKCompatible {
     
     // The name of the lead player
     var leadPlayerName: String {
-        guard let index = players.firstIndex(of: leadPlayer) else { return "" }
+        guard let index = playersReferences.firstIndex(of: leadPlayer) else { return "" }
         return playersNames[index]
     }
     
@@ -177,6 +193,12 @@ class Game: CKCompatible {
         }
     }
     
+    // Calculate whether there are enough players available to continue the game
+    var enoughPlayers: Bool {
+        // A minimum of three players is required to play the game
+        return activePlayers.count > 2
+    }
+    
     // Calculate whether all players have responded to the game invitation
     var allPlayersResponded: Bool {
         // A player's status will only be "invited" if they haven't responded to the invitation yet
@@ -191,6 +213,12 @@ class Game: CKCompatible {
         return Set(currentPlayers) == [.sentDrawing, .sentCaption]
     }
     
+    // Calculate whether all players have seen the finished game and it's ready to be deleted
+    var allPlayersDone: Bool {
+        let activeStatus = activePlayers.map { $1.status }
+        return Set(activeStatus) == [.done]
+    }
+    
     // Figure out if a player has won the game yet
     var gameWinner: String? {
         // Check if the highest score has reached the points needed to win, and if so, return the reference to that player
@@ -200,9 +228,9 @@ class Game: CKCompatible {
         return playersNames[index]
     }
     
-    // MARK: - Initializer
+    // MARK: - Initializers
     
-    init(players: [CKRecord.Reference],
+    init(playersReferences: [CKRecord.Reference],
          playersNames: [String],
          playersStatus: [PlayerStatus]? = nil,
          playersPoints: [Int]? = nil,
@@ -212,38 +240,31 @@ class Game: CKCompatible {
          gameStatus: GameStatus = .waitingForPlayers,
          recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
         
-        self.players = players
+        self.playersReferences = playersReferences
         self.playersNames = playersNames
         if let playersStatus = playersStatus { self.playersStatus = playersStatus }
         else {
             // By default, the initial status of all players is waiting, except for the lead player (who starts off at the first index)
-            self.playersStatus = Array(repeating: .invited, count: players.count - 1)
+            self.playersStatus = Array(repeating: .invited, count: playersReferences.count - 1)
             self.playersStatus.insert(.accepted, at: 0)
         }
         if let playersPoints = playersPoints { self.playersPoints = playersPoints }
         else {
             // By default, all players start with zero points
-            self.playersPoints = Array(repeating: 0, count: players.count)
+            self.playersPoints = Array(repeating: 0, count: playersReferences.count)
         }
-        
-        var playersInfo = [String : Player]()
-        for index in 0..<players.count {
-            let player = Player(name: playersNames[index], status: self.playersStatus[index], points: self.playersPoints[index])
-            playersInfo[players[index].recordID.recordName] = player
-        }
-        self.playersInfo = playersInfo
-        
         self.leadPlayer = leadPlayer
         self.memes = memes
         self.pointsToWin = pointsToWin
         self.gameStatus = gameStatus
         self.recordID = recordID
+//        print("got here to init in Game model and record change tag is \(recordChangeTag)")
     }
     
     // MARK: - Convert from CKRecord
     
     required convenience init?(ckRecord: CKRecord) {
-        guard let players = ckRecord[GameStrings.playersKey] as? [CKRecord.Reference],
+        guard let playersReferences = ckRecord[GameStrings.playersReferencesKey] as? [CKRecord.Reference],
             let playersNames = ckRecord[GameStrings.playersNamesKey] as? [String],
             let playersStatusRawValues = ckRecord[GameStrings.playersStatusKey] as? [Int],
             let playersPoints = ckRecord[GameStrings.playersPointsKey] as? [Int],
@@ -255,16 +276,20 @@ class Game: CKCompatible {
         let memes = ckRecord[GameStrings.memesKey] as? [CKRecord.Reference]
         let playersStatus = playersStatusRawValues.compactMap({ PlayerStatus(rawValue: $0) })
         
-        self.init(players: players, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, leadPlayer: leadPlayer, memes: memes, pointsToWin: pointsToWin, gameStatus: gameStatus, recordID: ckRecord.recordID)
+        self.init(playersReferences: playersReferences, playersNames: playersNames, playersStatus: playersStatus, playersPoints: playersPoints, leadPlayer: leadPlayer, memes: memes, pointsToWin: pointsToWin, gameStatus: gameStatus, recordID: ckRecord.recordID)
+        self.originalRecord = ckRecord
     }
     
     // MARK: - Convert to CKRecord
     
     func createCKRecord() -> CKRecord {
-        let record = CKRecord(recordType: GameStrings.recordType, recordID: recordID)
+        var newRecord: CKRecord?
+        if let originalRecord = originalRecord { newRecord = originalRecord }
+        else { newRecord = CKRecord(recordType: GameStrings.recordType, recordID: recordID) }
+        guard let record = newRecord else { return CKRecord(recordType: GameStrings.recordType) }
         
         record.setValuesForKeys([
-            GameStrings.playersKey : players,
+            GameStrings.playersReferencesKey : playersReferences,
             GameStrings.playersNamesKey : playersNames,
             GameStrings.playersStatusKey : playersStatus.compactMap({ $0.rawValue }),
             GameStrings.playersPointsKey : playersPoints,
@@ -288,14 +313,25 @@ class Game: CKCompatible {
     
     // Quickly update a player's status
     func updateStatus(of player: User, to status: PlayerStatus) {
-        guard let index = players.firstIndex(of: player.reference) else { return }
+        guard let index = playersReferences.firstIndex(of: player.reference) else { return }
         playersStatus[index] = status
     }
     
-    // Quickly update a players points when their caption is selected as winner
+    // Quickly get a user's points
+    func getPoints(of player: User) -> Int {
+        playersInfo[player.recordID.recordName]?.points ?? 0
+    }
+    
+    // Quickly update a player's points
+    func updatePoints(of player: User, to points: Int) {
+        guard let index = playersReferences.firstIndex(of: player.reference) else { return }
+        playersPoints[index] = points
+    }
+    
+    // Quickly update a the game when a caption is selected as winner
     func winningCaptionSelected(as caption: Caption) {
         // Update the points of the player who submitted that caption
-        guard let index = players.firstIndex(of: caption.author) else { return }
+        guard let index = playersReferences.firstIndex(of: caption.author) else { return }
         playersPoints[index] += 1
         
         // Check to see if this results in an overall winner of the game, and update the status of the game accordingly
@@ -305,7 +341,7 @@ class Game: CKCompatible {
     
     // Quickly get the name of a player from their CKReference
     func getName(of reference: CKRecord.Reference) -> String {
-        guard let index = players.firstIndex(of: reference) else { return "ERROR" }
+        guard let index = playersReferences.firstIndex(of: reference) else { return "ERROR" }
         return playersNames[index]
     }
     
@@ -315,9 +351,9 @@ class Game: CKCompatible {
         gameStatus = .waitingForDrawing
         
         // Increment the lead player, looping back to the beginning if necessary
-        guard var index = players.firstIndex(of: leadPlayer) else { return }
-        index = (index + 1) % players.count
-        leadPlayer = players[index]
+        guard var index = activePlayersReferences.firstIndex(of: leadPlayer) else { return }
+        index = (index + 1) % activePlayersReferences.count
+        leadPlayer = activePlayersReferences[index]
         
         // Reset the status of all the active players
         for index in 0..<playersStatus.count {
@@ -326,12 +362,19 @@ class Game: CKCompatible {
             }
         }
     }
+    
+    // Reset the game's status based on the players status
+    func resetGameStatus() {
+        if !enoughPlayers || gameWinner != nil { gameStatus = .gameOver }
+        else if allCaptionsSubmitted { gameStatus = .waitingForResult }
+        else if allPlayersResponded { gameStatus = .waitingForDrawing }
+    }
 }
 
 // MARK: - Equatable
 
 extension Game: Equatable {
-    
+    // Override the default equatable function
     static func == (lhs: Game, rhs: Game) -> Bool {
         return lhs.recordID.recordName == rhs.recordID.recordName
     }

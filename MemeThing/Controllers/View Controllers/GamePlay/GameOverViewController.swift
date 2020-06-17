@@ -14,18 +14,39 @@ class GameOverViewController: UIViewController, HasAGameObject {
     
     @IBOutlet weak var winnerNameLabel: UILabel!
     @IBOutlet weak var resultsTableView: UITableView!
-    @IBOutlet weak var navigationBar: UINavigationItem!
+    @IBOutlet weak var exitGameButton: UIButton!
+    @IBOutlet weak var playAgainButton: UIButton!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
     var gameID: String?
-    var game: FinishedGame? { FinishedGameController.shared.finishedGames.first(where: { $0.recordID == gameID }) }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
     
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
+    }
+    
+    // MARK: - Helper Methods
+    
+    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
+    func disableUI() {
+        loadingIndicator.startAnimating()
+        loadingIndicator.isHidden = false
+        
+        exitGameButton.deactivate()
+        playAgainButton.deactivate()
+    }
+    
+    func enableUI() {
+        exitGameButton.activate()
+        playAgainButton.activate()
+        
+        loadingIndicator.isHidden = true
+        loadingIndicator.stopAnimating()
     }
     
     // MARK: - Set Up UI
@@ -41,54 +62,81 @@ class GameOverViewController: UIViewController, HasAGameObject {
         resultsTableView.dataSource = self
         resultsTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")
         resultsTableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "playerCell")
+        resultsTableView.isUserInteractionEnabled = false
     }
     
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        transitionToStoryboard(named: StoryboardNames.mainMenu)
+        guard let game = game else { return transitionToStoryboard(named: StoryboardNames.mainMenu) }
+        
+        // Remove the user from the game
+        GameController.shared.leave(game) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Return to the main menu
+                    self?.transitionToStoryboard(named: StoryboardNames.mainMenu)
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
     }
     
     @IBAction func exitGameButtonTapped(_ sender: UIButton) {
-        // Delete the game from CoreData
         guard let game = game else { return }
-        FinishedGameController.shared.delete(game)
         
-        // Return to the main menu
-        transitionToStoryboard(named: StoryboardNames.mainMenu)
+        // Remove the user from the game
+        GameController.shared.leave(game) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Return to the main menu
+                    self?.transitionToStoryboard(named: StoryboardNames.mainMenu)
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
     }
     
     @IBAction func playAgainButtonTapped(_ sender: UIButton) {
-        guard let finishedGame = game else { return }
+        guard let oldGame = game else { return }
         
-        // TODO: - only the active players?
+        // Don't allow the user to interact with the screen while the data is loading
+        disableUI()
         
-        // Fetch the players who participated in the previous game
-       GameController.shared.fetchPlayers(from: finishedGame.activePlayers) { [weak self] (result) in
-            switch result {
-            case .success(let players):
-                // Create a new game with all the previous (active) players
-                // FIXME: - need some way to prevent multiple users clicking this button at the same time
-                GameController.shared.newGame(players: players) { (result) in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(let game):
-                            // Delete the finished game from the CoreData
-                            FinishedGameController.shared.delete(finishedGame)
-                            
-                            // Transition to the waiting view
-                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game.recordID.recordName)
-                        case .failure(let error):
-                            // Print and display the error
-                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            self?.presentErrorAlert(error)
+        // Leave the previous game
+        GameController.shared.leave(oldGame) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Start a new game from the data in the old game
+                    GameController.shared.newGame(from: oldGame) { (result) in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let game):
+                                // Transition to the waiting view
+                                self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                            case .failure(let error):
+                                // Print and display the error and reset the UI
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                self?.presentErrorAlert(error)
+                                self?.enableUI()
+                            }
                         }
                     }
+                case .failure(let error):
+                    // Print and display the error and reset the UI
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                    self?.enableUI()
                 }
-            case .failure(let error):
-                // Print and display the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                DispatchQueue.main.async { self?.presentErrorAlert(error) }
             }
         }
     }
@@ -99,7 +147,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
 extension GameOverViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return game?.numActivePlayers ?? 0
+        return game?.activePlayers.values.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

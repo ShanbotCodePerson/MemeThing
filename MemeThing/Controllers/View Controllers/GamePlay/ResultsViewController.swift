@@ -32,7 +32,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     var nextDestination: String?
     
     // MARK: - Lifecycle Methods
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -60,16 +60,21 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme
                     self?.meme = meme
-                    print("in completion and meme id is \(meme.reference.recordID.recordName) with \(String(describing: meme.captions?.count)) captions")
+                    
+                    // TODO: - show a loading indicator, hide buttons and page control while loading
+                    // Give some time for CloudKit to catch up
+                    sleep(2)
+                    // FIXME: - better solution, like rerunning fetch captions function if returns empty?
                     
                     // Fetch the captions for that meme from the cloud
                     MemeController.shared.fetchCaptions(for: meme) { (result) in
                         DispatchQueue.main.async {
                             switch result {
-                            case .success(let captions): // FIXME: - why does this return [] the first time its run?
+                            case .success(let captions):
                                 print("in second completion and captions are \(captions)")
                                 // Save the captions
                                 print("captions were set")
+                                // TODO: - shuffle order of captions so not in order of who submitted
                                 self?.captions = captions
                                 self?.pageControl.numberOfPages = captions.count
                             case .failure(let error):
@@ -126,6 +131,24 @@ class ResultsViewController: UIViewController, HasAGameObject {
         
         scrollView.contentSize = CGSize(width: (scrollView.frame.size.width * CGFloat(captions.count)), height: scrollView.frame.size.height)
         scrollView.delegate = self
+    }
+    
+    // Helper method to enable and disable the previous and next buttons as necessary
+    func resetButtons() {
+        if pageControl.currentPage == 0 {
+            previousButton.deactivate()
+            previousButton.tintColor = .lightGray
+        } else {
+            previousButton.activate()
+            previousButton.tintColor = .systemBlue
+        }
+        if pageControl.currentPage == (pageControl.numberOfPages - 1) {
+            nextButton.deactivate()
+            nextButton.tintColor = .lightGray
+        } else {
+            nextButton.activate()
+            nextButton.tintColor = .systemBlue
+        }
     }
     
     // Helper methods to disable the UI while the data is loading and reenable it when it's finished
@@ -205,7 +228,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game.recordID.recordName)
+        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
     }
     
     @IBAction func chooseWinnerButtonTapped(_ sender: UIButton) {
@@ -227,27 +250,17 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 // Increment the points of the player who wrote that caption and update the game's status based on whether there is an overall winner or not
                 game.winningCaptionSelected(as: caption)
                 
-                // FIXME: - first delete the game if the status is game over, otherwise save the changes
-                
                 // Save the updated game to the cloud
                 GameController.shared.saveChanges(to: game) { (result) in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
-                            // Decide on the next view to go to (back to the waiting view if a new round is starting, or the game over page)
-                            if game.gameStatus == .gameOver {
-                                self?.nextDestination = StoryboardNames.gameOverView
-                                
-                                print("got here to \(#function) and about to save finished game")
-                                // Create the finished game object and save it to the core data
-                                FinishedGameController.shared.newFinishedGame(from: game)
-                                print("finished game should be saved, \(FinishedGameController.shared.finishedGames.count)")
-                            } else {
-                                // Set the next destination view controller
-                                self?.nextDestination = StoryboardNames.waitingView
-                            }
+                            // If the game is over, go to the game over view
+                            if game.gameStatus == .gameOver { self?.nextDestination = StoryboardNames.gameOverView }
+                                // Otherwise, set the next destination as the waiting view
+                            else { self?.nextDestination = StoryboardNames.waitingView }
                             
-                            // Before transitioning to the next view, first show everyone the results of this round
+                            // Before transitioning to the next view, first display the results of this round
                             self?.loadingIndicator.stopAnimating()
                             self?.presentEndOFRoundView(with: game)
                         case .failure(let error):
@@ -274,22 +287,28 @@ class ResultsViewController: UIViewController, HasAGameObject {
     }
     
     @IBAction func previousButtonTapped(_ sender: UIButton) {
+        guard let captions = captions, captions.count > 1 else { return }
         if pageControl.currentPage > 0 {
-            print(pageControl)
-            print(scrollView)
-//            pageControl.currentPage -= 1
-//            // FIXME: - move the scroll view
-
+            pageControl.currentPage -= 1
+            UIView.animate(withDuration: 0.2) {
+                self.scrollView.contentOffset.x = self.scrollView.contentSize.width * CGFloat((Double(self.pageControl.currentPage) / Double(self.pageControl.numberOfPages)))
+            }
+            
+            // Activate or deactivate the previous and next buttons as needed
+            resetButtons()
         }
     }
     
     @IBAction func nextButtonTapped(_ sender: UIButton) {
+        guard let captions = captions, captions.count > 1 else { return }
         if pageControl.currentPage < pageControl.numberOfPages {
-            print(pageControl)
-            print(scrollView)
-//            pageControl.currentPage += 1
-//            // FIXME: - move the scroll view
-//            scrollView.contentOffset.x = 10
+            pageControl.currentPage += 1
+            UIView.animate(withDuration: 0.2) {
+                self.scrollView.contentOffset.x = self.scrollView.contentSize.width * CGFloat((Double(self.pageControl.currentPage) / Double(self.pageControl.numberOfPages)))
+            }
+            
+            // Activate or deactivate the previous and next buttons as needed
+            resetButtons()
         }
     }
 }
@@ -303,19 +322,6 @@ extension ResultsViewController: UIScrollViewDelegate {
         pageControl.currentPage = Int(pageNumber)
         
         // Activate or deactivate the previous and next buttons as needed
-        if pageControl.currentPage == 0 {
-            previousButton.deactivate()
-            previousButton.tintColor = .lightGray
-        } else {
-            previousButton.activate()
-            previousButton.tintColor = .systemBlue
-        }
-        if pageControl.currentPage == pageControl.numberOfPages {
-            nextButton.deactivate()
-            nextButton.tintColor = .lightGray
-        } else {
-            nextButton.activate()
-            nextButton.tintColor = .systemBlue
-        }
+        resetButtons()
     }
 }

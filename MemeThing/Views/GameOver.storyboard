@@ -85,6 +85,9 @@
                                     <action selector="exitGameButtonTapped:" destination="vF3-GY-91v" eventType="touchUpInside" id="XNY-La-gkb"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="PW0-iu-W3q">
+                                <rect key="frame" x="178.5" y="792.5" width="57" height="57.5"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -99,22 +102,28 @@
                             <constraint firstItem="C6x-WJ-hoh" firstAttribute="centerX" secondItem="qoa-2s-lxQ" secondAttribute="centerX" id="Oal-tK-KxD"/>
                             <constraint firstItem="WDd-WB-wEb" firstAttribute="leading" secondItem="qoa-2s-lxQ" secondAttribute="leading" id="Rwl-vP-ypv"/>
                             <constraint firstItem="1eo-go-cSN" firstAttribute="centerX" secondItem="qoa-2s-lxQ" secondAttribute="centerX" id="TQ5-Gv-AeS"/>
+                            <constraint firstItem="PW0-iu-W3q" firstAttribute="width" secondItem="C6x-WJ-hoh" secondAttribute="height" multiplier="1:1" id="Vn5-G1-g4m"/>
+                            <constraint firstItem="PW0-iu-W3q" firstAttribute="centerY" secondItem="C6x-WJ-hoh" secondAttribute="centerY" id="YyO-pU-t0D"/>
                             <constraint firstItem="WDd-WB-wEb" firstAttribute="trailing" secondItem="qoa-2s-lxQ" secondAttribute="trailing" id="aXg-jJ-vCi"/>
                             <constraint firstItem="WDd-WB-wEb" firstAttribute="top" secondItem="Fvu-tI-e4F" secondAttribute="bottom" id="an4-nX-kuH"/>
                             <constraint firstItem="C6x-WJ-hoh" firstAttribute="height" secondItem="qoa-2s-lxQ" secondAttribute="height" multiplier="0.07" id="dzn-3K-yOe"/>
                             <constraint firstItem="fJE-8X-ex2" firstAttribute="top" secondItem="qoa-2s-lxQ" secondAttribute="top" id="fMC-CJ-RF6"/>
                             <constraint firstItem="fJE-8X-ex2" firstAttribute="leading" secondItem="qoa-2s-lxQ" secondAttribute="leading" id="fuQ-JT-Ftb"/>
+                            <constraint firstItem="PW0-iu-W3q" firstAttribute="centerX" secondItem="C6x-WJ-hoh" secondAttribute="centerX" id="ggA-cM-Y1k"/>
                             <constraint firstItem="dKz-gp-v3E" firstAttribute="leading" secondItem="1WI-hM-gnU" secondAttribute="leading" id="lVc-pk-E4Y"/>
                             <constraint firstItem="C6x-WJ-hoh" firstAttribute="width" secondItem="qoa-2s-lxQ" secondAttribute="width" multiplier="0.9" id="mSD-uV-cjc"/>
                             <constraint firstItem="1eo-go-cSN" firstAttribute="width" secondItem="qoa-2s-lxQ" secondAttribute="width" multiplier="0.9" id="nzb-gc-5O2"/>
                             <constraint firstItem="Fvu-tI-e4F" firstAttribute="leading" secondItem="qoa-2s-lxQ" secondAttribute="leading" id="tGq-Ef-zBK"/>
                             <constraint firstItem="qoa-2s-lxQ" firstAttribute="bottom" secondItem="C6x-WJ-hoh" secondAttribute="bottom" constant="12" id="vS9-Sh-KBX"/>
                             <constraint firstItem="dKz-gp-v3E" firstAttribute="top" secondItem="1WI-hM-gnU" secondAttribute="top" id="w8Q-ar-Y8e"/>
+                            <constraint firstItem="PW0-iu-W3q" firstAttribute="height" secondItem="C6x-WJ-hoh" secondAttribute="height" id="xht-46-aJk"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="qoa-2s-lxQ"/>
                     </view>
                     <connections>
-                        <outlet property="navigationBar" destination="3P7-am-baH" id="38a-3b-XrV"/>
+                        <outlet property="exitGameButton" destination="1eo-go-cSN" id="kMj-c2-8Jx"/>
+                        <outlet property="loadingIndicator" destination="PW0-iu-W3q" id="REv-i5-J3Z"/>
+                        <outlet property="playAgainButton" destination="C6x-WJ-hoh" id="tqM-Hl-6DY"/>
                         <outlet property="resultsTableView" destination="edL-Y1-kIt" id="ToD-Lh-Rm7"/>
                         <outlet property="winnerNameLabel" destination="Fvu-tI-e4F" id="lrN-Tq-Gb3"/>
                     </connections>

@@ -43,10 +43,10 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         // Transition to the captions view if the game has moved on, or to the main menu if the game has ended
         DispatchQueue.main.async {
             if sender.name == toCaptionsView {
-                self.transitionToStoryboard(named: StoryboardNames.captionView, with: game.recordID.recordName)
+                self.transitionToStoryboard(named: StoryboardNames.captionView, with: game)
             }
             else if sender.name == toGameOver {
-                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game.recordID.recordName)
+                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
             }
         }
     }
@@ -56,7 +56,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     func setUpViews() {
         view.backgroundColor = UIColor(white: 0, alpha: 0.6)
         captionLabel.backgroundColor = .purpleAccent
-        
+        // FIXME: - alternative source of game object if already over and deleted from cloud
         guard let game = game, let memeReference = game.memes?.last else { return }
         
         // Fetch the meme
@@ -80,12 +80,11 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                                 let name = game.getName(of: caption.author)
                                 self?.winnerLabel.text = "Congratulations \(name) for having the best caption!"
                                 
-                                // TODO: - don't need subscriptions to captions, just handle points here?
                                 guard let currentUser = UserController.shared.currentUser else { return }
                                 if caption.author.recordID.recordName == currentUser.reference.recordID.recordName {
                                     print("got here to updating current user's points")
                                     UserController.shared.update(currentUser, points: 1) { (result) in
-                                        // TODO: - show alerts?
+                                        // TODO: - show alerts? tell winning user they earned a point?
                                         switch result {
                                         case .success(_):
                                             print("should have incremented users points, now is \(currentUser.points)")
@@ -115,11 +114,11 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     
     @IBAction func continueButtonTapped(_ sender: UIButton) {
         guard let game = game, let nextDestination = nextDestination else { return }
-        transitionToStoryboard(named: nextDestination, with: game.recordID.recordName)
+        transitionToStoryboard(named: nextDestination, with: game)
     }
     
     @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
          guard let game = game, let nextDestination = nextDestination else { return }
-        transitionToStoryboard(named: nextDestination, with: game.recordID.recordName)
+        transitionToStoryboard(named: nextDestination, with: game)
     }
 }
