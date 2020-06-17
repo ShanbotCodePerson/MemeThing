@@ -59,18 +59,26 @@ class MemeController {
     }
     
     // Read (fetch) a list of captions for a meme
-    func fetchCaptions(for meme: Meme, completion: @escaping (Result<[Caption], MemeThingError>) -> Void) {
+    func fetchCaptions(for meme: Meme, firstTry: Bool = true, completion: @escaping (Result<[Caption], MemeThingError>) -> Void) {
         // Form the predicate to look for all captions that reference that meme
         let predicate = NSPredicate(format: "%K == %@", argumentArray: [CaptionStrings.memeKey, meme.reference.recordID])
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
-//        print("got here to \(#function) and predicate is \(compoundPredicate)")
         
         // Fetch the data from the cloud
-        CKService.shared.read(predicate: compoundPredicate) { (result: Result<[Caption], MemeThingError>) in
+        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[Caption], MemeThingError>) in
             switch result {
             case .success(let captions):
-                // Return the success
-                return completion(.success(captions))
+                print("got here to \(#function) in completion and there are \(captions.count) captions")
+                // If the captions aren't in the cloud on the first try, wait two seconds then try to fetch them again
+                if firstTry && captions.count == 0 {
+                    print("trying to fetch captions again")
+                    sleep(2)
+                    self?.fetchCaptions(for: meme, firstTry: false, completion: completion)
+                }
+                else {
+                    // Otherwise, return the success
+                    return completion(.success(captions))
+                }
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
