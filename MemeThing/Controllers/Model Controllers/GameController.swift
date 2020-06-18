@@ -262,28 +262,6 @@ class GameController {
         }
     }
     
-//    // Subscribe all players to notifications of games they're participating in being deleted
-//    func subscribeToGameEndings() {
-//        guard let currentUser = UserController.shared.currentUser else { return }
-//
-//        // TODO: - User defaults to track whether the subscription has already been saved
-//
-//        // Form the predicate to look for games that include the current user in the players list
-//        let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [currentUser.reference, GameStrings.playersReferencesKey])
-//        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, options: [.firesOnRecordDeletion])
-//
-//        // Format the display of the notification
-//        let notificationInfo = CKQuerySubscription.NotificationInfo()
-//        notificationInfo.shouldSendContentAvailable = true
-//        notificationInfo.category = NotificationHelper.Category.gameEnded.rawValue
-//        subscription.notificationInfo = notificationInfo
-//
-//        // Save the subscription to the cloud
-//        CKService.shared.publicDB.save(subscription) { (sub, error) in
-////            print("got here to \(#function) and \(sub) and \(error)")
-//        }
-//    }
-    
     // Subscribe all players to notifications of all updates to games they're participating in
     func subscribeToGameUpdates() {
         guard let currentUser = UserController.shared.currentUser else { return }
@@ -372,16 +350,6 @@ class GameController {
             }
         }
     }
-    
-//    // Receive a notification that a game has ended
-//    func receiveNotificationGameEnded(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
-//        print("got here to \(#function)")
-//        // Perform all the clean-up to finish the game
-//        handleEnd(for: recordID.recordName)
-//        
-//        // Return the success
-//        return completion(0)
-//    }
     
     // Receive a notification that a game has been updated
     func receiveUpdateToGame(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {

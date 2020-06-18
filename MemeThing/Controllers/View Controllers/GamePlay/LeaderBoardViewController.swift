@@ -41,7 +41,7 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
             gameID == game.recordID.recordName else { return }
         
-        dismiss(animated: true)
+        DispatchQueue.main.async { self.dismiss(animated: true) }
     }
     
     @objc func transitionToNewPage(_ sender: NSNotification) {

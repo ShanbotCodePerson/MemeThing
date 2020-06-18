@@ -59,7 +59,7 @@ class MemeController {
     }
     
     // Read (fetch) a list of captions for a meme
-    func fetchCaptions(for meme: Meme, firstTry: Bool = true, completion: @escaping (Result<[Caption], MemeThingError>) -> Void) {
+    func fetchCaptions(for meme: Meme, expectedNumber: Int, firstTry: Bool = true, completion: @escaping (Result<[Caption], MemeThingError>) -> Void) {
         // Form the predicate to look for all captions that reference that meme
         let predicate = NSPredicate(format: "%K == %@", argumentArray: [CaptionStrings.memeKey, meme.reference.recordID])
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
@@ -70,10 +70,11 @@ class MemeController {
             case .success(let captions):
                 print("got here to \(#function) in completion and there are \(captions.count) captions")
                 // If the captions aren't in the cloud on the first try, wait two seconds then try to fetch them again
-                if firstTry && captions.count == 0 {
-                    print("trying to fetch captions again")
+                if firstTry && captions.count < expectedNumber {
+                    print("not enough captions, about to sleep 2 seconds")
                     sleep(2)
-                    self?.fetchCaptions(for: meme, firstTry: false, completion: completion)
+                    print("trying to fetch captions again")
+                    self?.fetchCaptions(for: meme, expectedNumber: expectedNumber, firstTry: false, completion: completion)
                 }
                 else {
                     // Otherwise, return the success

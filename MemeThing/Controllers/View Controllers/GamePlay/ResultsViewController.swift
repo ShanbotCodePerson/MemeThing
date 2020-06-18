@@ -62,8 +62,11 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     // Save the meme
                     self?.meme = meme
                     
+                    // Calculate how many captions there should be
+                    let expectedNumber = game.playersStatus.filter({ $0 == .sentCaption }).count
+                    
                     // Fetch the captions for that meme from the cloud
-                    MemeController.shared.fetchCaptions(for: meme) { (result) in
+                    MemeController.shared.fetchCaptions(for: meme, expectedNumber: expectedNumber) { (result) in
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let captions):

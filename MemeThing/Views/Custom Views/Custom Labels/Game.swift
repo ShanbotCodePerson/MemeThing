@@ -113,6 +113,11 @@ class Game: CKCompatible {
         return playersInfo.filter { $1.status != .denied && $1.status != .quit }
     }
     
+    // All the references for the active players
+    var activePlayersReferences: [CKRecord.Reference] {
+        return playersReferences.filter({ activePlayers.keys.contains($0.recordID.recordName) })
+    }
+    
     // All the active players, sorted in descending order by points
     var sortedPlayers: [Player] {
         return activePlayers.values.sorted { (player1, player2) -> Bool in

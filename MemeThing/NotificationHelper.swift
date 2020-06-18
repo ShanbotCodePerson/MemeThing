@@ -19,7 +19,6 @@ class NotificationHelper {
         case friendRequestResponse = "FRIEND_REQUEST_RESPONSE"
         case newGameInvitation = "NEW_GAME_INVITATION"
         case gameUpdate = "GAME_UPDATE"
-//        case gameEnded = "GAME_ENDED"
     }
     
     // MARK: - Process Notifications
@@ -53,9 +52,6 @@ class NotificationHelper {
         case .gameUpdate:
             print("received update to game")
             GameController.shared.receiveUpdateToGame(withID: recordIDChanged, completion: completion)
-//        case .gameEnded:
-//            print("received notification that game ended")
-//            GameController.shared.receiveNotificationGameEnded(withID: recordIDChanged, completion: completion)
         }
     }
     

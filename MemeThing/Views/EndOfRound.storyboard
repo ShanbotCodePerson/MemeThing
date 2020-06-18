@@ -16,14 +16,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="poq-0W-Hh3" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="20.5" y="688" width="373" height="41"/>
+                                <rect key="frame" x="20.5" y="707" width="373" height="41"/>
                                 <state key="normal" title="Continue"/>
                                 <connections>
                                     <action selector="continueButtonTapped:" destination="UaH-bf-bqP" eventType="touchUpInside" id="ksX-tY-eV5"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ejJ-2K-M7N" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="20.5" y="135.5" width="373" height="20.5"/>
+                                <rect key="frame" x="20.5" y="116" width="373" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="JzP-v4-33S"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -32,10 +35,13 @@
                                 <rect key="frame" x="20.5" y="164" width="373" height="487"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PKS-h6-6LA">
-                                        <rect key="frame" x="0.0" y="0.0" width="373" height="466.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="373" height="447"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5yZ-7t-7eS" customClass="MemeThingCaption" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="466.5" width="373" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="447" width="373" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="fnL-p8-3k2"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -53,16 +59,19 @@
                                     <constraint firstItem="PKS-h6-6LA" firstAttribute="width" secondItem="ezc-7D-MKU" secondAttribute="width" id="51E-W0-csd"/>
                                     <constraint firstItem="5yZ-7t-7eS" firstAttribute="top" secondItem="PKS-h6-6LA" secondAttribute="bottom" id="9Ds-gq-hY0"/>
                                     <constraint firstAttribute="bottom" secondItem="5yZ-7t-7eS" secondAttribute="bottom" id="EcS-iV-Voz"/>
-                                    <constraint firstItem="5yZ-7t-7eS" firstAttribute="leading" secondItem="ezc-7D-MKU" secondAttribute="leading" id="MSG-cK-qI3"/>
+                                    <constraint firstItem="5yZ-7t-7eS" firstAttribute="width" secondItem="PKS-h6-6LA" secondAttribute="width" id="HXk-Ds-n0H"/>
                                     <constraint firstItem="ozi-iF-g8r" firstAttribute="centerX" secondItem="ezc-7D-MKU" secondAttribute="centerX" id="VXC-hi-YZN"/>
-                                    <constraint firstAttribute="trailing" secondItem="5yZ-7t-7eS" secondAttribute="trailing" id="Y43-9M-Her"/>
                                     <constraint firstItem="PKS-h6-6LA" firstAttribute="centerX" secondItem="ezc-7D-MKU" secondAttribute="centerX" id="r24-7k-ww5"/>
+                                    <constraint firstItem="5yZ-7t-7eS" firstAttribute="centerX" secondItem="ezc-7D-MKU" secondAttribute="centerX" id="sQX-8E-QoI"/>
                                     <constraint firstItem="PKS-h6-6LA" firstAttribute="top" secondItem="ezc-7D-MKU" secondAttribute="top" id="src-Mh-dCs"/>
                                     <constraint firstItem="ozi-iF-g8r" firstAttribute="centerY" secondItem="ezc-7D-MKU" secondAttribute="centerY" id="xhu-F2-40y"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHi-YD-VRK" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="20.5" y="659" width="373" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHi-YD-VRK" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="659" width="373" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="Wug-Al-qYR"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
