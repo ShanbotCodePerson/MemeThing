@@ -87,11 +87,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         return
                     }
                     
-                    // TODO: - check that the email is unique and is a valid email address
+                    // Check that the email is a valid email address
+                    guard let email = self?.emailTextField.text, !email.isEmpty, email.isValidEmail()
+                        else {
+                            self?.presentAlert(title: "Invalid Email", message: "You must enter a valid email address to use for password recovery")
+                            self?.enableUI()
+                            return
+                    }
                     
                     // Confirm that the remaining text fields have valid information
                     guard let screenName = self?.screenNameTextField.text,
-                        let email = self?.emailTextField.text,
                         let password = self?.passwordTextField.text, !password.isEmpty,
                         let confirmPassword = self?.confirmPasswordTextField.text
                         else {
@@ -110,15 +115,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     
                     // Create the new user
                     UserController.shared.createUser(with: username, password: password, screenName: screenName, email: email) { (result) in
-                        switch result {
-                        case .success(_):
-                            // Go straight to the main menu if the user was created correctly
-                            self?.presentMainMenuVC()
-                        case .failure(let error):
-                            // Print and return the error and allow the user to interact with the UI again
-                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            self?.presentErrorAlert(error)
-                            self?.enableUI()
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(_):
+                                // Go straight to the main menu if the user was created correctly
+                                self?.presentMainMenuVC()
+                            case .failure(let error):
+                                // Print and return the error and allow the user to interact with the UI again
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                self?.presentErrorAlert(error)
+                                self?.enableUI()
+                            }
                         }
                     }
                 }

@@ -19,6 +19,7 @@ enum MemeThingError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .ckError(let error):
+            // FIXME: - better user-friendly error handling needed here
             return "Error fetching data from the cloud: \(error.localizedDescription)"
         case .couldNotUnwrap:
             return "The cloud returned bad data"

@@ -54,6 +54,7 @@
 		40C2148524809A35007B7630 /* CaptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148424809A35007B7630 /* CaptionViewController.swift */; };
 		40C2148724809A47007B7630 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148624809A47007B7630 /* ResultsViewController.swift */; };
 		40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148824809A57007B7630 /* WaitingViewController.swift */; };
+		40C71495249B069D00B9F0AE /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C71494249B069D00B9F0AE /* HelperFunctions.swift */; };
 		40D003B724831B690046D64B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003B624831B690046D64B /* Game.swift */; };
 		40D003B924831B700046D64B /* Caption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003B824831B700046D64B /* Caption.swift */; };
 		40D003BB2483220B0046D64B /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003BA2483220B0046D64B /* GameController.swift */; };
@@ -114,6 +115,7 @@
 		40C2148424809A35007B7630 /* CaptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionViewController.swift; sourceTree = "<group>"; };
 		40C2148624809A47007B7630 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		40C2148824809A57007B7630 /* WaitingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingViewController.swift; sourceTree = "<group>"; };
+		40C71494249B069D00B9F0AE /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HelperFunctions.swift; path = MemeThing/HelperFunctions.swift; sourceTree = SOURCE_ROOT; };
 		40D003B624831B690046D64B /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Game.swift; path = "MemeThing/Views/Custom Views/Custom Labels/Game.swift"; sourceTree = SOURCE_ROOT; };
 		40D003B824831B700046D64B /* Caption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Caption.swift; path = "MemeThing/Views/Custom Views/Custom Labels/Caption.swift"; sourceTree = SOURCE_ROOT; };
 		40D003BA2483220B0046D64B /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				40C2147B247EEE9B007B7630 /* MemeThingError.swift */,
 				4039CE0B248205D4004DA41F /* StyleGuide.swift */,
 				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
+				40C71494249B069D00B9F0AE /* HelperFunctions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -460,6 +463,7 @@
 				40C21476247EE944007B7630 /* UserController.swift in Sources */,
 				4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */,
 				406C5394248AE9EC004729C7 /* LeaderBoardViewController.swift in Sources */,
+				40C71495249B069D00B9F0AE /* HelperFunctions.swift in Sources */,
 				40D003B924831B700046D64B /* Caption.swift in Sources */,
 				40A777EC248966F200ADBB82 /* GameTableViewCell.swift in Sources */,
 				40D003BB2483220B0046D64B /* GameController.swift in Sources */,

@@ -55,7 +55,8 @@ extension CKServicing {
         // Save the record to the cloud
         publicDB.save(record) { (record, error) in
             // Handle any errors
-            if let error = error { return completion(.failure(.ckError(error))) }
+            if let error = error as? CKError {
+                return completion(.failure(.ckError(error))) }
             
             // Unwrap the data
             guard let record = record, let savedObject = T(ckRecord: record) else { return completion(.failure(.couldNotUnwrap)) }

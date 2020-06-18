@@ -37,7 +37,7 @@ class User: CKCompatible {
     
     // CloudKit properties
     var friendsReferences: [CKRecord.Reference]
-    let appleUserReference: CKRecord.Reference
+    let appleUserReference: CKRecord.Reference?
     var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .none) }
     static var recordType: CKRecord.RecordType { UserStrings.recordType }
     var ckRecord: CKRecord { createCKRecord() }
@@ -52,7 +52,7 @@ class User: CKCompatible {
          points: Int = 0,
          blockedUsernames: [String] = [],
          friendsReferences: [CKRecord.Reference] = [],
-         appleUserReference: CKRecord.Reference,
+         appleUserReference: CKRecord.Reference?,
          recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
         self.username = username
         self.password = password
@@ -78,9 +78,9 @@ class User: CKCompatible {
             let email = ckRecord[UserStrings.emailKey] as? String,
             let points = ckRecord[UserStrings.pointsKey] as? Int,
             let blockedUsernames = ckRecord[UserStrings.blockedUsernamesKey] as? [String],
-            var friendsReferences = ckRecord[UserStrings.friendsReferenceKey] as? [CKRecord.Reference],
-            let appleUserReference = ckRecord[UserStrings.appleUserReferenceKey] as? CKRecord.Reference
+            var friendsReferences = ckRecord[UserStrings.friendsReferenceKey] as? [CKRecord.Reference]
             else { return nil }
+        let appleUserReference = ckRecord[UserStrings.appleUserReferenceKey] as? CKRecord.Reference
         
         friendsReferences = Array(Set(friendsReferences))
         self.init(username: username, password: password, screenName: screenName, email: email, points: points, blockedUsernames: blockedUsernames, friendsReferences: friendsReferences, appleUserReference: appleUserReference, recordID: ckRecord.recordID)
@@ -99,8 +99,10 @@ class User: CKCompatible {
             UserStrings.pointsKey : points,
             UserStrings.blockedUsernamesKey : blockedUsernames,
             UserStrings.friendsReferenceKey : friendsReferences,
-            UserStrings.appleUserReferenceKey : appleUserReference
         ])
+        if let appleUserReference = appleUserReference {
+            record.setValue(appleUserReference, forKey: UserStrings.appleUserReferenceKey)
+        }
         
         return record
     }
