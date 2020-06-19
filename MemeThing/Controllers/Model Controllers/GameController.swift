@@ -41,7 +41,7 @@ class GameController {
         CKService.shared.create(object: newGame) { [weak self] (result) in
             switch result {
             case .success(let game):
-                // Update the source of truth
+                // Add the game to the source of truth
                 if var currentGames = self?.currentGames {
                     currentGames.append(game)
                     self?.currentGames = currentGames
@@ -66,17 +66,34 @@ class GameController {
         // Remove the old game from the cloud
         delete(oldGame) { (_) in }
         
-//        // Use the data from the old game to start a new game, with the current user as the first lead player
-//        var playerReferences = oldGame.activePlayersReferences
-//        playerReferences.removeAll(where: { $0 == currentUser.reference })
-//        playerReferences.insert(currentUser.reference, at: 0)
-//        
-////        playersNames
-//        
-//        let newGame = Game(playersReferences: playerReferences, playersNames: playerNames, leadPlayer: currentUser.reference, pointsToWin: oldGame.pointsToWin, recordID: CKRecord.ID(recordName: "\(oldGame.recordID)-2"))
+        // Use the data from the old game to start a new game, with the current user as the first lead player
+        let activePlayers = oldGame.activePlayers
+        var playerReferences = oldGame.playersReferences.filter { $0 != currentUser.reference && activePlayers.keys.contains($0.recordID.recordName) }
+        playerReferences.insert(currentUser.reference, at: 0)
+        let playerNames = playerReferences.compactMap { activePlayers[$0.recordID.recordName]?.name }
+        
+        let newGame = Game(playersReferences: playerReferences, playersNames: playerNames, leadPlayer: currentUser.reference, pointsToWin: oldGame.pointsToWin, recordID: CKRecord.ID(recordName: "\(oldGame.recordID)-2"))
         
         // Save the game to the cloud
-        // FIXME: - need to handle a merge if someone else has already tried to restart the game
+        CKService.shared.create(object: newGame) { [weak self] (result) in
+            switch result {
+            case .success(let game):
+                // Add the game to the source of truth
+                if var currentGames = self?.currentGames {
+                    currentGames.append(game)
+                    self?.currentGames = currentGames
+                } else {
+                    self?.currentGames = [game]
+                }
+                
+                // Return the success
+                return completion(.success(game))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
     }
     
     // Read (fetch) all the games the user is currently involved in
@@ -244,28 +261,6 @@ class GameController {
         }
     }
     
-    // Subscribe all players to notifications of games they're participating in being deleted
-    func subscribeToGameEndings() {
-        guard let currentUser = UserController.shared.currentUser else { return }
-        
-        // TODO: - User defaults to track whether the subscription has already been saved
-        
-        // Form the predicate to look for games that include the current user in the players list
-        let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [currentUser.reference, GameStrings.playersReferencesKey])
-        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, options: [.firesOnRecordDeletion])
-        
-        // Format the display of the notification
-        let notificationInfo = CKQuerySubscription.NotificationInfo()
-        notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.category = NotificationHelper.Category.gameEnded.rawValue
-        subscription.notificationInfo = notificationInfo
-        
-        // Save the subscription to the cloud
-        CKService.shared.publicDB.save(subscription) { (sub, error) in
-//            print("got here to \(#function) and \(sub) and \(error)")
-        }
-    }
-    
     // Subscribe all players to notifications of all updates to games they're participating in
     func subscribeToGameUpdates() {
         guard let currentUser = UserController.shared.currentUser else { return }
@@ -278,7 +273,7 @@ class GameController {
         
         // Format the display of the notification
         let notificationInfo = CKQuerySubscription.NotificationInfo()
-        notificationInfo.title = "Update to game" // TODO: - figure out a better message for this
+        notificationInfo.title = "Update to game"
         notificationInfo.alertBody =  "Update to a game you're playing"
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.category = NotificationHelper.Category.gameUpdate.rawValue
@@ -353,16 +348,6 @@ class GameController {
                 return completion(.failure(error))
             }
         }
-    }
-    
-    // Receive a notification that a game has ended
-    func receiveNotificationGameEnded(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
-        print("got here to \(#function)")
-        // Perform all the clean-up to finish the game
-        handleEnd(for: recordID.recordName)
-        
-        // Return the success
-        return completion(0)
     }
     
     // Receive a notification that a game has been updated
@@ -494,7 +479,10 @@ class GameController {
                     // Return the success
                     return completion(.success(true))
                 case .failure(let error):
-                    // Print and return the error
+                    // If the error is that the game has already been deleted, then saving the game is no longer relevant
+                    if case MemeThingError.alreadyDeleted = error { return completion(.success(true)) }
+                    
+                    // Otherwise, print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(error))
                 }

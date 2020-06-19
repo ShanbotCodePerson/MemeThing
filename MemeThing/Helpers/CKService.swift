@@ -36,7 +36,6 @@ protocol CKServicing {
     func create<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<T>)
     func read<T: CKCompatible> (predicate: NSCompoundPredicate, completion: @escaping ArrayHandler<T>)
     func read<T: CKCompatible> (reference: CKRecord.Reference, completion: @escaping SingleItemHandler<T>)
-    func read<T: CKCompatible> (recordIDs: [CKRecord.ID], completion: @escaping ArrayHandler<T>)
     func read<T: CKCompatible> (recordID: CKRecord.ID, completion: @escaping SingleItemHandler<T>)
     func update<T: CKCompatible> (object: T, overwrite: Bool, completion: @escaping SingleItemHandler<T>)
     func delete<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<Bool>)
@@ -56,7 +55,8 @@ extension CKServicing {
         // Save the record to the cloud
         publicDB.save(record) { (record, error) in
             // Handle any errors
-            if let error = error { return completion(.failure(.ckError(error))) }
+            if let error = error as? CKError {
+                return completion(.failure(.ckError(error))) }
             
             // Unwrap the data
             guard let record = record, let savedObject = T(ckRecord: record) else { return completion(.failure(.couldNotUnwrap)) }
@@ -69,17 +69,14 @@ extension CKServicing {
     func read<T: CKCompatible> (predicate: NSCompoundPredicate, completion: @escaping ArrayHandler<T>) {
         // Form the query based on the predicate
         let query = CKQuery(recordType: T.recordType, predicate: predicate)
-//        print("got here to \(#function) and query is \(query)")
         
         // Fetch the data from the cloud
         publicDB.perform(query, inZoneWith: nil) { (records, error) in
             // Handle any errors
             if let error = error { return completion(.failure(.ckError(error))) }
-//            print("inside completion and records are \(records)")
             
             // Check that actual data was returned
             guard let objects = records?.compactMap({ T(ckRecord: $0) }) else { return completion(.failure(.couldNotUnwrap)) }
-//            print("unwrapped objects are \(objects)")
             
             // Complete with the objects
             return completion(.success(objects))
@@ -99,31 +96,6 @@ extension CKServicing {
             // Complete with the objects
             return completion(.success(object))
         }
-    }
-    
-    func read<T: CKCompatible> (recordIDs: [CKRecord.ID], completion: @escaping ArrayHandler<T>) {
-        // Create the operation to pull the data from the cloud
-        let operation = CKFetchRecordsOperation(recordIDs: recordIDs)
-        
-        // Handle the completion of the operation
-        operation.fetchRecordsCompletionBlock = { (recordDictionary, error) in
-            // Handle any errors
-            if let error = error { return completion(.failure(.ckError(error))) }
-            
-            // Unwrap the data
-            // FIXME: - this probably won't work
-            guard let recordDictionary = recordDictionary,
-                let records = recordDictionary.values as? [CKRecord]
-                else { return completion(.failure(.couldNotUnwrap)) }
-            let objects = records.compactMap({ T(ckRecord: $0) })
-            
-            // Complete with the objects
-            return completion(.success(objects))
-        }
-        
-        
-        // Add the operation to the cloud
-        publicDB.add(operation)
     }
     
     func read<T: CKCompatible> (recordID: CKRecord.ID, completion: @escaping SingleItemHandler<T>) {
@@ -157,6 +129,7 @@ extension CKServicing {
                 print(data)
                 let ckError = data.allValues[0] as! CKError
                 if case CKError.Code.serverRecordChanged = ckError.code { return completion(.failure(.mergeNeeded)) }
+                if case CKError.Code.unknownItem = ckError.code { return completion(.failure(.alreadyDeleted)) }
                 
                 // Otherwise, return the error
                 return completion(.failure(.ckError(error)))
@@ -176,6 +149,7 @@ extension CKServicing {
     func delete<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<Bool>) {
         // Create the operation to save the updates to the object
         let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [object.recordID])
+        operation.savePolicy = .changedKeys
         operation.qualityOfService = .userInteractive
         
         // Handle the completion of the operation

@@ -21,7 +21,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var constraintToButton: NSLayoutConstraint!
     @IBOutlet weak var constraintToSafeArea: NSLayoutConstraint!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var initialLoadingIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var savingLoadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -36,11 +37,11 @@ class ResultsViewController: UIViewController, HasAGameObject {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Load all the data
-        loadAllData()
-        
         // Set up the UI
         setUpViews()
+        
+        // Load all the data
+        loadAllData()
         
         // Set up the observers to listen for notifications telling the view to transition to a new page
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toNewRound, object: nil)
@@ -61,22 +62,25 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     // Save the meme
                     self?.meme = meme
                     
-                    // TODO: - show a loading indicator, hide buttons and page control while loading
-                    // Give some time for CloudKit to catch up
-                    sleep(2)
-                    // FIXME: - better solution, like rerunning fetch captions function if returns empty?
+                    // Calculate how many captions there should be
+                    let expectedNumber = game.playersStatus.filter({ $0 == .sentCaption }).count
                     
                     // Fetch the captions for that meme from the cloud
-                    MemeController.shared.fetchCaptions(for: meme) { (result) in
+                    MemeController.shared.fetchCaptions(for: meme, expectedNumber: expectedNumber) { (result) in
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let captions):
-                                print("in second completion and captions are \(captions)")
-                                // Save the captions
-                                print("captions were set")
-                                // TODO: - shuffle order of captions so not in order of who submitted
-                                self?.captions = captions
+                                print("in completion in results VC and captions are \(captions)")
+                                // Shuffle order of captions so that they're not in order of who submitted first
+                                self?.captions = captions.shuffled()
+                                
+                                // Set up the page control and unhide it
                                 self?.pageControl.numberOfPages = captions.count
+                                self?.pageControl.isHidden = false
+                                self?.nextButton.tintColor = .systemBlue
+                                
+                                // Hide the loading icon
+                                self?.initialLoadingIndicator.stopAnimating()
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 self?.presentErrorAlert(error)
@@ -95,9 +99,11 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     func setUpViews() {
         view.backgroundColor = .background
-        loadingIndicator.isHidden = true
+        savingLoadingIndicator.isHidden = true
         previousButton.deactivate()
         previousButton.tintColor = .lightGray
+        nextButton.tintColor = .lightGray
+        pageControl.isHidden = true
         
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
         
@@ -154,8 +160,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
     // Helper methods to disable the UI while the data is loading and reenable it when it's finished
     func disableUI() {
         // Display the loading icon while the image saves
-        loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
+        savingLoadingIndicator.startAnimating()
+        savingLoadingIndicator.isHidden = false
         
         // Don't allow the user to interact with the screen while the save is in progress
         chooseWinnerButton.deactivate()
@@ -167,8 +173,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     func enableUI() {
         // Hide the loading icon
-        loadingIndicator.stopAnimating()
-        loadingIndicator.isHidden = true
+        savingLoadingIndicator.stopAnimating()
+        savingLoadingIndicator.isHidden = true
         
         // Re enable the buttons as applicable
         chooseWinnerButton.activate()
@@ -190,6 +196,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
             gameID == game.recordID.recordName,
             let currentUser = UserController.shared.currentUser
             else { return }
+
+        // If the leaderboard is open, close it
+        NotificationCenter.default.post(Notification(name: closeLeaderboard, userInfo: ["gameID" : game.recordID.recordName]))
         
         // Decide on the next destination view controller based on the type of update
         DispatchQueue.main.async {
@@ -261,7 +270,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                             else { self?.nextDestination = StoryboardNames.waitingView }
                             
                             // Before transitioning to the next view, first display the results of this round
-                            self?.loadingIndicator.stopAnimating()
+                            self?.savingLoadingIndicator.stopAnimating()
                             self?.presentEndOFRoundView(with: game)
                         case .failure(let error):
                             // Print and display the error

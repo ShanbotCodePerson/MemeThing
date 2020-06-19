@@ -15,6 +15,8 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var winnerLabel: UILabel!
     @IBOutlet weak var memeImageView: UIImageView!
     @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var nextUpLabel: UILabel!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -30,7 +32,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         
         // Set up the observer to listen for notifications in case the user has left this page open too long and the game is moving on, or if the game has ended
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toCaptionsView, object: nil)
-         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
     }
     
     // MARK: - Respond to Notifications
@@ -56,7 +58,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     func setUpViews() {
         view.backgroundColor = UIColor(white: 0, alpha: 0.6)
         captionLabel.backgroundColor = .purpleAccent
-        // FIXME: - alternative source of game object if already over and deleted from cloud
+        
         guard let game = game, let memeReference = game.memes?.last else { return }
         
         // Fetch the meme
@@ -73,12 +75,23 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let caption):
-                                // Set the text of the caption label
-                                self?.captionLabel.text = caption.text
-                                
                                 // Get the name of the user from the game object to display in the winner's name label
                                 let name = game.getName(of: caption.author)
                                 self?.winnerLabel.text = "Congratulations \(name) for having the best caption!"
+                                
+                                // Set the text of the caption label
+                                self?.captionLabel.text = caption.text
+                                
+                                // Set the text of the label telling the users what's up next
+                                if let gameWinner = game.gameWinner {
+                                    self?.nextUpLabel.text = "The game is over and \(gameWinner) has won!"
+                                } else {
+                                    self?.nextUpLabel.text = "Next it is \(game.leadPlayerName)'s turn to draw a meme!"
+                                }
+                                
+                                // Hide the loading icon now that it is no longer needed
+                                self?.loadingIndicator.isHidden = true
+                                self?.loadingIndicator.stopAnimating()
                                 
                                 guard let currentUser = UserController.shared.currentUser else { return }
                                 if caption.author.recordID.recordName == currentUser.reference.recordID.recordName {

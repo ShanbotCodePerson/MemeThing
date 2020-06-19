@@ -60,6 +60,8 @@ class WaitingViewController: UIViewController, HasAGameObject {
             } else { setUpTableView() }
         case .waitingForResult:
             transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+        case .gameOver:
+            transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
         default:
             print("In waiting view and game status is \(game.gameStatus). This shouldn't happen - check what went wrong")
         }

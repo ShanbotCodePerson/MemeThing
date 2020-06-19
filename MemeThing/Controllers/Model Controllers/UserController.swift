@@ -33,8 +33,6 @@ class UserController {
     func createUser(with username: String, password: String, screenName: String?, email: String, completion: @escaping resultHandler) {
         // Get the apple user reference of the current user of the phone
         fetchAppleUserReference { [weak self] (reference) in
-            guard let reference = reference else { return completion(.failure(.noUserFound))}
-            
             // Create the new user
             let newUser = User(username: username, password: password, screenName: screenName, email: email, appleUserReference: reference)
             
@@ -125,6 +123,7 @@ class UserController {
             case .success(let users):
                 // There should only be one user with that username
                 guard let user = users.first else { return completion(.failure(.noUserFound)) }
+                
                 // Return the result
                 return completion(.success(user))
             case .failure(let error):
@@ -264,7 +263,6 @@ class UserController {
         FriendRequestController.shared.subscribeToFriendRemoving()
         FriendRequestController.shared.subscribeToFriendRequestResponses()
         GameController.shared.subscribeToGameInvitations()
-        GameController.shared.subscribeToGameEndings()
         GameController.shared.subscribeToGameUpdates()
     }
 }

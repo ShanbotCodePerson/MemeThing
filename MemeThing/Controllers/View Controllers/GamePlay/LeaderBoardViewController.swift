@@ -27,7 +27,40 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         super.viewDidLoad()
         setUpViews()
         
-        // FIXME: - need to have all observers in here so that user continues with game as needed even if viewing leaderboard while notification comes in
+        // Set up the observers to listen for notifications telling the view to transition to a new page
+        NotificationCenter.default.addObserver(self, selector: #selector(closeSelf(_:)), name: closeLeaderboard, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toCaptionsView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toResultsView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+    }
+    
+    // MARK: - Respond to Notifications
+    
+    @objc func closeSelf(_ sender: NSNotification) {
+        // Only change the view if the update is for the game that the user currently has open
+        guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
+            gameID == game.recordID.recordName else { return }
+        
+        DispatchQueue.main.async { self.dismiss(animated: true) }
+    }
+    
+    @objc func transitionToNewPage(_ sender: NSNotification) {
+        // Only change the view if the update is for the game that the user currently has open
+        guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
+            gameID == game.recordID.recordName else { return }
+        
+        // Transition to the relevant view based on the type of update
+        DispatchQueue.main.async {
+            if sender.name == toCaptionsView {
+                self.transitionToStoryboard(named: StoryboardNames.captionView, with: game)
+            }
+            else if sender.name == toResultsView {
+                self.transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+            }
+            else if sender.name == toGameOver {
+                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+            }
+        }
     }
     
     // MARK: - Set Up UI

@@ -142,6 +142,12 @@ class CaptionViewController: UIViewController, HasAGameObject {
         guard let game = game, let meme = meme, let currentUser = UserController.shared.currentUser,
             let captionText = captionTextField.text else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Don't allow the user to interact with the screen while the save is in progress
         disableUI()
         

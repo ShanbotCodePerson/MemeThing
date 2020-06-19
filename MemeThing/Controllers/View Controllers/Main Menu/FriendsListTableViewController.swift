@@ -139,6 +139,13 @@ class FriendsListTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
+        // Present the text field for the user to enter the desired username to friend
         presentTextFieldAlert(title: "Add Friend", message: "Send a friend request to a username", textFieldPlaceholder: "Enter username here...", saveButtonTitle: "Send Friend Request", completion: sendRequest(to:))
     }
     
@@ -253,11 +260,6 @@ class FriendsListTableViewController: UITableViewController {
         return cell
     }
     
-//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if dataSource[indexPath.section].name == .friends { return 50 }
-//        return 60
-//    }
-    
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Enable swipe-to-delete functionality only for friends, not friend requests
         if dataSource[indexPath.section].name == .friends && dataSource[indexPath.section].data.count > 0 { return true }
@@ -307,6 +309,12 @@ class FriendsListTableViewController: UITableViewController {
 extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
     
     func respondToFriendRequest(from cell: FriendTableViewCell, accept: Bool) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Get the reference to the friend request that was responded to
         guard let indexPath = tableView.indexPath(for: cell),
             dataSource[indexPath.section].name == .pendingFriendRequests,

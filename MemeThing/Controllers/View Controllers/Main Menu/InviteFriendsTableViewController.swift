@@ -75,6 +75,12 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func startGameButtonTapped(_ sender: UIButton) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Get the list of selected players
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.usersFriends?[$0.row] }
@@ -127,7 +133,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Check how many rows are selected and enable or disable the start game button accordingly
-        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
+        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 1 {
             startGameButton.activate()
         }
         else  { startGameButton.deactivate() }
@@ -135,7 +141,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         // Check how many rows are selected and enable or disable the start game button accordingly
-        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 0 { // FIXME: - change to one after done testing
+        if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 1 {
             startGameButton.activate()
         }
         else { startGameButton.deactivate() }
