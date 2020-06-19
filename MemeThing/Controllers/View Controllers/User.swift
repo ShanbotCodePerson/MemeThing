@@ -34,10 +34,10 @@ class User: CKCompatible {
     var email: String
     var points: Int
     var blockedUsernames: [String]
-    
-    // CloudKit properties
     var friendsReferences: [CKRecord.Reference]
     let appleUserReference: CKRecord.Reference?
+    
+    // CloudKit properties
     var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .none) }
     static var recordType: CKRecord.RecordType { UserStrings.recordType }
     var ckRecord: CKRecord { createCKRecord() }

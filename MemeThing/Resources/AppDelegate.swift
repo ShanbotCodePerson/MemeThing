@@ -42,11 +42,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Registering for Notifications
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        // TODO: - in user controller and meme controller, register for notifications
+        // Register for all notifications
+        UserController.shared.setUpUser()
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        // TODO: - display an alert to suggest turning on notifications
+        // Display an alert to suggest turning on notifications
+        // TODO: - test this
+        
+        // TODO: - how to do this?
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

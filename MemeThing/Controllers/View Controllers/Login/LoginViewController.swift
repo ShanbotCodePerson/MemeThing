@@ -58,79 +58,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        // TODO: - handle signing in with a different account or something?
-        
-        // Check to see if the username contains an actual string
-        guard let username = usernameTextField.text, !username.isEmpty else {
-            presentAlert(title: "Invalid Username", message: "You must choose a username")
-            return
-        }
-        
-        // Don't allow the user to interact with the screen while the data is processing
-        disableUI()
-        
-        // Check to see if the username is unique
-        UserController.shared.searchFor(username) { [weak self] (result) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(_):
-                   // If the username is taken, present an alert
-                    self?.presentAlert(title: "Username Taken", message: "That username is already taken - please choose a different username")
-                    self?.enableUI()
-                    return
-                case .failure(let error):
-                    // Make sure the error is that no user was found, rather than some other type of error
-                    guard case MemeThingError.noUserFound = error else {
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorAlert(error)
-                        self?.enableUI()
-                        return
-                    }
-                    
-                    // Check that the email is a valid email address
-                    guard let email = self?.emailTextField.text, !email.isEmpty, email.isValidEmail()
-                        else {
-                            self?.presentAlert(title: "Invalid Email", message: "You must enter a valid email address to use for password recovery")
-                            self?.enableUI()
-                            return
-                    }
-                    
-                    // Confirm that the remaining text fields have valid information
-                    guard let screenName = self?.screenNameTextField.text,
-                        let password = self?.passwordTextField.text, !password.isEmpty,
-                        let confirmPassword = self?.confirmPasswordTextField.text
-                        else {
-                            self?.presentAlert(title: "Invalid Password", message: "You must enter a password")
-                            self?.enableUI()
-                            return
-                    }
-                    
-                    // Confirm that the passwords match
-                    guard let signingUp = self?.signingUp else { return }
-                    if signingUp && password != confirmPassword {
-                        self?.presentAlert(title: "Passwords Don't Match", message: "The passwords you have entered don't match - make sure to enter your password carefully")
-                        self?.enableUI()
-                        return
-                    }
-                    
-                    // Create the new user
-                    UserController.shared.createUser(with: username, password: password, screenName: screenName, email: email) { (result) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(_):
-                                // Go straight to the main menu if the user was created correctly
-                                self?.presentMainMenuVC()
-                            case .failure(let error):
-                                // Print and return the error and allow the user to interact with the UI again
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorAlert(error)
-                                self?.enableUI()
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // Either sign up or login
+        if signingUp { signUp() }
+        else { login() }
     }
     
     @IBAction func tappedScreen(_ sender: UITapGestureRecognizer) {
@@ -142,7 +72,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         confirmPasswordTextField.resignFirstResponder()
     }
     
-    // MARK: - Helper Methods
+    // MARK: - Set Up UI
     
     func setUpViews() {
         view.backgroundColor = .background
@@ -178,29 +108,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
         
         UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
-    }
-    
-    func fetchUser() {
-        // Don't allow the user to interact with the screen while the data is loading
-        disableUI()
-        
-        UserController.shared.fetchUser { [weak self] (result) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(_):
-                    // Go straight to the main menu if the user was fetched correctly
-                    self?.presentMainMenuVC()
-                case .failure(let error):
-                    // Allow the user to interact with the UI again
-                    self?.enableUI()
-                    
-                    // Print and display the error (unless the error is that no user has been created yet)
-                    if case MemeThingError.noUserFound = error { return }
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorAlert(error)
-                }
-            }
-        }
     }
     
     func toggleToLogin() {
@@ -243,12 +150,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signingUp = true
     }
     
-    func presentMainMenuVC() {
-        DispatchQueue.main.async {
-            self.transitionToStoryboard(named: StoryboardNames.mainMenu, direction: .fromRight)
-        }
-    }
-    
     // Helper methods to disable the UI while the data is loading and reenable it when it's finished
     func disableUI() {
         loadingIndictor.startAnimating()
@@ -280,6 +181,161 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         loadingIndictor.stopAnimating()
         loadingIndictor.isHidden = true
+    }
+    
+    // MARK: - Helper Methods
+    
+    // Try to get the current user from their iCloud information
+    func fetchUser() {
+        // Don't allow the user to interact with the screen while the data is loading
+        disableUI()
+        
+        UserController.shared.fetchUser { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Go straight to the main menu if the user was fetched correctly
+                    self?.presentMainMenuVC()
+                case .failure(let error):
+                    // Allow the user to interact with the UI again
+                    self?.enableUI()
+                    
+                    // Print and display the error (unless the error is that no user has been created yet)
+                    if case MemeThingError.noUserFound = error { return }
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
+    }
+    
+    // Transition to the main menu
+    func presentMainMenuVC() {
+        DispatchQueue.main.async {
+            self.transitionToStoryboard(named: StoryboardNames.mainMenu, direction: .fromRight)
+        }
+    }
+    
+    // Check that all the fields are valid and create a new user
+    func signUp() {
+        // Make sure the username contains an actual string
+        guard let username = usernameTextField.text, !username.isEmpty else {
+            presentAlert(title: "Invalid Username", message: "You must choose a username")
+            return
+        }
+        
+        // Don't allow the user to interact with the screen while the data is processing
+        disableUI()
+        
+        // Check to see if the username is unique
+        UserController.shared.searchFor(username) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                   // If the username is taken, present an alert
+                    self?.presentAlert(title: "Username Taken", message: "That username is already taken - please choose a different username")
+                    self?.enableUI()
+                    return
+                case .failure(let error):
+                    // Make sure the error is that no user was found, rather than some other type of error
+                    guard case MemeThingError.noUserFound = error else {
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                        self?.enableUI()
+                        return
+                    }
+                    
+                    // Make sure that the email is a valid email address
+                    guard let email = self?.emailTextField.text, !email.isEmpty, email.isValidEmail()
+                        else {
+                            self?.presentAlert(title: "Invalid Email", message: "You must enter a valid email address to use for password recovery")
+                            self?.enableUI()
+                            return
+                    }
+                    
+                    // Make sure that the remaining text fields have valid information
+                    guard let screenName = self?.screenNameTextField.text,
+                        let password = self?.passwordTextField.text, !password.isEmpty,
+                        let confirmPassword = self?.confirmPasswordTextField.text
+                        else {
+                            self?.presentAlert(title: "Invalid Password", message: "You must enter a password")
+                            self?.enableUI()
+                            return
+                    }
+                    
+                    // Make sure that the passwords match
+                    guard let signingUp = self?.signingUp else { return }
+                    if signingUp && password != confirmPassword {
+                        self?.presentAlert(title: "Passwords Don't Match", message: "The passwords you have entered don't match - make sure to enter your password carefully")
+                        self?.enableUI()
+                        return
+                    }
+                    
+                    // Create the new user
+                    UserController.shared.createUser(with: username, password: password, screenName: screenName, email: email) { (result) in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(_):
+                                // Go straight to the main menu if the user was created correctly
+                                self?.presentMainMenuVC()
+                            case .failure(let error):
+                                // Print and return the error and allow the user to interact with the UI again
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                self?.presentErrorAlert(error)
+                                self?.enableUI()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Check that the username and password are valid and fetch the user
+    func login() {
+        // Make sure the username contains an actual string
+        guard let username = usernameTextField.text, !username.isEmpty else {
+            presentAlert(title: "Username Missing", message: "You must enter a username")
+            return
+        }
+        // Make sure that the password contains an actual string
+        guard let password = passwordTextField.text, !password.isEmpty else {
+            presentAlert(title: "Password Missing", message: "You must enter a password")
+            return
+        }
+        
+        // Don't allow the user to interact with the screen while the data is processing
+        disableUI()
+        
+        // Check to see if the username is unique
+        UserController.shared.searchFor(username) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let user):
+                    // Make sure that the password is correct
+                    guard password == user.password else {
+                        self?.presentAlert(title: "Incorrect Password", message: "The password you have entered does not match that username - please try again")
+                        self?.enableUI()
+                        return
+                    }
+                    
+                    // Save the user to the source of truth and proceed to the main menu
+                    UserController.shared.currentUser = user
+                    self?.presentMainMenuVC()
+                case .failure(let error):
+                    // Display an alert if that username doesn't exist
+                    if case MemeThingError.noUserFound = error {
+                        self?.presentAlert(title: "Incorrect Username", message: "The username you have entered does not exist")
+                    } else {
+                        // Otherwise, print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                    // Allow the user to interact with the UI again
+                    self?.enableUI()
+                }
+            }
+        }
     }
     
     // MARK: - Text Field Controls

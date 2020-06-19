@@ -123,6 +123,7 @@ class UserController {
             case .success(let users):
                 // There should only be one user with that username
                 guard let user = users.first else { return completion(.failure(.noUserFound)) }
+                
                 // Return the result
                 return completion(.success(user))
             case .failure(let error):
