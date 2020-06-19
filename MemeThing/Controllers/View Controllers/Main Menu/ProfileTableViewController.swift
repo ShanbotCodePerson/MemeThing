@@ -49,6 +49,13 @@ class ProfileTableViewController: UITableViewController {
     @IBAction func editScreenNameButtonTapped(_ sender: UIButton) {
         guard let user = UserController.shared.currentUser else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
+        // Present the text field to allow the user to edit their name
         presentTextFieldAlert(title: "Edit Screen Name", message: "Edit your name as it will appear to your friends.", textFieldPlaceholder: "", textFieldText: user.screenName) { [weak self] (screenName) in
             
             // Save the new screen name to the cloud
@@ -85,6 +92,13 @@ class ProfileTableViewController: UITableViewController {
     @IBAction func editEmailButtonTapped(_ sender: UIButton) {
         guard let user = UserController.shared.currentUser else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
+        // Present the text field to allow the user to edit their email
         presentTextFieldAlert(title: "Edit Email", message: "Edit your email (used for password recovery)", textFieldPlaceholder: "", textFieldText: user.email) { [weak self] (email) in
             
             // Confirm that the new email address is valid

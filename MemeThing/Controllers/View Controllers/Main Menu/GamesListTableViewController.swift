@@ -228,6 +228,12 @@ class GamesListTableViewController: UITableViewController {
 extension GamesListTableViewController: GameTableViewCellDelegate {
     
     func respondToGameInvitation(for cell: GameTableViewCell, accept: Bool) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         guard let indexPath = tableView.indexPath(for: cell),
             dataSource[indexPath.section].name == .pendingInvitations
             else { return }

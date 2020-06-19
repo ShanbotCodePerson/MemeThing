@@ -87,6 +87,11 @@ extension UIViewController {
         present(alertController, animated: true)
     }
     
+    // Present an alert that the internet connection isn't working
+    func presentInternetAlert() {
+        presentAlert(title: "No Internet Connection", message: "You must be connected to the internet in order to use MemeThing. Please check your internet connection and try again")
+    }
+    
     // Present an alert with simple confirm or cancel buttons
     func presentConfirmAlert(title: String, message: String, cancelText: String = "Cancel", confirmText: String = "Confirm", completion: @escaping () -> Void) {
         // Create the alert controller

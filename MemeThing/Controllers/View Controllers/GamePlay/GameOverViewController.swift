@@ -108,6 +108,12 @@ class GameOverViewController: UIViewController, HasAGameObject {
     @IBAction func playAgainButtonTapped(_ sender: UIButton) {
         guard let oldGame = game else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Don't allow the user to interact with the screen while the data is loading
         disableUI()
         

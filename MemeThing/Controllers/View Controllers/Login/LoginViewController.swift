@@ -34,7 +34,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Make sure that the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
+        // Try to automatically log the user in using their cloud information
         fetchUser()
+        
+        // Set up the UI
         setUpViews()
         
         // Add an observer for when the keyboard appears or disappears

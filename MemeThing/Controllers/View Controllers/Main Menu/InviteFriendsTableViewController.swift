@@ -75,6 +75,12 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func startGameButtonTapped(_ sender: UIButton) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Get the list of selected players
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.usersFriends?[$0.row] }

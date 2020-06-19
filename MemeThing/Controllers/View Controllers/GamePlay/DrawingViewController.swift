@@ -89,6 +89,12 @@ class DrawingViewController: UIViewController, HasAGameObject {
     @IBAction func sendButtonTapped(_ sender: UIButton) {
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Create the image from the canvas (hide the undo button first so that it isn't saved in the screenshot)
         undoButton.isHidden = true
         let image = canvasView.getImage()
