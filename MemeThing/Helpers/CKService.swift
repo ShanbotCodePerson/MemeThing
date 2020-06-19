@@ -129,6 +129,7 @@ extension CKServicing {
                 print(data)
                 let ckError = data.allValues[0] as! CKError
                 if case CKError.Code.serverRecordChanged = ckError.code { return completion(.failure(.mergeNeeded)) }
+                if case CKError.Code.unknownItem = ckError.code { return completion(.failure(.alreadyDeleted)) }
                 
                 // Otherwise, return the error
                 return completion(.failure(.ckError(error)))
@@ -148,6 +149,7 @@ extension CKServicing {
     func delete<T: CKCompatible> (object: T, completion: @escaping SingleItemHandler<Bool>) {
         // Create the operation to save the updates to the object
         let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [object.recordID])
+        operation.savePolicy = .changedKeys
         operation.qualityOfService = .userInteractive
         
         // Handle the completion of the operation

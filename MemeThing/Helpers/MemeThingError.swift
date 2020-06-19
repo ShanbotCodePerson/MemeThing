@@ -15,6 +15,7 @@ enum MemeThingError: LocalizedError {
     case noUserFound
     case unknownError // FIXME: - need to convert this to real error, replace all instances of it
     case mergeNeeded
+    case alreadyDeleted
     
     var errorDescription: String? {
         switch self {
@@ -29,6 +30,8 @@ enum MemeThingError: LocalizedError {
             return "Man I have no idea your guess is as good as mine sorry bro"
         case .mergeNeeded:
             return "The Cloud has been updated in the meantime - a merge is needed"
+        case .alreadyDeleted:
+            return "The game has already been deleted from the cloud"
         }
     }
 }

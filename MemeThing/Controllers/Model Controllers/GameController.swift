@@ -75,8 +75,7 @@ class GameController {
         let newGame = Game(playersReferences: playerReferences, playersNames: playerNames, leadPlayer: currentUser.reference, pointsToWin: oldGame.pointsToWin, recordID: CKRecord.ID(recordName: "\(oldGame.recordID)-2"))
         
         // Save the game to the cloud
-        // FIXME: - need to handle a merge if someone else has already tried to restart the game
-        saveChanges(to: newGame) { [weak self] (result) in
+        CKService.shared.create(object: newGame) { [weak self] (result) in
             switch result {
             case .success(let game):
                 // Add the game to the source of truth
@@ -480,7 +479,10 @@ class GameController {
                     // Return the success
                     return completion(.success(true))
                 case .failure(let error):
-                    // Print and return the error
+                    // If the error is that the game has already been deleted, then saving the game is no longer relevant
+                    if case MemeThingError.alreadyDeleted = error { return completion(.success(true)) }
+                    
+                    // Otherwise, print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(error))
                 }

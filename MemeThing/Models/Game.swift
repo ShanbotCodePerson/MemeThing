@@ -110,7 +110,7 @@ class Game: CKCompatible {
     
     // All the active players, filtering out those who denied the invitation or quit the game
     var activePlayers: [String : Player] {
-        return playersInfo.filter { $1.status != .denied && $1.status != .quit && $1.status != .invited }
+        return playersInfo.filter { $1.status != .denied && $1.status != .quit }
     }
     
     // All the references for the active players

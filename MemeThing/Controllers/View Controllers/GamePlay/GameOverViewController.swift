@@ -117,26 +117,13 @@ class GameOverViewController: UIViewController, HasAGameObject {
         // Don't allow the user to interact with the screen while the data is loading
         disableUI()
         
-        // Leave the previous game
-        GameController.shared.leave(oldGame) { [weak self] (result) in
+        // Start a new game from the data in the old game
+        GameController.shared.newGame(from: oldGame) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
-                case .success(_):
-                    // Start a new game from the data in the old game
-                    GameController.shared.newGame(from: oldGame) { (result) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(let game):
-                                // Transition to the waiting view
-                                self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
-                            case .failure(let error):
-                                // Print and display the error and reset the UI
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorAlert(error)
-                                self?.enableUI()
-                            }
-                        }
-                    }
+                case .success(let game):
+                    // Transition to the waiting view
+                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
                 case .failure(let error):
                     // Print and display the error and reset the UI
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
