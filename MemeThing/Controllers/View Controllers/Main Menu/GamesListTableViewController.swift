@@ -12,6 +12,8 @@ class GamesListTableViewController: UITableViewController {
     
     // MARK: - Properties
     
+    var refresh = UIRefreshControl()
+    
     enum SectionName: String {
         case pendingInvitations = "Pending Invitations to Games"
         case waitingForResponses = "Waiting for Responses"
@@ -49,7 +51,7 @@ class GamesListTableViewController: UITableViewController {
         setUpViews()
         
         // Load the data, if it hasn't been loaded already
-        loadAllData()
+        if GameController.shared.currentGames == nil { loadAllData() }
         
         // Set up the observer to listen for notifications telling the view to reload its data
         NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: updateListOfGames, object: nil)
@@ -61,24 +63,36 @@ class GamesListTableViewController: UITableViewController {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
+    @objc func refreshData() {
+        DispatchQueue.main.async {
+            self.loadAllData()
+            self.refresh.endRefreshing()
+        }
+    }
+    
     func setUpViews() {
         navigationController?.setNavigationBarHidden(false, animated: true)
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .background
+        
+        // FIXME: - need to figure out why this isn't calling its target function
+//        refresh.attributedTitle = NSAttributedString(string: "Check for updates")
+//        refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+//        tableView.addSubview(refresh)
     }
     
     func loadAllData() {
-        if GameController.shared.currentGames == nil {
-            GameController.shared.fetchCurrentGames { [weak self] (result) in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(_):
-                        // Refresh the table to show the data
-                        self?.tableView.reloadData()
-                    case .failure(let error):
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorAlert(error)
-                    }
+        GameController.shared.fetchCurrentGames { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    print("got here to \(#function)")
+                    // Refresh the table to show the data
+                    self?.tableView.reloadData()
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
                 }
             }
         }

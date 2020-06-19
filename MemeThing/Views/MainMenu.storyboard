@@ -21,7 +21,7 @@
                                 <rect key="frame" x="41.5" y="251" width="331" height="448"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUO-Of-2dw" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="331" height="83"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="331" height="106"/>
                                         <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="18"/>
                                         <state key="normal" title="New Game"/>
                                         <connections>
@@ -29,7 +29,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QmY-Sk-EIK" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="91" width="331" height="83.5"/>
+                                        <rect key="frame" x="0.0" y="114" width="331" height="106"/>
                                         <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="17"/>
                                         <state key="normal" title="Resume Game"/>
                                         <connections>
@@ -37,21 +37,21 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U25-wd-vr0" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="182.5" width="331" height="83"/>
+                                        <rect key="frame" x="0.0" y="228" width="331" height="106"/>
                                         <state key="normal" title="Friends"/>
                                         <connections>
                                             <segue destination="zQQ-LU-7ql" kind="show" identifier="toFriendsTVC" id="XD5-pV-uaG"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9HV-p3-eCF" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="273.5" width="331" height="83.5"/>
+                                        <rect key="frame" x="0.0" y="342" width="331" height="106"/>
                                         <state key="normal" title="Profile"/>
                                         <connections>
                                             <segue destination="Ko3-va-DOb" kind="show" id="rY2-du-ZtF"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ey-6h-7nf">
-                                        <rect key="frame" x="0.0" y="365" width="331" height="83"/>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ey-6h-7nf">
+                                        <rect key="frame" x="0.0" y="452" width="331" height="0.0"/>
                                         <state key="normal" title="Fake notifications"/>
                                         <connections>
                                             <action selector="tempFakeNotifications:" destination="TSk-Yz-NDn" eventType="touchUpInside" id="BIM-eF-eLS"/>
