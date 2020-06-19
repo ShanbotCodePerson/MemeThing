@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../MemeThing/Views/ViewResults.storyboard">
+   </FileRef>
+   <FileRef
       location = "self:MemeThing.xcodeproj">
    </FileRef>
 </Workspace>

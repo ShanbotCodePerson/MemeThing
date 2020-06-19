@@ -16,7 +16,6 @@
 		4039CE062481E553004DA41F /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE052481E553004DA41F /* Meme.swift */; };
 		4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE0B248205D4004DA41F /* StyleGuide.swift */; };
 		4039CE132482067E004DA41F /* MemeThingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE122482067E004DA41F /* MemeThingButton.swift */; };
-		404643442492A67900C1961D /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404643432492A67900C1961D /* CoreDataStack.swift */; };
 		404A7D092491766500984BB7 /* ThreeLabelsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404A7D072491766500984BB7 /* ThreeLabelsTableViewCell.swift */; };
 		404A7D0A2491766500984BB7 /* ThreeLabelsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 404A7D082491766500984BB7 /* ThreeLabelsTableViewCell.xib */; };
 		405279E524781E1A00942A7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405279E424781E1A00942A7D /* AppDelegate.swift */; };
@@ -24,6 +23,9 @@
 		405279EC24781E1A00942A7D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405279EA24781E1A00942A7D /* Main.storyboard */; };
 		405279EE24781E1C00942A7D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405279ED24781E1C00942A7D /* Assets.xcassets */; };
 		405279F124781E1C00942A7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405279EF24781E1C00942A7D /* LaunchScreen.storyboard */; };
+		4058B99F249C436500E170A5 /* MainMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4058B99E249C436400E170A5 /* MainMenu.storyboard */; };
+		4058B9A1249C43BC00E170A5 /* ViewResults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4058B9A0249C43BC00E170A5 /* ViewResults.storyboard */; };
+		4058B9A3249C43D200E170A5 /* Drawing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4058B9A2249C43D200E170A5 /* Drawing.storyboard */; };
 		405A22B4249035010009A143 /* MemeThingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405A22B3249035010009A143 /* MemeThingLabel.swift */; };
 		4060899F2491ABF8009635DA /* SelfSizingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4060899E2491ABF8009635DA /* SelfSizingTableView.swift */; };
 		406089A22491BB10009635DA /* MemeThingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406089A12491BB10009635DA /* MemeThingTextField.swift */; };
@@ -33,12 +35,9 @@
 		406C5396248AE9F8004729C7 /* GameOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406C5395248AE9F8004729C7 /* GameOverViewController.swift */; };
 		407681DE2493D21F009D0C15 /* EndOfRound.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 407681DD2493D21F009D0C15 /* EndOfRound.storyboard */; };
 		407681E02493D446009D0C15 /* EndOfRoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407681DF2493D446009D0C15 /* EndOfRoundViewController.swift */; };
-		408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 408A26E0247ED77D008CE8DC /* MainMenu.storyboard */; };
 		40A777EC248966F200ADBB82 /* GameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777EB248966F200ADBB82 /* GameTableViewCell.swift */; };
 		40A777EE24896A4500ADBB82 /* GamesListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */; };
-		40BA228D248715B3009A2197 /* Drawing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA228B248715B3009A2197 /* Drawing.storyboard */; };
 		40BA228F248715C9009A2197 /* AddCaption.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA228E248715C9009A2197 /* AddCaption.storyboard */; };
-		40BA229224871603009A2197 /* ViewResults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA229024871603009A2197 /* ViewResults.storyboard */; };
 		40BA229424871F0D009A2197 /* Waiting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA229324871F0D009A2197 /* Waiting.storyboard */; };
 		40C2146C247EE0E7007B7630 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146B247EE0E7007B7630 /* LoginViewController.swift */; };
 		40C2146E247EE0F4007B7630 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */; };
@@ -67,14 +66,13 @@
 /* Begin PBXFileReference section */
 		401109882487FF7600E8FCE2 /* MemeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeImageView.swift; sourceTree = "<group>"; };
 		4011098A24882AEE00E8FCE2 /* MemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeController.swift; sourceTree = "<group>"; };
-		4039365B2486B898007C2601 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationHelper.swift; path = MemeThing/NotificationHelper.swift; sourceTree = SOURCE_ROOT; };
+		4039365B2486B898007C2601 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationHelper.swift; path = MemeThing/Helpers/NotificationHelper.swift; sourceTree = SOURCE_ROOT; };
 		4039365F2486E684007C2601 /* FriendRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestController.swift; sourceTree = "<group>"; };
 		4039366124870328007C2601 /* InviteFriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsTableViewController.swift; sourceTree = "<group>"; };
 		4039CE032481DF5C004DA41F /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
-		4039CE052481E553004DA41F /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Meme.swift; path = "MemeThing/Controllers/View Controllers/Meme.swift"; sourceTree = SOURCE_ROOT; };
-		4039CE0B248205D4004DA41F /* StyleGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleGuide.swift; sourceTree = SOURCE_ROOT; };
+		4039CE052481E553004DA41F /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Meme.swift; path = MemeThing/Models/Meme.swift; sourceTree = SOURCE_ROOT; };
+		4039CE0B248205D4004DA41F /* StyleGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StyleGuide.swift; path = MemeThing/Helpers/StyleGuide.swift; sourceTree = SOURCE_ROOT; };
 		4039CE122482067E004DA41F /* MemeThingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingButton.swift; sourceTree = "<group>"; };
-		404643432492A67900C1961D /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDataStack.swift; path = MemeThing/CoreDataStack.swift; sourceTree = SOURCE_ROOT; };
 		404A7D072491766500984BB7 /* ThreeLabelsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeLabelsTableViewCell.swift; sourceTree = "<group>"; };
 		404A7D082491766500984BB7 /* ThreeLabelsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThreeLabelsTableViewCell.xib; sourceTree = "<group>"; };
 		405279E124781E1A00942A7D /* MemeThing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemeThing.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,6 +82,9 @@
 		405279ED24781E1C00942A7D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		405279F024781E1C00942A7D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		405279F224781E1C00942A7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4058B99E249C436400E170A5 /* MainMenu.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainMenu.storyboard; sourceTree = "<group>"; };
+		4058B9A0249C43BC00E170A5 /* ViewResults.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ViewResults.storyboard; sourceTree = "<group>"; };
+		4058B9A2249C43D200E170A5 /* Drawing.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Drawing.storyboard; sourceTree = "<group>"; };
 		405A22B3249035010009A143 /* MemeThingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingLabel.swift; sourceTree = "<group>"; };
 		4060899E2491ABF8009635DA /* SelfSizingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingTableView.swift; sourceTree = "<group>"; };
 		406089A12491BB10009635DA /* MemeThingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingTextField.swift; sourceTree = "<group>"; };
@@ -93,33 +94,30 @@
 		406C5395248AE9F8004729C7 /* GameOverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverViewController.swift; sourceTree = "<group>"; };
 		407681DD2493D21F009D0C15 /* EndOfRound.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = EndOfRound.storyboard; sourceTree = "<group>"; };
 		407681DF2493D446009D0C15 /* EndOfRoundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRoundViewController.swift; sourceTree = "<group>"; };
-		408A26E1247ED77D008CE8DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/Base.lproj/MainMenu.storyboard; sourceTree = "<group>"; };
 		40A777EB248966F200ADBB82 /* GameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTableViewCell.swift; sourceTree = "<group>"; };
 		40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListTableViewController.swift; sourceTree = "<group>"; };
-		40BA228C248715B3009A2197 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/MemeThing/Views/Base.lproj/Drawing.storyboard; sourceTree = "<group>"; };
 		40BA228E248715C9009A2197 /* AddCaption.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AddCaption.storyboard; sourceTree = "<group>"; };
-		40BA229124871603009A2197 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = MemeThing/Views/MemeThing/Views/Base.lproj/ViewResults.storyboard; sourceTree = "<group>"; };
 		40BA229324871F0D009A2197 /* Waiting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Waiting.storyboard; sourceTree = "<group>"; };
 		40C2146B247EE0E7007B7630 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListTableViewController.swift; sourceTree = "<group>"; };
-		40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIViewControllerExtension.swift; path = "MemeThing/Controllers/View Controllers/UIViewControllerExtension.swift"; sourceTree = SOURCE_ROOT; };
-		40C21473247EE939007B7630 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = "MemeThing/Controllers/View Controllers/User.swift"; sourceTree = SOURCE_ROOT; };
+		40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIViewControllerExtension.swift; path = MemeThing/Helpers/UIViewControllerExtension.swift; sourceTree = SOURCE_ROOT; };
+		40C21473247EE939007B7630 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = MemeThing/Models/User.swift; sourceTree = SOURCE_ROOT; };
 		40C21475247EE944007B7630 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
 		40C21477247EE97A007B7630 /* MemeThing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MemeThing.entitlements; sourceTree = "<group>"; };
 		40C21479247EE97D007B7630 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		40C2147B247EEE9B007B7630 /* MemeThingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MemeThingError.swift; path = "MemeThing/Controllers/Model Controllers/MemeThingError.swift"; sourceTree = SOURCE_ROOT; };
-		40C2147D247EF1BE007B7630 /* CKService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CKService.swift; path = "MemeThing/Controllers/Model Controllers/CKService.swift"; sourceTree = SOURCE_ROOT; };
+		40C2147B247EEE9B007B7630 /* MemeThingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MemeThingError.swift; path = MemeThing/Helpers/MemeThingError.swift; sourceTree = SOURCE_ROOT; };
+		40C2147D247EF1BE007B7630 /* CKService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CKService.swift; path = MemeThing/Helpers/CKService.swift; sourceTree = SOURCE_ROOT; };
 		40C21480247F1434007B7630 /* ProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
 		40C2148224809A24007B7630 /* DrawingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingViewController.swift; sourceTree = "<group>"; };
 		40C2148424809A35007B7630 /* CaptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionViewController.swift; sourceTree = "<group>"; };
 		40C2148624809A47007B7630 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		40C2148824809A57007B7630 /* WaitingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingViewController.swift; sourceTree = "<group>"; };
-		40C71494249B069D00B9F0AE /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HelperFunctions.swift; path = MemeThing/HelperFunctions.swift; sourceTree = SOURCE_ROOT; };
-		40D003B624831B690046D64B /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Game.swift; path = "MemeThing/Views/Custom Views/Custom Labels/Game.swift"; sourceTree = SOURCE_ROOT; };
-		40D003B824831B700046D64B /* Caption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Caption.swift; path = "MemeThing/Views/Custom Views/Custom Labels/Caption.swift"; sourceTree = SOURCE_ROOT; };
+		40C71494249B069D00B9F0AE /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HelperFunctions.swift; path = MemeThing/Helpers/HelperFunctions.swift; sourceTree = SOURCE_ROOT; };
+		40D003B624831B690046D64B /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Game.swift; path = MemeThing/Models/Game.swift; sourceTree = SOURCE_ROOT; };
+		40D003B824831B700046D64B /* Caption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Caption.swift; path = MemeThing/Models/Caption.swift; sourceTree = SOURCE_ROOT; };
 		40D003BA2483220B0046D64B /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
-		40D003BF24844C110046D64B /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendRequest.swift; path = MemeThing/FriendRequest.swift; sourceTree = SOURCE_ROOT; };
+		40D003BF24844C110046D64B /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FriendRequest.swift; path = MemeThing/Models/FriendRequest.swift; sourceTree = SOURCE_ROOT; };
 		40D003C1248493470046D64B /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		40DC058D24901B7400EE02AC /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		40DC059324902D7400EE02AC /* MemeThingTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingTableCellView.swift; sourceTree = "<group>"; };
@@ -278,11 +276,11 @@
 			isa = PBXGroup;
 			children = (
 				405279EA24781E1A00942A7D /* Main.storyboard */,
-				408A26E0247ED77D008CE8DC /* MainMenu.storyboard */,
+				4058B99E249C436400E170A5 /* MainMenu.storyboard */,
 				40BA229324871F0D009A2197 /* Waiting.storyboard */,
-				40BA228B248715B3009A2197 /* Drawing.storyboard */,
+				4058B9A2249C43D200E170A5 /* Drawing.storyboard */,
 				40BA228E248715C9009A2197 /* AddCaption.storyboard */,
-				40BA229024871603009A2197 /* ViewResults.storyboard */,
+				4058B9A0249C43BC00E170A5 /* ViewResults.storyboard */,
 				407681DD2493D21F009D0C15 /* EndOfRound.storyboard */,
 				406C5391248AE9CE004729C7 /* Leaderboard.storyboard */,
 				406C538F248AE9BF004729C7 /* GameOver.storyboard */,
@@ -299,7 +297,6 @@
 				40D003B624831B690046D64B /* Game.swift */,
 				4039CE052481E553004DA41F /* Meme.swift */,
 				40D003B824831B700046D64B /* Caption.swift */,
-				404643432492A67900C1961D /* CoreDataStack.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -423,14 +420,14 @@
 				407681DE2493D21F009D0C15 /* EndOfRound.storyboard in Resources */,
 				406C5390248AE9BF004729C7 /* GameOver.storyboard in Resources */,
 				40DC058E24901B7400EE02AC /* Colors.xcassets in Resources */,
-				408A26E2247ED77D008CE8DC /* MainMenu.storyboard in Resources */,
-				40BA229224871603009A2197 /* ViewResults.storyboard in Resources */,
+				4058B9A1249C43BC00E170A5 /* ViewResults.storyboard in Resources */,
+				4058B9A3249C43D200E170A5 /* Drawing.storyboard in Resources */,
 				40BA228F248715C9009A2197 /* AddCaption.storyboard in Resources */,
 				405279F124781E1C00942A7D /* LaunchScreen.storyboard in Resources */,
+				4058B99F249C436500E170A5 /* MainMenu.storyboard in Resources */,
 				404A7D0A2491766500984BB7 /* ThreeLabelsTableViewCell.xib in Resources */,
 				405279EE24781E1C00942A7D /* Assets.xcassets in Resources */,
 				40BA229424871F0D009A2197 /* Waiting.storyboard in Resources */,
-				40BA228D248715B3009A2197 /* Drawing.storyboard in Resources */,
 				405279EC24781E1A00942A7D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -458,7 +455,6 @@
 				406C5396248AE9F8004729C7 /* GameOverViewController.swift in Sources */,
 				4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */,
 				40D003C024844C110046D64B /* FriendRequest.swift in Sources */,
-				404643442492A67900C1961D /* CoreDataStack.swift in Sources */,
 				40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */,
 				40C21476247EE944007B7630 /* UserController.swift in Sources */,
 				4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */,
@@ -503,30 +499,6 @@
 				405279F024781E1C00942A7D /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		408A26E0247ED77D008CE8DC /* MainMenu.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				408A26E1247ED77D008CE8DC /* Base */,
-			);
-			name = MainMenu.storyboard;
-			sourceTree = "<group>";
-		};
-		40BA228B248715B3009A2197 /* Drawing.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				40BA228C248715B3009A2197 /* Base */,
-			);
-			name = Drawing.storyboard;
-			sourceTree = "<group>";
-		};
-		40BA229024871603009A2197 /* ViewResults.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				40BA229124871603009A2197 /* Base */,
-			);
-			name = ViewResults.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
