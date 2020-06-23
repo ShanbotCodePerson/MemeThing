@@ -64,6 +64,7 @@ class GamesListTableViewController: UITableViewController {
     }
     
     @objc func refreshData() {
+        print("got here to \(#function)")
         DispatchQueue.main.async {
             self.loadAllData()
             self.refresh.endRefreshing()
@@ -75,7 +76,7 @@ class GamesListTableViewController: UITableViewController {
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .background
         
-        // FIXME: - need to figure out why this isn't calling its target function
+//        // FIXME: - need to figure out why this isn't calling its target function
 //        refresh.attributedTitle = NSAttributedString(string: "Check for updates")
 //        refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
 //        tableView.addSubview(refresh)
@@ -213,26 +214,26 @@ class GamesListTableViewController: UITableViewController {
         // Go to the correct page of the gameplay based on the status of the game and whether or not the user is the lead player
         switch game.gameStatus {
         case .waitingForPlayers:
-            transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+            transitionToStoryboard(named: .Waiting, with: game)
         case .waitingForDrawing:
             if (game.leadPlayer == currentUser.reference) {
-                transitionToStoryboard(named: StoryboardNames.drawingView, with: game)
+                transitionToStoryboard(named: .Drawing, with: game)
             }
             else {
-                transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                transitionToStoryboard(named: .Waiting, with: game)
             }
         case .waitingForCaptions:
             if (game.leadPlayer == currentUser.reference) || game.getStatus(of: currentUser) == .sentCaption {
-                transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                transitionToStoryboard(named: .Waiting, with: game)
             } else {
-                transitionToStoryboard(named: StoryboardNames.captionView, with: game)
+                transitionToStoryboard(named: .AddCaption, with: game)
             }
         case .waitingForResult:
-            transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+            transitionToStoryboard(named: .ViewResults, with: game)
         case .waitingForNextRound:
-            transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+            transitionToStoryboard(named: .Waiting, with: game)
         case .gameOver:
-            transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+            transitionToStoryboard(named: .GameOver, with: game)
         }
     }
 }
@@ -260,7 +261,7 @@ extension GamesListTableViewController: GameTableViewCellDelegate {
                 switch result {
                 case .success(_):
                     // If the user accepted the invitation, transition them to the waiting view until all users have responded
-                    if accept { self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game) }
+                    if accept { self?.transitionToStoryboard(named: .Waiting, with: game) }
                 case .failure(let error):
                     // Otherwise, display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

@@ -68,7 +68,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        guard let game = game else { return transitionToStoryboard(named: StoryboardNames.mainMenu) }
+        guard let game = game else { return transitionToStoryboard(named: .MainMenu) }
         
         // Remove the user from the game
         GameController.shared.leave(game) { [weak self] (result) in
@@ -76,7 +76,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
                 switch result {
                 case .success(_):
                     // Return to the main menu
-                    self?.transitionToStoryboard(named: StoryboardNames.mainMenu)
+                    self?.transitionToStoryboard(named: .MainMenu)
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -95,7 +95,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
                 switch result {
                 case .success(_):
                     // Return to the main menu
-                    self?.transitionToStoryboard(named: StoryboardNames.mainMenu)
+                    self?.transitionToStoryboard(named: .MainMenu)
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -123,7 +123,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
                 switch result {
                 case .success(let game):
                     // Transition to the waiting view
-                    self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                    self?.transitionToStoryboard(named: .Waiting, with: game)
                 case .failure(let error):
                     // Print and display the error and reset the UI
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

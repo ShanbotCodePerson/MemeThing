@@ -52,13 +52,13 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
             if sender.name == toCaptionsView {
-                self.transitionToStoryboard(named: StoryboardNames.captionView, with: game)
+                self.transitionToStoryboard(named: .AddCaption, with: game)
             }
             else if sender.name == toResultsView {
-                self.transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+                self.transitionToStoryboard(named: .ViewResults, with: game)
             }
             else if sender.name == toGameOver {
-                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+                self.transitionToStoryboard(named: .GameOver, with: game)
             }
         }
     }
@@ -94,7 +94,7 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
                     switch result {
                     case .success(_):
                         // Return to the main menu
-                        self?.transitionToStoryboard(named: StoryboardNames.mainMenu)
+                        self?.transitionToStoryboard(named: .MainMenu)
                     case .failure(let error):
                         // Print and present the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

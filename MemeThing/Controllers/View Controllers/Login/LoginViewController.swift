@@ -49,6 +49,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         // Add an observer for when the keyboard appears or disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        
+        // Add an observer for if the user denies permission to receive remote notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(deniedNotifications), name: notificationsDenied, object: nil)
+    }
+    
+    // MARK: - Respond to Notifications
+    
+    @objc func deniedNotifications() {
+        DispatchQueue.main.async {
+            // Present an alert to the user asking them to reconsider allowing notifications
+            self.presentAlert(title: "Notifications Will Not Display", message: "MemeThing uses notifications to alert you of new friend requests, invitations to games, and updates to games you're playing. Please consider enabling notifications in your phone's settings for a richer gaming experience.")
+        }
     }
     
     // MARK: - Actions
@@ -222,7 +234,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     // Transition to the main menu
     func presentMainMenuVC() {
         DispatchQueue.main.async {
-            self.transitionToStoryboard(named: StoryboardNames.mainMenu, direction: .fromRight)
+            self.transitionToStoryboard(named: .MainMenu, direction: .fromRight)
         }
     }
     
