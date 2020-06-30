@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4005A19A24AB7F6800BE556F /* Complaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4005A19924AB7F6800BE556F /* Complaint.swift */; };
 		4005A19C24AB819000BE556F /* ComplaintController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4005A19B24AB819000BE556F /* ComplaintController.swift */; };
+		4005A1A024ABF9DC00BE556F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4005A19F24ABF9DB00BE556F /* GoogleService-Info.plist */; };
 		401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401109882487FF7600E8FCE2 /* MemeImageView.swift */; };
 		4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4011098A24882AEE00E8FCE2 /* MemeController.swift */; };
 		402D7CFE249C45A100955ADF /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402D7CFD249C45A100955ADF /* Reachability.swift */; };
@@ -64,11 +65,13 @@
 		40D003C2248493470046D64B /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D003C1248493470046D64B /* FriendTableViewCell.swift */; };
 		40DC058E24901B7400EE02AC /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40DC058D24901B7400EE02AC /* Colors.xcassets */; };
 		40DC059424902D7400EE02AC /* MemeThingTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40DC059324902D7400EE02AC /* MemeThingTableCellView.swift */; };
+		4462AA84C49861EFF1FE1C89 /* Pods_MemeThing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ED762668309E2B410B1A7C0 /* Pods_MemeThing.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4005A19924AB7F6800BE556F /* Complaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Complaint.swift; sourceTree = "<group>"; };
 		4005A19B24AB819000BE556F /* ComplaintController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplaintController.swift; sourceTree = "<group>"; };
+		4005A19F24ABF9DB00BE556F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		401109882487FF7600E8FCE2 /* MemeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeImageView.swift; sourceTree = "<group>"; };
 		4011098A24882AEE00E8FCE2 /* MemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeController.swift; sourceTree = "<group>"; };
 		402D7CFD249C45A100955ADF /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -127,6 +130,9 @@
 		40D003C1248493470046D64B /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		40DC058D24901B7400EE02AC /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		40DC059324902D7400EE02AC /* MemeThingTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingTableCellView.swift; sourceTree = "<group>"; };
+		412BCA46A87BC7942E6C31FB /* Pods-MemeThing.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemeThing.release.xcconfig"; path = "Target Support Files/Pods-MemeThing/Pods-MemeThing.release.xcconfig"; sourceTree = "<group>"; };
+		5D74783BDE27C49F69D269F4 /* Pods-MemeThing.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemeThing.debug.xcconfig"; path = "Target Support Files/Pods-MemeThing/Pods-MemeThing.debug.xcconfig"; sourceTree = "<group>"; };
+		8ED762668309E2B410B1A7C0 /* Pods_MemeThing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MemeThing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,12 +141,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				40C2147A247EE97D007B7630 /* CloudKit.framework in Frameworks */,
+				4462AA84C49861EFF1FE1C89 /* Pods_MemeThing.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		23C88D59C4F4C05DD2C0742F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5D74783BDE27C49F69D269F4 /* Pods-MemeThing.debug.xcconfig */,
+				412BCA46A87BC7942E6C31FB /* Pods-MemeThing.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		401109872487FF5800E8FCE2 /* Custom Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -214,6 +231,7 @@
 				405279E324781E1A00942A7D /* MemeThing */,
 				405279E224781E1A00942A7D /* Products */,
 				40C21478247EE97D007B7630 /* Frameworks */,
+				23C88D59C4F4C05DD2C0742F /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -332,6 +350,7 @@
 				40DC058D24901B7400EE02AC /* Colors.xcassets */,
 				405279EF24781E1C00942A7D /* LaunchScreen.storyboard */,
 				405279F224781E1C00942A7D /* Info.plist */,
+				4005A19F24ABF9DB00BE556F /* GoogleService-Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -363,6 +382,7 @@
 			isa = PBXGroup;
 			children = (
 				40C21479247EE97D007B7630 /* CloudKit.framework */,
+				8ED762668309E2B410B1A7C0 /* Pods_MemeThing.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -374,9 +394,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 405279F524781E1C00942A7D /* Build configuration list for PBXNativeTarget "MemeThing" */;
 			buildPhases = (
+				E92C473DAC5F0F6AC4672954 /* [CP] Check Pods Manifest.lock */,
 				405279DD24781E1A00942A7D /* Sources */,
 				405279DE24781E1A00942A7D /* Frameworks */,
 				405279DF24781E1A00942A7D /* Resources */,
+				C0A416036B9A41DD0E856628 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -438,10 +460,53 @@
 				405279EE24781E1C00942A7D /* Assets.xcassets in Resources */,
 				40BA229424871F0D009A2197 /* Waiting.storyboard in Resources */,
 				405279EC24781E1A00942A7D /* Main.storyboard in Resources */,
+				4005A1A024ABF9DC00BE556F /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C0A416036B9A41DD0E856628 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MemeThing/Pods-MemeThing-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MemeThing/Pods-MemeThing-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MemeThing/Pods-MemeThing-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E92C473DAC5F0F6AC4672954 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MemeThing-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		405279DD24781E1A00942A7D /* Sources */ = {
@@ -632,6 +697,7 @@
 		};
 		405279F624781E1C00942A7D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5D74783BDE27C49F69D269F4 /* Pods-MemeThing.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MemeThing/MemeThing.entitlements;
@@ -651,6 +717,7 @@
 		};
 		405279F724781E1C00942A7D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 412BCA46A87BC7942E6C31FB /* Pods-MemeThing.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MemeThing/MemeThing.entitlements;
