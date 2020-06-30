@@ -282,7 +282,7 @@ class FriendsListTableViewController: UITableViewController {
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
-                            // Give the user an opportunity to block the unwanted friend request
+                            // Give the user an opportunity to block the unwanted friend
                             self?.presentConfirmAlert(title: "Friend Removed", message: "Do you want to block \(friend.screenName) from sending you any more friend requests?", cancelText: "No", confirmText: "Yes, block \(friend.screenName)", completion: {
                                 // If the user clicks "confirm," add that user to their blocked list
                                 self?.blockUser(named: friend.username)

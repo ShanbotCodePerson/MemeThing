@@ -132,6 +132,35 @@ class CaptionViewController: UIViewController, HasAGameObject {
         captionTextField.resignFirstResponder()
     }
     
+    @IBAction func reportContentButton(_ sender: UIButton) {
+        guard let currentUser = UserController.shared.currentUser,
+            let meme = meme
+            else { return }
+        
+        presentTextFieldAlert(title: "Report Drawing?", message: "Report the drawing for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
+            
+            // Form the body of the report
+            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.author.recordID). User description of problem is: \(complaint)"
+            
+            // Save the complaint to the cloud to be reviewed later
+            ComplaintController.createComplaint(with: content, photo: meme.photo) { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Display the success
+                        self?.presentAlert(title: "Report Sent", message: "Your report has been sent and will be reviewed as soon as possible")
+                        
+                        // TODO: - Notify the development team (aka me)
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        }
+    }
+    
     @IBAction func sendButtonTapped(_ sender: UIButton) {
         saveCaption()
     }

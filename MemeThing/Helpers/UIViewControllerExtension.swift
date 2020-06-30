@@ -74,12 +74,12 @@ extension UIViewController {
     // MARK: - Alerts
     
     // Present an alert with a simple dismiss button to display a message to the user
-    func presentAlert(title: String, message: String) {
+    func presentAlert(title: String, message: String, completion: @escaping () -> Void = {}) {
         // Create the alert controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Add the dismiss button to the alert
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { (_) in return completion() }))
         
         // Present the alert
         present(alertController, animated: true)
