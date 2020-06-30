@@ -45,7 +45,7 @@ class CanvasView: UIView {
             context.addLines(between: points)
             
             // Set the defaults for the appearance of the line
-            context.setLineWidth(10.0)
+            context.setLineWidth(8.0)
             context.setLineCap(.round)
             
             // Draw the path

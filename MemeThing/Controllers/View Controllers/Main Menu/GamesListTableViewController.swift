@@ -12,6 +12,8 @@ class GamesListTableViewController: UITableViewController {
     
     // MARK: - Properties
     
+    var refresh = UIRefreshControl()
+    
     enum SectionName: String {
         case pendingInvitations = "Pending Invitations to Games"
         case waitingForResponses = "Waiting for Responses"
@@ -49,7 +51,7 @@ class GamesListTableViewController: UITableViewController {
         setUpViews()
         
         // Load the data, if it hasn't been loaded already
-        loadAllData()
+        if GameController.shared.currentGames == nil { loadAllData() }
         
         // Set up the observer to listen for notifications telling the view to reload its data
         NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: updateListOfGames, object: nil)
@@ -61,24 +63,37 @@ class GamesListTableViewController: UITableViewController {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
+    @objc func refreshData() {
+        print("got here to \(#function)")
+        DispatchQueue.main.async {
+            self.loadAllData()
+            self.refresh.endRefreshing()
+        }
+    }
+    
     func setUpViews() {
         navigationController?.setNavigationBarHidden(false, animated: true)
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .background
+        
+//        // FIXME: - need to figure out why this isn't calling its target function
+//        refresh.attributedTitle = NSAttributedString(string: "Check for updates")
+//        refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+//        tableView.addSubview(refresh)
     }
     
     func loadAllData() {
-        if GameController.shared.currentGames == nil {
-            GameController.shared.fetchCurrentGames { [weak self] (result) in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(_):
-                        // Refresh the table to show the data
-                        self?.tableView.reloadData()
-                    case .failure(let error):
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorAlert(error)
-                    }
+        GameController.shared.fetchCurrentGames { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    print("got here to \(#function)")
+                    // Refresh the table to show the data
+                    self?.tableView.reloadData()
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
                 }
             }
         }
@@ -199,26 +214,26 @@ class GamesListTableViewController: UITableViewController {
         // Go to the correct page of the gameplay based on the status of the game and whether or not the user is the lead player
         switch game.gameStatus {
         case .waitingForPlayers:
-            transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+            transitionToStoryboard(named: .Waiting, with: game)
         case .waitingForDrawing:
             if (game.leadPlayer == currentUser.reference) {
-                transitionToStoryboard(named: StoryboardNames.drawingView, with: game)
+                transitionToStoryboard(named: .Drawing, with: game)
             }
             else {
-                transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                transitionToStoryboard(named: .Waiting, with: game)
             }
         case .waitingForCaptions:
             if (game.leadPlayer == currentUser.reference) || game.getStatus(of: currentUser) == .sentCaption {
-                transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                transitionToStoryboard(named: .Waiting, with: game)
             } else {
-                transitionToStoryboard(named: StoryboardNames.captionView, with: game)
+                transitionToStoryboard(named: .AddCaption, with: game)
             }
         case .waitingForResult:
-            transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+            transitionToStoryboard(named: .ViewResults, with: game)
         case .waitingForNextRound:
-            transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+            transitionToStoryboard(named: .Waiting, with: game)
         case .gameOver:
-            transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+            transitionToStoryboard(named: .GameOver, with: game)
         }
     }
 }
@@ -246,7 +261,7 @@ extension GamesListTableViewController: GameTableViewCellDelegate {
                 switch result {
                 case .success(_):
                     // If the user accepted the invitation, transition them to the waiting view until all users have responded
-                    if accept { self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game) }
+                    if accept { self?.transitionToStoryboard(named: .Waiting, with: game) }
                 case .failure(let error):
                     // Otherwise, display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

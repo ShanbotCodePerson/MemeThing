@@ -30,7 +30,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
     var meme: Meme? { didSet { memeImageView.image = meme?.photo } }
     var captions: [Caption]? { didSet { setUpPages(from: captions) } }
-    var nextDestination: String?
+    var nextDestination: StoryboardNames?
     
     // MARK: - Lifecycle Methods
     
@@ -204,13 +204,13 @@ class ResultsViewController: UIViewController, HasAGameObject {
         DispatchQueue.main.async {
             if sender.name == toNewRound {
                 if game.leadPlayer == currentUser.reference {
-                    self.nextDestination = StoryboardNames.drawingView
+                    self.nextDestination = .Drawing
                 } else {
-                    self.nextDestination = StoryboardNames.waitingView
+                    self.nextDestination = .Waiting
                 }
             }
             else if sender.name == toGameOver {
-                self.nextDestination = StoryboardNames.gameOverView
+                self.nextDestination = .GameOver
             }
             
             // Before transitioning to the next view, first show everyone the results of this round
@@ -220,7 +220,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     // A helper function to set up and present the end of round view
     func presentEndOFRoundView(with game: Game) {
-        let storyboard = UIStoryboard(name: StoryboardNames.endOfRoundView, bundle: nil)
+        let storyboard = UIStoryboard(name: StoryboardNames.EndOfRound.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? EndOfRoundViewController else { return }
         initialVC.gameID = game.recordID.recordName
         initialVC.nextDestination = self.nextDestination
@@ -232,12 +232,71 @@ class ResultsViewController: UIViewController, HasAGameObject {
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        transitionToStoryboard(named: StoryboardNames.mainMenu)
+        transitionToStoryboard(named:.MainMenu)
     }
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        presentPopoverStoryboard(named: .Leaderboard, with: game)
+    }
+    
+    @IBAction func reportImageButtonTapped(_ sender: UIButton) {
+        guard let currentUser = UserController.shared.currentUser,
+            let meme = meme
+            else { return }
+        
+        presentTextFieldAlert(title: "Report Drawing?", message: "Report the drawing for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
+            
+            // Form the body of the report
+            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.author.recordID). User description of problem is: \(complaint)"
+            
+            // Save the complaint to the cloud to be reviewed later
+            ComplaintController.createComplaint(with: content, photo: meme.photo) { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Display the success
+                        self?.presentAlert(title: "Report Sent", message: "Your report has been sent and will be reviewed as soon as possible")
+                        
+                    // TODO: - Notify the development team (aka me)
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        }
+    }
+    
+    @IBAction func reportCaptionButtonTapped(_ sender: UIButton) {
+        guard let currentUser = UserController.shared.currentUser,
+            let meme = meme, let captions = captions
+            else { return }
+        let caption = captions[pageControl.currentPage]
+        
+        presentTextFieldAlert(title: "Report Caption?", message: "Report the caption for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
+            
+            // Form the body of the report
+            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a caption made by user with id \(caption.author.recordID) about a drawing made by user with id \(meme.author.recordID). Caption text is \(caption.text). User description of problem is: \(complaint)"
+            
+            // Save the complaint to the cloud to be reviewed later
+            ComplaintController.createComplaint(with: content, photo: meme.photo, caption: caption.text) { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Display the success
+                        self?.presentAlert(title: "Report Sent", message: "Your report has been sent and will be reviewed as soon as possible")
+                        
+                    // TODO: - Notify the development team (aka me)
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        }
     }
     
     @IBAction func chooseWinnerButtonTapped(_ sender: UIButton) {
@@ -265,9 +324,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
                         switch result {
                         case .success(_):
                             // If the game is over, go to the game over view
-                            if game.gameStatus == .gameOver { self?.nextDestination = StoryboardNames.gameOverView }
+                            if game.gameStatus == .gameOver { self?.nextDestination = StoryboardNames.GameOver }
                                 // Otherwise, set the next destination as the waiting view
-                            else { self?.nextDestination = StoryboardNames.waitingView }
+                            else { self?.nextDestination = .Waiting }
                             
                             // Before transitioning to the next view, first display the results of this round
                             self?.savingLoadingIndicator.stopAnimating()

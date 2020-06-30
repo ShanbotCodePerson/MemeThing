@@ -46,7 +46,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
         DispatchQueue.main.async {
             if sender.name == toGameOver {
                 print("should be going to game over view now")
-                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+                self.transitionToStoryboard(named: .GameOver, with: game)
             }
         }
     }
@@ -74,12 +74,12 @@ class DrawingViewController: UIViewController, HasAGameObject {
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        transitionToStoryboard(named: StoryboardNames.mainMenu)
+        transitionToStoryboard(named: .MainMenu)
     }
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        presentPopoverStoryboard(named: .Leaderboard, with: game)
     }
     
     @IBAction func undoButtonTapped(_ sender: UIButton) {
@@ -126,7 +126,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
                         switch result {
                         case .success(_):
                             // Transition back to the waiting view until all the captions have been submitted
-                            self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                            self?.transitionToStoryboard(named: .Waiting, with: game)
                         case .failure(let error):
                             // Print and display the error and reset the UI
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

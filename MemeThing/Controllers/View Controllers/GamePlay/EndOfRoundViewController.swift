@@ -22,7 +22,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     
     var gameID: String?
     var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
-    var nextDestination: String?
+    var nextDestination: StoryboardNames?
     
     // MARK: - Lifecycle Methods
     
@@ -45,10 +45,10 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         // Transition to the captions view if the game has moved on, or to the main menu if the game has ended
         DispatchQueue.main.async {
             if sender.name == toCaptionsView {
-                self.transitionToStoryboard(named: StoryboardNames.captionView, with: game)
+                self.transitionToStoryboard(named: .AddCaption, with: game)
             }
             else if sender.name == toGameOver {
-                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+                self.transitionToStoryboard(named: .GameOver, with: game)
             }
         }
     }

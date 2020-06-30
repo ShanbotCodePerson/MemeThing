@@ -54,13 +54,10 @@ class User: CKCompatible {
          friendsReferences: [CKRecord.Reference] = [],
          appleUserReference: CKRecord.Reference?,
          recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+        
         self.username = username
         self.password = password
-        if let screenName = screenName {
-            self.screenName = screenName
-        } else {
-            self.screenName = username
-        }
+        self.screenName = screenName ?? username
         self.email = email
         self.points = points
         self.blockedUsernames = blockedUsernames

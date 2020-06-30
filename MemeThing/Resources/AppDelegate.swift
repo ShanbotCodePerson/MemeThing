@@ -47,10 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        // Display an alert to suggest turning on notifications
+        // Tell the view to display an alert to suggest turning on notifications
         // TODO: - test this
-        
-        // TODO: - how to do this?
+        NotificationCenter.default.post(Notification(name: notificationsDenied))
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

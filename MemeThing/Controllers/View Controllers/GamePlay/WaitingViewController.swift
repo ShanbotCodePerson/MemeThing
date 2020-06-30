@@ -59,9 +59,9 @@ class WaitingViewController: UIViewController, HasAGameObject {
                 waitingForTableView.isHidden = true
             } else { setUpTableView() }
         case .waitingForResult:
-            transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+            transitionToStoryboard(named: .ViewResults, with: game)
         case .gameOver:
-            transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+            transitionToStoryboard(named: .GameOver, with: game)
         default:
             print("In waiting view and game status is \(game.gameStatus). This shouldn't happen - check what went wrong")
         }
@@ -99,13 +99,13 @@ class WaitingViewController: UIViewController, HasAGameObject {
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
             if sender.name == toCaptionsView {
-                self.transitionToStoryboard(named: StoryboardNames.captionView, with: game)
+                self.transitionToStoryboard(named: .AddCaption, with: game)
             }
             else if sender.name == toResultsView {
-                self.transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+                self.transitionToStoryboard(named: .ViewResults, with: game)
             }
             else if sender.name == toGameOver {
-                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+                self.transitionToStoryboard(named: .GameOver, with: game)
             }
         }
     }
@@ -119,7 +119,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
         // If the current user is the lead player, transition to the drawing view
         DispatchQueue.main.async {
             if game.leadPlayer == UserController.shared.currentUser?.reference {
-                self.transitionToStoryboard(named: StoryboardNames.drawingView, with: game)
+                self.transitionToStoryboard(named: .Drawing, with: game)
             } else {
                 // Otherwise, refresh the waiting view to reflect that the game is starting
                 self.setUpViews()
@@ -130,12 +130,12 @@ class WaitingViewController: UIViewController, HasAGameObject {
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        transitionToStoryboard(named: StoryboardNames.mainMenu)
+        transitionToStoryboard(named: .MainMenu)
     }
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        presentPopoverStoryboard(named: .Leaderboard, with: game)
     }
 }
 

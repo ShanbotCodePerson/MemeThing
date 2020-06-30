@@ -14,25 +14,23 @@ protocol HasAGameObject: UIViewController {
     var gameID: String? { get set }
 }
 
-// MARK: - String Constants
-
-struct StoryboardNames  {
-    static let mainMenu = "MainMenu"
-    static let waitingView = "Waiting"
-    static let drawingView = "Drawing"
-    static let captionView = "AddCaption"
-    static let resultsView = "ViewResults"
-    static let endOfRoundView = "EndOfRound"
-    static let leaderboardView = "Leaderboard"
-    static let gameOverView = "GameOver"
-}
-
 extension UIViewController {
     
     // MARK: - Navigation
     
-    func transitionToStoryboard(named: String, direction: CATransitionSubtype = .fromLeft) {
-        let storyboard = UIStoryboard(name: named, bundle: nil)
+    enum StoryboardNames: String  {
+        case MainMenu
+        case Waiting
+        case Drawing
+        case AddCaption
+        case ViewResults
+        case EndOfRound
+        case Leaderboard
+        case GameOver
+    }
+    
+    func transitionToStoryboard(named storyboard: StoryboardNames, direction: CATransitionSubtype = .fromLeft) {
+        let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() else { return }
         initialVC.modalPresentationStyle = .fullScreen
         
@@ -47,8 +45,8 @@ extension UIViewController {
         self.present(initialVC, animated: false)
     }
     
-    func transitionToStoryboard(named: String, with game: Game) {
-        let storyboard = UIStoryboard(name: named, bundle: nil)
+    func transitionToStoryboard(named storyboard: StoryboardNames, with game: Game) {
+        let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
         initialVC.gameID = game.recordID.recordName
         initialVC.modalPresentationStyle = .fullScreen
@@ -64,8 +62,8 @@ extension UIViewController {
         self.present(initialVC, animated: false)
     }
     
-    func presentPopoverStoryboard(named: String, with game: Game) {
-        let storyboard = UIStoryboard(name: named, bundle: nil)
+    func presentPopoverStoryboard(named storyboard: StoryboardNames, with game: Game) {
+        let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
         initialVC.gameID = game.recordID.recordName
         initialVC.modalPresentationStyle = .overFullScreen
@@ -76,12 +74,12 @@ extension UIViewController {
     // MARK: - Alerts
     
     // Present an alert with a simple dismiss button to display a message to the user
-    func presentAlert(title: String, message: String) {
+    func presentAlert(title: String, message: String, completion: @escaping () -> Void = {}) {
         // Create the alert controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Add the dismiss button to the alert
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { (_) in return completion() }))
         
         // Present the alert
         present(alertController, animated: true)

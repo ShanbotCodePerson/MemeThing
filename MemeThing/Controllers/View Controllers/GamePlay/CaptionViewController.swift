@@ -69,7 +69,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
             if sender.name == toGameOver {
-                self.transitionToStoryboard(named: StoryboardNames.gameOverView, with: game)
+                self.transitionToStoryboard(named: .GameOver, with: game)
             }
         }
     }
@@ -118,18 +118,47 @@ class CaptionViewController: UIViewController, HasAGameObject {
     // MARK: - Actions
     
     @IBAction func mainMenuButtonTapped(_ sender: UIBarButtonItem) {
-        transitionToStoryboard(named: StoryboardNames.mainMenu)
+        transitionToStoryboard(named: .MainMenu)
     }
     
     @IBAction func dotsButtonTapped(_ sender: UIBarButtonItem) {
         guard let game = game else { return }
-        presentPopoverStoryboard(named: StoryboardNames.leaderboardView, with: game)
+        presentPopoverStoryboard(named: .Leaderboard, with: game)
     }
     
     @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
         print("got here to \(#function)")
         // Close the keyboard
         captionTextField.resignFirstResponder()
+    }
+    
+    @IBAction func reportContentButton(_ sender: UIButton) {
+        guard let currentUser = UserController.shared.currentUser,
+            let meme = meme
+            else { return }
+        
+        presentTextFieldAlert(title: "Report Drawing?", message: "Report the drawing for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
+            
+            // Form the body of the report
+            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.author.recordID). User description of problem is: \(complaint)"
+            
+            // Save the complaint to the cloud to be reviewed later
+            ComplaintController.createComplaint(with: content, photo: meme.photo) { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Display the success
+                        self?.presentAlert(title: "Report Sent", message: "Your report has been sent and will be reviewed as soon as possible")
+                        
+                        // TODO: - Notify the development team (aka me)
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        }
     }
     
     @IBAction func sendButtonTapped(_ sender: UIButton) {
@@ -168,10 +197,10 @@ class CaptionViewController: UIViewController, HasAGameObject {
                         case .success(_):
                             if game.allCaptionsSubmitted {
                                 // Go to the results view if all captions have been submitted already
-                                self?.transitionToStoryboard(named: StoryboardNames.resultsView, with: game)
+                                self?.transitionToStoryboard(named: .ViewResults, with: game)
                             } else {
                                 // Transition back to the waiting view until all the captions have been submitted
-                                self?.transitionToStoryboard(named: StoryboardNames.waitingView, with: game)
+                                self?.transitionToStoryboard(named: .Waiting, with: game)
                             }
                         case .failure(let error):
                             // Print and display the error and reset the UI

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4005A19A24AB7F6800BE556F /* Complaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4005A19924AB7F6800BE556F /* Complaint.swift */; };
+		4005A19C24AB819000BE556F /* ComplaintController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4005A19B24AB819000BE556F /* ComplaintController.swift */; };
 		401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401109882487FF7600E8FCE2 /* MemeImageView.swift */; };
 		4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4011098A24882AEE00E8FCE2 /* MemeController.swift */; };
 		402D7CFE249C45A100955ADF /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402D7CFD249C45A100955ADF /* Reachability.swift */; };
@@ -65,6 +67,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4005A19924AB7F6800BE556F /* Complaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Complaint.swift; sourceTree = "<group>"; };
+		4005A19B24AB819000BE556F /* ComplaintController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplaintController.swift; sourceTree = "<group>"; };
 		401109882487FF7600E8FCE2 /* MemeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeImageView.swift; sourceTree = "<group>"; };
 		4011098A24882AEE00E8FCE2 /* MemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeController.swift; sourceTree = "<group>"; };
 		402D7CFD249C45A100955ADF /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -270,6 +274,7 @@
 				4039365F2486E684007C2601 /* FriendRequestController.swift */,
 				40D003BA2483220B0046D64B /* GameController.swift */,
 				4011098A24882AEE00E8FCE2 /* MemeController.swift */,
+				4005A19B24AB819000BE556F /* ComplaintController.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";
@@ -299,6 +304,7 @@
 				40D003B624831B690046D64B /* Game.swift */,
 				4039CE052481E553004DA41F /* Meme.swift */,
 				40D003B824831B700046D64B /* Caption.swift */,
+				4005A19924AB7F6800BE556F /* Complaint.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -455,9 +461,11 @@
 				40C2148524809A35007B7630 /* CaptionViewController.swift in Sources */,
 				406089A22491BB10009635DA /* MemeThingTextField.swift in Sources */,
 				40D003C2248493470046D64B /* FriendTableViewCell.swift in Sources */,
+				4005A19A24AB7F6800BE556F /* Complaint.swift in Sources */,
 				406C5396248AE9F8004729C7 /* GameOverViewController.swift in Sources */,
 				4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */,
 				40D003C024844C110046D64B /* FriendRequest.swift in Sources */,
+				4005A19C24AB819000BE556F /* ComplaintController.swift in Sources */,
 				40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */,
 				40C21476247EE944007B7630 /* UserController.swift in Sources */,
 				4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */,
@@ -637,7 +645,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.shannon.MemeThing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -656,7 +664,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.shannon.MemeThing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

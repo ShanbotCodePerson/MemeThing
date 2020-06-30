@@ -70,6 +70,7 @@ class FriendTableViewCell: UITableViewCell {
         if let username = username {
             usernameLabel.text = username
             pointsLabel.text = "Points: \(points ?? 0)"
+            usernameLabel.textAlignment = .left
             pointsLabel.textAlignment = .right
             rightConstraint.constant = 6
             pointsLabel.isHidden = false
