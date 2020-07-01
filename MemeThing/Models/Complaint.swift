@@ -7,71 +7,49 @@
 //
 
 import Foundation
-import CloudKit
-import UIKit.UIImage
 
 // MARK: - String Constants
 
 struct ComplaintStrings {
     static let recordType = "Complaint"
     static let contentKey = "content"
-    fileprivate static let photoAssetKey = "photoAsset"
     fileprivate static let captionKey = "caption"
+    fileprivate static let recordIDKey = "recordID"
 }
 
-class Complaint: CKCompatible, CKPhotoAsset {
+class Complaint {
     
     // MARK: - Properties
     
-    // Complaint properties
     let content: String
-    var photo: UIImage?
     let caption: String?
+    let recordID: String
     
-    // CK Properties
-    var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .none) }
-    static var recordType: CKRecord.RecordType { ComplaintStrings.recordType }
-    var ckRecord: CKRecord { createCKRecord() }
-    var recordID: CKRecord.ID
+    // MARK: - Initializers
     
-    // MARK: - Initializer
-    
-    init(content: String, photo: UIImage?, caption: String?, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+    init(content: String,
+         caption: String?,
+         recordID: String = UUID().uuidString) {
+        
         self.content = content
-        self.photo = photo
         self.caption = caption
         self.recordID = recordID
     }
     
-    // MARK: - Convert from CKRecord
-    
-    required convenience init?(ckRecord: CKRecord) {
-        guard let content = ckRecord[ComplaintStrings.contentKey] as? String else { return nil }
-        let caption = ckRecord[ComplaintStrings.captionKey] as? String
+    convenience init?(dictionary: [String : Any]) {
+        guard let content = dictionary[ComplaintStrings.contentKey] as? String,
+            let recordID = dictionary[ComplaintStrings.recordIDKey] as? String
+            else { return nil }
+        let caption = dictionary[ComplaintStrings.captionKey] as? String
         
-        var photo: UIImage?
-        if let photoAsset = ckRecord[ComplaintStrings.photoAssetKey] as? CKAsset {
-            do {
-                let data = try Data(contentsOf: photoAsset.fileURL!)
-                photo = UIImage(data: data)
-            } catch {
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-            }
-        }
-        guard let unwrappedPhoto = photo else { return nil }
-        
-        self.init(content: content, photo: unwrappedPhoto, caption: caption, recordID: ckRecord.recordID)
+        self.init(content: content, caption: caption, recordID: recordID)
     }
     
-    // MARK: - Convert to CKRecord
-
-    func createCKRecord() -> CKRecord {
-        let record = CKRecord(recordType: ComplaintStrings.recordType, recordID: recordID)
-        
-        record.setValue(content, forKey: ComplaintStrings.contentKey)
-        if let photoAsset = photoAsset { record.setValue(photoAsset, forKey: ComplaintStrings.photoAssetKey) }
-        if let caption = caption { record.setValue(caption, forKey: ComplaintStrings.captionKey) }
-        
-        return record
+    // MARK: - Convert to Dictionary
+    
+    func asDictionary() -> [String : Any] {
+        [ComplaintStrings.contentKey : content,
+         ComplaintStrings.captionKey : caption as Any,
+         ComplaintStrings.recordIDKey : recordID]
     }
 }

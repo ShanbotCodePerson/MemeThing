@@ -7,100 +7,81 @@
 //
 
 import Foundation
-import CloudKit
 
 // MARK: - String Constants
 
 struct UserStrings {
     static let recordType = "User"
-    static let usernameKey = "username"
-    fileprivate static let passwordKey = "password"
+    static let emailKey = "email"
     fileprivate static let screenNameKey = "screenName"
-    fileprivate static let emailKey = "email"
     fileprivate static let pointsKey = "points"
     fileprivate static let blockedUsernamesKey = "blockedUsernames"
-    fileprivate static let friendsReferenceKey = "friendsReference"
-    static let appleUserReferenceKey = "appleUserReference"
+    fileprivate static let friendIDsKey = "friendIDs"
+    static let recordIDKey = "recordID"
 }
 
-class User: CKCompatible {
+class User {
     
     // MARK: - Properties
     
-    // User properties
-    let username: String
-    var password: String
+    let email: String
     var screenName: String
-    var email: String
     var points: Int
     var blockedUsernames: [String]
-    var friendsReferences: [CKRecord.Reference]
-    let appleUserReference: CKRecord.Reference?
+    var friendIDs: [String]
+    let recordID: String
+    var documentID: String?
     
-    // CloudKit properties
-    var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .none) }
-    static var recordType: CKRecord.RecordType { UserStrings.recordType }
-    var ckRecord: CKRecord { createCKRecord() }
-    var recordID: CKRecord.ID
+    // MARK: - Initializers
     
-    // MARK: - Initializer
-    
-    init(username: String,
-         password: String,
+    init(email: String,
          screenName: String?,
-         email: String,
          points: Int = 0,
          blockedUsernames: [String] = [],
-         friendsReferences: [CKRecord.Reference] = [],
-         appleUserReference: CKRecord.Reference?,
-         recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+         friendIDs: [String] = [],
+         recordID: String = UUID().uuidString) {
         
-        self.username = username
-        self.password = password
-        self.screenName = screenName ?? username
         self.email = email
+        self.screenName = (screenName ?? email.components(separatedBy: "@").first) ?? email
         self.points = points
         self.blockedUsernames = blockedUsernames
-        self.friendsReferences = friendsReferences
-        self.appleUserReference = appleUserReference
+        self.friendIDs = friendIDs
         self.recordID = recordID
     }
     
-    // MARK: - Convert from CKRecord
-    
-    required convenience init?(ckRecord: CKRecord) {
-        guard let username = ckRecord[UserStrings.usernameKey] as? String,
-            let password = ckRecord[UserStrings.passwordKey] as? String,
-            let screenName = ckRecord[UserStrings.screenNameKey] as? String,
-            let email = ckRecord[UserStrings.emailKey] as? String,
-            let points = ckRecord[UserStrings.pointsKey] as? Int,
-            let blockedUsernames = ckRecord[UserStrings.blockedUsernamesKey] as? [String],
-            var friendsReferences = ckRecord[UserStrings.friendsReferenceKey] as? [CKRecord.Reference]
+    convenience init?(dictionary: [String : Any]) {
+        guard let email = dictionary[UserStrings.emailKey] as? String,
+            let screenName = dictionary[UserStrings.screenNameKey] as? String,
+            let points = dictionary[UserStrings.pointsKey] as? Int,
+            let blockedUsernames = dictionary[UserStrings.blockedUsernamesKey] as? [String],
+            var friendIDs = dictionary[UserStrings.friendIDsKey] as? [String],
+            let recordID = dictionary[UserStrings.recordIDKey] as? String
             else { return nil }
-        let appleUserReference = ckRecord[UserStrings.appleUserReferenceKey] as? CKRecord.Reference
+        friendIDs = Array(Set(friendIDs))
         
-        friendsReferences = Array(Set(friendsReferences))
-        self.init(username: username, password: password, screenName: screenName, email: email, points: points, blockedUsernames: blockedUsernames, friendsReferences: friendsReferences, appleUserReference: appleUserReference, recordID: ckRecord.recordID)
+        self.init(email: email,
+                  screenName: screenName,
+                  points: points,
+                  blockedUsernames: blockedUsernames,
+                  friendIDs: friendIDs,
+                  recordID: recordID)
     }
     
-    // MARK: - Convert to CKRecord
+    // MARK: - Convert to Dictionary
     
-    func createCKRecord() -> CKRecord {
-        let record = CKRecord(recordType: UserStrings.recordType, recordID: recordID)
-        
-        record.setValuesForKeys([
-            UserStrings.usernameKey : username,
-            UserStrings.passwordKey : password,
-            UserStrings.screenNameKey : screenName,
-            UserStrings.emailKey : email,
-            UserStrings.pointsKey : points,
-            UserStrings.blockedUsernamesKey : blockedUsernames,
-            UserStrings.friendsReferenceKey : friendsReferences,
-        ])
-        if let appleUserReference = appleUserReference {
-            record.setValue(appleUserReference, forKey: UserStrings.appleUserReferenceKey)
-        }
-        
-        return record
+    func asDictionary() -> [String : Any] {
+        [UserStrings.emailKey : email,
+         UserStrings.screenNameKey : screenName,
+         UserStrings.pointsKey : points,
+         UserStrings.blockedUsernamesKey : blockedUsernames,
+         UserStrings.friendIDsKey : friendIDs,
+         UserStrings.recordIDKey : recordID
+        ]
+    }
+}
+
+extension User: Equatable {
+    static func == (lhs: User, rhs: User) -> Bool {
+        return lhs.recordID == rhs.recordID
     }
 }

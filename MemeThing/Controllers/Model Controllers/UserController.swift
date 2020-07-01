@@ -7,7 +7,14 @@
 //
 
 import Foundation
-import CloudKit
+import Firebase
+import FirebaseStorage
+
+// TODO: - find somewhere else to put this
+typealias resultCompletion = (Result<Bool, MemeThingError>) -> Void
+typealias resultCompletionWith<T> = (Result<T, MemeThingError>) -> Void
+let db = Firestore.firestore()
+let storage = Storage.storage()
 
 class UserController {
     
@@ -20,175 +27,200 @@ class UserController {
     var currentUser: User? { didSet { setUpUser() } }
     var usersFriends: [User]?
     
-    // MARK: - Properties
-    
-    typealias resultHandler = (Result<Bool, MemeThingError>) -> Void
-    typealias resultHandlerWithObject = (resultTypeOne) -> Void
-    typealias resultTypeMany = Result<[User], MemeThingError>
-    typealias resultTypeOne = Result<User, MemeThingError>
-    
     // MARK: - CRUD Methods
     
     // Create a new user
-    func createUser(with username: String, password: String, screenName: String?, email: String, completion: @escaping resultHandler) {
-        // Get the apple user reference of the current user of the phone
-        fetchAppleUserReference { [weak self] (reference) in
-            // Create the new user
-            let newUser = User(username: username, password: password, screenName: screenName, email: email, appleUserReference: reference)
+    func createUser(with email: String, screenName: String?, completion: @escaping resultCompletion) {
+        // Create the new user
+        let user = User(email: email, screenName: screenName)
+        
+        // Save the user to the cloud
+        // Save the user object to the cloud and save the documentID for editing purposes
+        let reference: DocumentReference = db.collection(UserStrings.recordType).addDocument(data: user.asDictionary()) { (error) in
             
-            // Save the user to the cloud
-            CKService.shared.create(object: newUser) { (result) in
-                switch result {
-                case .success(let user):
-                    // Save the user to the source of truth
-                    self?.currentUser = user
-                    return completion(.success(true))
-                case .failure(let error):
-                    // Print and return the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(error))
-                }
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.fsError(error)))
             }
         }
+        // FIXME: - threading issue here, but need reference outside
+        user.documentID = reference.documentID
+        
+        // Save to the source of truth and return the success
+        currentUser = user
+        setUpUser()
     }
     
     // Read (fetch) the current user
-    func fetchUser(completion: @escaping resultHandler) {
-        // Get the apple user reference of the current user of the phone
-        fetchAppleUserReference { [weak self] (reference) in
-            guard let reference = reference else { return completion(.failure(.noUserFound))}
-            
-            // Create the search predicate to only look for the current user
-            let predicate = NSPredicate(format: "%K == %@", argumentArray: [UserStrings.appleUserReferenceKey, reference])
-            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
-            
-            // Fetch the user from the cloud
-            CKService.shared.read(predicate: compoundPredicate) { (result: resultTypeMany) in
-                switch result {
-                case .success(let users):
-                    // There should only be one user
-                    guard let user = users.first else { return completion(.failure(.noUserFound)) }
-                    // Save the user to the source of truth and set up notifications for friend requests
-                    self?.currentUser = user
-                    return completion(.success(true))
-                case .failure(let error):
-                   // Print and return the error
+    func fetchUser(completion: @escaping resultCompletion) {
+        guard let user = Auth.auth().currentUser, let email = user.email else { return completion(.failure(.noUserFound)) }
+        
+        db.collection(UserStrings.recordType)
+            .whereField(UserStrings.emailKey, isEqualTo: email)
+            .getDocuments { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(error))
+                    return completion(.failure(.fsError(error)))
                 }
-            }
+                
+                // Unwrap the data
+                guard let documents = results?.documents, documents.count > 0
+                    else { return completion(.failure(.noUserFound)) }
+                guard let document = documents.first,
+                    let currentUser = User(dictionary: document.data())
+                    else { return completion(.failure(.couldNotUnwrap)) }
+                currentUser.documentID = document.documentID
+                
+                // Save to the source of truth and return the success
+                self?.currentUser = currentUser
+                self?.setUpUser()
+                return completion(.success(true))
         }
     }
     
     // Read (fetch) all the friends of a user
     // TODO: - is this a problem with security? how to only have access to relevant details?
-    func fetchUsersFriends(completion: @escaping resultHandler) {
+    func fetchUsersFriends(completion: @escaping resultCompletion) {
         guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
         // Return an empty array if the user has no friends
-        if currentUser.friendsReferences.count == 0 {
+        if currentUser.friendIDs.count == 0 {
             self.usersFriends = []
             return completion(.success(false))
         }
         
-        let predicate = NSPredicate(format: "%K IN %@", argumentArray: ["recordID", currentUser.friendsReferences.compactMap({ $0.recordID })])
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
-        
-        // Create the search predicate to look for all the user's friends
-        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: resultTypeMany) in
-            switch result {
-            case .success(let users):
-                // Save the list of friends to the source of truth
-                self?.usersFriends = users
+        // Fetch the data from the cloud
+        db.collection(UserStrings.recordType)
+            .whereField(UserStrings.recordIDKey, in: currentUser.friendIDs)
+            .getDocuments { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                let friends = documents.compactMap({ User(dictionary: $0.data()) })
+                
+                // Save to the source of truth and return the success
+                self?.usersFriends = friends
                 return completion(.success(true))
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
         }
     }
     
-    // Read (fetch) a search for another user
-    func searchFor(_ username: String, completion: @escaping resultHandlerWithObject) {
-        // TODO: - allow searching based on screen name or based on partial username
-        
-        // Create the search predicate to only look for the given username
-        let predicate = NSPredicate(format: "%K == %@", argumentArray: [UserStrings.usernameKey, username])
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
-        
-        // Fetch the user from the cloud
-        CKService.shared.read(predicate: compoundPredicate) { (result: resultTypeMany) in
-            switch result {
-            case .success(let users):
-                // There should only be one user with that username
-                guard let user = users.first else { return completion(.failure(.noUserFound)) }
+    // Read (search for) a specific user by an email
+    func searchFor(email: String, completion: @escaping resultCompletionWith<User>) {
+        // Fetch the data from the cloud
+        db.collection(UserStrings.recordType)
+            .whereField(UserStrings.emailKey, isEqualTo: email)
+            .getDocuments { (results, error) in
                 
-                // Return the result
-                return completion(.success(user))
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let document = results?.documents.first
+                    else { return completion(.failure(.noSuchUser))}
+                guard let friend = User(dictionary: document.data())
+                    else { return completion(.failure(.couldNotUnwrap)) }
+                
+                // Return the success
+                return completion(.success(friend))
+        }
+    }
+    
+    // Read (search for) a specific user by a recordID
+    func fetchUser(by recordID: String, completion: @escaping resultCompletionWith<User>) {
+        // Fetch the data from the cloud
+        db.collection(UserStrings.recordType)
+            .whereField(UserStrings.recordIDKey, isEqualTo: recordID)
+            .getDocuments { (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let document = results?.documents.first,
+                    let friend = User(dictionary: document.data())
+                    else { return completion(.failure(.couldNotUnwrap)) }
+                friend.documentID = document.documentID
+                
+                // Save to the source of truth and return the success
+                return completion(.success(friend))
         }
     }
     
     // Update a user - generic helper function for other update functionality
-    private func update(_ user: User, completion: @escaping resultHandler) {
-        CKService.shared.update(object: user) { (result) in
-            switch result {
-            case .success(_):
+     func saveChanges(to user: User, completion: @escaping resultCompletion) {
+        guard let documentID = user.documentID else { return completion(.failure(.noUserFound)) }
+        
+        // Update the data in the cloud
+        db.collection(UserStrings.recordType)
+            .document(documentID)
+            .updateData(user.asDictionary()) { [weak self] (error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Update the source of truth
+                self?.currentUser = user
+                
                 // Return the success
                 return completion(.success(true))
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
         }
     }
     
     // Update a user with new profile information
-    func update(_ user: User, password: String?, screenName: String?, email: String?, completion: @escaping resultHandler) {
+    func update(_ user: User, screenName: String?, completion: @escaping resultCompletion) {
         // Update any fields that changed
-        if let password = password { user.password = password }
         if let screenName = screenName { user.screenName = screenName }
-        if let email = email { user.email = email }
         
         // Save the changes to the cloud
-        update(user, completion: completion)
+        saveChanges(to: user, completion: completion)
     }
     
     // Update a user's points
-    func update(_ user: User, points: Int, completion: @escaping resultHandler) {
+    func update(_ user: User, points: Int, completion: @escaping resultCompletion) {
         // Update the user's points
         user.points += points
         
         // Save the changes to the cloud
-        update(user, completion: completion)
+        saveChanges(to: user, completion: completion)
     }
     
     // Update a user with a new friend
-    func update(_ user: User, friendReference: CKRecord.Reference, completion: @escaping resultHandler) {
+    func update(_ user: User, friendID: String, completion: @escaping resultCompletion) {
         // Add the friend to the user's list of friends
-        user.friendsReferences.append(friendReference)
+        user.friendIDs.append(friendID)
         
         // Fetch the friend from the reference
-        CKService.shared.read(reference: friendReference) { [weak self] (result: resultTypeOne) in
+        fetchUser(by: friendID) { [weak self] (result) in
             switch result {
             case .success(let friend):
-                // Save the friend to the user's list of friends
+                // Save the friend to the source of truth
                 if var userFriends = self?.usersFriends {
                     userFriends.append(friend)
                     self?.usersFriends = userFriends
                 } else {
                     self?.usersFriends = [friend]
                 }
-                print("got here to \(#function) and usersFriends SoT should now be updated, count is now \(String(describing: self?.usersFriends?.count))")
+                
                 // Tell the tableview in the friends list to update
-                let notification = Notification(name: friendsUpdate)
-                NotificationCenter.default.post(notification)
+                NotificationCenter.default.post(Notification(name: friendsUpdate))
             case .failure(let error):
                 // Print the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -196,72 +228,57 @@ class UserController {
         }
         
         // Save the changes to the cloud
-        update(user, completion: completion)
+        saveChanges(to: user, completion: completion)
     }
     
     // Update a user with a new blocked username
-    func update(_ user: User, usernameToBlock username: String, completion: @escaping resultHandler) {
+    func update(_ user: User, usernameToBlock username: String, completion: @escaping resultCompletion) {
         // Add the username to the user's list of blocked usernames
         user.blockedUsernames.append(username)
         
         // Save the changes to the cloud
-        update(user, completion: completion)
+        saveChanges(to: user, completion: completion)
     }
     
     // Update a user by removing a friend
-    func update(_ user: User, friendToRemove friend: CKRecord.Reference, completion: @escaping resultHandler) {
-//        print("got here to \(#function) and user has friends with ids \(user.friendsReferences.map({$0.recordID.recordName})) and we want to delete \(friend.recordID.recordName)")
-        
+    func update(_ user: User, friendToRemove friendID: String, completion: @escaping resultCompletion) {
         // Remove the friend from the user's list of friends
-        user.friendsReferences.removeAll(where: { $0.recordID.recordName == friend.recordID.recordName })
-        print("user now has \(user.friendsReferences) friends")
+        user.friendIDs.removeAll(where: { $0 == friendID })
         
         // Update the source of truth
-        usersFriends?.removeAll(where: { $0.recordID.recordName == friend.recordID.recordName })
+        usersFriends?.removeAll(where: { $0.recordID == friendID })
         
         // Save the changes to the cloud
-        update(user, completion: completion)
+        saveChanges(to: user, completion: completion)
     }
     
     // Delete a user
-    func delete(_ user: User, completion: @escaping resultHandler) {
-        CKService.shared.delete(object: user) { (result) in
-            switch result {
-            case .success(_):
-                // Return the success
-                return completion(.success(true))
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
+    func delete(_ user: User, completion: @escaping resultCompletion) {
+        guard let documentID = user.documentID else { return completion(.failure(.noUserFound)) }
+        
+        // Delete the data from the cloud
+        db.collection(UserStrings.recordType)
+            .document(documentID)
+            .delete() { (error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // FIXME: - delete all related objects, friend requests, etc
         }
     }
     
     // MARK: - Helper Methods
     
-    // Get the apple user reference of the user from their phone
-    func fetchAppleUserReference(completion: @escaping (CKRecord.Reference?) -> Void) {
-        CKContainer.default().fetchUserRecordID { (recordID, error) in
-            // Handle the error
-            if let error = error {
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(nil)
-            }
-            
-            // Unwrap the data
-            guard let recordID = recordID else { return completion(nil) }
-            let reference = CKRecord.Reference(recordID: recordID, action: .none)
-            return completion(reference)
-        }
-}
-    
     // Set up all the necessary notification subscriptions for the user
     func setUpUser() {
-        print("got here to \(#function)")
-        FriendRequestController.shared.subscribeToFriendRequests()
-        FriendRequestController.shared.subscribeToFriendRemoving()
-        FriendRequestController.shared.subscribeToFriendRequestResponses()
+        FriendRequestController.shared.subscribeToFriendRequestNotifications()
+        FriendRequestController.shared.subscribeToFriendRequestResponseNotifications()
+        FriendRequestController.shared.subscribeToRemovingFriendNotifications()
+        
         GameController.shared.subscribeToGameInvitations()
         GameController.shared.subscribeToGameUpdates()
     }

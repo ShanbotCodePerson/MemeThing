@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		4005A19A24AB7F6800BE556F /* Complaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4005A19924AB7F6800BE556F /* Complaint.swift */; };
 		4005A19C24AB819000BE556F /* ComplaintController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4005A19B24AB819000BE556F /* ComplaintController.swift */; };
 		4005A1A024ABF9DC00BE556F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4005A19F24ABF9DB00BE556F /* GoogleService-Info.plist */; };
+		4005A1A224AC34E000BE556F /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4005A1A124AC34E000BE556F /* UIImageExtension.swift */; };
 		401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401109882487FF7600E8FCE2 /* MemeImageView.swift */; };
 		4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4011098A24882AEE00E8FCE2 /* MemeController.swift */; };
 		402D7CFE249C45A100955ADF /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402D7CFD249C45A100955ADF /* Reachability.swift */; };
@@ -49,9 +50,7 @@
 		40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */; };
 		40C21474247EE939007B7630 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21473247EE939007B7630 /* User.swift */; };
 		40C21476247EE944007B7630 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21475247EE944007B7630 /* UserController.swift */; };
-		40C2147A247EE97D007B7630 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40C21479247EE97D007B7630 /* CloudKit.framework */; };
 		40C2147C247EEE9B007B7630 /* MemeThingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2147B247EEE9B007B7630 /* MemeThingError.swift */; };
-		40C2147E247EF1BE007B7630 /* CKService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2147D247EF1BE007B7630 /* CKService.swift */; };
 		40C21481247F1434007B7630 /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21480247F1434007B7630 /* ProfileTableViewController.swift */; };
 		40C2148324809A24007B7630 /* DrawingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148224809A24007B7630 /* DrawingViewController.swift */; };
 		40C2148524809A35007B7630 /* CaptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148424809A35007B7630 /* CaptionViewController.swift */; };
@@ -72,6 +71,7 @@
 		4005A19924AB7F6800BE556F /* Complaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Complaint.swift; sourceTree = "<group>"; };
 		4005A19B24AB819000BE556F /* ComplaintController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplaintController.swift; sourceTree = "<group>"; };
 		4005A19F24ABF9DB00BE556F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4005A1A124AC34E000BE556F /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		401109882487FF7600E8FCE2 /* MemeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeImageView.swift; sourceTree = "<group>"; };
 		4011098A24882AEE00E8FCE2 /* MemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeController.swift; sourceTree = "<group>"; };
 		402D7CFD249C45A100955ADF /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -116,7 +116,6 @@
 		40C21477247EE97A007B7630 /* MemeThing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MemeThing.entitlements; sourceTree = "<group>"; };
 		40C21479247EE97D007B7630 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		40C2147B247EEE9B007B7630 /* MemeThingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MemeThingError.swift; path = MemeThing/Helpers/MemeThingError.swift; sourceTree = SOURCE_ROOT; };
-		40C2147D247EF1BE007B7630 /* CKService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CKService.swift; path = MemeThing/Helpers/CKService.swift; sourceTree = SOURCE_ROOT; };
 		40C21480247F1434007B7630 /* ProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
 		40C2148224809A24007B7630 /* DrawingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingViewController.swift; sourceTree = "<group>"; };
 		40C2148424809A35007B7630 /* CaptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionViewController.swift; sourceTree = "<group>"; };
@@ -140,7 +139,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40C2147A247EE97D007B7630 /* CloudKit.framework in Frameworks */,
 				4462AA84C49861EFF1FE1C89 /* Pods_MemeThing.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,7 +152,6 @@
 				5D74783BDE27C49F69D269F4 /* Pods-MemeThing.debug.xcconfig */,
 				412BCA46A87BC7942E6C31FB /* Pods-MemeThing.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -330,13 +327,13 @@
 		40ACAB64247ECD2C004516CF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				40C2147D247EF1BE007B7630 /* CKService.swift */,
 				4039365B2486B898007C2601 /* NotificationHelper.swift */,
 				402D7CFD249C45A100955ADF /* Reachability.swift */,
 				40C71494249B069D00B9F0AE /* HelperFunctions.swift */,
 				40C2147B247EEE9B007B7630 /* MemeThingError.swift */,
 				4039CE0B248205D4004DA41F /* StyleGuide.swift */,
 				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
+				4005A1A124AC34E000BE556F /* UIImageExtension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -548,11 +545,11 @@
 				40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */,
 				401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */,
 				402D7CFE249C45A100955ADF /* Reachability.swift in Sources */,
+				4005A1A224AC34E000BE556F /* UIImageExtension.swift in Sources */,
 				4039CE132482067E004DA41F /* MemeThingButton.swift in Sources */,
 				405279E524781E1A00942A7D /* AppDelegate.swift in Sources */,
 				40D003B724831B690046D64B /* Game.swift in Sources */,
 				4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */,
-				40C2147E247EF1BE007B7630 /* CKService.swift in Sources */,
 				405279E724781E1A00942A7D /* SceneDelegate.swift in Sources */,
 				40C21481247F1434007B7630 /* ProfileTableViewController.swift in Sources */,
 				40C21474247EE939007B7630 /* User.swift in Sources */,

@@ -7,68 +7,61 @@
 //
 
 import Foundation
-import CloudKit
 
 // MARK: - String Constants
 
 struct CaptionStrings {
     static let recordType = "Caption"
     fileprivate static let textKey = "text"
-    fileprivate static let authorKey = "author"
-    static let memeKey = "meme"
-    static let gameKey = "game"
+    fileprivate static let authorIDKey = "authorID"
+    static let memeIDKey = "memeID"
+    static let gameIDKey = "gameID"
+    static let recordIDKey = "recordID"
 }
 
-class Caption: CKCompatible {
-
+class Caption {
+    
     // MARK: - Properties
     
-    // Caption properties
     let text: String
-    let author: CKRecord.Reference
-    let meme: CKRecord.Reference
-    let game: CKRecord.Reference
+    let authorID: String
+    let memeID: String
+    let gameID: String
+    let recordID: String
     
-    // CloudKit properties
-    var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .deleteSelf) }
-    static var recordType: CKRecord.RecordType { CaptionStrings.recordType }
-    var ckRecord: CKRecord { createCKRecord() }
-    var recordID: CKRecord.ID
+    // MARK: - Initializers
     
-    // MARK: - Initializer
-    
-    init(text: String, author: CKRecord.Reference, meme: CKRecord.Reference, game: CKRecord.Reference, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+    init(text: String,
+         authorID: String,
+         memeID: String,
+         gameID: String,
+         recordID: String = UUID().uuidString) {
+        
         self.text = text
-        self.author = author
-        self.meme = meme
-        self.game = game
+        self.authorID = authorID
+        self.memeID = memeID
+        self.gameID = gameID
         self.recordID = recordID
     }
     
-    // MARK: - Convert from CKRecord
-    
-    required convenience init?(ckRecord: CKRecord) {
-        guard let text = ckRecord[CaptionStrings.textKey] as? String,
-            let author = ckRecord[CaptionStrings.authorKey] as? CKRecord.Reference,
-            let meme = ckRecord[CaptionStrings.memeKey] as? CKRecord.Reference,
-            let game = ckRecord[CaptionStrings.gameKey] as? CKRecord.Reference
+    convenience init?(dictionary: [String : Any]) {
+        guard let text = dictionary[CaptionStrings.textKey] as? String,
+            let authorID = dictionary[CaptionStrings.authorIDKey] as? String,
+            let memeID = dictionary[CaptionStrings.memeIDKey] as? String,
+            let gameID = dictionary[CaptionStrings.gameIDKey] as? String,
+            let recordID = dictionary[CaptionStrings.recordIDKey] as? String
             else { return nil }
         
-        self.init(text: text, author: author, meme: meme, game: game, recordID: ckRecord.recordID)
+        self.init(text: text, authorID: authorID, memeID: memeID, gameID: gameID, recordID: recordID)
     }
     
-    // MARK: - Convert to CKRecord
+    // MARK: - Convert to Dictionary
     
-    func createCKRecord() -> CKRecord {
-        let record = CKRecord(recordType: CaptionStrings.recordType, recordID: recordID)
-        
-        record.setValuesForKeys([
-            CaptionStrings.textKey : text,
-            CaptionStrings.authorKey : author,
-            CaptionStrings.memeKey : meme,
-            CaptionStrings.gameKey : game
-        ])
-        
-        return record
+    func asDictionary() -> [String : Any] {
+        [CaptionStrings.textKey : text,
+         CaptionStrings.authorIDKey : authorID,
+         CaptionStrings.memeIDKey : memeID,
+         CaptionStrings.gameIDKey : gameID,
+         CaptionStrings.recordIDKey : recordID]
     }
 }

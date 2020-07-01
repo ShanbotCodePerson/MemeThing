@@ -7,7 +7,8 @@
 //
 
 import Foundation
-import CloudKit
+import Firebase
+import FirebaseStorage
 import UIKit.UIImage
 
 class MemeController {
@@ -16,124 +17,211 @@ class MemeController {
     
     static let shared = MemeController()
     
-    // MARK: - Properties
-    
-    typealias resultHandler = (Result<Bool, MemeThingError>) -> Void
-    typealias resultHandlerWithObject = (Result<Meme, MemeThingError>) -> Void
-    
     // MARK: - CRUD Methods
     
     // Create a new meme
-    func createMeme(in game: Game, with photo: UIImage, by author: User, completion: @escaping resultHandlerWithObject) {
-        // Create the meme
-        let meme = Meme(photo: photo, author: author.reference, game: game.reference)
+    func createMeme(in game: Game, with image: UIImage, by author: User, completion: @escaping resultCompletionWith<Meme>) {
         
-        // Save it to the cloud
-        CKService.shared.create(object: meme) { (result) in
+        // Create the meme
+        let meme = Meme(image: image, authorID: author.recordID, gameID: game.recordID)
+        
+        let group = DispatchGroup()
+        
+        // Save the meme's image to the cloud storage
+        group.enter()
+        save(image, id: meme.recordID) { (result) in
             switch result {
-            case .success(let meme):
-                // Return the success
-                return completion(.success(meme))
+            case .success(_):
+                group.leave()
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(error))
             }
         }
-    }
-    
-    // Read (fetch) a meme from a reference
-    func fetchMeme(from reference: CKRecord.Reference, completion: @escaping resultHandlerWithObject) {
-        // Fetch the data from the cloud
-        CKService.shared.read(reference: reference) { (result: Result<Meme, MemeThingError>) in
-            switch result {
-            case .success(let meme):
-                // Return the success
-                return completion(.success(meme))
-            case .failure(let error):
+        
+        // Save the meme to the cloud
+        group.enter()
+        let reference: DocumentReference = db.collection(MemeStrings.recordType).addDocument(data: meme.asDictionary()) { (error) in
+            if let error = error {
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
+                return completion(.failure(.fsError(error)))
             }
+            group.leave()
+        }
+        
+        // Return the success
+        group.notify(queue: .main) {
+            meme.documentID = reference.documentID
+            return completion(.success(meme))
+        }
+    }
+    
+    // Save a meme's image
+    private func save(_ image: UIImage, id: String, completion: @escaping resultCompletion) {
+        // Convert the image to data
+        guard let data = image.compressTo(1) else { return completion(.failure(.badPhotoFile)) }
+        
+        // Create a name for the file in the cloud using the user's id
+        let photoRef = storage.reference().child("memes/\(id).jpg")
+        
+        // Save the data to the cloud
+        photoRef.putData(data, metadata: nil) { (metadata, error) in
+            
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.fsError(error)))
+            }
+            
+            return completion(.success(true))
+        }
+    }
+    
+    // Read (fetch) a meme's image
+    func getImage(for recordID: String, completion: @escaping resultCompletionWith<UIImage>) {
+        // Get the reference to the profile photo
+        let photoRef = storage.reference().child("memes/\(recordID).jpg")
+        
+        // Download the photo from the cloud
+        photoRef.getData(maxSize: Int64(1.2 * 1024 * 1024)) { (data, error) in
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.fsError(error)))
+            }
+            
+            // Convert the data to an image and return it
+            guard let data = data,
+                let image = UIImage(data: data)
+                else { return completion(.failure(.couldNotUnwrap)) }
+            return completion(.success(image))
+        }
+    }
+    
+    // Read (fetch) a meme from a recordID
+    func fetchMeme(from recordID: String, completion: @escaping resultCompletionWith<Meme>) {
+        // Fetch the data from the cloud
+        db.collection(MemeStrings.recordType)
+            .whereField(MemeStrings.recordIDKey, isEqualTo: recordID)
+            .getDocuments { (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let document = results?.documents.first,
+                    let meme = Meme(dictionary: document.data())
+                    else { return completion(.failure(.couldNotUnwrap)) }
+                meme.documentID = document.documentID
+                
+                // Return the success
+                return completion(.success(meme))
         }
     }
     
     // Read (fetch) a list of captions for a meme
-    func fetchCaptions(for meme: Meme, expectedNumber: Int, firstTry: Bool = true, completion: @escaping (Result<[Caption], MemeThingError>) -> Void) {
-        // Form the predicate to look for all captions that reference that meme
-        let predicate = NSPredicate(format: "%K == %@", argumentArray: [CaptionStrings.memeKey, meme.reference.recordID])
-        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate])
-        
-        // Fetch the data from the cloud
-        CKService.shared.read(predicate: compoundPredicate) { [weak self] (result: Result<[Caption], MemeThingError>) in
-            switch result {
-            case .success(let captions):
-                print("got here to \(#function) in completion and there are \(captions.count) captions")
-                // If the captions aren't in the cloud on the first try, wait two seconds then try to fetch them again
+    func fetchCaptions(for meme: Meme, expectedNumber: Int, firstTry: Bool = true, completion: @escaping resultCompletionWith<[Caption]>) {
+        // Fetch all the captions referencing the meme
+        db.collection(CaptionStrings.recordType)
+            .whereField(CaptionStrings.memeIDKey, isEqualTo: meme.recordID)
+            .getDocuments { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents
+                    else { return completion(.failure(.couldNotUnwrap)) }
+                let captions = documents.compactMap { Caption(dictionary: $0.data()) }
+                
+                // If the captions aren't in the cloud on the first try, wait a second then try to fetch them again
                 if firstTry && captions.count < expectedNumber {
-                    print("not enough captions, about to sleep 2 seconds")
-                    sleep(2)
-                    print("trying to fetch captions again")
+                    sleep(1)
                     self?.fetchCaptions(for: meme, expectedNumber: expectedNumber, firstTry: false, completion: completion)
                 }
-                else {
                     // Otherwise, return the success
-                    return completion(.success(captions))
-                }
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
+                else { return completion(.success(captions)) }
         }
     }
     
     // Read (fetch) the winning caption for a meme
     func fetchWinningCaption(for meme: Meme, completion: @escaping (Result<Caption, MemeThingError>) -> Void) {
-        print("got here to \(#function) and meme is \(meme) with winning caption is \(String(describing: meme.winningCaption))")
-        // Get the recordID of the winning caption from the meme
-        guard let recordID = meme.winningCaption?.recordID else { return completion(.failure(.unknownError)) }
+        guard let winningCaptionID = meme.winningCaptionID else { return completion(.failure(.unknownError)) }
         
         // Fetch the data from the cloud
-        CKService.shared.read(recordID: recordID) { (result: Result<Caption, MemeThingError>) in
-            switch result {
-            case .success(let caption):
+        db.collection(CaptionStrings.recordType)
+            .whereField(CaptionStrings.recordIDKey, isEqualTo: winningCaptionID)
+            .getDocuments { (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let document = results?.documents.first,
+                    let caption = Caption(dictionary: document.data())
+                    else { return completion(.failure(.couldNotUnwrap)) }
+                
                 // Return the success
                 return completion(.success(caption))
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
         }
     }
     
     // Update a meme
-    private func update(_ meme: Meme, completion: @escaping resultHandler) {
+    private func saveChanges(to meme: Meme, completion: @escaping resultCompletion) {
+        guard let documentID = meme.documentID else { return completion(.failure(.noData)) }
+        
         // Save the updated meme to the cloud
-        CKService.shared.update(object: meme) { (result) in
-            switch result {
-            case .success(_):
-                // Return the success
+        db.collection(MemeStrings.recordType)
+            .document(documentID)
+            .setData(meme.asDictionary()) { (error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
                 return completion(.success(true))
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
         }
     }
     
     // Update a meme with a new caption
-    func createCaption(for meme: Meme, by author: User, with text: String, in game: Game, completion: @escaping resultHandler) {
+    func createCaption(for meme: Meme, by author: User, with text: String, in game: Game, completion: @escaping resultCompletion) {
         // Create the caption
-        let caption = Caption(text: text, author: author.reference, meme: meme.reference, game: game.reference)
+        let caption = Caption(text: text, authorID: author.recordID, memeID: meme.recordID, gameID: game.recordID)
         
-        // Save it to the cloud
-        CKService.shared.create(object: caption) { (result) in
+        // Save the caption to the cloud
+        db.collection(CaptionStrings.recordType)
+            .addDocument(data: caption.asDictionary()) { (error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                return completion(.success(true))
+        }
+    }
+    
+    // Update a meme with a winning caption
+    func setWinningCaption(to caption: Caption, for meme: Meme, completion: @escaping resultCompletion) {
+        // Add the recordID of the winning caption to the meme
+        meme.winningCaptionID = caption.recordID
+        
+        // Save the updated meme to the cloud
+        saveChanges(to: meme) { (result) in
             switch result {
             case .success(_):
-                // Return the success
                 return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
@@ -143,30 +231,7 @@ class MemeController {
         }
     }
     
-    // Update a meme with a winning caption
-    func setWinningCaption(to caption: Caption, for meme: Meme, completion: @escaping resultHandler) {
-        // Save the change to the cloud
-        CKService.shared.update(object: caption) { [weak self] (result) in
-            switch result {
-            case .success(let caption):
-                // Update the meme with the with the reference to the winning caption
-                meme.winningCaption = caption.reference
-                self?.update(meme, completion: { (result) in
-                    switch result {
-                    case .success(_):
-                        // Return the success
-                        return completion(.success(true))
-                    case .failure(let error):
-                        // Print and return the error
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        return completion(.failure(error))
-                    }
-                })
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
-        }
-    }
+    // TODO: - Delete all memes associated with a game when the game is over
+    
+    // TODO: - Delete all captions associated with a game when the game is over
 }
