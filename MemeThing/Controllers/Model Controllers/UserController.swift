@@ -114,7 +114,7 @@ class UserController {
     }
     
     // Read (search for) a specific user by an email
-    func searchFor(email: String, completion: @escaping resultCompletionWith<User>) {
+    func searchFor(_ email: String, completion: @escaping resultCompletionWith<User>) {
         // Fetch the data from the cloud
         db.collection(UserStrings.recordType)
             .whereField(UserStrings.emailKey, isEqualTo: email)

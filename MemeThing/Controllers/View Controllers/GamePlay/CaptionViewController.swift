@@ -22,8 +22,8 @@ class CaptionViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
-    var meme: Meme? { didSet { memeImageView.image =  meme?.photo } }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
+    var meme: Meme? { didSet { memeImageView.image =  meme?.image } }
     
     // MARK: - Lifecycle Methods
 
@@ -64,7 +64,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
     @objc func transitionToNewPage(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
@@ -140,10 +140,10 @@ class CaptionViewController: UIViewController, HasAGameObject {
         presentTextFieldAlert(title: "Report Drawing?", message: "Report the drawing for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
             
             // Form the body of the report
-            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.author.recordID). User description of problem is: \(complaint)"
+            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.authorID). User description of problem is: \(complaint)"
             
             // Save the complaint to the cloud to be reviewed later
-            ComplaintController.createComplaint(with: content, photo: meme.photo) { [weak self] (result) in
+            ComplaintController.createComplaint(with: content, image: meme.image) { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):

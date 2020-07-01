@@ -150,45 +150,47 @@ class FriendsListTableViewController: UITableViewController {
     }
     
     // A helper function for when the user clicks to add the friend
-    func sendRequest(to username: String) {
+    func sendRequest(to email: String) {
+        // FIXME: - send friend requests by email instead of username
         guard let currentUser = UserController.shared.currentUser,
-            username != currentUser.username else {
-                presentAlert(title: "Invalid Username", message: "You can't send a friend request to yourself")
+            email != currentUser.email else {
+                presentAlert(title: "Invalid Email", message: "You can't send a friend request to yourself")
                 return
         }
         
+        // FIXME: - blocked usernames should become blocked emails instead
         // Make sure the user hasn't already blocked, sent, received, or accepted a request from that username
         if currentUser.blockedUsernames.contains(username) {
             presentAlert(title: "Blocked", message: "You have blocked \(username)")
             return
         }
         if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
-            guard outgoingFriendRequests.filter({ $0.toUsername == username }).count == 0 else {
-                presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(username)")
+            guard outgoingFriendRequests.filter({ $0.toID == currentUser.recordID }).count == 0 else {
+                presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(email)")
                 return
             }
         }
         if let pendingFriendRequests = FriendRequestController.shared.pendingFriendRequests {
-            guard pendingFriendRequests.filter({ $0.fromUsername == username }).count == 0 else {
-                presentAlert(title: "Already Received", message: "You have already received a friend request from \(username)")
+            guard pendingFriendRequests.filter({ $0.fromID == currentUser.recordID }).count == 0 else {
+                presentAlert(title: "Already Received", message: "You have already received a friend request from \(email)")
                 return
             }
         }
         if let userFriends = UserController.shared.usersFriends {
-            guard userFriends.filter({ $0.username == username }).count == 0 else {
-                presentAlert(title: "Already Friends", message: "You are already friends with \(username)")
+            guard userFriends.filter({ $0.email == email }).count == 0 else {
+                presentAlert(title: "Already Friends", message: "You are already friends with \(email)")
                 return
             }
         }
         
         // Search to see if that username exists
-        UserController.shared.searchFor(username) { [weak self] (result) in
+        UserController.shared.searchFor(email) { [weak self] (result) in
             switch result {
             case .success(let friend):
                 // If the username exists, first make sure that the current user hasn't been blocked by that person
                 guard !friend.blockedUsernames.contains(currentUser.username) else {
                     DispatchQueue.main.async {
-                        self?.presentAlert(title: "Blocked", message: "You have been blocked by \(username)")
+                        self?.presentAlert(title: "Blocked", message: "You have been blocked by \(email)")
                     }
                     return
                 }
@@ -199,7 +201,7 @@ class FriendsListTableViewController: UITableViewController {
                         switch result {
                         case .success(_):
                             // Display an alert showing the success, and refresh the tableview to show the pending friend request
-                            self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.username)")
+                            self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.email)")
                             self?.tableView.reloadData()
                         case .failure(let error):
                             // Print and display the error
@@ -212,7 +214,7 @@ class FriendsListTableViewController: UITableViewController {
                 DispatchQueue.main.async {
                     // Otherwise, show an alert to the user that the username doesn't exist
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentAlert(title: "Username Not Found", message: "The username \(username) does not exist - make sure to enter the username carefully.")
+                    self?.presentAlert(title: "Username Not Found", message: "The email \(email) is not a user of MemeThing - make sure to enter the email carefully.")
                 }
             }
         }
@@ -244,16 +246,16 @@ class FriendsListTableViewController: UITableViewController {
         switch sectionName {
         case .pendingFriendRequests:
             guard let friendRequest = data[indexPath.row] as? FriendRequest else { return cell }
-            cell.setUpViews(section: sectionName, username: friendRequest.fromUsername)
+            cell.setUpViews(section: sectionName, name: friendRequest.fromName)
         case .outgoingFriendRequests:
             guard let friendRequest = data[indexPath.row] as? FriendRequest else { return cell }
-            cell.setUpViews(section: sectionName, username: friendRequest.toUsername)
+            cell.setUpViews(section: sectionName, name: friendRequest.toName)
         case .friends:
             // Add a placeholder row if the user has no friends
-            if data.count == 0 { cell.setUpViews(section: sectionName, username: nil) }
+            if data.count == 0 { cell.setUpViews(section: sectionName, name: nil) }
             else {
                 guard let friend = data[indexPath.row] as? User else { return cell }
-                cell.setUpViews(section: sectionName, username: friend.screenName, points: friend.points)
+                cell.setUpViews(section: sectionName, name: friend.screenName, points: friend.points)
             }
         }
         

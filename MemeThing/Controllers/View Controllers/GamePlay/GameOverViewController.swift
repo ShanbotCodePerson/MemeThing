@@ -21,7 +21,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
     
     // MARK: - Lifecycle Methods
 

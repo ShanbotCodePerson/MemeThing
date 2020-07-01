@@ -37,9 +37,9 @@ class ProfileTableViewController: UITableViewController {
         view.backgroundColor = .background
         
         guard let user = UserController.shared.currentUser else { return }
-        usernameLabel.text = "Username: \(user.username)"
         screenNameLabel.text = "Screen Name: \(user.screenName)"
-        passwordLabel.text = "Password: \(repeatElement("*", count: user.password.count).joined())"
+        // FIXME: - reconfigure this whole view, add password reset functionality but don't show password
+//        passwordLabel.text = "Password: \(repeatElement("*", count: user.password.count).joined())"
         emailLabel.text = "Email: \(user.email)"
         pointsLabel.text = "Points: \(user.points)"
     }
@@ -59,7 +59,7 @@ class ProfileTableViewController: UITableViewController {
         presentTextFieldAlert(title: "Edit Screen Name", message: "Edit your name as it will appear to your friends.", textFieldPlaceholder: "", textFieldText: user.screenName) { [weak self] (screenName) in
             
             // Save the new screen name to the cloud
-            UserController.shared.update(user, password: nil, screenName: screenName, email: nil) { (result) in
+            UserController.shared.update(user, screenName: screenName) { (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):

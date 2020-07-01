@@ -21,7 +21,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
     var nextDestination: StoryboardNames?
     
     // MARK: - Lifecycle Methods
@@ -40,7 +40,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     @objc func transitionToNewPage(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         // Transition to the captions view if the game has moved on, or to the main menu if the game has ended
         DispatchQueue.main.async {
@@ -67,7 +67,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                 switch result {
                 case .success(let meme):
                     // Set the image view
-                    self?.memeImageView.image = meme.photo
+                    self?.memeImageView.image = meme.image
                     
                     // Fetch the winning caption
                     MemeController.shared.fetchWinningCaption(for: meme) { (result) in
@@ -76,7 +76,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                             switch result {
                             case .success(let caption):
                                 // Get the name of the user from the game object to display in the winner's name label
-                                let name = game.getName(of: caption.author)
+                                let name = game.getName(of: caption.authorID)
                                 self?.winnerLabel.text = "Congratulations \(name) for having the best caption!"
                                 
                                 // Set the text of the caption label
@@ -94,12 +94,13 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                                 self?.loadingIndicator.stopAnimating()
                                 
                                 guard let currentUser = UserController.shared.currentUser else { return }
-                                if caption.author.recordID.recordName == currentUser.reference.recordID.recordName {
+                                if caption.authorID == currentUser.recordID {
                                     print("got here to updating current user's points")
                                     UserController.shared.update(currentUser, points: 1) { (result) in
                                         // TODO: - show alerts? tell winning user they earned a point?
                                         switch result {
                                         case .success(_):
+                                            // TODO: - display an alert or update the ui somehow telling the user they got a point
                                             print("should have incremented users points, now is \(currentUser.points)")
                                         case .failure(let error):
                                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

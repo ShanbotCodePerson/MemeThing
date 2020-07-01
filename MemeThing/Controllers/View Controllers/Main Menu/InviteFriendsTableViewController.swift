@@ -94,8 +94,6 @@ class InviteFriendsTableViewController: UITableViewController {
                 switch result {
                 case .success(let game):
                     // Transition to the waiting view, passing along the reference to the current game
-                    print("got here to \(#function) and seems to have created the game successfully")
-                    print("SoT is now \(String(describing: GameController.shared.currentGames?.compactMap({$0.debugging})))")
                     self?.transitionToStoryboard(named: .Waiting, with: game)
                 case .failure(let error):
                     // Print and display the error and reset the UI

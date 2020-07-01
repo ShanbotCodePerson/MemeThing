@@ -21,7 +21,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
     
     // MARK: - Lifecycle Methods
     
@@ -40,7 +40,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
         print("got here to \(#function) in drawingview and \(sender.name)")
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
@@ -108,10 +108,10 @@ class DrawingViewController: UIViewController, HasAGameObject {
             case .success(let meme):
                 // Add the meme to the game
                 if var memes = game.memes {
-                    memes.append(meme.reference)
+                    memes.append(meme.recordID)
                     game.memes = memes
                 } else {
-                    game.memes = [meme.reference]
+                    game.memes = [meme.recordID]
                 }
                 
                 // Update the game's status

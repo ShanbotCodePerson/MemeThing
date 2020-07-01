@@ -19,7 +19,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
     
     // MARK: - Lifecycle Methods
     
@@ -55,7 +55,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
         case .waitingForDrawing:
             waitingForTableView.isHidden = true
         case .waitingForCaptions:
-            if game.leadPlayer == UserController.shared.currentUser?.reference {
+            if game.leadPlayerID == UserController.shared.currentUser?.recordID {
                 waitingForTableView.isHidden = true
             } else { setUpTableView() }
         case .waitingForResult:
@@ -81,7 +81,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
     @objc func refreshPage(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         // Refresh the page
         DispatchQueue.main.async {
@@ -94,7 +94,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
     @objc func transitionToNewPage(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
@@ -114,11 +114,11 @@ class WaitingViewController: UIViewController, HasAGameObject {
     @objc func gameStarting(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         // If the current user is the lead player, transition to the drawing view
         DispatchQueue.main.async {
-            if game.leadPlayer == UserController.shared.currentUser?.reference {
+            if game.leadPlayerID == UserController.shared.currentUser?.recordID {
                 self.transitionToStoryboard(named: .Drawing, with: game)
             } else {
                 // Otherwise, refresh the waiting view to reflect that the game is starting

@@ -14,13 +14,13 @@ import UIKit.UIImage
 class ComplaintController {
     
     // Save a complaint to the cloud
-    static func createComplaint(with content: String, photo: UIImage?, caption: String? = nil, completion: @escaping resultCompletion) {
+    static func createComplaint(with content: String, image: UIImage?, caption: String? = nil, completion: @escaping resultCompletion) {
         
         // Create the complaint
         let complaint = Complaint(content: content, caption: caption)
         
         // Save the image using the complaint's record id
-        if let photo = photo { save(photo, id: complaint.recordID) }
+        if let image = image { save(image, id: complaint.recordID) }
         
         // Save the complaint to the cloud
         db.collection(ComplaintStrings.recordType)
@@ -37,15 +37,15 @@ class ComplaintController {
     }
     
     // A helper function to save the offending image to the cloud
-    private static func save(_ photo: UIImage, id: String) {
+    private static func save(_ image: UIImage, id: String) {
         // Convert the image to data
-        guard let data = photo.compressTo(0.5) else { return }
+        guard let data = image.compressTo(0.5) else { return }
         
         // Create a name for the file in the cloud using the user's id
-        let photoRef = storage.reference().child("reportedImages/\(id).jpg")
+        let imageRef = storage.reference().child("reportedImages/\(id).jpg")
         
         // Save the data to the cloud
-        photoRef.putData(data, metadata: nil) { (_, error) in
+        imageRef.putData(data, metadata: nil) { (_, error) in
             if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
         }
     }

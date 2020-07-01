@@ -19,7 +19,7 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
     
     // MARK: - Lifecycle Methods
 
@@ -39,7 +39,7 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     @objc func closeSelf(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         DispatchQueue.main.async { self.dismiss(animated: true) }
     }
@@ -47,7 +47,7 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
     @objc func transitionToNewPage(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {

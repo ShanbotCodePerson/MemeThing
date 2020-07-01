@@ -27,8 +27,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
-    var meme: Meme? { didSet { memeImageView.image = meme?.photo } }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
+    var meme: Meme? { didSet { memeImageView.image = meme?.image } }
     var captions: [Caption]? { didSet { setUpPages(from: captions) } }
     var nextDestination: StoryboardNames?
     
@@ -52,7 +52,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     func loadAllData() {
         guard let game = game, let memeReference = game.memes?.last else { return }
-        print("got here to \(#function) and \(game.debugging)")
         
         // Fetch the meme from the cloud
         MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
@@ -108,7 +107,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
         
         // Hide the button to choose the winner if the user is not the lead player
-        if game.leadPlayer != currentUser.reference {
+        if game.leadPlayerID != currentUser.recordID {
             chooseWinnerButton.isHidden = true
             constraintToButton.isActive = false
             constraintToSafeArea.isActive = true
@@ -193,17 +192,17 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @objc func transitionToNewPage(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName,
+            gameID == game.recordID,
             let currentUser = UserController.shared.currentUser
             else { return }
 
         // If the leaderboard is open, close it
-        NotificationCenter.default.post(Notification(name: closeLeaderboard, userInfo: ["gameID" : game.recordID.recordName]))
+        NotificationCenter.default.post(Notification(name: closeLeaderboard, userInfo: ["gameID" : game.recordID]))
         
         // Decide on the next destination view controller based on the type of update
         DispatchQueue.main.async {
             if sender.name == toNewRound {
-                if game.leadPlayer == currentUser.reference {
+                if game.leadPlayerID == currentUser.recordID {
                     self.nextDestination = .Drawing
                 } else {
                     self.nextDestination = .Waiting
@@ -222,7 +221,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     func presentEndOFRoundView(with game: Game) {
         let storyboard = UIStoryboard(name: StoryboardNames.EndOfRound.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? EndOfRoundViewController else { return }
-        initialVC.gameID = game.recordID.recordName
+        initialVC.gameID = game.recordID
         initialVC.nextDestination = self.nextDestination
         initialVC.modalPresentationStyle = .overFullScreen
         initialVC.modalTransitionStyle = .crossDissolve
@@ -248,10 +247,10 @@ class ResultsViewController: UIViewController, HasAGameObject {
         presentTextFieldAlert(title: "Report Drawing?", message: "Report the drawing for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
             
             // Form the body of the report
-            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.author.recordID). User description of problem is: \(complaint)"
+            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.authorID). User description of problem is: \(complaint)"
             
             // Save the complaint to the cloud to be reviewed later
-            ComplaintController.createComplaint(with: content, photo: meme.photo) { [weak self] (result) in
+            ComplaintController.createComplaint(with: content, image: meme.image) { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
@@ -278,10 +277,10 @@ class ResultsViewController: UIViewController, HasAGameObject {
         presentTextFieldAlert(title: "Report Caption?", message: "Report the caption for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
             
             // Form the body of the report
-            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a caption made by user with id \(caption.author.recordID) about a drawing made by user with id \(meme.author.recordID). Caption text is \(caption.text). User description of problem is: \(complaint)"
+            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a caption made by user with id \(caption.authorID) about a drawing made by user with id \(meme.authorID). Caption text is \(caption.text). User description of problem is: \(complaint)"
             
             // Save the complaint to the cloud to be reviewed later
-            ComplaintController.createComplaint(with: content, photo: meme.photo, caption: caption.text) { [weak self] (result) in
+            ComplaintController.createComplaint(with: content, image: meme.image, caption: caption.text) { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):

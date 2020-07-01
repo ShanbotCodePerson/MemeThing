@@ -29,8 +29,8 @@ class GamesListTableViewController: UITableViewController {
             else { return arrays }
         
         let unstartedGames = currentGames.filter { $0.gameStatus == .waitingForPlayers }
-        let pendingInvitations = unstartedGames.filter { $0.leadPlayer != currentUser.reference }
-        let waitingForResponse = unstartedGames.filter { $0.leadPlayer == currentUser.reference }
+        let pendingInvitations = unstartedGames.filter { $0.leadPlayerID != currentUser.recordID }
+        let waitingForResponse = unstartedGames.filter { $0.leadPlayerID == currentUser.recordID }
         let activeGames = currentGames.filter { $0.gameStatus != .waitingForPlayers && $0.gameStatus != .gameOver }
         let finishedGames = currentGames.filter { $0.gameStatus == .gameOver }
         
@@ -216,14 +216,14 @@ class GamesListTableViewController: UITableViewController {
         case .waitingForPlayers:
             transitionToStoryboard(named: .Waiting, with: game)
         case .waitingForDrawing:
-            if (game.leadPlayer == currentUser.reference) {
+            if (game.leadPlayerID == currentUser.recordID) {
                 transitionToStoryboard(named: .Drawing, with: game)
             }
             else {
                 transitionToStoryboard(named: .Waiting, with: game)
             }
         case .waitingForCaptions:
-            if (game.leadPlayer == currentUser.reference) || game.getStatus(of: currentUser) == .sentCaption {
+            if (game.leadPlayerID == currentUser.recordID) || game.getStatus(of: currentUser) == .sentCaption {
                 transitionToStoryboard(named: .Waiting, with: game)
             } else {
                 transitionToStoryboard(named: .AddCaption, with: game)
