@@ -83,8 +83,14 @@ class GamesListTableViewController: UITableViewController {
     }
     
     func loadAllData() {
+        // Show the loading icon
+        view.startLoadingIcon()
+        
         GameController.shared.fetchCurrentGames { [weak self] (result) in
             DispatchQueue.main.async {
+                // Hide the loading icon
+                self?.view.stopLoadingIcon()
+                
                 switch result {
                 case .success(_):
                     print("got here to \(#function)")

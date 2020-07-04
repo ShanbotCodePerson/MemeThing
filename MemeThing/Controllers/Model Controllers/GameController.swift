@@ -169,6 +169,112 @@ class GameController {
         // FIXME: - merge conflicts?
     }
     
+    // Update a game by accepting or declining an invitation
+    func respondToInvitation(to game: Game, accept: Bool, completion: @escaping resultCompletion) {
+        print("got here to \(#function)")
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
+        // Update the game with the user's response
+        game.updateStatus(of: currentUser, to: (accept ? .accepted : .denied))
+        
+        // Check that there's still enough players to be able to have a game, or start the game if everyone has responded
+        game.resetGameStatus()
+        
+        // Save the updated game to the cloud
+        saveChanges(to: game) { [weak self] (result) in
+            switch result {
+            case .success(let game):
+                // If the user declined the invitation, remove the game from the source of truth
+                if !accept { self?.handleEnd(for: game) }
+                
+                // Tell the table view list of current games to update itself
+                NotificationCenter.default.post(Notification(name: updateListOfGames))
+                
+                // Return the success
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    
+    // Update the game by allowing the user the quit at any time
+    func quit(_ game: Game, completion: @escaping resultCompletion) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Update the user's status
+        game.updateStatus(of: currentUser, to: .quit)
+        
+        // FIXME: - need to confirm this works
+        // Handle the flow of the gameplay, for example, if user quit in middle of a drawing or caption
+        if game.leadPlayerID == currentUser.recordID { game.resetGame() }
+        game.resetGameStatus()
+        
+        // Save the update to the game
+        saveChanges(to: game) { [weak self] (result) in
+            switch result {
+            case .success(let game):
+                // Handle the clean up for leaving the game
+                self?.handleEnd(for: game)
+                
+                // Return the success
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    // Allow the user to leave the game after it's finished
+    func leave(_ game: Game, completion: @escaping resultCompletion) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Update the user's status
+        game.updateStatus(of: currentUser, to: .done)
+        
+        // If the user is the last one to leave the game, remove it from the cloud
+        if game.allPlayersDone {
+            delete(game) { [weak self] (result) in
+                switch result {
+                case .success(_):
+                    // Handle the clean up for leaving the game
+                    self?.handleEnd(for: game)
+                    
+                    // Return the success
+                    return completion(.success(true))
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            }
+        } else {
+            // Otherwise, save the changes to the game
+            saveChanges(to: game) { [weak self] (result) in
+                switch result {
+                case .success(_):
+                    // Handle the clean up for leaving the game
+                    self?.handleEnd(for: game)
+                    
+                    // Return the success
+                    return completion(.success(true))
+                case .failure(let error):
+                    // If the error is that the game has already been deleted, then saving the game is no longer relevant
+                    if case MemeThingError.alreadyDeleted = error { return completion(.success(true)) }
+                    
+                    // Otherwise, print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            }
+        }
+    }
+    
 //    // Helper method to handle merge conflicts between different games pushed to the cloud at the same time
 //    func handleMerge(for localGame: Game, completion: @escaping resultCompletionWith<Game>){
 //        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
@@ -245,17 +351,16 @@ class GameController {
     
     // FIXME: - remote notifications, for when the app is closed
     
-    
     // FIXME: - I think this same function will actually run for all game changes (creations, updates, and deletes)
     /// check to see when this function runs, and break out into helper functions as needed
-    // Subscribe all players to notifications of invitations to games
-    func subscribeToGameInvitations() {
+    // Subscribe all players to notifications related to games
+    func subscribeToGameNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted when any games are created that include the user in the list of players
         db.collection(GameStrings.recordType)
             .whereField(GameStrings.playersIDsKey, arrayContains: currentUser.recordID)
-            .addSnapshotListener { (snapshot, error) in
+            .addSnapshotListener { [weak self] (snapshot, error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -263,257 +368,107 @@ class GameController {
                     return
                 }
                 
-                // Unwrap the data
-                guard let documents = snapshot?.documents else { return }
-                let games = documents.compactMap { (document) -> Game? in
-                    guard let game = Game(dictionary: document.data()) else { return nil }
-                    game.documentID = document.documentID
-                    return game
-                }
-                
-                // Save the new games to the source of truth
-                
-                // Display an alert to the user and update the list of games
+                snapshot?.documentChanges.forEach({ (change) in
+                    // Unwrap the data
+                    guard let game = Game(dictionary: change.document.data()) else { return }
+                    print("got here to \(#function) and \(game) \(change.type)")
+                    
+                    switch change.type {
+                    case .added:
+                        // The user has been invited to a game
+                        self?.handleInvitation(to: game)
+                    case .modified:
+                        // A game the user is playing has been updated
+                        self?.handleUpdate(to: game)
+                    case .removed:
+                        // A game the user was involved in has ended
+                        self?.handleDeletion(of: game)
+                    }
+                })
         }
     }
     
-//    // Subscribe all players to notifications of all updates to games they're participating in
-//    func subscribeToGameUpdates() {
-//        guard let currentUser = UserController.shared.currentUser else { return }
-//
-//        // TODO: - User defaults to track whether the subscription has already been saved
-//
-//        // Form the predicate to look for games that include the current user in the players list
-//        let predicate = NSPredicate(format: "%@ IN %K", argumentArray: [currentUser.reference, GameStrings.playersReferencesKey])
-//        let subscription = CKQuerySubscription(recordType: GameStrings.recordType, predicate: predicate, options: [.firesOnRecordUpdate])
-//
-//        // Format the display of the notification
-//        let notificationInfo = CKQuerySubscription.NotificationInfo()
-//        notificationInfo.title = "Update to game"
-//        notificationInfo.alertBody =  "Update to a game you're playing"
-//        notificationInfo.shouldSendContentAvailable = true
-//        notificationInfo.category = NotificationHelper.Category.gameUpdate.rawValue
-//        subscription.notificationInfo = notificationInfo
-//
-//        // Save the subscription to the cloud
-//        CKService.shared.publicDB.save(subscription) { (_, _) in }
-//    }
-//
-//    // MARK: - Receive Notifications
-//
-//    // Receive a notification that you've been invited to a game
-//    func receiveInvitationToGame(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
-//        print("got here to \(#function)")
-//
-//        // TODO: - show an alert to the user
-//
-//        // Fetch the game record from the cloud
-//        CKService.shared.read(recordID: recordID) { [weak self] (result: Result<Game, MemeThingError>) in
-//            switch result {
-//            case .success(let game):
-//                print("got here to \(#function) and game is \(game)")
-//                // Update the source of truth if it isn't already
-//                if !(self?.currentGames?.contains(game) ?? false) {
-//                    if var currentGames = self?.currentGames {
-//                        currentGames.append(game)
-//                        self?.currentGames = currentGames
-//                    } else {
-//                        self?.currentGames = [game]
-//                    }
-//                }
-//
-//                // Tell the table view list of current games to update itself
-//                NotificationCenter.default.post(Notification(name: updateListOfGames))
-//
-//                // Return the success
-//                return completion(0)
-//            case .failure(let error):
-//                // Print and return the error
-//                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                return completion(2)
-//            }
-//        }
-//    }
-//
-//    // Accept or decline an invitation to a game
-//    func respondToInvitation(to game: Game, accept: Bool, completion: @escaping resultHandler) {
-//        print("got here to \(#function)")
-//        guard let currentUser = UserController.shared.currentUser else { return }
-//
-//        // Update the game with the user's response
-//        game.updateStatus(of: currentUser, to: (accept ? .accepted : .denied))
-//
-//        // Check that there's still enough players to be able to have a game, or start the game if everyone has responded
-//        game.resetGameStatus()
-//
-//        // Save the updated game to the cloud
-//        saveChanges(to: game) { [weak self] (result) in
-//            switch result {
-//            case .success(let game):
-//                // If the user declined the invitation, remove the game from the source of truth
-//                if !accept { self?.handleEnd(for: game.recordID.recordName) }
-//
-//                // Tell the table view list of current games to update itself
-//                NotificationCenter.default.post(Notification(name: updateListOfGames))
-//
-//                // Return the success
-//                return completion(.success(true))
-//            case .failure(let error):
-//                // Print and return the error
-//                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                return completion(.failure(error))
-//            }
-//        }
-//    }
-//
-//    // Receive a notification that a game has been updated
-//    func receiveUpdateToGame(withID recordID: CKRecord.ID, completion: @escaping (UInt) -> Void) {
-//        guard let currentUser = UserController.shared.currentUser else { return completion(1) }
-//        print("got here to \(#function)")
-//
-//        // Fetch the game object from the cloud
-//        fetchGame(from: recordID) { [weak self] (result) in
-//            switch result {
-//            case .success(let game):
-//                // Ignore updates to games that the user is not currently participating in
-//                let status = game.getStatus(of: currentUser)
-//                guard status != .quit && status != .denied else { return completion(0) }
-//
-//                // Update the game in the source of truth
-//                guard let index = self?.currentGames?.firstIndex(of: game) else { return completion(0) }
-//                self?.currentGames?[index] = game
-//
-//                // Form the notification that will tell the views how to update
-//                var notificationDestination: Notification.Name?
-//
-//                // Set the destination of the notification based on the status of the game
-//                switch game.gameStatus {
-//                case .waitingForPlayers:
-//                    // Tell the waiting view to update itself
-//                    notificationDestination = updateWaitingView
-//                case .waitingForDrawing:
-//                    // Tell the view (either the waiting view or the end of round view) to transition to a new round
-//                    notificationDestination = toNewRound
-//                case .waitingForCaptions:
-//                    // If the player has not submitted a caption yet, tell their view to transition to the captions view
-//                    if game.getStatus(of: currentUser) == .accepted {
-//                        notificationDestination = toCaptionsView
-//                    } else {
-//                        // Otherwise, tell the waiting view to update itself
-//                        notificationDestination = updateWaitingView
-//                    }
-//                case .waitingForResult:
-//                    // Tell the waiting view to transition to the results view
-//                    notificationDestination = toResultsView
-//                case .waitingForNextRound:
-//                    // Tell the results view to navigate to a new round
-//                    notificationDestination = toNewRound
-//                case .gameOver:
-//                    // Tell the results view to navigate to the game over view
-//                    notificationDestination = toGameOver
-//                }
-//
-//                // Post the notification to update the view
-//                guard let notificationName = notificationDestination else { return completion(0) }
-//                NotificationCenter.default.post(Notification(name: notificationName,  userInfo: ["gameID" : game.recordID.recordName]))
-//                print("notification sent with name \(notificationName)")
-//
-//                // Return the success
-//                return completion(0)
-//            case .failure(let error):
-//                // Print and return the error
-//                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                return completion(2)
-//            }
-//        }
-//    }
-//
-//    // MARK: - Helper Method
-//
-//    // Allow the user the quit the game at any time
-//    func quit(_ game: Game, completion: @escaping resultHandler) {
-//        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-//
-//        // Update the user's status
-//        game.updateStatus(of: currentUser, to: .quit)
-//
-//        // FIXME: - need to confirm this works
-//        // Handle the flow of the gameplay, for example, if user quit in middle of a drawing or caption
-//        if game.leadPlayer.recordID.recordName == currentUser.recordID.recordName {
-//            game.resetGame()
-//        }
-//        game.resetGameStatus()
-//
-//        // Save the update to the game
-//        saveChanges(to: game) { [weak self] (result) in
-//            switch result {
-//            case .success(let game):
-//                // Handle the clean up for leaving the game
-//                self?.handleEnd(for: game.recordID.recordName)
-//
-//                // Return the success
-//                return completion(.success(true))
-//            case .failure(let error):
-//                // Print and return the error
-//                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                return completion(.failure(error))
-//            }
-//        }
-//    }
-//
-//    // Allow the user to leave the game after it's finished
-//    func leave(_ game: Game, completion: @escaping resultHandler) {
-//        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-//
-//        // Update the user's status
-//        game.updateStatus(of: currentUser, to: .done)
-//
-//        // If the user is the last one to leave the game, remove it from the cloud
-//        if game.allPlayersDone {
-//            delete(game) { [weak self] (result) in
-//                switch result {
-//                case .success(_):
-//                    // Handle the clean up for leaving the game
-//                    self?.handleEnd(for: game.recordID.recordName)
-//
-//                    // Return the success
-//                    return completion(.success(true))
-//                case .failure(let error):
-//                    // Print and return the error
-//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                    return completion(.failure(error))
-//                }
-//            }
-//        } else {
-//            // Otherwise, save the changes to the game
-//            saveChanges(to: game) { [weak self] (result) in
-//                switch result {
-//                case .success(_):
-//                    // Handle the clean up for leaving the game
-//                    self?.handleEnd(for: game.recordID.recordName)
-//
-//                    // Return the success
-//                    return completion(.success(true))
-//                case .failure(let error):
-//                    // If the error is that the game has already been deleted, then saving the game is no longer relevant
-//                    if case MemeThingError.alreadyDeleted = error { return completion(.success(true)) }
-//
-//                    // Otherwise, print and return the error
-//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                    return completion(.failure(error))
-//                }
-//            }
-//        }
-//    }
-//
-//    // Perform all the cleanup for the user to exit the game, whether it's over or the user has quit
-//    func handleEnd(for gameRecordName: String) {
-//        print("got here to \(#function) and SoT has \(String(describing: currentGames?.count)) games")
-//        // Remove the game from the source of truth
-//        currentGames?.removeAll(where: { $0.recordID.recordName == gameRecordName })
-//        print("Now has \(String(describing: currentGames?.count)) games")
-//
-//        // Tell the table view list of current games to update itself
-//        NotificationCenter.default.post(Notification(name: updateListOfGames))
-//    }
+    // MARK: - Helper Methods
+    
+    private func handleInvitation(to game: Game) {
+        print("got here to \(#function)")
+        
+        // Update the source of truth if it doesn't already contain the game
+        if !(self.currentGames?.contains(game) ?? false) {
+            if var currentGames = self.currentGames {
+                currentGames.append(game)
+                self.currentGames = currentGames
+            } else {
+                self.currentGames = [game]
+            }
+        }
+        
+        // Tell the table view list of current games to update itself and show an alert to the user
+        NotificationCenter.default.post(Notification(name: updateListOfGames))
+        // TODO: - show a pop up with the game invitation?
+    }
+    
+    private func handleUpdate(to game: Game) {
+        guard let currentUser = UserController.shared.currentUser else { return }
+        print("got here to \(#function)")
+        
+        // Ignore updates to games that the user is not currently participating in
+        let status = game.getStatus(of: currentUser)
+        guard status != .quit && status != .denied else { return }
+        
+        // Update the game in the source of truth
+        guard let index = currentGames?.firstIndex(of: game) else { return }
+        currentGames?[index] = game
+        
+        // Form the notification that will tell the views how to update
+        var notificationDestination: Notification.Name?
+        
+        // Set the destination of the notification based on the status of the game
+        switch game.gameStatus {
+        case .waitingForPlayers:
+            // Tell the waiting view to update itself
+            notificationDestination = updateWaitingView
+        case .waitingForDrawing:
+            // Tell the view (either the waiting view or the end of round view) to transition to a new round
+            notificationDestination = toNewRound
+        case .waitingForCaptions:
+            // If the player has not submitted a caption yet, tell their view to transition to the captions view
+            if game.getStatus(of: currentUser) == .accepted {
+                notificationDestination = toCaptionsView
+            } else {
+                // Otherwise, tell the waiting view to update itself
+                notificationDestination = updateWaitingView
+            }
+        case .waitingForResult:
+            // Tell the waiting view to transition to the results view
+            notificationDestination = toResultsView
+        case .waitingForNextRound:
+            // Tell the results view to navigate to a new round
+            notificationDestination = toNewRound
+        case .gameOver:
+            // Tell the results view to navigate to the game over view
+            notificationDestination = toGameOver
+        }
+        
+        // Post the notification to update the view
+        guard let notificationName = notificationDestination else { return }
+        NotificationCenter.default.post(Notification(name: notificationName,  userInfo: ["gameID" : game.recordID]))
+        print("notification sent with name \(notificationName)")
+    }
+    
+    private func handleDeletion(of game: Game) {
+        print("got here to \(#function), not sure I even need this function")
+        handleEnd(for: game)
+    }
+
+    // Perform all the cleanup for the user to exit the game, whether it's over or the user has quit
+    private func handleEnd(for game: Game) {
+        print("got here to \(#function) and SoT has \(String(describing: currentGames?.count)) games")
+        // Remove the game from the source of truth
+        currentGames?.removeAll(where: { $0 == game })
+        print("Now has \(String(describing: currentGames?.count)) games")
+
+        // Tell the table view list of current games to update itself
+        NotificationCenter.default.post(Notification(name: updateListOfGames))
+    }
 }

@@ -28,6 +28,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
         
         // Set up the UI
         setUpViews()
+        
         // FIXME: - do I have to remove these observers upon deinit?
         // Set up the observers to listen for notifications telling the view to reload its data
         NotificationCenter.default.addObserver(self, selector: #selector(refreshPage(_:)), name: updateWaitingView, object: nil)
@@ -67,7 +68,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
         }
     }
     
-    // Set up the tableview
+    // Set up the tableview if it's needed
     func setUpTableView() {
         waitingForTableView.delegate = self
         waitingForTableView.dataSource = self

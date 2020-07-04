@@ -17,7 +17,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!
     @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -78,13 +77,18 @@ class CaptionViewController: UIViewController, HasAGameObject {
     
     func setUpViews() {
         view.backgroundColor = .background
-        loadingIndicator.isHidden = true
         
         guard let game = game, let memeReference = game.memes?.last else { return }
+        
+        // Show the loading icon
+        view.startLoadingIcon()
         
         // Fetch the meme object
         MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
             DispatchQueue.main.async {
+                // Hide the loading icon
+                self?.view.stopLoadingIcon()
+                
                 switch result {
                 case .success(let meme):
                     // Save the meme object
@@ -96,23 +100,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 }
             }
         }
-    }
-    
-    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
-    func disableUI() {
-        loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
-        
-        captionTextField.isUserInteractionEnabled = false
-        sendButton.deactivate()
-    }
-    
-    func enableUI() {
-        captionTextField.isUserInteractionEnabled = true
-        sendButton.activate()
-        
-        loadingIndicator.isHidden = true
-        loadingIndicator.stopAnimating()
     }
     
     // MARK: - Actions
@@ -177,8 +164,8 @@ class CaptionViewController: UIViewController, HasAGameObject {
             return
         }
         
-        // Don't allow the user to interact with the screen while the save is in progress
-        disableUI()
+        // Show the loading icon
+        view.startLoadingIcon()
         
         // Add the caption to the meme object
         MemeController.shared.createCaption(for: meme, by: currentUser, with: captionText, in: game) { [weak self] (result) in
@@ -192,6 +179,9 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 
                 // Save the updated game to the cloud
                 GameController.shared.saveChanges(to: game) { (result) in
+                    // Hide the loading icon
+                    self?.view.stopLoadingIcon()
+                    
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
@@ -203,19 +193,18 @@ class CaptionViewController: UIViewController, HasAGameObject {
                                 self?.transitionToStoryboard(named: .Waiting, with: game)
                             }
                         case .failure(let error):
-                            // Print and display the error and reset the UI
+                            // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             self?.presentErrorAlert(error)
-                            self?.enableUI()
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    // Print and display the error and reset the UI
+                    // Print and display the error and hide the loading icon
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.stopLoadingIcon()
                     self?.presentErrorAlert(error)
-                    self?.enableUI()
                 }
             }
         }

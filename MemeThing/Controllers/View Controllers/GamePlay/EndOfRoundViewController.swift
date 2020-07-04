@@ -16,7 +16,6 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var memeImageView: UIImageView!
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var nextUpLabel: UILabel!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -28,6 +27,8 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set up the UI
         setUpViews()
         
         // Set up the observer to listen for notifications in case the user has left this page open too long and the game is moving on, or if the game has ended
@@ -61,6 +62,9 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         
         guard let game = game, let memeReference = game.memes?.last else { return }
         
+        // Show the loading icon
+        view.startLoadingIcon()
+        
         // Fetch the meme
         MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
             DispatchQueue.main.async {
@@ -73,6 +77,9 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                     MemeController.shared.fetchWinningCaption(for: meme) { (result) in
                         print("got here to \(#function) and fetched winning caption")
                         DispatchQueue.main.async {
+                            // Hide the loading icon
+                            self?.view.stopLoadingIcon()
+                            
                             switch result {
                             case .success(let caption):
                                 // Get the name of the user from the game object to display in the winner's name label
@@ -88,10 +95,6 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                                 } else {
                                     self?.nextUpLabel.text = "Next it is \(game.leadPlayerName)'s turn to draw a meme!"
                                 }
-                                
-                                // Hide the loading icon now that it is no longer needed
-                                self?.loadingIndicator.isHidden = true
-                                self?.loadingIndicator.stopAnimating()
                                 
                                 guard let currentUser = UserController.shared.currentUser else { return }
                                 if caption.authorID == currentUser.recordID {
@@ -116,8 +119,9 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                         }
                     }
                 case .failure(let error):
-                    // Print and display the error
+                    // Print and display the error and hide the loading icon
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.stopLoadingIcon()
                     self?.presentErrorAlert(error)
                 }
             }

@@ -25,9 +25,6 @@ class InviteFriendsTableViewController: UITableViewController {
         
         // Load the data if it hasn't been loaded already
         loadData()
-        
-        // Start off with the button disabled until enough players have been selected for the game
-        startGameButton.deactivate()
     }
     
     // MARK: - Helper Methods
@@ -37,12 +34,21 @@ class InviteFriendsTableViewController: UITableViewController {
         tableView.backgroundColor = .background
         tableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "friendCell")
         loadingIndicator.isHidden = true
+        
+        // Start off with the button disabled until enough players have been selected for the game
+        startGameButton.deactivate()
     }
     
     func loadData() {
+        // Show the loading icon
+        view.startLoadingIcon()
+        
         if UserController.shared.usersFriends == nil {
             UserController.shared.fetchUsersFriends { [weak self] (result) in
                 DispatchQueue.main.async {
+                    // Hide the loading icon
+                    self?.view.stopLoadingIcon()
+                    
                     switch result {
                     case .success(_):
                         self?.tableView.reloadData()
@@ -53,23 +59,6 @@ class InviteFriendsTableViewController: UITableViewController {
                 }
             }
         }
-    }
-    
-    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
-    func disableUI() {
-        loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
-        
-        tableView.isUserInteractionEnabled = false
-        startGameButton.deactivate()
-    }
-    
-    func enableUI() {
-        tableView.isUserInteractionEnabled = true
-        startGameButton.activate()
-        
-        loadingIndicator.isHidden = true
-        loadingIndicator.stopAnimating()
     }
     
     // MARK: - Actions
@@ -85,21 +74,23 @@ class InviteFriendsTableViewController: UITableViewController {
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.usersFriends?[$0.row] }
         
-        // Don't allow the user to interact with the screen while the data is loading
-        disableUI()
+        // Show the loading icon
+        view.startLoadingIcon()
 
         // Create the game object, thus saving it to the cloud and thus automatically alerting the selected players
         GameController.shared.newGame(players: friends) { [weak self] (result) in
             DispatchQueue.main.async {
+                // Hide the loading icon
+                self?.view.stopLoadingIcon()
+                
                 switch result {
                 case .success(let game):
                     // Transition to the waiting view, passing along the reference to the current game
                     self?.transitionToStoryboard(named: .Waiting, with: game)
                 case .failure(let error):
-                    // Print and display the error and reset the UI
+                    // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
-                    self?.enableUI()
                 }
             }
         }

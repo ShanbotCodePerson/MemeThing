@@ -231,10 +231,10 @@ class UserController {
         saveChanges(to: user, completion: completion)
     }
     
-    // Update a user with a new blocked username
-    func update(_ user: User, usernameToBlock username: String, completion: @escaping resultCompletion) {
+    // Update a user with a new blocked id
+    func update(_ user: User, IDToBlock ID: String, completion: @escaping resultCompletion) {
         // Add the username to the user's list of blocked usernames
-        user.blockedUsernames.append(username)
+        user.blockedIDs.append(ID)
         
         // Save the changes to the cloud
         saveChanges(to: user, completion: completion)
@@ -279,7 +279,6 @@ class UserController {
         FriendRequestController.shared.subscribeToFriendRequestResponseNotifications()
         FriendRequestController.shared.subscribeToRemovingFriendNotifications()
         
-        GameController.shared.subscribeToGameInvitations()
-        GameController.shared.subscribeToGameUpdates()
+        GameController.shared.subscribeToGameNotifications()
     }
 }

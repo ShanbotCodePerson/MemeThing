@@ -21,8 +21,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var constraintToButton: NSLayoutConstraint!
     @IBOutlet weak var constraintToSafeArea: NSLayoutConstraint!
-    @IBOutlet weak var initialLoadingIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var savingLoadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -53,6 +51,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
     func loadAllData() {
         guard let game = game, let memeReference = game.memes?.last else { return }
         
+        // Show the loading icon
+        view.startLoadingIcon()
+        
         // Fetch the meme from the cloud
         MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
             DispatchQueue.main.async {
@@ -67,6 +68,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     // Fetch the captions for that meme from the cloud
                     MemeController.shared.fetchCaptions(for: meme, expectedNumber: expectedNumber) { (result) in
                         DispatchQueue.main.async {
+                            // Hide the loading icon
+                            self?.view.stopLoadingIcon()
+                            
                             switch result {
                             case .success(let captions):
                                 print("in completion in results VC and captions are \(captions)")
@@ -77,9 +81,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                 self?.pageControl.numberOfPages = captions.count
                                 self?.pageControl.isHidden = false
                                 self?.nextButton.tintColor = .systemBlue
-                                
-                                // Hide the loading icon
-                                self?.initialLoadingIndicator.stopAnimating()
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 self?.presentErrorAlert(error)
@@ -87,7 +88,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
                         }
                     }
                 case .failure(let error):
+                    // Print and display the error and hide the loading icon
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.stopLoadingIcon()
                     self?.presentErrorAlert(error)
                 }
             }
@@ -98,7 +101,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     func setUpViews() {
         view.backgroundColor = .background
-        savingLoadingIndicator.isHidden = true
         previousButton.deactivate()
         previousButton.tintColor = .lightGray
         nextButton.tintColor = .lightGray
@@ -153,37 +155,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
         } else {
             nextButton.activate()
             nextButton.tintColor = .systemBlue
-        }
-    }
-    
-    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
-    func disableUI() {
-        // Display the loading icon while the image saves
-        savingLoadingIndicator.startAnimating()
-        savingLoadingIndicator.isHidden = false
-        
-        // Don't allow the user to interact with the screen while the save is in progress
-        chooseWinnerButton.deactivate()
-        nextButton.deactivate()
-        nextButton.tintColor = .lightGray
-        previousButton.deactivate()
-        previousButton.tintColor = .lightGray
-    }
-    
-    func enableUI() {
-        // Hide the loading icon
-        savingLoadingIndicator.stopAnimating()
-        savingLoadingIndicator.isHidden = true
-        
-        // Re enable the buttons as applicable
-        chooseWinnerButton.activate()
-        if pageControl.currentPage < pageControl.numberOfPages {
-            nextButton.activate()
-            nextButton.tintColor = .systemBlue // TODO: - do I want a different color for this?
-        }
-        if pageControl.currentPage > 0 {
-            previousButton.activate()
-            previousButton.tintColor = .systemBlue
         }
     }
     
@@ -304,8 +275,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
         // Get the caption based on which "page" the view is on at the time the button is clicked
         let caption = captions[pageControl.currentPage]
         
-        // Disable the UI while the data loads
-        disableUI()
+        // Show the loading icon
+        view.startLoadingIcon()
         
         // Update the data in the meme and the caption
         MemeController.shared.setWinningCaption(to: caption, for: meme) { [weak self] (result) in
@@ -320,6 +291,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 // Save the updated game to the cloud
                 GameController.shared.saveChanges(to: game) { (result) in
                     DispatchQueue.main.async {
+                        // Hide the loading icon
+                        self?.view.stopLoadingIcon()
+                        
                         switch result {
                         case .success(_):
                             // If the game is over, go to the game over view
@@ -327,27 +301,21 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                 // Otherwise, set the next destination as the waiting view
                             else { self?.nextDestination = .Waiting }
                             
-                            // Before transitioning to the next view, first display the results of this round
-                            self?.savingLoadingIndicator.stopAnimating()
+                            // Before transitioning to the next view, first display the results of this round)
                             self?.presentEndOFRoundView(with: game)
                         case .failure(let error):
                             // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             self?.presentErrorAlert(error)
-                            
-                            // Reset the UI
-                            self?.enableUI()
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    // Print and display the error
+                    // Print and display the error and hide the loading icon
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.stopLoadingIcon()
                     self?.presentErrorAlert(error)
-                    
-                    // Reset the UI
-                    self?.enableUI()
                 }
             }
         }

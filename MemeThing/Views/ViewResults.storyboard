@@ -137,16 +137,9 @@
                                     <constraint firstItem="A8m-FQ-Uba" firstAttribute="top" secondItem="CL9-hn-DN2" secondAttribute="top" id="uBn-ad-QRa"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="Ivf-vW-PcX">
-                                <rect key="frame" x="166" y="658" width="82" height="82"/>
-                            </activityIndicatorView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="3rS-cQ-PaR">
-                                <rect key="frame" x="178.5" y="792.5" width="57" height="57.5"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="3rS-cQ-PaR" firstAttribute="height" secondItem="NVX-Za-Jzn" secondAttribute="height" id="07O-HV-0m0"/>
                             <constraint firstItem="NVX-Za-Jzn" firstAttribute="top" secondItem="AI8-U4-y9f" secondAttribute="bottom" constant="8" id="3tt-9Z-nNy"/>
                             <constraint firstItem="qSh-vj-0xP" firstAttribute="top" secondItem="Bo3-Gf-UQy" secondAttribute="top" id="4tj-CC-WHH"/>
                             <constraint firstItem="CL9-hn-DN2" firstAttribute="top" secondItem="yf6-n3-Yte" secondAttribute="bottom" id="6c4-ZD-Uh3"/>
@@ -159,23 +152,16 @@
                             <constraint firstItem="NVX-Za-Jzn" firstAttribute="centerX" secondItem="1UW-qO-BJN" secondAttribute="centerX" id="Fyq-4X-lqB"/>
                             <constraint firstItem="CL9-hn-DN2" firstAttribute="height" secondItem="1UW-qO-BJN" secondAttribute="height" multiplier="0.1" id="Gf2-d2-dgj"/>
                             <constraint firstItem="NVX-Za-Jzn" firstAttribute="width" secondItem="1UW-qO-BJN" secondAttribute="width" multiplier="0.9" id="Hp3-5a-HPE"/>
-                            <constraint firstItem="Ivf-vW-PcX" firstAttribute="height" secondItem="CL9-hn-DN2" secondAttribute="height" id="Ijf-h3-1Z4"/>
                             <constraint firstItem="1UW-qO-BJN" firstAttribute="bottom" secondItem="AI8-U4-y9f" secondAttribute="bottom" constant="12" id="Jhr-5d-b0e"/>
                             <constraint firstItem="yf6-n3-Yte" firstAttribute="leading" secondItem="1UW-qO-BJN" secondAttribute="leading" id="KYZ-Ka-233"/>
                             <constraint firstItem="f0B-nn-3yJ" firstAttribute="bottom" secondItem="qSh-vj-0xP" secondAttribute="bottom" id="Nyg-Ef-qc0"/>
                             <constraint firstItem="CL9-hn-DN2" firstAttribute="centerX" secondItem="1UW-qO-BJN" secondAttribute="centerX" id="PcE-Vb-4HU"/>
-                            <constraint firstItem="3rS-cQ-PaR" firstAttribute="centerX" secondItem="NVX-Za-Jzn" secondAttribute="centerX" id="S2P-ev-6Kc"/>
                             <constraint firstItem="AI8-U4-y9f" firstAttribute="top" secondItem="CL9-hn-DN2" secondAttribute="bottom" constant="8" id="SHx-Z3-YOr"/>
                             <constraint firstItem="1UW-qO-BJN" firstAttribute="trailing" secondItem="qSh-vj-0xP" secondAttribute="trailing" id="Vhy-Yk-gKL"/>
                             <constraint firstItem="AI8-U4-y9f" firstAttribute="centerX" secondItem="1UW-qO-BJN" secondAttribute="centerX" id="W7w-Qf-V3K"/>
-                            <constraint firstItem="Ivf-vW-PcX" firstAttribute="centerX" secondItem="CL9-hn-DN2" secondAttribute="centerX" id="XSc-BQ-Weh"/>
                             <constraint firstItem="1UW-qO-BJN" firstAttribute="bottom" secondItem="NVX-Za-Jzn" secondAttribute="bottom" constant="12" id="YjD-Ia-gd1"/>
                             <constraint firstItem="yf6-n3-Yte" firstAttribute="top" secondItem="f0B-nn-3yJ" secondAttribute="bottom" id="cJq-1f-Oa5"/>
-                            <constraint firstItem="3rS-cQ-PaR" firstAttribute="width" secondItem="NVX-Za-Jzn" secondAttribute="height" multiplier="1:1" id="g3J-MY-FEl"/>
-                            <constraint firstItem="3rS-cQ-PaR" firstAttribute="centerY" secondItem="NVX-Za-Jzn" secondAttribute="centerY" id="l8t-xz-1ss"/>
-                            <constraint firstItem="Ivf-vW-PcX" firstAttribute="width" secondItem="CL9-hn-DN2" secondAttribute="height" multiplier="1:1" id="qFe-KG-eeC"/>
                             <constraint firstItem="f0B-nn-3yJ" firstAttribute="trailing" secondItem="1UW-qO-BJN" secondAttribute="trailing" id="rd4-t2-0d8"/>
-                            <constraint firstItem="Ivf-vW-PcX" firstAttribute="centerY" secondItem="CL9-hn-DN2" secondAttribute="centerY" id="sQV-eM-i9d"/>
                             <constraint firstItem="qSh-vj-0xP" firstAttribute="leading" secondItem="Bo3-Gf-UQy" secondAttribute="leading" id="uVH-gM-jiu"/>
                             <constraint firstItem="f0B-nn-3yJ" firstAttribute="top" secondItem="1UW-qO-BJN" secondAttribute="top" id="ztR-NW-odc"/>
                         </constraints>
@@ -190,13 +176,11 @@
                         <outlet property="chooseWinnerButton" destination="NVX-Za-Jzn" id="95q-2j-jEp"/>
                         <outlet property="constraintToButton" destination="3tt-9Z-nNy" id="HIq-8z-lqR"/>
                         <outlet property="constraintToSafeArea" destination="Jhr-5d-b0e" id="hmD-bh-TvB"/>
-                        <outlet property="initialLoadingIndicator" destination="Ivf-vW-PcX" id="1vi-xe-MTh"/>
                         <outlet property="memeImageView" destination="AlU-DO-Xe3" id="piz-LP-Eie"/>
                         <outlet property="navigationBar" destination="f0B-nn-3yJ" id="bSU-r5-FUi"/>
                         <outlet property="nextButton" destination="7mb-DM-cl2" id="vrB-FR-Nn1"/>
                         <outlet property="pageControl" destination="bLi-Zs-I7l" id="H6d-zu-Gxc"/>
                         <outlet property="previousButton" destination="4EB-A1-VVY" id="2iv-h0-Aob"/>
-                        <outlet property="savingLoadingIndicator" destination="3rS-cQ-PaR" id="Yrl-Fp-fKd"/>
                         <outlet property="scrollView" destination="A8m-FQ-Uba" id="xE4-pa-5kD"/>
                     </connections>
                 </viewController>

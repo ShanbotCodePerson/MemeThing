@@ -13,6 +13,7 @@
 		4005A1A224AC34E000BE556F /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4005A1A124AC34E000BE556F /* UIImageExtension.swift */; };
 		401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401109882487FF7600E8FCE2 /* MemeImageView.swift */; };
 		4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4011098A24882AEE00E8FCE2 /* MemeController.swift */; };
+		40169F7E24AFF8550078706C /* LoadingIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40169F7D24AFF8550078706C /* LoadingIcon.swift */; };
 		402D7CFE249C45A100955ADF /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402D7CFD249C45A100955ADF /* Reachability.swift */; };
 		4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365B2486B898007C2601 /* NotificationHelper.swift */; };
 		403936602486E684007C2601 /* FriendRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365F2486E684007C2601 /* FriendRequestController.swift */; };
@@ -73,6 +74,7 @@
 		4005A1A124AC34E000BE556F /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		401109882487FF7600E8FCE2 /* MemeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeImageView.swift; sourceTree = "<group>"; };
 		4011098A24882AEE00E8FCE2 /* MemeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeController.swift; sourceTree = "<group>"; };
+		40169F7D24AFF8550078706C /* LoadingIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIcon.swift; sourceTree = "<group>"; };
 		402D7CFD249C45A100955ADF /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		4039365B2486B898007C2601 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationHelper.swift; path = MemeThing/Helpers/NotificationHelper.swift; sourceTree = SOURCE_ROOT; };
 		4039365F2486E684007C2601 /* FriendRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestController.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 				402D7CFD249C45A100955ADF /* Reachability.swift */,
 				40C2147B247EEE9B007B7630 /* MemeThingError.swift */,
 				4039CE0B248205D4004DA41F /* StyleGuide.swift */,
+				40169F7D24AFF8550078706C /* LoadingIcon.swift */,
 				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
 				4005A1A124AC34E000BE556F /* UIImageExtension.swift */,
 			);
@@ -537,6 +540,7 @@
 				4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */,
 				40DC059424902D7400EE02AC /* MemeThingTableCellView.swift in Sources */,
 				40A777EE24896A4500ADBB82 /* GamesListTableViewController.swift in Sources */,
+				40169F7E24AFF8550078706C /* LoadingIcon.swift in Sources */,
 				403936602486E684007C2601 /* FriendRequestController.swift in Sources */,
 				40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */,
 				401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */,

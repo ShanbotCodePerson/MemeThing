@@ -16,7 +16,6 @@ class GameOverViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var resultsTableView: UITableView!
     @IBOutlet weak var exitGameButton: UIButton!
     @IBOutlet weak var playAgainButton: UIButton!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -30,25 +29,6 @@ class GameOverViewController: UIViewController, HasAGameObject {
         setUpViews()
     }
     
-    // MARK: - Helper Methods
-    
-    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
-    func disableUI() {
-        loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
-        
-        exitGameButton.deactivate()
-        playAgainButton.deactivate()
-    }
-    
-    func enableUI() {
-        exitGameButton.activate()
-        playAgainButton.activate()
-        
-        loadingIndicator.isHidden = true
-        loadingIndicator.stopAnimating()
-    }
-    
     // MARK: - Set Up UI
     
     func setUpViews() {
@@ -58,6 +38,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
         
         winnerNameLabel.text = game.gameStatusDescription
         
+        // Set up the tableview
         resultsTableView.delegate = self
         resultsTableView.dataSource = self
         resultsTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")
@@ -114,21 +95,23 @@ class GameOverViewController: UIViewController, HasAGameObject {
             return
         }
         
-        // Don't allow the user to interact with the screen while the data is loading
-        disableUI()
+        // Show the loading icon
+        view.startLoadingIcon()
         
         // Start a new game from the data in the old game
         GameController.shared.newGame(from: oldGame) { [weak self] (result) in
             DispatchQueue.main.async {
+                // Hide the loading icon
+                self?.view.stopLoadingIcon()
+                
                 switch result {
                 case .success(let game):
                     // Transition to the waiting view
                     self?.transitionToStoryboard(named: .Waiting, with: game)
                 case .failure(let error):
-                    // Print and display the error and reset the UI
+                    // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
-                    self?.enableUI()
                 }
             }
         }

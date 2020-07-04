@@ -25,6 +25,8 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set up the UI
         setUpViews()
         
         // Set up the observers to listen for notifications telling the view to transition to a new page

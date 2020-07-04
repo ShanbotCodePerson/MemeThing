@@ -15,7 +15,7 @@ struct UserStrings {
     static let emailKey = "email"
     fileprivate static let screenNameKey = "screenName"
     fileprivate static let pointsKey = "points"
-    fileprivate static let blockedUsernamesKey = "blockedUsernames"
+    fileprivate static let blockedIDsKey = "blockedIDs"
     fileprivate static let friendIDsKey = "friendIDs"
     static let recordIDKey = "recordID"
 }
@@ -27,7 +27,7 @@ class User {
     let email: String
     var screenName: String
     var points: Int
-    var blockedUsernames: [String]
+    var blockedIDs: [String]
     var friendIDs: [String]
     let recordID: String
     var documentID: String?
@@ -37,14 +37,14 @@ class User {
     init(email: String,
          screenName: String?,
          points: Int = 0,
-         blockedUsernames: [String] = [],
+         blockedIDs: [String] = [],
          friendIDs: [String] = [],
          recordID: String = UUID().uuidString) {
         
         self.email = email
         self.screenName = (screenName ?? email.components(separatedBy: "@").first) ?? email
         self.points = points
-        self.blockedUsernames = blockedUsernames
+        self.blockedIDs = blockedIDs
         self.friendIDs = friendIDs
         self.recordID = recordID
     }
@@ -53,7 +53,7 @@ class User {
         guard let email = dictionary[UserStrings.emailKey] as? String,
             let screenName = dictionary[UserStrings.screenNameKey] as? String,
             let points = dictionary[UserStrings.pointsKey] as? Int,
-            let blockedUsernames = dictionary[UserStrings.blockedUsernamesKey] as? [String],
+            let blockedIDs = dictionary[UserStrings.blockedIDsKey] as? [String],
             var friendIDs = dictionary[UserStrings.friendIDsKey] as? [String],
             let recordID = dictionary[UserStrings.recordIDKey] as? String
             else { return nil }
@@ -62,7 +62,7 @@ class User {
         self.init(email: email,
                   screenName: screenName,
                   points: points,
-                  blockedUsernames: blockedUsernames,
+                  blockedIDs: blockedIDs,
                   friendIDs: friendIDs,
                   recordID: recordID)
     }
@@ -73,7 +73,7 @@ class User {
         [UserStrings.emailKey : email,
          UserStrings.screenNameKey : screenName,
          UserStrings.pointsKey : points,
-         UserStrings.blockedUsernamesKey : blockedUsernames,
+         UserStrings.blockedIDsKey : blockedIDs,
          UserStrings.friendIDsKey : friendIDs,
          UserStrings.recordIDKey : recordID
         ]

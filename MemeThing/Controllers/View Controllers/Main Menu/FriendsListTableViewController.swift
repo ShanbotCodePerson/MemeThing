@@ -118,15 +118,15 @@ class FriendsListTableViewController: UITableViewController {
         }
     }
     
-    func blockUser(named username: String) {
+    func blockUser(with ID: String, name: String) {
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Add the username to the current user's list of blocked people and save the change to the cloud
-        UserController.shared.update(currentUser, usernameToBlock: username) { [weak self] (result) in
+        UserController.shared.update(currentUser, IDToBlock: ID) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
-                    self?.presentAlert(title: "Successfully Blocked", message: "You have successfully blocked \(username)")
+                    self?.presentAlert(title: "Successfully Blocked", message: "You have successfully blocked \(name)")
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -158,41 +158,42 @@ class FriendsListTableViewController: UITableViewController {
                 return
         }
         
-        // FIXME: - blocked usernames should become blocked emails instead
-        // Make sure the user hasn't already blocked, sent, received, or accepted a request from that username
-        if currentUser.blockedUsernames.contains(username) {
-            presentAlert(title: "Blocked", message: "You have blocked \(username)")
-            return
-        }
-        if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
-            guard outgoingFriendRequests.filter({ $0.toID == currentUser.recordID }).count == 0 else {
-                presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(email)")
-                return
-            }
-        }
-        if let pendingFriendRequests = FriendRequestController.shared.pendingFriendRequests {
-            guard pendingFriendRequests.filter({ $0.fromID == currentUser.recordID }).count == 0 else {
-                presentAlert(title: "Already Received", message: "You have already received a friend request from \(email)")
-                return
-            }
-        }
-        if let userFriends = UserController.shared.usersFriends {
-            guard userFriends.filter({ $0.email == email }).count == 0 else {
-                presentAlert(title: "Already Friends", message: "You are already friends with \(email)")
-                return
-            }
-        }
-        
-        // Search to see if that username exists
+        // Search to see if that email exists as a user of the app
         UserController.shared.searchFor(email) { [weak self] (result) in
             switch result {
             case .success(let friend):
-                // If the username exists, first make sure that the current user hasn't been blocked by that person
-                guard !friend.blockedUsernames.contains(currentUser.username) else {
+                
+                // Make sure that the current user hasn't been blocked by that person
+                guard !friend.blockedIDs.contains(currentUser.recordID) else {
                     DispatchQueue.main.async {
                         self?.presentAlert(title: "Blocked", message: "You have been blocked by \(email)")
                     }
                     return
+                }
+                
+                // Make sure the user hasn't already blocked, sent, received, or accepted a request from that person
+                if currentUser.blockedIDs.contains(friend.recordID) {
+                    self?.presentAlert(title: "Blocked", message: "You have blocked \(email)")
+                    return
+                }
+                // FIXME: - pretty sure this stuff won't work
+                if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
+                    guard outgoingFriendRequests.filter({ $0.toID == currentUser.recordID }).count == 0 else {
+                        self?.presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(email)")
+                        return
+                    }
+                }
+                if let pendingFriendRequests = FriendRequestController.shared.pendingFriendRequests {
+                    guard pendingFriendRequests.filter({ $0.fromID == currentUser.recordID }).count == 0 else {
+                        self?.presentAlert(title: "Already Received", message: "You have already received a friend request from \(email)")
+                        return
+                    }
+                }
+                if let userFriends = UserController.shared.usersFriends {
+                    guard userFriends.filter({ $0.email == email }).count == 0 else {
+                        self?.presentAlert(title: "Already Friends", message: "You are already friends with \(email)")
+                        return
+                    }
                 }
                 
                 // Send them a friend request
@@ -214,7 +215,7 @@ class FriendsListTableViewController: UITableViewController {
                 DispatchQueue.main.async {
                     // Otherwise, show an alert to the user that the username doesn't exist
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentAlert(title: "Username Not Found", message: "The email \(email) is not a user of MemeThing - make sure to enter the email carefully.")
+                    self?.presentAlert(title: "Email Not Found", message: "The email \(email) is not a user of MemeThing - make sure to enter the email carefully.")
                 }
             }
         }
@@ -280,14 +281,15 @@ class FriendsListTableViewController: UITableViewController {
                 tableView.isUserInteractionEnabled = false
                 
                 // If the user clicks "confirm," remove the friend and update the tableview
-                FriendRequestController.shared.remove(friend: friend) { [weak self] (result) in
+                FriendRequestController.shared.sendRequestToRemove(friend) { [weak self] (result) in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
                             // Give the user an opportunity to block the unwanted friend
                             self?.presentConfirmAlert(title: "Friend Removed", message: "Do you want to block \(friend.screenName) from sending you any more friend requests?", cancelText: "No", confirmText: "Yes, block \(friend.screenName)", completion: {
+                                
                                 // If the user clicks "confirm," add that user to their blocked list
-                                self?.blockUser(named: friend.username)
+                                self?.blockUser(with: friend.recordID, name: friend.screenName)
                             })
                             print("got here to \(#function) and \(String(describing: self?.dataSource))")
                             // Update the tableview
@@ -324,18 +326,19 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
             else { return }
         
         // Respond to the friend request
-        FriendRequestController.shared.sendResponse(to: friendRequest, accept: accept) { [weak self] (result) in
+        FriendRequestController.shared.respondToFriendRequest(friendRequest, accept: accept) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
                     // Show an alert that the friend request has been accepted
                     if accept {
-                        self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromUsername) as a friend!")
+                        self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromName) as a friend!")
                     } else {
                         // Give the user an opportunity to block the unwanted friend request
-                        self?.presentConfirmAlert(title: "Friend Request Denied", message: "Do you want to block \(friendRequest.fromUsername) from sending you any more friend requests?", cancelText: "No", confirmText: "Yes, block \(friendRequest.fromUsername)", completion: {
+                        self?.presentConfirmAlert(title: "Friend Request Denied", message: "Do you want to block \(friendRequest.fromName) from sending you any more friend requests?", cancelText: "No", confirmText: "Yes, block \(friendRequest.fromName)", completion: {
+                            
                             // If the user clicks "confirm," add that user to their blocked list
-                            self?.blockUser(named: friendRequest.fromUsername)
+                            self?.blockUser(with: friendRequest.fromID, name: friendRequest.fromName)
                         })
                     }
                     

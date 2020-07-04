@@ -14,10 +14,8 @@ class ProfileTableViewController: UITableViewController {
     
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var screenNameLabel: UILabel!
-    @IBOutlet weak var passwordLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var pointsLabel: UILabel!
-    @IBOutlet weak var passwordButton: UIButton!
     
     // MARK: - Properties
     
@@ -38,8 +36,6 @@ class ProfileTableViewController: UITableViewController {
         
         guard let user = UserController.shared.currentUser else { return }
         screenNameLabel.text = "Screen Name: \(user.screenName)"
-        // FIXME: - reconfigure this whole view, add password reset functionality but don't show password
-//        passwordLabel.text = "Password: \(repeatElement("*", count: user.password.count).joined())"
         emailLabel.text = "Email: \(user.email)"
         pointsLabel.text = "Points: \(user.points)"
     }
@@ -73,56 +69,19 @@ class ProfileTableViewController: UITableViewController {
         }
     }
     
-    @IBAction func showPasswordButtonTapped(_ sender: UIButton) {
+    @IBAction func resetPasswordButtonTapped(_ sender: UIButton) {
         guard let user = UserController.shared.currentUser else { return }
         
-        // Allow the user to hide the password or show it
-        if editingPassword {
-            passwordLabel.text = "Password: \(repeatElement("*", count: user.password.count).joined())"
-            passwordButton.setTitle("Show", for: .normal)
-            editingPassword = false
-        } else {
-            // Show the password and update the text of the button
-            passwordLabel.text = "Password: \(user.password)"
-            passwordButton.setTitle("Hide", for: .normal)
-            editingPassword = true
-        }
-    }
-    
-    @IBAction func editEmailButtonTapped(_ sender: UIButton) {
-        guard let user = UserController.shared.currentUser else { return }
-        
-        // Make sure the user is connected to the internet
-        guard Reachability.checkReachable() else {
-            presentInternetAlert()
-            return
-        }
-        
-        // Present the text field to allow the user to edit their email
-        presentTextFieldAlert(title: "Edit Email", message: "Edit your email (used for password recovery)", textFieldPlaceholder: "", textFieldText: user.email) { [weak self] (email) in
-            
-            // Confirm that the new email address is valid
-            guard email.isValidEmail() else {
-                self?.presentAlert(title: "Invalid Email", message: "You must enter a valid email address to use for password recovery")
-                return
-            }
-            
-            // Save the new email to the cloud
-            UserController.shared.update(user, password: nil, screenName: nil, email: email) { (result) in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(_):
-                        self?.emailLabel.text = "Email: \(email)"
-                    case .failure(let error):
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorAlert(error)
-                    }
-                }
-            }
-        }
+        // First present an alert asking the user to confirm their current password
     }
     
     @IBAction func pointsInformationButtonTapped(_ sender: UIButton) {
         presentAlert(title: "Points", message: "Earn points by having your captions selected in games with your friends.")
+    }
+    
+    @IBAction func signOutButtonTapped(_ sender: UIButton) {
+    }
+    
+    @IBAction func deleteAccountButtonTapped(_ sender: UIButton) {
     }
 }

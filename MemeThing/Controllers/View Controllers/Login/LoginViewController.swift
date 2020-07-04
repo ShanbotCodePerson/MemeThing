@@ -24,7 +24,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var textFieldsStackView: UIStackView!
     @IBOutlet weak var stackViewHeightLayoutConstraint: NSLayoutConstraint!
     @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!
-    @IBOutlet weak var loadingIndictor: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -103,7 +102,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = .background
         // TODO: - need to test this in other device sizes
         stackViewHeightLayoutConstraint.constant = buttonsStackView.frame.height + textFieldsStackView.frame.height + 20
-        loadingIndictor.isHidden = true
         
         screenNameTextField.delegate = self
         emailTextField.delegate = self
@@ -174,50 +172,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signingUp = true
     }
     
-    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
-    func disableUI() {
-        loadingIndictor.startAnimating()
-        loadingIndictor.isHidden = false
-        
-        signUpToggleButton.isUserInteractionEnabled = false
-        loginToggleButton.isUserInteractionEnabled = false
-        
-        screenNameTextField.isUserInteractionEnabled = false
-        emailTextField.isUserInteractionEnabled = false
-        passwordTextField.isUserInteractionEnabled = false
-        confirmPasswordTextField.isUserInteractionEnabled = false
-        
-        doneButton.deactivate()
-    }
-    
-    func enableUI() {
-        signUpToggleButton.isUserInteractionEnabled = true
-        loginToggleButton.isUserInteractionEnabled = true
-        
-        screenNameTextField.isUserInteractionEnabled = true
-        emailTextField.isUserInteractionEnabled = true
-        passwordTextField.isUserInteractionEnabled = true
-        confirmPasswordTextField.isUserInteractionEnabled = true
-        
-        doneButton.activate()
-        
-        loadingIndictor.stopAnimating()
-        loadingIndictor.isHidden = true
-    }
-    
     // MARK: - Helper Methods
-    
-    // Transition to the main menu
-    func presentMainMenuVC() {
-        DispatchQueue.main.async {
-            self.transitionToStoryboard(named: .MainMenu, direction: .fromRight)
-        }
-    }
     
     // Try to log the user in
     func autoLogin() {
-        // Don't allow the user to interact with the screen while the data is loading
-        disableUI()
+        // Show the loading icon
+        view.startLoadingIcon()
         
         if let user = Auth.auth().currentUser {
             // If the user's email account has not yet been verified, don't sign in
@@ -225,13 +185,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
             UserController.shared.fetchUser { [weak self] (result) in
                 DispatchQueue.main.async {
+                    // Hide the loading icon
+                    self?.view.stopLoadingIcon()
+                    
                     switch result {
                     case .success(_):
-                        self?.presentMainMenuVC()
+                        self?.transitionToStoryboard(named: .MainMenu, direction: .fromRight)
                     case .failure(let error):
-                        // Allow the user to interact with the UI again
-                        self?.enableUI()
-                        
                         // Print and display the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         self?.presentErrorAlert(error)
@@ -289,8 +249,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        // Don't allow the user to interact with the screen while the data is processing
-        disableUI()
+        // Show the loading icon
+        view.startLoadingIcon()
         
         // Create the user and send the notification email
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] (authResult, error) in
@@ -298,21 +258,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             guard authResult?.user != nil, error == nil else {
                 // Print and display the error
                 print("Error in \(#function) : \(error!.localizedDescription) \n---\n \(error!)")
-                DispatchQueue.main.async { self?.presentErrorAlert(error!) }
+                DispatchQueue.main.async {
+                    self?.view.stopLoadingIcon()
+                    self?.presentErrorAlert(error!)
+                }
                 return
             }
             
             // Send an email to verify the user's email address
             Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
-                
-                if let error = error {
-                    // Print and display the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    DispatchQueue.main.async { self?.presentErrorAlert(error) }
+                DispatchQueue.main.async {
+                    // Hide the loading icon
+                    self?.view.stopLoadingIcon()
+                    
+                    if let error = error {
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                       self?.presentErrorAlert(error)
+                    }
+                    
+                    // Present an alert asking them to check their email
+                    self?.presentVerifyEmailAlert(with: email)
                 }
-                
-                // Present an alert asking them to check their email
-                self?.presentVerifyEmailAlert(with: email)
             })
         }
     }
@@ -325,7 +292,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 switch result {
                 case .success(_):
                     // Navigate to the main screen of the app
-                    self?.presentMainMenuVC()
+                    self?.transitionToStoryboard(named: .MainMenu, direction: .fromRight)
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -353,7 +320,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         switch result {
                         case .success(_):
                             // Navigate to the main screen of the app
-                            self?.presentMainMenuVC()
+                            self?.transitionToStoryboard(named: .MainMenu, direction: .fromRight)
                         case .failure(let error):
                             // If the error is that the user doesn't exist yet, then create it
                             if case MemeThingError.noUserFound = error {
