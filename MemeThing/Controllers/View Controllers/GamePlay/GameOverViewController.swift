@@ -32,8 +32,6 @@ class GameOverViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
-        view.backgroundColor = .background
-        
         guard let game = game else { return }
         
         winnerNameLabel.text = game.gameStatusDescription

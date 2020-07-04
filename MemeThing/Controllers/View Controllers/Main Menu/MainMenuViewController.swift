@@ -19,7 +19,6 @@ class MainMenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: false)
-        view.backgroundColor = .background
     }
     
     override func viewWillAppear(_ animated: Bool) {

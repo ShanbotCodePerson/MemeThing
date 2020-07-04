@@ -26,7 +26,6 @@ class DrawingViewController: UIViewController, HasAGameObject {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .background
         
         // Set up the observer to transition to the game over view in case the game ends prematurely
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)

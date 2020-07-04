@@ -100,7 +100,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
-        view.backgroundColor = .background
         previousButton.deactivate()
         previousButton.tintColor = .lightGray
         nextButton.tintColor = .lightGray

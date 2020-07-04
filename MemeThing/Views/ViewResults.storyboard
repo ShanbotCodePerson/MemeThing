@@ -138,7 +138,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="NVX-Za-Jzn" firstAttribute="top" secondItem="AI8-U4-y9f" secondAttribute="bottom" constant="8" id="3tt-9Z-nNy"/>
                             <constraint firstItem="qSh-vj-0xP" firstAttribute="top" secondItem="Bo3-Gf-UQy" secondAttribute="top" id="4tj-CC-WHH"/>
@@ -192,6 +192,9 @@
     <resources>
         <image name="ellipsis" catalog="system" width="128" height="37"/>
         <image name="flag" catalog="system" width="128" height="121"/>
+        <namedColor name="background">
+            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="navBar">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

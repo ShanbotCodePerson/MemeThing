@@ -12,7 +12,6 @@ class ProfileTableViewController: UITableViewController {
     
     // MARK: - Outlets
     
-    @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var screenNameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var pointsLabel: UILabel!
@@ -32,7 +31,6 @@ class ProfileTableViewController: UITableViewController {
     
     func setUpViews() {
         navigationController?.setNavigationBarHidden(false, animated: true)
-        view.backgroundColor = .background
         
         guard let user = UserController.shared.currentUser else { return }
         screenNameLabel.text = "Screen Name: \(user.screenName)"

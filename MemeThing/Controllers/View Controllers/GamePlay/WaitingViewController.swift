@@ -43,8 +43,6 @@ class WaitingViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
-        view.backgroundColor = .background
-        
         guard let game = game else { return }
         
         waitingLabel.text = game.gameStatusDescription

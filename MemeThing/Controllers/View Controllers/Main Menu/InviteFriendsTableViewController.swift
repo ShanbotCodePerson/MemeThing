@@ -13,7 +13,6 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Outlets
     
     @IBOutlet weak var startGameButton: UIButton!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Lifecycle Methods
     
@@ -31,9 +30,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     func setUpViews() {
         navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.backgroundColor = .background
         tableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "friendCell")
-        loadingIndicator.isHidden = true
         
         // Start off with the button disabled until enough players have been selected for the game
         startGameButton.deactivate()

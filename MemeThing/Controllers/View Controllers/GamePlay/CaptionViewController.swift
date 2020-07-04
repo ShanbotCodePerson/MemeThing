@@ -76,8 +76,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
-        view.backgroundColor = .background
-        
         guard let game = game, let memeReference = game.memes?.last else { return }
         
         // Show the loading icon
