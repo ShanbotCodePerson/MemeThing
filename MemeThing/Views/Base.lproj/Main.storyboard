@@ -34,75 +34,8 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="Lol-Sz-ptg">
-                                <rect key="frame" x="41.5" y="280.5" width="331" height="300"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="53Q-PZ-Azf">
-                                        <rect key="frame" x="0.0" y="0.0" width="331" height="44.5"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TA2-Zb-LEP">
-                                                <rect key="frame" x="0.0" y="0.0" width="165.5" height="44.5"/>
-                                                <color key="backgroundColor" systemColor="systemGray4Color" red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <color key="tintColor" name="purpleAccent"/>
-                                                <state key="normal" title="Sign Up"/>
-                                                <connections>
-                                                    <action selector="signUpToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="q6s-ln-sVF"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Asi-DS-fLW">
-                                                <rect key="frame" x="165.5" y="0.0" width="165.5" height="44.5"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <state key="normal" title="Log In"/>
-                                                <connections>
-                                                    <action selector="loginToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="QHd-jT-mRK"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TyY-uG-08h">
-                                        <rect key="frame" x="0.0" y="44.5" width="331" height="255.5"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="lFt-yw-6cG">
-                                                <rect key="frame" x="8" y="48" width="315" height="160"/>
-                                                <subviews>
-                                                    <textField opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="twx-kb-Bqy" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="315" height="34"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next" textContentType="email"/>
-                                                    </textField>
-                                                    <textField opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Screen Name Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qwu-Ed-SWn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="42" width="315" height="34"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
-                                                    </textField>
-                                                    <textField opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Password Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IxU-ce-hvA" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="84" width="315" height="34"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES" textContentType="password"/>
-                                                    </textField>
-                                                    <textField opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ea3-oj-rzn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="126" width="315" height="34"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES" textContentType="password"/>
-                                                    </textField>
-                                                </subviews>
-                                            </stackView>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemGray4Color" red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstItem="lFt-yw-6cG" firstAttribute="centerX" secondItem="TyY-uG-08h" secondAttribute="centerX" id="2Bv-iX-UQQ"/>
-                                            <constraint firstItem="lFt-yw-6cG" firstAttribute="width" secondItem="TyY-uG-08h" secondAttribute="width" multiplier="0.95" id="891-Cf-JUc"/>
-                                            <constraint firstItem="lFt-yw-6cG" firstAttribute="centerY" secondItem="TyY-uG-08h" secondAttribute="centerY" id="JPu-cW-3hy"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="ZkL-BW-XhN"/>
-                                </constraints>
-                            </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cam-3L-kts" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="269" y="770.5" width="103.5" height="44.5"/>
+                                <rect key="frame" x="269" y="595" width="103.5" height="44.5"/>
                                 <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="Sign Up">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -111,40 +44,122 @@
                                     <action selector="doneButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="xTo-2U-eNt"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Psx-mv-opk">
+                                <rect key="frame" x="41.5" y="296" width="331" height="269"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Lol-Sz-ptg">
+                                        <rect key="frame" x="0.0" y="0.0" width="331" height="269"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="53Q-PZ-Azf">
+                                                <rect key="frame" x="0.0" y="0.0" width="331" height="49"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TA2-Zb-LEP">
+                                                        <rect key="frame" x="0.0" y="0.0" width="165.5" height="49"/>
+                                                        <color key="backgroundColor" systemColor="systemGray4Color" red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="tintColor" name="purpleAccent"/>
+                                                        <state key="normal" title="Sign Up"/>
+                                                        <connections>
+                                                            <action selector="signUpToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="q6s-ln-sVF"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Asi-DS-fLW">
+                                                        <rect key="frame" x="165.5" y="0.0" width="165.5" height="49"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" title="Log In"/>
+                                                        <connections>
+                                                            <action selector="loginToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="QHd-jT-mRK"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TyY-uG-08h">
+                                                <rect key="frame" x="0.0" y="49" width="331" height="220"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="lFt-yw-6cG">
+                                                        <rect key="frame" x="8" y="10" width="315" height="200"/>
+                                                        <subviews>
+                                                            <textField opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Email Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="twx-kb-Bqy" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="0.0" width="315" height="44"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next" textContentType="email"/>
+                                                            </textField>
+                                                            <textField opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Screen Name Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qwu-Ed-SWn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="52" width="315" height="44"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
+                                                            </textField>
+                                                            <textField opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Password Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IxU-ce-hvA" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="104" width="315" height="44"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES" textContentType="password"/>
+                                                            </textField>
+                                                            <textField opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ea3-oj-rzn" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="156" width="315" height="44"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES" textContentType="password"/>
+                                                            </textField>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemGray4Color" red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstItem="lFt-yw-6cG" firstAttribute="centerX" secondItem="TyY-uG-08h" secondAttribute="centerX" id="Ktt-HO-ItG"/>
+                                                    <constraint firstItem="lFt-yw-6cG" firstAttribute="centerY" secondItem="TyY-uG-08h" secondAttribute="centerY" id="aMg-2C-lZb"/>
+                                                    <constraint firstItem="twx-kb-Bqy" firstAttribute="height" secondItem="TyY-uG-08h" secondAttribute="height" multiplier="0.2" id="kSx-Og-n6l"/>
+                                                    <constraint firstItem="lFt-yw-6cG" firstAttribute="width" secondItem="TyY-uG-08h" secondAttribute="width" multiplier="0.95" id="wnQ-Mk-oZj"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstItem="Lol-Sz-ptg" firstAttribute="height" secondItem="Psx-mv-opk" secondAttribute="height" id="MJB-uA-WZc"/>
+                                    <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerX" secondItem="Psx-mv-opk" secondAttribute="centerX" id="f8J-aV-r8P"/>
+                                    <constraint firstItem="Lol-Sz-ptg" firstAttribute="width" secondItem="Psx-mv-opk" secondAttribute="width" id="f9X-ek-I6C"/>
+                                    <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerY" secondItem="Psx-mv-opk" secondAttribute="centerY" id="zGQ-Fx-zoV"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="Psx-mv-opk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RH0-Qc-nWr" secondAttribute="bottom" constant="20" id="0zt-AW-ddB"/>
+                            <constraint firstItem="Psx-mv-opk" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.3" id="12s-Fo-P6Y"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.25" id="4MZ-ZF-eom"/>
-                            <constraint firstItem="cam-3L-kts" firstAttribute="trailing" secondItem="Lol-Sz-ptg" secondAttribute="trailing" id="4rn-kH-aTr"/>
-                            <constraint firstItem="53Q-PZ-Azf" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.05" id="Iht-sb-58d"/>
+                            <constraint firstItem="Psx-mv-opk" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.8" id="CHC-5x-f2l"/>
+                            <constraint firstItem="cam-3L-kts" firstAttribute="trailing" secondItem="Psx-mv-opk" secondAttribute="trailing" id="F4O-be-UzU"/>
+                            <constraint firstItem="Psx-mv-opk" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="G81-fp-HVz"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.05" id="JsU-Q5-p2S"/>
                             <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.25" priority="999" id="MBw-7A-XxJ"/>
-                            <constraint firstItem="cam-3L-kts" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TCl-xO-nvx" secondAttribute="leading" symbolic="YES" id="OOa-kE-wIg"/>
-                            <constraint firstItem="cam-3L-kts" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="1.75" id="Vxi-zM-2Jq"/>
-                            <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.95" id="eqd-eO-1c3"/>
-                            <constraint firstItem="Lol-Sz-ptg" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.8" id="hCY-QT-NOp"/>
-                            <constraint firstItem="Lol-Sz-ptg" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RH0-Qc-nWr" secondAttribute="bottom" constant="20" id="hSm-aw-eXH"/>
-                            <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="r1A-6R-ZSp"/>
+                            <constraint firstItem="53Q-PZ-Azf" firstAttribute="height" secondItem="TCl-xO-nvx" secondAttribute="height" multiplier="0.06" id="PDv-ne-1Zk"/>
+                            <constraint firstItem="cam-3L-kts" firstAttribute="top" secondItem="Psx-mv-opk" secondAttribute="bottom" constant="30" id="YnQ-ft-0QD"/>
+                            <constraint firstItem="Psx-mv-opk" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.95" priority="999" id="e9X-hG-kWE"/>
+                            <constraint firstItem="TCl-xO-nvx" firstAttribute="bottom" secondItem="Psx-mv-opk" secondAttribute="bottom" constant="297" id="i9w-Mx-86o"/>
+                            <constraint firstItem="cam-3L-kts" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TCl-xO-nvx" secondAttribute="leading" symbolic="YES" id="mN8-C6-CyO"/>
                             <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="z90-LU-jmu"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="TCl-xO-nvx"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="i9w-Mx-86o"/>
+                            </mask>
+                        </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="VPv-Vl-pKr" appends="YES" id="7y6-vp-qVW"/>
                         </connections>
                     </view>
                     <connections>
-                        <outlet property="buttonsStackView" destination="53Q-PZ-Azf" id="B6e-4d-ij6"/>
                         <outlet property="confirmPasswordTextField" destination="Ea3-oj-rzn" id="FCw-Xu-Ea5"/>
                         <outlet property="doneButton" destination="cam-3L-kts" id="SAk-I6-a2L"/>
                         <outlet property="emailTextField" destination="twx-kb-Bqy" id="f5Q-Dq-d9U"/>
-                        <outlet property="keyboardHeightLayoutConstraint" destination="eqd-eO-1c3" id="C1k-sw-Dw3"/>
+                        <outlet property="keyboardHeightLayoutConstraint" destination="i9w-Mx-86o" id="G5z-X8-7f3"/>
                         <outlet property="loginToggleButton" destination="Asi-DS-fLW" id="eSc-Hz-h9l"/>
                         <outlet property="passwordTextField" destination="IxU-ce-hvA" id="lzg-3M-IKU"/>
                         <outlet property="screenNameTextField" destination="qwu-Ed-SWn" id="yEY-gX-Uaq"/>
                         <outlet property="signUpToggleButton" destination="TA2-Zb-LEP" id="3Gf-Ku-2Tg"/>
-                        <outlet property="stackViewHeightLayoutConstraint" destination="ZkL-BW-XhN" id="cBd-Oc-GGR"/>
-                        <outlet property="textFieldsStackView" destination="lFt-yw-6cG" id="H52-4C-SqI"/>
+                        <outlet property="textFieldContainerView" destination="Psx-mv-opk" id="CUs-9E-Kqn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eVC-Xj-uC6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
