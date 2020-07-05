@@ -56,7 +56,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @objc func deniedNotifications() {
         DispatchQueue.main.async {
             // Present an alert to the user asking them to reconsider allowing notifications
-            self.presentAlert(title: "Notifications Will Not Display", message: "MemeThing uses notifications to alert you of new friend requests, invitations to games, and updates to games you're playing. Please consider enabling notifications in your phone's settings for a richer gaming experience.", completion: { self.autoLogin() })
+            // FIXME: - uncomment this before production
+//            self.presentAlert(title: "Notifications Will Not Display", message: "MemeThing uses notifications to alert you of new friend requests, invitations to games, and updates to games you're playing. Please consider enabling notifications in your phone's settings for a richer gaming experience.", completion: { self.autoLogin() })
         }
     }
     

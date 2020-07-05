@@ -17,23 +17,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="RH0-Qc-nWr">
-                                <rect key="frame" x="109.5" y="83" width="195.5" height="61"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Meme Thing!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7lZ-sP-LMr" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="195.5" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please sign up or log in" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ozd-FJ-riY" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="40.5" width="195.5" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cam-3L-kts" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
                                 <rect key="frame" x="269" y="595" width="103.5" height="44.5"/>
                                 <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -44,6 +27,12 @@
                                     <action selector="doneButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="xTo-2U-eNt"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Meme Thing" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cis-zz-m9s">
+                                <rect key="frame" x="41.5" y="74" width="331" height="182"/>
+                                <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="70"/>
+                                <color key="textColor" name="purpleAccent"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Psx-mv-opk">
                                 <rect key="frame" x="41.5" y="296" width="331" height="269"/>
                                 <subviews>
@@ -125,20 +114,20 @@
                         <color key="backgroundColor" name="background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="Psx-mv-opk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="RH0-Qc-nWr" secondAttribute="bottom" constant="20" id="0zt-AW-ddB"/>
                             <constraint firstItem="Psx-mv-opk" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.3" id="12s-Fo-P6Y"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.25" id="4MZ-ZF-eom"/>
+                            <constraint firstItem="cis-zz-m9s" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="9kC-HW-EQi"/>
                             <constraint firstItem="Psx-mv-opk" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.8" id="CHC-5x-f2l"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="trailing" secondItem="Psx-mv-opk" secondAttribute="trailing" id="F4O-be-UzU"/>
                             <constraint firstItem="Psx-mv-opk" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="G81-fp-HVz"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.05" id="JsU-Q5-p2S"/>
-                            <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.25" priority="999" id="MBw-7A-XxJ"/>
                             <constraint firstItem="53Q-PZ-Azf" firstAttribute="height" secondItem="TCl-xO-nvx" secondAttribute="height" multiplier="0.06" id="PDv-ne-1Zk"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="top" secondItem="Psx-mv-opk" secondAttribute="bottom" constant="30" id="YnQ-ft-0QD"/>
                             <constraint firstItem="Psx-mv-opk" firstAttribute="centerY" secondItem="TCl-xO-nvx" secondAttribute="centerY" multiplier="0.95" priority="999" id="e9X-hG-kWE"/>
                             <constraint firstItem="TCl-xO-nvx" firstAttribute="bottom" secondItem="Psx-mv-opk" secondAttribute="bottom" constant="297" id="i9w-Mx-86o"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TCl-xO-nvx" secondAttribute="leading" symbolic="YES" id="mN8-C6-CyO"/>
-                            <constraint firstItem="RH0-Qc-nWr" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="z90-LU-jmu"/>
+                            <constraint firstItem="Psx-mv-opk" firstAttribute="top" secondItem="cis-zz-m9s" secondAttribute="bottom" constant="40" id="maB-bi-A46"/>
+                            <constraint firstItem="cis-zz-m9s" firstAttribute="width" secondItem="Psx-mv-opk" secondAttribute="width" id="owq-WC-Yzf"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="TCl-xO-nvx"/>
                         <variation key="default">

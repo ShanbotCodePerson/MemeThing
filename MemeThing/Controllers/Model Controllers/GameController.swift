@@ -200,7 +200,6 @@ class GameController {
         }
     }
     
-    
     // Update the game by allowing the user the quit at any time
     func quit(_ game: Game, completion: @escaping resultCompletion) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }

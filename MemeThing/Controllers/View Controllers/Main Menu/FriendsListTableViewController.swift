@@ -146,7 +146,7 @@ class FriendsListTableViewController: UITableViewController {
         }
         
         // Present the text field for the user to enter the desired username to friend
-        presentTextFieldAlert(title: "Add Friend", message: "Send a friend request to a username", textFieldPlaceholder: "Enter username here...", saveButtonTitle: "Send Friend Request", completion: sendRequest(to:))
+        presentTextFieldAlert(title: "Add Friend", message: "Connect with your friends!", textFieldPlaceholder: "Enter email here...", saveButtonTitle: "Send Friend Request", completion: sendRequest(to:))
     }
     
     // A helper function for when the user clicks to add the friend
