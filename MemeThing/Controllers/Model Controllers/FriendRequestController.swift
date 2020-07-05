@@ -197,6 +197,9 @@ class FriendRequestController {
                 // Remove the friend request from the source of truth
                 self?.pendingFriendRequests?.removeAll(where: { $0 == friendRequest })
                 
+                // Send a local notification to update the friends tableview
+                NotificationCenter.default.post(Notification(name: friendsUpdate))
+                
                 // Otherwise return the success
                 return completion(.success(true))
         }

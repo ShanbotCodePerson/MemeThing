@@ -364,6 +364,11 @@ class GameController {
                 snapshot?.documentChanges.forEach({ (change) in
                     // Unwrap the data
                     guard let game = Game(dictionary: change.document.data()) else { return }
+                    
+                    // Make sure the game is one the user is actively participating in
+                    let status = game.getStatus(of: currentUser)
+                    guard status != .denied, status != .quit, status != .done else { return }
+                    
                     print("got here to \(#function) and \(game) \(change.type)")
                     
                     switch change.type {
