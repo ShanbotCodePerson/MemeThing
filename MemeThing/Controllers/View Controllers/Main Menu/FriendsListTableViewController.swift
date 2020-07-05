@@ -55,7 +55,7 @@ class FriendsListTableViewController: UITableViewController {
     // MARK: - Helper Methods
     
     @objc func updateData() {
-        DispatchQueue.main.async { print("got here to \(#function)"); self.tableView.reloadData() }
+        DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
     func setUpViews() {

@@ -173,12 +173,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // Try to log the user in
     func autoLogin() {
+        // Show the loading icon
+        view.startLoadingIcon()
+        
         if let user = Auth.auth().currentUser {
             // If the user's email account has not yet been verified, don't sign in
-            guard user.isEmailVerified else { return }
-            
-            // Show the loading icon
-            view.startLoadingIcon()
+            guard user.isEmailVerified else {
+                // Hide the loading icon
+                view.stopLoadingIcon()
+                return
+            }
             
             UserController.shared.fetchUser { [weak self] (result) in
                 DispatchQueue.main.async {
@@ -301,11 +305,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // Check that the username and password are valid and fetch the user
     func login(with email: String, password: String) {
+        // Show the loading icon
+        view.startLoadingIcon()
+        
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
             if let error = error {
-                // Print and display the error
+                // Print and display the error and hide the loading icon
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                DispatchQueue.main.async { self?.presentErrorAlert(error) }
+                DispatchQueue.main.async {
+                    self?.view.stopLoadingIcon()
+                    self?.presentErrorAlert(error)
+                }
                 return
             }
             
@@ -314,6 +324,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 // Try to fetch the current user
                 UserController.shared.fetchUser { (result) in
                     DispatchQueue.main.async {
+                        // Hide the loading icon
+                        self?.view.stopLoadingIcon()
+                        
                         switch result {
                         case .success(_):
                             // Navigate to the main screen of the app
@@ -331,8 +344,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     }
                 }
             } else {
-                // Present the alert asking the user to check their email
-                self?.presentVerifyEmailAlert(with: email)
+                DispatchQueue.main.async {
+                    // Hide the loading icon
+                    self?.view.stopLoadingIcon()
+                    
+                    // Present the alert asking the user to check their email
+                    self?.presentVerifyEmailAlert(with: email)
+                }
             }
         }
     }
