@@ -272,6 +272,7 @@ class UserController {
     
     // Set up all the necessary notification subscriptions for the user
     func setUpUser() {
+        print("got here to \(#function)")
         FriendRequestController.shared.subscribeToFriendRequestNotifications()
         FriendRequestController.shared.subscribeToFriendRequestResponseNotifications()
         FriendRequestController.shared.subscribeToRemovingFriendNotifications()

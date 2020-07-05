@@ -17,9 +17,7 @@ class FriendRequestController {
     
     // MARK: - Source of Truth
     
-    var pendingFriendRequests: [FriendRequest]? {
-        didSet { print("did this")}
-    }
+    var pendingFriendRequests: [FriendRequest]?
     var outgoingFriendRequests: [FriendRequest]?
     
     // MARK: - CRUD Methods
@@ -33,13 +31,19 @@ class FriendRequestController {
         
         // Save it to the cloud
         db.collection(FriendRequestStrings.recordType)
-            .addDocument(data: friendRequest.asDictionary()) { (error) in
+            .addDocument(data: friendRequest.asDictionary()) { [weak self] (error) in
                 
                 if let error = error {
                     // Print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(.fsError(error)))
                 }
+                
+                // Add it to the source of truth
+                if self?.outgoingFriendRequests?.append(friendRequest) == nil {
+                    self?.outgoingFriendRequests = [friendRequest]
+                }
+                
                 // Return the success
                 return completion(.success(true))
         }
@@ -163,9 +167,8 @@ class FriendRequestController {
                     UserController.shared.fetchUsersFriends { (result) in
                         switch result {
                         case .success(_):
-                            // TODO: -Send a local notification to update the tableview as necessary
-                            print("Do this later")
-                        //                            NotificationCenter.default.post(Notification(name: updateFriendsList))
+                            // Send a local notification to update the friends tableview
+                            NotificationCenter.default.post(Notification(name: friendsUpdate))
                         case .failure(let error):
                             // Print and return the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -183,13 +186,16 @@ class FriendRequestController {
         // Save the changes to the friend request
         db.collection(FriendRequestStrings.recordType)
             .document(documentID)
-            .updateData([FriendRequestStrings.statusKey : friendRequest.status.rawValue]) { (error) in
+            .updateData([FriendRequestStrings.statusKey : friendRequest.status.rawValue]) { [weak self] (error) in
                 
                 if let error = error {
                     // Print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(.fsError(error)))
                 }
+                
+                // Remove the friend request from the source of truth
+                self?.pendingFriendRequests?.removeAll(where: { $0 == friendRequest })
                 
                 // Otherwise return the success
                 return completion(.success(true))
@@ -218,6 +224,7 @@ class FriendRequestController {
     // MARK: - Notifications
     
     func subscribeToFriendRequestNotifications() {
+        print("got here to \(#function)")
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted of any adding-type friend requests with the current user as the recipient
@@ -225,6 +232,7 @@ class FriendRequestController {
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.recordID)
             .whereField(FriendRequestStrings.statusKey, isEqualTo: FriendRequest.Status.waiting.rawValue)
             .addSnapshotListener { [weak self] (snapshot, error) in
+                print("got here to \(#function) and snapshot triggered")
                 
                 if let error = error {
                     // Print and return the error
@@ -255,6 +263,7 @@ class FriendRequestController {
     }
     
     func subscribeToFriendRequestResponseNotifications() {
+        print("got here to \(#function)")
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted of changes to friend requests with the current user as the sender
@@ -262,6 +271,7 @@ class FriendRequestController {
             .whereField(FriendRequestStrings.fromIDKey, isEqualTo: currentUser.recordID)
             .whereField(FriendRequestStrings.statusKey, in: [FriendRequest.Status.accepted.rawValue, FriendRequest.Status.denied.rawValue])
             .addSnapshotListener { [weak self] (snapshot, error) in
+                print("got here to \(#function) and snapshot triggered")
                 
                 if let error = error {
                     // Print and return the error
@@ -276,9 +286,10 @@ class FriendRequestController {
                     friendRequest.documentID = document.documentID
                     return friendRequest
                 }
+                let acceptedRequests = newResponses.filter({ $0.status == .accepted })
                 
                 // If the request was accepted, add the friends to the user's list of friends, avoiding duplicates
-                currentUser.friendIDs.append(contentsOf: newResponses.filter({ $0.status == .accepted }).map({ $0.toID }))
+                currentUser.friendIDs.append(contentsOf: acceptedRequests.map({ $0.toID }))
                 currentUser.friendIDs = Array(Set(currentUser.friendIDs))
                 
                 // Save the changes to the user
@@ -310,6 +321,7 @@ class FriendRequestController {
     }
     
     func subscribeToRemovingFriendNotifications() {
+        print("got here to \(#function)")
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted of any removing-type friend requests with the current user as the recipient
@@ -317,6 +329,7 @@ class FriendRequestController {
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.recordID)
             .whereField(FriendRequestStrings.statusKey, isEqualTo: FriendRequest.Status.removingFriend.rawValue)
             .addSnapshotListener { [weak self] (snapshot, error) in
+                print("got here to \(#function) and snapshot triggered")
                 
                 if let error = error {
                     // Print and return the error
