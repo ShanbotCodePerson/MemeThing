@@ -65,3 +65,11 @@ class Caption {
          CaptionStrings.recordIDKey : recordID]
     }
 }
+
+// MARK: - Equatable
+
+extension Caption: Equatable {
+    static func == (lhs: Caption, rhs: Caption) -> Bool {
+        return lhs.recordID == rhs.recordID
+    }
+}

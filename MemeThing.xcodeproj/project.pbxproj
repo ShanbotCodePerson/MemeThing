@@ -33,6 +33,7 @@
 		4058B9A1249C43BC00E170A5 /* ViewResults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4058B9A0249C43BC00E170A5 /* ViewResults.storyboard */; };
 		4058B9A3249C43D200E170A5 /* Drawing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4058B9A2249C43D200E170A5 /* Drawing.storyboard */; };
 		405A22B4249035010009A143 /* MemeThingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405A22B3249035010009A143 /* MemeThingLabel.swift */; };
+		405C1E1B24B285F20025AF18 /* ArrayHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405C1E1A24B285F20025AF18 /* ArrayHelper.swift */; };
 		4060899F2491ABF8009635DA /* SelfSizingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4060899E2491ABF8009635DA /* SelfSizingTableView.swift */; };
 		406089A22491BB10009635DA /* MemeThingTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406089A12491BB10009635DA /* MemeThingTextField.swift */; };
 		406C5390248AE9BF004729C7 /* GameOver.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 406C538F248AE9BF004729C7 /* GameOver.storyboard */; };
@@ -96,6 +97,7 @@
 		4058B9A0249C43BC00E170A5 /* ViewResults.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ViewResults.storyboard; sourceTree = "<group>"; };
 		4058B9A2249C43D200E170A5 /* Drawing.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Drawing.storyboard; sourceTree = "<group>"; };
 		405A22B3249035010009A143 /* MemeThingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingLabel.swift; sourceTree = "<group>"; };
+		405C1E1A24B285F20025AF18 /* ArrayHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayHelper.swift; sourceTree = "<group>"; };
 		4060899E2491ABF8009635DA /* SelfSizingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingTableView.swift; sourceTree = "<group>"; };
 		406089A12491BB10009635DA /* MemeThingTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeThingTextField.swift; sourceTree = "<group>"; };
 		406C538F248AE9BF004729C7 /* GameOver.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GameOver.storyboard; sourceTree = "<group>"; };
@@ -334,6 +336,7 @@
 				40169F7D24AFF8550078706C /* LoadingIcon.swift */,
 				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
 				4005A1A124AC34E000BE556F /* UIImageExtension.swift */,
+				405C1E1A24B285F20025AF18 /* ArrayHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -525,6 +528,7 @@
 				40D003C2248493470046D64B /* FriendTableViewCell.swift in Sources */,
 				4005A19A24AB7F6800BE556F /* Complaint.swift in Sources */,
 				406C5396248AE9F8004729C7 /* GameOverViewController.swift in Sources */,
+				405C1E1B24B285F20025AF18 /* ArrayHelper.swift in Sources */,
 				4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */,
 				40D003C024844C110046D64B /* FriendRequest.swift in Sources */,
 				4005A19C24AB819000BE556F /* ComplaintController.swift in Sources */,

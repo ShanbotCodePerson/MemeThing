@@ -84,12 +84,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
             switch result {
             case .success(let meme):
                 // Add the meme to the game
-                if var memes = game.memes {
-                    memes.append(meme.recordID)
-                    game.memes = memes
-                } else {
-                    game.memes = [meme.recordID]
-                }
+                if game.memes.append(meme.recordID) == nil { game.memes = [meme.recordID] }
                 
                 // Update the game's status
                 game.gameStatus = .waitingForCaptions

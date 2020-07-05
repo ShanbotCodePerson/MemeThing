@@ -80,6 +80,8 @@ class User {
     }
 }
 
+// MARK: - Equatable
+
 extension User: Equatable {
     static func == (lhs: User, rhs: User) -> Bool {
         return lhs.recordID == rhs.recordID

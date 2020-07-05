@@ -45,10 +45,7 @@ class GameController {
         game.documentID = reference.documentID
         
         // Add the game to the source of truth
-        if var currentGames = self.currentGames {
-            currentGames.append(game)
-            self.currentGames = currentGames
-        } else { self.currentGames = [game] }
+        if currentGames?.append(game) == nil { currentGames = [game] }
         
         // Return the success
         return completion(.success(game))
@@ -82,10 +79,7 @@ class GameController {
         newGame.documentID = reference.documentID
         
         // Add the game to the source of truth
-        if var currentGames = self.currentGames {
-            currentGames.append(newGame)
-            self.currentGames = currentGames
-        } else { self.currentGames = [newGame] }
+        if currentGames?.append(newGame) == nil { currentGames = [newGame] }
         
         // Return the success
         return completion(.success(newGame))
@@ -393,14 +387,7 @@ class GameController {
         print("got here to \(#function)")
         
         // Update the source of truth if it doesn't already contain the game
-        if !(self.currentGames?.contains(game) ?? false) {
-            if var currentGames = self.currentGames {
-                currentGames.append(game)
-                self.currentGames = currentGames
-            } else {
-                self.currentGames = [game]
-            }
-        }
+        if currentGames?.uniqueAppend(game) == nil { currentGames = [game] }
         
         // Tell the table view list of current games to update itself and show an alert to the user
         NotificationCenter.default.post(Notification(name: updateListOfGames))

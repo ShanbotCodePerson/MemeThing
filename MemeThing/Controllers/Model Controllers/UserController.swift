@@ -204,18 +204,15 @@ class UserController {
     
     // Update a user with a new friend
     func update(_ user: User, friendID: String, completion: @escaping resultCompletion) {
-        // Add the friend to the user's list of friends
-        user.friendIDs.append(friendID)
+        // Add the friend to the user's list of friends if it isn't already
+        user.friendIDs.uniqueAppend(friendID)
         
         // Fetch the friend from the reference
         fetchUser(by: friendID) { [weak self] (result) in
             switch result {
             case .success(let friend):
-                // Save the friend to the source of truth
-                if var userFriends = self?.usersFriends {
-                    userFriends.append(friend)
-                    self?.usersFriends = userFriends
-                } else {
+                // Save the friend to the source of truth if it isn't already
+                if self?.usersFriends?.uniqueAppend(friend) == nil {
                     self?.usersFriends = [friend]
                 }
                 

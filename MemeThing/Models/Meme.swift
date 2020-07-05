@@ -79,3 +79,11 @@ class Meme {
          MemeStrings.recordIDKey : recordID]
     }
 }
+
+// MARK: - Equatable
+
+extension Meme: Equatable {
+    static func == (lhs: Meme, rhs: Meme) -> Bool {
+        return lhs.recordID == rhs.recordID
+    }
+}

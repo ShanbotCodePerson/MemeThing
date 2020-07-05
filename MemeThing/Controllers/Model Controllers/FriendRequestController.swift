@@ -17,7 +17,9 @@ class FriendRequestController {
     
     // MARK: - Source of Truth
     
-    var pendingFriendRequests: [FriendRequest]?
+    var pendingFriendRequests: [FriendRequest]? {
+        didSet { print("did this")}
+    }
     var outgoingFriendRequests: [FriendRequest]?
     
     // MARK: - CRUD Methods
@@ -239,11 +241,8 @@ class FriendRequestController {
                 }
                 
                 for friendRequest in newFriendRequests {
-                    // Add the friend request to the source of truth
-                    if var pendingFriendRequests = self?.pendingFriendRequests {
-                        pendingFriendRequests.append(friendRequest)
-                        self?.pendingFriendRequests = pendingFriendRequests
-                    } else {
+                    // Add the friend request to the source of truth if it isn't already
+                    if self?.pendingFriendRequests?.uniqueAppend(friendRequest) == nil {
                         self?.pendingFriendRequests = [friendRequest]
                     }
                     
@@ -278,8 +277,9 @@ class FriendRequestController {
                     return friendRequest
                 }
                 
-                // If the request was accepted, add the friends to the user's list of friends
+                // If the request was accepted, add the friends to the user's list of friends, avoiding duplicates
                 currentUser.friendIDs.append(contentsOf: newResponses.filter({ $0.status == .accepted }).map({ $0.toID }))
+                currentUser.friendIDs = Array(Set(currentUser.friendIDs))
                 
                 // Save the changes to the user
                 UserController.shared.saveChanges(to: currentUser) { (result) in
