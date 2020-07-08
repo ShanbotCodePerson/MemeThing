@@ -333,11 +333,13 @@ class GameController {
         db.collection(GameStrings.recordType)
             .document(documentID)
             .delete() { (error) in
+                
                 if let error = error {
                     // Print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(.fsError(error)))
                 }
+                
                 return completion(.success(true))
                 
                 // FIXME: - delete all associated memes and captions
