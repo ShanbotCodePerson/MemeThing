@@ -94,10 +94,10 @@ class DrawingViewController: UIViewController, HasAGameObject {
                 
                 // Save the game to the cloud
                  GameController.shared.saveChanges(to: game) { (result) in
-                    // Hide the loading icon
-                    self?.view.stopLoadingIcon()
-                    
                     DispatchQueue.main.async {
+                        // Hide the loading icon
+                        self?.view.stopLoadingIcon()
+                        
                         switch result {
                         case .success(_):
                             // Transition back to the waiting view until all the captions have been submitted

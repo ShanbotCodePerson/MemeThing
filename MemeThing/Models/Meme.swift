@@ -57,17 +57,6 @@ class Meme {
                   winningCaptionID: winningCaptionID,
                   gameID: gameID,
                   recordID: recordID)
-        
-        // Fetch the meme's image
-        MemeController.shared.getImage(for: recordID) { [weak self] (result) in
-            switch result {
-            case .success(let image):
-                self?.image = image
-            case .failure(let error):
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                // TODO: - use some default image in case it wasn't fetched correctly
-            }
-        }
     }
     
     // MARK: - Convert to Dictionary

@@ -76,13 +76,13 @@ class CaptionViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
-        guard let game = game, let memeReference = game.memes?.last else { return }
+        guard let game = game, let memeID = game.memes?.last else { return }
         
         // Show the loading icon
         view.startLoadingIcon()
         
         // Fetch the meme object
-        MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
+        MemeController.shared.fetchMeme(from: memeID) { [weak self] (result) in
             DispatchQueue.main.async {
                 // Hide the loading icon
                 self?.view.stopLoadingIcon()

@@ -536,17 +536,17 @@
                         <color key="backgroundColor" name="background"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="gameCell" id="Q2R-KI-GpJ" customClass="GameTableViewCell" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="73"/>
+                                <rect key="frame" x="0.0" y="28" width="414" height="83"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Q2R-KI-GpJ" id="TVI-9T-J3c">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="73"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="83"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ktB-mD-9kl" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
-                                            <rect key="frame" x="10.5" y="7.5" width="393" height="58"/>
+                                            <rect key="frame" x="10.5" y="8.5" width="393" height="66"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="lfb-yj-H1P">
-                                                    <rect key="frame" x="6" y="0.0" width="387" height="58"/>
+                                                    <rect key="frame" x="6" y="4" width="387" height="58"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3rG-hb-1Jh">
                                                             <rect key="frame" x="0.0" y="0.0" width="387" height="30"/>
@@ -594,10 +594,10 @@
                                             </subviews>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                             <constraints>
+                                                <constraint firstItem="lfb-yj-H1P" firstAttribute="top" secondItem="ktB-mD-9kl" secondAttribute="top" constant="4" id="2qd-pJ-l2N"/>
+                                                <constraint firstAttribute="bottom" secondItem="lfb-yj-H1P" secondAttribute="bottom" constant="4" id="A0p-x4-ZLv"/>
                                                 <constraint firstItem="lfb-yj-H1P" firstAttribute="leading" secondItem="ktB-mD-9kl" secondAttribute="leading" constant="6" id="D8A-h7-FaO"/>
                                                 <constraint firstAttribute="trailing" secondItem="lfb-yj-H1P" secondAttribute="trailing" id="Hs8-6V-32z"/>
-                                                <constraint firstItem="lfb-yj-H1P" firstAttribute="top" secondItem="ktB-mD-9kl" secondAttribute="top" id="dCp-zb-NOa"/>
-                                                <constraint firstAttribute="bottom" secondItem="lfb-yj-H1P" secondAttribute="bottom" id="ril-qX-qWc"/>
                                             </constraints>
                                         </view>
                                     </subviews>

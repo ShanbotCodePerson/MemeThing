@@ -110,7 +110,7 @@ class MemeController {
         // Fetch the data from the cloud
         db.collection(MemeStrings.recordType)
             .whereField(MemeStrings.recordIDKey, isEqualTo: recordID)
-            .getDocuments { (results, error) in
+            .getDocuments { [weak self] (results, error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -124,8 +124,22 @@ class MemeController {
                     else { return completion(.failure(.couldNotUnwrap)) }
                 meme.documentID = document.documentID
                 
-                // Return the success
-                return completion(.success(meme))
+                // Fetch the meme's image
+                self?.getImage(for: meme.recordID) { (result) in
+                    switch result {
+                    case .success(let image):
+                        // Set the meme's image
+                        meme.image = image
+                        
+                        // Return the success
+                        return completion(.success(meme))
+                    case .failure(let error):
+                        // Print and return the error
+                        // TODO: - use some default image in case it wasn't fetched correctly
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                }
         }
     }
     
