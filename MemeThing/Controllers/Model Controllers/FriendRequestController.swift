@@ -43,9 +43,11 @@ class FriendRequestController {
                     return completion(.failure(.fsError(error)))
                 }
                 
-                // Add it to the source of truth
-                if self?.outgoingFriendRequests?.uniqueAppend(friendRequest) == nil {
-                    self?.outgoingFriendRequests = [friendRequest]
+                // Add it to the source of truth (unless the request is to remove)
+                if addingFriend {
+                    if self?.outgoingFriendRequests?.uniqueAppend(friendRequest) == nil {
+                        self?.outgoingFriendRequests = [friendRequest]
+                    }
                 }
                 
                 // Send a local notification to update the tableview
