@@ -29,8 +29,8 @@ class GamesListTableViewController: UITableViewController {
             else { return arrays }
         
         let unstartedGames = currentGames.filter { $0.gameStatus == .waitingForPlayers }
-        let pendingInvitations = unstartedGames.filter { $0.leadPlayerID != currentUser.recordID }
-        let waitingForResponse = unstartedGames.filter { $0.leadPlayerID == currentUser.recordID }
+        let pendingInvitations = unstartedGames.filter { $0.getStatus(of: currentUser) == .invited }
+        let waitingForResponse = unstartedGames.filter { $0.getStatus(of: currentUser) != .invited }
         let activeGames = currentGames.filter { $0.gameStatus != .waitingForPlayers && $0.gameStatus != .gameOver }
         let finishedGames = currentGames.filter { $0.gameStatus == .gameOver }
         
@@ -255,10 +255,10 @@ extension GamesListTableViewController: GameTableViewCellDelegate {
             return
         }
         
+        // Get the reference to the game that was responded to
         guard let indexPath = tableView.indexPath(for: cell),
             dataSource[indexPath.section].name == .pendingInvitations
             else { return }
-        // Get the reference to the game that was responded to
         let game = dataSource[indexPath.section].data[indexPath.row]
         
         // Respond to the game invitation
@@ -271,6 +271,7 @@ extension GamesListTableViewController: GameTableViewCellDelegate {
                 case .failure(let error):
                     // Otherwise, display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    cell.contentView.stopLoadingIcon()
                     self?.presentErrorAlert(error)
                 }
             }

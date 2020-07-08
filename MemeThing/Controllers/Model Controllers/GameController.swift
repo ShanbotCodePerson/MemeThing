@@ -19,6 +19,10 @@ class GameController {
     
     var currentGames: [Game]? // TODO: - could replace with a dictionary to make it easier to index by game id?
     
+    // MARK: - Properties
+    
+    let db = Firestore.firestore()
+    
     // MARK: - CRUD Methods
     
     // Create a new game from scratch
@@ -364,12 +368,13 @@ class GameController {
                 snapshot?.documentChanges.forEach({ (change) in
                     // Unwrap the data
                     guard let game = Game(dictionary: change.document.data()) else { return }
+                    game.documentID = change.document.documentID
                     
                     // Make sure the game is one the user is actively participating in
                     let status = game.getStatus(of: currentUser)
                     guard status != .denied, status != .quit, status != .done else { return }
                     
-                    print("got here to \(#function) and \(game) \(change.type)")
+                    print("got here to \(#function) and \(game) \(change.type.rawValue)")
                     
                     switch change.type {
                     case .added:

@@ -10,17 +10,17 @@ import UIKit
 
 extension UIView {
     
-    func startLoadingIcon() {
+    func startLoadingIcon(color: UIColor = .darkGray) {
         let backgroundView = UIView()
         backgroundView.frame = CGRect.init(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.15)
         backgroundView.tag = 475647
         
         let activityIndicator = UIActivityIndicatorView(frame: backgroundView.frame)
-        activityIndicator.center = self.center
+        activityIndicator.center = backgroundView.center
         activityIndicator.hidesWhenStopped = true
         activityIndicator.style = .large
-        activityIndicator.color = .darkGray
+        activityIndicator.color = color
         activityIndicator.startAnimating()
         self.isUserInteractionEnabled = false
         

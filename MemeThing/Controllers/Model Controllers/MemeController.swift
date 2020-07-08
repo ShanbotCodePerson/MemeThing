@@ -17,6 +17,11 @@ class MemeController {
     
     static let shared = MemeController()
     
+    // MARK: - Properties
+    
+    let db = Firestore.firestore()
+    let storage = Storage.storage()
+    
     // MARK: - CRUD Methods
     
     // Create a new meme

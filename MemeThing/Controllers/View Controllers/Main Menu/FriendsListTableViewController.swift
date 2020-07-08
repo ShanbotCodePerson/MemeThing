@@ -160,59 +160,57 @@ class FriendsListTableViewController: UITableViewController {
         
         // Search to see if that email exists as a user of the app
         UserController.shared.searchFor(email) { [weak self] (result) in
-            switch result {
-            case .success(let friend):
-                
-                // Make sure that the current user hasn't been blocked by that person
-                guard !friend.blockedIDs.contains(currentUser.recordID) else {
-                    DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let friend):
+                    
+                    // Make sure that the current user hasn't been blocked by that person
+                    guard !friend.blockedIDs.contains(currentUser.recordID) else {
                         self?.presentAlert(title: "Blocked", message: "You have been blocked by \(email)")
-                    }
-                    return
-                }
-                
-                // Make sure the user hasn't already blocked, sent, received, or accepted a request from that person
-                if currentUser.blockedIDs.contains(friend.recordID) {
-                    self?.presentAlert(title: "Blocked", message: "You have blocked \(email)")
-                    return
-                }
-                // FIXME: - pretty sure this stuff won't work
-                if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
-                    guard outgoingFriendRequests.filter({ $0.toID == currentUser.recordID }).count == 0 else {
-                        self?.presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(email)")
                         return
                     }
-                }
-                if let pendingFriendRequests = FriendRequestController.shared.pendingFriendRequests {
-                    guard pendingFriendRequests.filter({ $0.fromID == currentUser.recordID }).count == 0 else {
-                        self?.presentAlert(title: "Already Received", message: "You have already received a friend request from \(email)")
+                    
+                    // Make sure the user hasn't already blocked, sent, received, or accepted a request from that person
+                    if currentUser.blockedIDs.contains(friend.recordID) {
+                        self?.presentAlert(title: "Blocked", message: "You have blocked \(email)")
                         return
                     }
-                }
-                if let userFriends = UserController.shared.usersFriends {
-                    guard userFriends.filter({ $0.email == email }).count == 0 else {
-                        self?.presentAlert(title: "Already Friends", message: "You are already friends with \(email)")
-                        return
-                    }
-                }
-                
-                // Send them a friend request
-                FriendRequestController.shared.sendFriendRequest(to: friend) { (result) in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(_):
-                            // Display an alert showing the success, and refresh the tableview to show the pending friend request
-                            self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.email)")
-                            self?.tableView.reloadData()
-                        case .failure(let error):
-                            // Print and display the error
-                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            self?.presentErrorAlert(error)
+                    // FIXME: - pretty sure this stuff won't work
+                    if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
+                        guard outgoingFriendRequests.filter({ $0.toID == friend.recordID }).count == 0 else {
+                            self?.presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(email)")
+                            return
                         }
                     }
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
+                    if let pendingFriendRequests = FriendRequestController.shared.pendingFriendRequests {
+                        guard pendingFriendRequests.filter({ $0.fromID == friend.recordID }).count == 0 else {
+                            self?.presentAlert(title: "Already Received", message: "You have already received a friend request from \(email)")
+                            return
+                        }
+                    }
+                    if let userFriends = UserController.shared.usersFriends {
+                        guard userFriends.filter({ $0.email == email }).count == 0 else {
+                            self?.presentAlert(title: "Already Friends", message: "You are already friends with \(email)")
+                            return
+                        }
+                    }
+                    
+                    // Send them a friend request
+                    FriendRequestController.shared.sendFriendRequest(to: friend) { (result) in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(_):
+                                // Display an alert showing the success, and refresh the tableview to show the pending friend request
+                                self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.email)")
+                                self?.tableView.reloadData()
+                            case .failure(let error):
+                                // Print and display the error
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                self?.presentErrorAlert(error)
+                            }
+                        }
+                    }
+                case .failure(let error):
                     // Otherwise, show an alert to the user that the username doesn't exist
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentAlert(title: "Email Not Found", message: "The email \(email) is not a user of MemeThing - make sure to enter the email carefully.")
@@ -348,6 +346,7 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
+                    cell.contentView.stopLoadingIcon()
                 }
             }
         }

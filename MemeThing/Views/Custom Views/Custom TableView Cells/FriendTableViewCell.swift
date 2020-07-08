@@ -33,7 +33,7 @@ class FriendTableViewCell: UITableViewCell {
     @IBAction func friendRequestButtonTapped(_ sender: UIButton) {
         // TODO: - test that this actually works, and if so then add to other cells
         // Show the loading icon over the cell
-        self.contentView.startLoadingIcon()
+        self.contentView.startLoadingIcon(color: .white)
         
         // Pass the functionality off to the delegate
         delegate?.respondToFriendRequest(from: self, accept: (sender.tag == 1))
@@ -42,6 +42,8 @@ class FriendTableViewCell: UITableViewCell {
     // MARK: - Set Up UI
     
     func setUpViews(section: FriendsListTableViewController.SectionNames, name: String?, points: Int? = nil) {
+        nameLabel.textAlignment = .left
+        
         switch section {
         case .pendingFriendRequests:
             guard let name = name else { return }
@@ -75,7 +77,6 @@ class FriendTableViewCell: UITableViewCell {
         if let name = name {
             nameLabel.text = name
             pointsLabel.text = "Points: \(points ?? 0)"
-            nameLabel.textAlignment = .left
             pointsLabel.textAlignment = .right
             rightConstraint.constant = 6
             pointsLabel.isHidden = false

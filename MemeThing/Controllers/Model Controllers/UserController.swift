@@ -13,8 +13,6 @@ import FirebaseStorage
 // TODO: - find somewhere else to put this
 typealias resultCompletion = (Result<Bool, MemeThingError>) -> Void
 typealias resultCompletionWith<T> = (Result<T, MemeThingError>) -> Void
-let db = Firestore.firestore()
-let storage = Storage.storage()
 
 class UserController {
     
@@ -24,8 +22,13 @@ class UserController {
     
     // MARK: - Source of Truth
     
-    var currentUser: User? { didSet { setUpUser() } }
+    var currentUser: User?
     var usersFriends: [User]?
+    
+    // MARK: - Properties
+    
+    let db = Firestore.firestore()
+    let storage = Storage.storage()
     
     // MARK: - CRUD Methods
     

@@ -37,10 +37,10 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     func loadData() {
-        // Show the loading icon
-        view.startLoadingIcon()
-        
         if UserController.shared.usersFriends == nil {
+            // Show the loading icon
+            view.startLoadingIcon()
+            
             UserController.shared.fetchUsersFriends { [weak self] (result) in
                 DispatchQueue.main.async {
                     // Hide the loading icon

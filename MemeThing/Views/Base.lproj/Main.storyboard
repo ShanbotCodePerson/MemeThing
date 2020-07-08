@@ -107,6 +107,7 @@
                                     <constraint firstItem="Lol-Sz-ptg" firstAttribute="height" secondItem="Psx-mv-opk" secondAttribute="height" id="MJB-uA-WZc"/>
                                     <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerX" secondItem="Psx-mv-opk" secondAttribute="centerX" id="f8J-aV-r8P"/>
                                     <constraint firstItem="Lol-Sz-ptg" firstAttribute="width" secondItem="Psx-mv-opk" secondAttribute="width" id="f9X-ek-I6C"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="400" id="reO-7d-u0D"/>
                                     <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerY" secondItem="Psx-mv-opk" secondAttribute="centerY" id="zGQ-Fx-zoV"/>
                                 </constraints>
                             </view>
@@ -115,9 +116,9 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Psx-mv-opk" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.3" id="12s-Fo-P6Y"/>
-                            <constraint firstItem="cam-3L-kts" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.25" id="4MZ-ZF-eom"/>
+                            <constraint firstItem="cam-3L-kts" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.25" priority="999" id="4MZ-ZF-eom"/>
                             <constraint firstItem="cis-zz-m9s" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="9kC-HW-EQi"/>
-                            <constraint firstItem="Psx-mv-opk" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.8" id="CHC-5x-f2l"/>
+                            <constraint firstItem="Psx-mv-opk" firstAttribute="width" secondItem="jaz-qT-BjZ" secondAttribute="width" multiplier="0.8" priority="999" id="CHC-5x-f2l"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="trailing" secondItem="Psx-mv-opk" secondAttribute="trailing" id="F4O-be-UzU"/>
                             <constraint firstItem="Psx-mv-opk" firstAttribute="centerX" secondItem="TCl-xO-nvx" secondAttribute="centerX" id="G81-fp-HVz"/>
                             <constraint firstItem="cam-3L-kts" firstAttribute="height" secondItem="jaz-qT-BjZ" secondAttribute="height" multiplier="0.05" id="JsU-Q5-p2S"/>

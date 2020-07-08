@@ -13,6 +13,13 @@ import UIKit.UIImage
 
 class ComplaintController {
     
+    // MARK: - Properties
+    
+    static let db = Firestore.firestore()
+    static let storage = Storage.storage()
+    
+    // MARK: - CRUD Methods
+    
     // Save a complaint to the cloud
     static func createComplaint(with content: String, image: UIImage?, caption: String? = nil, completion: @escaping resultCompletion) {
         
