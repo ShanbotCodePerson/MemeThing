@@ -34,6 +34,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         // Set up the observer to listen for notifications in case the user has left this page open too long and the game is moving on, or if the game has ended
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toCaptionsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toMainMenu, object: nil)
     }
     
     // MARK: - Respond to Notifications
@@ -50,6 +51,9 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
             }
             else if sender.name == toGameOver {
                 self.transitionToStoryboard(named: .GameOver, with: game)
+            }
+            else if sender.name == toMainMenu {
+                self.transitionToStoryboard(named: .MainMenu)
             }
         }
     }
