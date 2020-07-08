@@ -326,7 +326,6 @@ class FriendRequestController {
                             UserController.shared.fetchUsersFriends { (result) in
                                 switch result {
                                 case .success(_):
-                                    print("fill this out later")
                                     // TODO: - Send local notifications to show an alert and update the tableview as necessary
                                     //                                    NotificationCenter.default.post(name: responseToFriendRequest, object: response)
                                     NotificationCenter.default.post(Notification(name: friendsUpdate))
