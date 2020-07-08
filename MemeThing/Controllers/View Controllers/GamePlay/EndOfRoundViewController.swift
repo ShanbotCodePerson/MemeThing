@@ -16,23 +16,25 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var memeImageView: UIImageView!
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var nextUpLabel: UILabel!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
     var nextDestination: StoryboardNames?
     
     // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set up the UI
         setUpViews()
         
         // Set up the observer to listen for notifications in case the user has left this page open too long and the game is moving on, or if the game has ended
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toCaptionsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toMainMenu, object: nil)
     }
     
     // MARK: - Respond to Notifications
@@ -40,7 +42,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     @objc func transitionToNewPage(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         // Transition to the captions view if the game has moved on, or to the main menu if the game has ended
         DispatchQueue.main.async {
@@ -49,6 +51,9 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
             }
             else if sender.name == toGameOver {
                 self.transitionToStoryboard(named: .GameOver, with: game)
+            }
+            else if sender.name == toMainMenu {
+                self.transitionToStoryboard(named: .MainMenu)
             }
         }
     }
@@ -61,22 +66,28 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         
         guard let game = game, let memeReference = game.memes?.last else { return }
         
+        // Show the loading icon
+        view.startLoadingIcon()
+        
         // Fetch the meme
         MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let meme):
                     // Set the image view
-                    self?.memeImageView.image = meme.photo
+                    self?.memeImageView.image = meme.image
                     
                     // Fetch the winning caption
                     MemeController.shared.fetchWinningCaption(for: meme) { (result) in
                         print("got here to \(#function) and fetched winning caption")
                         DispatchQueue.main.async {
+                            // Hide the loading icon
+                            self?.view.stopLoadingIcon()
+                            
                             switch result {
                             case .success(let caption):
                                 // Get the name of the user from the game object to display in the winner's name label
-                                let name = game.getName(of: caption.author)
+                                let name = game.getName(of: caption.authorID)
                                 self?.winnerLabel.text = "Congratulations \(name) for having the best caption!"
                                 
                                 // Set the text of the caption label
@@ -86,20 +97,21 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                                 if let gameWinner = game.gameWinner {
                                     self?.nextUpLabel.text = "The game is over and \(gameWinner) has won!"
                                 } else {
-                                    self?.nextUpLabel.text = "Next it is \(game.leadPlayerName)'s turn to draw a meme!"
+                                    if game.leadPlayerID == UserController.shared.currentUser?.recordID {
+                                         self?.nextUpLabel.text = "Next it is your turn to draw a meme!"
+                                    } else {
+                                        self?.nextUpLabel.text = "Next it is \(game.leadPlayerName)'s turn to draw a meme!"
+                                    }
                                 }
                                 
-                                // Hide the loading icon now that it is no longer needed
-                                self?.loadingIndicator.isHidden = true
-                                self?.loadingIndicator.stopAnimating()
-                                
                                 guard let currentUser = UserController.shared.currentUser else { return }
-                                if caption.author.recordID.recordName == currentUser.reference.recordID.recordName {
+                                if caption.authorID == currentUser.recordID {
                                     print("got here to updating current user's points")
                                     UserController.shared.update(currentUser, points: 1) { (result) in
                                         // TODO: - show alerts? tell winning user they earned a point?
                                         switch result {
                                         case .success(_):
+                                            // TODO: - display an alert or update the ui somehow telling the user they got a point
                                             print("should have incremented users points, now is \(currentUser.points)")
                                         case .failure(let error):
                                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -115,8 +127,9 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                         }
                     }
                 case .failure(let error):
-                    // Print and display the error
+                    // Print and display the error and hide the loading icon
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.stopLoadingIcon()
                     self?.presentErrorAlert(error)
                 }
             }

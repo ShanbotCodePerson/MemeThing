@@ -16,48 +16,43 @@ class GameOverViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var resultsTableView: UITableView!
     @IBOutlet weak var exitGameButton: UIButton!
     @IBOutlet weak var playAgainButton: UIButton!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
     
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set up the UI
         setUpViews()
+        
+        // Set up the observer to listen for notifications that the game has been restarted
+        NotificationCenter.default.addObserver(self, selector: #selector(returnToMainMenu(_:)), name: toMainMenu, object: nil)
     }
     
-    // MARK: - Helper Methods
+    // MARK: - Notifications
     
-    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
-    func disableUI() {
-        loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
+    @objc func returnToMainMenu(_ sender: NSNotification) {
+        // Only change the view if the update is for the game that the user currently has open
+        guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
+            gameID == game.recordID else { return }
         
-        exitGameButton.deactivate()
-        playAgainButton.deactivate()
-    }
-    
-    func enableUI() {
-        exitGameButton.activate()
-        playAgainButton.activate()
-        
-        loadingIndicator.isHidden = true
-        loadingIndicator.stopAnimating()
+        // Return to the main menu
+        DispatchQueue.main.async { self.transitionToStoryboard(named: .MainMenu) }
     }
     
     // MARK: - Set Up UI
     
     func setUpViews() {
-        view.backgroundColor = .background
-        
         guard let game = game else { return }
         
         winnerNameLabel.text = game.gameStatusDescription
         
+        // Set up the tableview
         resultsTableView.delegate = self
         resultsTableView.dataSource = self
         resultsTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")
@@ -114,21 +109,23 @@ class GameOverViewController: UIViewController, HasAGameObject {
             return
         }
         
-        // Don't allow the user to interact with the screen while the data is loading
-        disableUI()
+        // Show the loading icon
+        view.startLoadingIcon()
         
         // Start a new game from the data in the old game
         GameController.shared.newGame(from: oldGame) { [weak self] (result) in
             DispatchQueue.main.async {
+                // Hide the loading icon
+                self?.view.stopLoadingIcon()
+                
                 switch result {
                 case .success(let game):
                     // Transition to the waiting view
                     self?.transitionToStoryboard(named: .Waiting, with: game)
                 case .failure(let error):
-                    // Print and display the error and reset the UI
+                    // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
-                    self?.enableUI()
                 }
             }
         }

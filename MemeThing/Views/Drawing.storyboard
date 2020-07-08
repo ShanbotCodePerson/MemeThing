@@ -76,23 +76,16 @@
                                             <action selector="sendButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PCf-Nl-Lhq"/>
                                         </connections>
                                     </button>
-                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="RRr-kq-KZo">
-                                        <rect key="frame" x="178.5" y="704.5" width="57" height="57.5"/>
-                                    </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="RRr-kq-KZo" firstAttribute="centerX" secondItem="4zL-R8-fD7" secondAttribute="centerX" id="81a-iG-nyg"/>
                                     <constraint firstAttribute="trailing" secondItem="duD-VB-0vT" secondAttribute="trailing" id="CN9-2q-3dk"/>
-                                    <constraint firstItem="RRr-kq-KZo" firstAttribute="centerY" secondItem="4zL-R8-fD7" secondAttribute="centerY" id="E42-n6-CnP"/>
                                     <constraint firstItem="duD-VB-0vT" firstAttribute="top" secondItem="Zx1-JU-3wd" secondAttribute="bottom" id="P4L-Jg-8R9"/>
                                     <constraint firstItem="4zL-R8-fD7" firstAttribute="top" secondItem="duD-VB-0vT" secondAttribute="bottom" id="Uqg-VI-XhL"/>
-                                    <constraint firstItem="RRr-kq-KZo" firstAttribute="width" secondItem="4zL-R8-fD7" secondAttribute="height" multiplier="1:1" id="YA1-lL-DgF"/>
                                     <constraint firstItem="Zx1-JU-3wd" firstAttribute="top" secondItem="JNr-ca-bWi" secondAttribute="top" id="cye-ia-Y86"/>
                                     <constraint firstAttribute="bottom" secondItem="4zL-R8-fD7" secondAttribute="bottom" constant="12" id="g5i-nl-UW5"/>
                                     <constraint firstAttribute="trailing" secondItem="Zx1-JU-3wd" secondAttribute="trailing" id="gtX-z5-EnN"/>
                                     <constraint firstItem="duD-VB-0vT" firstAttribute="leading" secondItem="JNr-ca-bWi" secondAttribute="leading" id="jJj-8C-c8b"/>
-                                    <constraint firstItem="RRr-kq-KZo" firstAttribute="height" secondItem="4zL-R8-fD7" secondAttribute="height" id="pz6-O8-mtm"/>
                                     <constraint firstItem="Zx1-JU-3wd" firstAttribute="leading" secondItem="JNr-ca-bWi" secondAttribute="leading" id="sq3-4i-jHW"/>
                                 </constraints>
                             </view>
@@ -116,7 +109,7 @@
                                 </items>
                             </navigationBar>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="UWg-1Y-3dz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="1Rj-YH-TxH"/>
                             <constraint firstItem="JNr-ca-bWi" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="2PY-RE-dda"/>
@@ -137,7 +130,6 @@
                     </view>
                     <connections>
                         <outlet property="canvasView" destination="7cY-5M-71c" id="LgD-Zk-BYf"/>
-                        <outlet property="loadingIndicator" destination="RRr-kq-KZo" id="xHX-dm-o97"/>
                         <outlet property="navigationBar" destination="UWg-1Y-3dz" id="ev9-NY-xpN"/>
                         <outlet property="sendButton" destination="4zL-R8-fD7" id="9dd-RV-Gmv"/>
                         <outlet property="undoButton" destination="hdu-03-sxy" id="0h1-Kq-7RX"/>
@@ -151,6 +143,9 @@
     <resources>
         <image name="arrow.counterclockwise" catalog="system" width="115" height="128"/>
         <image name="ellipsis" catalog="system" width="128" height="37"/>
+        <namedColor name="background">
+            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="lightBlueAccent">
             <color red="0.8666666666666667" green="0.93725490196078431" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

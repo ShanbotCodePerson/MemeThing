@@ -6,32 +6,31 @@
 //  Copyright © 2020 Shannon Draeker. All rights reserved.
 //
 
-// IMPORTANT NOTE: Once this data exists in the cloud, you must adjust the security settings for this object to allow other users to edit this record (since someone else will be responding, they need to change the value of the "status" object, which requires permission to change a record created by someone else, which is not the default). For instructions on how to do this, see https://stackoverflow.com/questions/32192968/cloudkit-error-saving-record-write-operation-not-permitted
-
 import Foundation
-import CloudKit
 
 // MARK: - String Constants
 
 struct FriendRequestStrings {
     static let recordType = "FriendRequest"
-    static let fromReferenceKey = "fromReference"
-    static let fromUsernameKey = "fromUsername"
-    static let toReferenceKey = "toReference"
-    static let toUsernameKey = "toUsername"
+    static let fromIDKey = "fromID"
+    static let fromNameKey = "fromName"
+    static let toIDKey = "toID"
+    static let toNameKey = "toName"
     static let statusKey = "status"
+    static let recordIDKey = "recordID"
 }
 
-class FriendRequest: CKCompatible {
+class FriendRequest {
     
     // MARK: - Properties
     
-    // FriendRequest properties
-    let fromReference: CKRecord.Reference
-    let fromUsername: String
-    let toReference: CKRecord.Reference
-    let toUsername: String
+    let fromID: String
+    let fromName: String
+    let toID: String
+    let toName: String
     var status: Status
+    let recordID: String
+    var documentID: String?
     
     enum Status: Int {
         case waiting
@@ -40,58 +39,59 @@ class FriendRequest: CKCompatible {
         case removingFriend
     }
     
-    // CloudKit properties
-    static var recordType: CKRecord.RecordType { FriendRequestStrings.recordType }
-    var ckRecord: CKRecord { createCKRecord() }
-    var recordID: CKRecord.ID
+    // MARK: - Initializers
     
-    // MARK: - Initializer
-    
-    init(fromReference: CKRecord.Reference, fromUsername: String, toReference: CKRecord.Reference, toUsername: String, status: Status = .waiting, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
-        self.fromReference = fromReference
-        self.fromUsername = fromUsername
-        self.toReference = toReference
-        self.toUsername = toUsername
+    init(fromID: String,
+         fromName: String,
+         toID: String,
+         toName: String,
+         status: Status = .waiting,
+         recordID: String = UUID().uuidString,
+         documentID: String? = nil) {
+        
+        self.fromID = fromID
+        self.fromName = fromName
+        self.toID = toID
+        self.toName = toName
         self.status = status
         self.recordID = recordID
+        self.documentID = documentID
     }
     
-    // MARK: - Convert from CKRecord
-    
-    required convenience init?(ckRecord: CKRecord) {
-        guard let fromReference = ckRecord[FriendRequestStrings.fromReferenceKey] as? CKRecord.Reference,
-            let fromUsername = ckRecord[FriendRequestStrings.fromUsernameKey] as? String,
-            let toReference = ckRecord[FriendRequestStrings.toReferenceKey] as? CKRecord.Reference,
-            let toUsername = ckRecord[FriendRequestStrings.toUsernameKey] as? String,
-            let statusRawValue = ckRecord[FriendRequestStrings.statusKey] as? Int,
-            let status = Status(rawValue: statusRawValue)
+    convenience init?(dictionary: [String : Any]) {
+        guard let fromID = dictionary[FriendRequestStrings.fromIDKey] as? String,
+            let fromName = dictionary[FriendRequestStrings.fromNameKey] as? String,
+            let toID = dictionary[FriendRequestStrings.toIDKey] as? String,
+            let toName = dictionary[FriendRequestStrings.toNameKey] as? String,
+            let statusRawValue = dictionary[FriendRequestStrings.statusKey] as? Int,
+            let status = Status(rawValue: statusRawValue),
+            let recordID = dictionary[FriendRequestStrings.recordIDKey] as? String
             else { return nil }
         
-        self.init(fromReference: fromReference, fromUsername: fromUsername, toReference: toReference, toUsername: toUsername, status: status, recordID: ckRecord.recordID)
+        self.init(fromID: fromID,
+                  fromName: fromName,
+                  toID: toID,
+                  toName: toName,
+                  status: status,
+                  recordID: recordID)
     }
     
-    // MARK: - Convert to CKRecord
+    // MARK: - Convert to Dictionary
     
-    func createCKRecord() -> CKRecord {
-        let record = CKRecord(recordType: FriendRequestStrings.recordType, recordID: recordID)
-        
-        record.setValuesForKeys([
-            FriendRequestStrings.fromReferenceKey : fromReference,
-            FriendRequestStrings.fromUsernameKey : fromUsername,
-            FriendRequestStrings.toReferenceKey : toReference,
-            FriendRequestStrings.toUsernameKey : toUsername,
-            FriendRequestStrings.statusKey : status.rawValue
-        ])
-        
-        return record
+    func asDictionary() -> [String : Any] {
+        [FriendRequestStrings.fromIDKey : fromID,
+         FriendRequestStrings.fromNameKey : fromName,
+         FriendRequestStrings.toIDKey : toID,
+         FriendRequestStrings.toNameKey : toName,
+         FriendRequestStrings.statusKey : status.rawValue,
+         FriendRequestStrings.recordIDKey : recordID]
     }
 }
 
 // MARK: - Equatable
 
 extension FriendRequest: Equatable {
-    
     static func == (lhs: FriendRequest, rhs: FriendRequest) -> Bool {
-        return lhs.recordID.recordName == rhs.recordID.recordName
+        return lhs.recordID == rhs.recordID
     }
 }

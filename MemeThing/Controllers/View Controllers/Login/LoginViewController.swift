@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
@@ -14,17 +15,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var signUpToggleButton: UIButton!
     @IBOutlet weak var loginToggleButton: UIButton!
-    @IBOutlet weak var usernameTextField: UITextField!
-    @IBOutlet weak var screenNameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
+    @IBOutlet weak var screenNameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var doneButton: UIButton!
-    @IBOutlet weak var buttonsStackView: UIStackView!
-    @IBOutlet weak var textFieldsStackView: UIStackView!
-    @IBOutlet weak var stackViewHeightLayoutConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textFieldContainerView: UIView!
     @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!
-    @IBOutlet weak var loadingIndictor: UIActivityIndicatorView!
     
     // MARK: - Properties
     
@@ -41,8 +38,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        // Try to automatically log the user in using their cloud information
-        fetchUser()
+        // Try to automatically log the user in
+        autoLogin()
         
         // Set up the UI
         setUpViews()
@@ -59,7 +56,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @objc func deniedNotifications() {
         DispatchQueue.main.async {
             // Present an alert to the user asking them to reconsider allowing notifications
-            self.presentAlert(title: "Notifications Will Not Display", message: "MemeThing uses notifications to alert you of new friend requests, invitations to games, and updates to games you're playing. Please consider enabling notifications in your phone's settings for a richer gaming experience.", completion: { self.fetchUser() })
+            // FIXME: - uncomment this before production
+//            self.presentAlert(title: "Notifications Will Not Display", message: "MemeThing uses notifications to alert you of new friend requests, invitations to games, and updates to games you're playing. Please consider enabling notifications in your phone's settings for a richer gaming experience.", completion: { self.autoLogin() })
         }
     }
     
@@ -74,20 +72,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func doneButtonTapped(_ sender: UIButton) {
-        // If the user has already logged in, don't create a new account but go straight to the main menu
-        if UserController.shared.currentUser != nil {
-            presentMainMenuVC()
+        // Make sure there is valid text in the email and password fields
+        guard let email = emailTextField.text, !email.isEmpty else {
+            presentAlert(title: "Invalid Email", message: "Email cannot be blank")
+            return
+        }
+        guard let password = passwordTextField.text, !password.isEmpty else {
+            presentAlert(title: "Invalid Password", message: "Password cannot be blank")
             return
         }
         
         // Either sign up or login
-        if signingUp { signUp() }
-        else { login() }
+        if signingUp { signUp(with: email, password: password) }
+        else { login(with: email, password: password) }
     }
     
     @IBAction func tappedScreen(_ sender: UITapGestureRecognizer) {
         // Close the keyboard for each text field
-        usernameTextField.resignFirstResponder()
         screenNameTextField.resignFirstResponder()
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
@@ -97,12 +98,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Set Up UI
     
     func setUpViews() {
-        view.backgroundColor = .background
-        // TODO: - need to test this in other device sizes
-        stackViewHeightLayoutConstraint.constant = buttonsStackView.frame.height + textFieldsStackView.frame.height + 20
-        loadingIndictor.isHidden = true
+        textFieldContainerView.addCornerRadius(12)
         
-        usernameTextField.delegate = self
         screenNameTextField.delegate = self
         emailTextField.delegate = self
         passwordTextField.delegate = self
@@ -120,12 +117,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
         let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
         if endFrameY >= UIScreen.main.bounds.size.height {
-            self.keyboardHeightLayoutConstraint?.constant = 0.0
+            // Turn off the keyboard height constraint
+            keyboardHeightLayoutConstraint.isActive = false
         } else {
-            if let endFrame = endFrame {
+            if let height = endFrame?.size.height,
+                height > (view.frame.size.height - textFieldContainerView.frame.size.height) / 2 {
                 // Calculate the correct height to shift the text fields up by
-                let currentHeight = (view.frame.height - stackViewHeightLayoutConstraint.constant) / 2
-                self.keyboardHeightLayoutConstraint?.constant = -1 * (endFrame.size.height - currentHeight + 10)
+                keyboardHeightLayoutConstraint?.constant = height
+                keyboardHeightLayoutConstraint.isActive = true
             }
         }
         
@@ -142,7 +141,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
             // Hide all but the necessary text fields
             self.screenNameTextField.isHidden = true
-            self.emailTextField.isHidden = true
             self.confirmPasswordTextField.isHidden = true
             self.passwordTextField.returnKeyType = .done
             
@@ -162,7 +160,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             
             // Show all the text fields
             self.screenNameTextField.isHidden = false
-            self.emailTextField.isHidden = false
             self.confirmPasswordTextField.isHidden = false
             self.passwordTextField.returnKeyType = .next
             
@@ -172,58 +169,133 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         signingUp = true
     }
     
-    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
-    func disableUI() {
-        loadingIndictor.startAnimating()
-        loadingIndictor.isHidden = false
-        
-        signUpToggleButton.isUserInteractionEnabled = false
-        loginToggleButton.isUserInteractionEnabled = false
-        
-        usernameTextField.isUserInteractionEnabled = false
-        screenNameTextField.isUserInteractionEnabled = false
-        emailTextField.isUserInteractionEnabled = false
-        passwordTextField.isUserInteractionEnabled = false
-        confirmPasswordTextField.isUserInteractionEnabled = false
-        
-        doneButton.deactivate()
-    }
-    
-    func enableUI() {
-        signUpToggleButton.isUserInteractionEnabled = true
-        loginToggleButton.isUserInteractionEnabled = true
-        
-        usernameTextField.isUserInteractionEnabled = true
-        screenNameTextField.isUserInteractionEnabled = true
-        emailTextField.isUserInteractionEnabled = true
-        passwordTextField.isUserInteractionEnabled = true
-        confirmPasswordTextField.isUserInteractionEnabled = true
-        
-        doneButton.activate()
-        
-        loadingIndictor.stopAnimating()
-        loadingIndictor.isHidden = true
-    }
-    
     // MARK: - Helper Methods
     
-    // Try to get the current user from their iCloud information
-    func fetchUser() {
-        // Don't allow the user to interact with the screen while the data is loading
-        disableUI()
+    // Try to log the user in
+    func autoLogin() {
+        // Show the loading icon
+        view.startLoadingIcon()
         
-        UserController.shared.fetchUser { [weak self] (result) in
+        if let user = Auth.auth().currentUser {
+            // If the user's email account has not yet been verified, don't sign in
+            guard user.isEmailVerified else {
+                // Hide the loading icon
+                view.stopLoadingIcon()
+                return
+            }
+            
+            UserController.shared.fetchUser { [weak self] (result) in
+                DispatchQueue.main.async {
+                    // Hide the loading icon
+                    self?.view.stopLoadingIcon()
+                    
+                    switch result {
+                    case .success(_):
+                        self?.transitionToStoryboard(named: .MainMenu, direction: .fromRight)
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Present an alert prompting the user to verify their email address
+    func presentVerifyEmailAlert(with email: String) {
+        // FIXME: - allow user to edit email address
+        // FIXME: - refactor to elsewhere
+        
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Verify Email Address", message: "Please check your email \(email) to verify your email address", preferredStyle: .alert)
+        
+        // Create the button to resend the email
+        let resendAction = UIAlertAction(title: "Resend Email", style: .cancel) { [weak self] (_) in
+            Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
+                if let error = error {
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    DispatchQueue.main.async { self?.presentErrorAlert(error) }
+                }
+                
+                // Present the same alert telling them to check their email
+                self?.presentVerifyEmailAlert(with: email)
+            })
+        }
+        
+        // Create the button to continue and check for verification
+        let continueAction = UIAlertAction(title: "Log In", style: .default) { [weak self] (_) in
+            self?.toggleToLogin()
+            self?.emailTextField.text = email
+        }
+        
+        // Add the buttons and present the alert
+        alertController.addAction(resendAction)
+        alertController.addAction(continueAction)
+        present(alertController, animated: true)
+    }
+    
+    // Check that all the fields are valid and create a new user
+    func signUp(with email: String, password: String) {
+        // Make sure the screen name contains an actual string
+        guard screenNameTextField.text == nil || screenNameTextField.text != "" else {
+            presentAlert(title: "Invalid Screen Name", message: "Your screen name can't be blank")
+            return
+        }
+        
+        // Make sure the passwords match
+        guard confirmPasswordTextField.text == password else {
+            presentAlert(title: "Passwords Do Not Match", message: "The passwords do not match - make sure to enter passwords carefully")
+            return
+        }
+        
+        // Show the loading icon
+        view.startLoadingIcon()
+        
+        // Create the user and send the notification email
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] (authResult, error) in
+            
+            guard authResult?.user != nil, error == nil else {
+                // Print and display the error
+                print("Error in \(#function) : \(error!.localizedDescription) \n---\n \(error!)")
+                DispatchQueue.main.async {
+                    self?.view.stopLoadingIcon()
+                    self?.presentErrorAlert(error!)
+                }
+                return
+            }
+            
+            // Send an email to verify the user's email address
+            Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
+                DispatchQueue.main.async {
+                    // Hide the loading icon
+                    self?.view.stopLoadingIcon()
+                    
+                    if let error = error {
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                       self?.presentErrorAlert(error)
+                    }
+                    
+                    // Present an alert asking them to check their email
+                    self?.presentVerifyEmailAlert(with: email)
+                }
+            })
+        }
+    }
+    
+    // Once a user has verified their email, finish completing their account
+    func setUpUser(with email: String) {
+        // FIXME: - maybe create this earlier, so that name originally entered by user is saved as is
+        UserController.shared.createUser(with: email, screenName: screenNameTextField.text) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
-                    // Go straight to the main menu if the user was fetched correctly
-                    self?.presentMainMenuVC()
+                    // Navigate to the main screen of the app
+                    self?.transitionToStoryboard(named: .MainMenu, direction: .fromRight)
                 case .failure(let error):
-                    // Allow the user to interact with the UI again
-                    self?.enableUI()
-                    
-                    // Print and display the error (unless the error is that no user has been created yet)
-                    if case MemeThingError.noUserFound = error { return }
+                    // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)
                 }
@@ -231,130 +303,53 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    // Transition to the main menu
-    func presentMainMenuVC() {
-        DispatchQueue.main.async {
-            self.transitionToStoryboard(named: .MainMenu, direction: .fromRight)
-        }
-    }
-    
-    // Check that all the fields are valid and create a new user
-    func signUp() {
-        // Make sure the username contains an actual string
-        guard let username = usernameTextField.text, !username.isEmpty else {
-            presentAlert(title: "Invalid Username", message: "You must choose a username")
-            return
-        }
+    // Check that the username and password are valid and fetch the user
+    func login(with email: String, password: String) {
+        // Show the loading icon
+        view.startLoadingIcon()
         
-        // Don't allow the user to interact with the screen while the data is processing
-        disableUI()
-        
-        // Check to see if the username is unique
-        UserController.shared.searchFor(username) { [weak self] (result) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(_):
-                   // If the username is taken, present an alert
-                    self?.presentAlert(title: "Username Taken", message: "That username is already taken - please choose a different username")
-                    self?.enableUI()
-                    return
-                case .failure(let error):
-                    // Make sure the error is that no user was found, rather than some other type of error
-                    guard case MemeThingError.noUserFound = error else {
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorAlert(error)
-                        self?.enableUI()
-                        return
-                    }
-                    
-                    // Make sure that the email is a valid email address
-                    guard let email = self?.emailTextField.text, !email.isEmpty, email.isValidEmail()
-                        else {
-                            self?.presentAlert(title: "Invalid Email", message: "You must enter a valid email address to use for password recovery")
-                            self?.enableUI()
-                            return
-                    }
-                    
-                    // Make sure that the remaining text fields have valid information
-                    guard let screenName = self?.screenNameTextField.text,
-                        let password = self?.passwordTextField.text, !password.isEmpty,
-                        let confirmPassword = self?.confirmPasswordTextField.text
-                        else {
-                            self?.presentAlert(title: "Invalid Password", message: "You must enter a password")
-                            self?.enableUI()
-                            return
-                    }
-                    
-                    // Make sure that the passwords match
-                    guard let signingUp = self?.signingUp else { return }
-                    if signingUp && password != confirmPassword {
-                        self?.presentAlert(title: "Passwords Don't Match", message: "The passwords you have entered don't match - make sure to enter your password carefully")
-                        self?.enableUI()
-                        return
-                    }
-                    
-                    // Create the new user
-                    UserController.shared.createUser(with: username, password: password, screenName: screenName, email: email) { (result) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(_):
-                                // Go straight to the main menu if the user was created correctly
-                                self?.presentMainMenuVC()
-                            case .failure(let error):
-                                // Print and return the error and allow the user to interact with the UI again
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorAlert(error)
-                                self?.enableUI()
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
+            if let error = error {
+                // Print and display the error and hide the loading icon
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                DispatchQueue.main.async {
+                    self?.view.stopLoadingIcon()
+                    self?.presentErrorAlert(error)
+                }
+                return
+            }
+            
+            // Make sure the email is verified
+            if Auth.auth().currentUser?.isEmailVerified ?? false {
+                // Try to fetch the current user
+                UserController.shared.fetchUser { (result) in
+                    DispatchQueue.main.async {
+                        // Hide the loading icon
+                        self?.view.stopLoadingIcon()
+                        
+                        switch result {
+                        case .success(_):
+                            // Navigate to the main screen of the app
+                            self?.transitionToStoryboard(named: .MainMenu, direction: .fromRight)
+                        case .failure(let error):
+                            // If the error is that the user doesn't exist yet, then create it
+                            if case MemeThingError.noUserFound = error {
+                                self?.setUpUser(with: email)
+                                return
                             }
+                            // Print and display the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorAlert(error)
                         }
                     }
                 }
-            }
-        }
-    }
-    
-    // Check that the username and password are valid and fetch the user
-    func login() {
-        // Make sure the username contains an actual string
-        guard let username = usernameTextField.text, !username.isEmpty else {
-            presentAlert(title: "Username Missing", message: "You must enter a username")
-            return
-        }
-        // Make sure that the password contains an actual string
-        guard let password = passwordTextField.text, !password.isEmpty else {
-            presentAlert(title: "Password Missing", message: "You must enter a password")
-            return
-        }
-        
-        // Don't allow the user to interact with the screen while the data is processing
-        disableUI()
-        
-        // Check to see if the username is unique
-        UserController.shared.searchFor(username) { [weak self] (result) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let user):
-                    // Make sure that the password is correct
-                    guard password == user.password else {
-                        self?.presentAlert(title: "Incorrect Password", message: "The password you have entered does not match that username - please try again")
-                        self?.enableUI()
-                        return
-                    }
+            } else {
+                DispatchQueue.main.async {
+                    // Hide the loading icon
+                    self?.view.stopLoadingIcon()
                     
-                    // Save the user to the source of truth and proceed to the main menu
-                    UserController.shared.currentUser = user
-                    self?.presentMainMenuVC()
-                case .failure(let error):
-                    // Display an alert if that username doesn't exist
-                    if case MemeThingError.noUserFound = error {
-                        self?.presentAlert(title: "Incorrect Username", message: "The username you have entered does not exist")
-                    } else {
-                        // Otherwise, print and return the error
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorAlert(error)
-                    }
-                    // Allow the user to interact with the UI again
-                    self?.enableUI()
+                    // Present the alert asking the user to check their email
+                    self?.presentVerifyEmailAlert(with: email)
                 }
             }
         }
@@ -364,24 +359,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // TODO: - make "return" of last text field say "sign up" or "login" as appropriate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if signingUp {
-            if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
-                // If there's another text field, move the editing view to that text field
-                nextField.becomeFirstResponder()
-            } else {
-                // Otherwise, remove the keyboard
-                textField.resignFirstResponder()
-            }
+        // If there's another text field, move the focus to that text field
+        if let nextField = textField.superview?.viewWithTag(textField.tag + (signingUp ? 1 : 2)) as? UITextField {
+            nextField.becomeFirstResponder()
+            return true
         }
-            // Increment different in the login view where there are fewer text fields
-        else {
-            if let nextField = textField.superview?.viewWithTag(textField.tag + 3) as? UITextField {
-                nextField.becomeFirstResponder()
-            } else {
-                // Otherwise, remove the keyboard
-                textField.resignFirstResponder()
-            }
+        
+        // Otherwise, remove the keyboard
+        textField.resignFirstResponder()
+        
+        // Make sure there is valid text in the email and password fields
+        guard let email = emailTextField.text, !email.isEmpty else {
+            presentAlert(title: "Invalid Email", message: "Email cannot be blank")
+            return true
         }
+        guard let password = passwordTextField.text, !password.isEmpty else {
+            presentAlert(title: "Invalid Password", message: "Password cannot be blank")
+            return true
+        }
+        
+        // Try to sign up or log in
+        if signingUp { signUp(with: email, password: password) }
+        else { login(with: email, password: password) }
         
         return true
     }

@@ -39,19 +39,19 @@ class NotificationHelper {
         switch notificationType {
         case .newFriendRequest:
             print("received new friend request")
-            FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged, completion: completion)
+//            FriendRequestController.shared.receiveFriendRequest(withID: recordIDChanged, completion: completion)
         case .removingFriend:
             print("received request remove friend")
-            FriendRequestController.shared.receiveFriendRemoving(withID: recordIDChanged, completion: completion)
+//            FriendRequestController.shared.receiveFriendRemoving(withID: recordIDChanged, completion: completion)
         case .friendRequestResponse:
             print("received response to friend request")
-            FriendRequestController.shared.receiveResponseToFriendRequest(withID: recordIDChanged, completion: completion)
+//            FriendRequestController.shared.receiveResponseToFriendRequest(withID: recordIDChanged, completion: completion)
         case .newGameInvitation:
             print("received new game invitation")
-            GameController.shared.receiveInvitationToGame(withID: recordIDChanged, completion: completion)
+//            GameController.shared.receiveInvitationToGame(withID: recordIDChanged, completion: completion)
         case .gameUpdate:
             print("received update to game")
-            GameController.shared.receiveUpdateToGame(withID: recordIDChanged, completion: completion)
+//            GameController.shared.receiveUpdateToGame(withID: recordIDChanged, completion: completion)
         }
     }
     
@@ -81,4 +81,5 @@ let toCaptionsView = Notification.Name("toCaptionsView")
 let toResultsView = Notification.Name("toResultsView")
 let toNewRound = Notification.Name("toNewRound")
 let toGameOver = Notification.Name("toGameOver")
+let toMainMenu = Notification.Name("toMainMenu")
 let notificationsDenied = Notification.Name("notificationsDenied")

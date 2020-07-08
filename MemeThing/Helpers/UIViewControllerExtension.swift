@@ -48,7 +48,7 @@ extension UIViewController {
     func transitionToStoryboard(named storyboard: StoryboardNames, with game: Game) {
         let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
-        initialVC.gameID = game.recordID.recordName
+        initialVC.gameID = game.recordID
         initialVC.modalPresentationStyle = .fullScreen
         
         // Make the transition look like navigating forward through a navigation controller
@@ -65,7 +65,7 @@ extension UIViewController {
     func presentPopoverStoryboard(named storyboard: StoryboardNames, with game: Game) {
         let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
-        initialVC.gameID = game.recordID.recordName
+        initialVC.gameID = game.recordID
         initialVC.modalPresentationStyle = .overFullScreen
         initialVC.modalTransitionStyle = .crossDissolve
         self.present(initialVC, animated: true)
@@ -140,6 +140,16 @@ extension UIViewController {
     func presentErrorAlert(_ localizedError: LocalizedError) {
         // Create the alert controller
         let alertController = UIAlertController(title: "ERROR", message: localizedError.errorDescription, preferredStyle: .actionSheet)
+        
+        // Add the dismiss button to the alert
+        alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
+        
+        // Present the alert
+        present(alertController, animated: true)
+    }
+    func presentErrorAlert(_ error: Error) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "ERROR", message: error.localizedDescription, preferredStyle: .actionSheet)
         
         // Add the dismiss button to the alert
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel))

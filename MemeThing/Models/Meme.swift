@@ -7,77 +7,72 @@
 //
 
 import Foundation
-import CloudKit
 import UIKit.UIImage
 
 // MARK: - String Constants
 
 struct MemeStrings {
-    fileprivate static let recordType = "Meme"
-    fileprivate static let photoKey = "photo"
-    fileprivate static let authorKey = "author"
-    fileprivate static let winningCaptionKey = "winningCaption"
-    fileprivate static let gameKey = "game"
+    static let recordType = "Meme"
+    fileprivate static let authorIDKey = "authorID"
+    fileprivate static let winningCaptionIDKey = "winningCaptionID"
+    static let gameIDKey = "gameID"
+    static let recordIDKey = "recordID"
 }
 
-class Meme: CKCompatible, CKPhotoAsset {
-
+class Meme {
+    
     // MARK: - Properties
     
-    // Meme properties
-    var photo: UIImage?
-    let author: CKRecord.Reference
-    var winningCaption: CKRecord.Reference?
-    var game: CKRecord.Reference
+    var image: UIImage?
+    let authorID: String
+    var winningCaptionID: String?
+    var gameID: String
+    let recordID: String
+    var documentID: String?
     
-    // CloudKit properties
-    var reference: CKRecord.Reference { CKRecord.Reference(recordID: recordID, action: .deleteSelf) }
-    static var recordType: CKRecord.RecordType { MemeStrings.recordType }
-    var ckRecord: CKRecord { createCKRecord() }
-    var recordID: CKRecord.ID
+    // MARK: - Initializers
     
-    // MARK: - Initializer
-    
-    init(photo: UIImage, author: CKRecord.Reference, winningCaption: CKRecord.Reference? = nil, game: CKRecord.Reference, recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
-        self.photo = photo
-        self.author = author
-        self.winningCaption = winningCaption
-        self.game = game
+    init(image: UIImage?,
+         authorID: String,
+         winningCaptionID: String? = nil,
+         gameID: String,
+         recordID: String = UUID().uuidString) {
+        
+        self.image = image
+        self.authorID = authorID
+        self.winningCaptionID = winningCaptionID
+        self.gameID = gameID
         self.recordID = recordID
     }
     
-    // MARK: - Convert from CKRecord
-    
-    required convenience init?(ckRecord: CKRecord) {
-        guard let author = ckRecord[MemeStrings.authorKey] as? CKRecord.Reference,
-            let game = ckRecord[MemeStrings.gameKey] as? CKRecord.Reference
+    convenience init?(dictionary: [String : Any]) {
+        guard let authorID = dictionary[MemeStrings.authorIDKey] as? String,
+            let gameID = dictionary[MemeStrings.gameIDKey] as? String,
+            let recordID = dictionary[MemeStrings.recordIDKey] as? String
             else { return nil }
-        let winningCaption = ckRecord[MemeStrings.winningCaptionKey] as? CKRecord.Reference
+        let winningCaptionID = dictionary[MemeStrings.winningCaptionIDKey] as? String
         
-        var photo: UIImage?
-        if let photoAsset = ckRecord[MemeStrings.photoKey] as? CKAsset {
-            do {
-                let data = try Data(contentsOf: photoAsset.fileURL!)
-                photo = UIImage(data: data)
-            } catch {
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-            }
-        }
-        guard let unwrappedPhoto = photo else { return nil }
-        
-        self.init(photo: unwrappedPhoto, author: author, winningCaption: winningCaption, game: game, recordID: ckRecord.recordID)
+        self.init(image: nil,
+                  authorID: authorID,
+                  winningCaptionID: winningCaptionID,
+                  gameID: gameID,
+                  recordID: recordID)
     }
     
-    // MARK: - Convert to CKRecord
+    // MARK: - Convert to Dictionary
     
-    func createCKRecord() -> CKRecord {
-        let record = CKRecord(recordType: MemeStrings.recordType, recordID: recordID)
-        
-        if let photoAsset = photoAsset { record.setValue(photoAsset, forKey: MemeStrings.photoKey) }
-        record.setValue(author, forKey: MemeStrings.authorKey)
-        if let winningCaption = winningCaption { record.setValue(winningCaption, forKey: MemeStrings.winningCaptionKey) }
-        record.setValue(game, forKey: MemeStrings.gameKey)
-        
-        return record
+    func asDictionary() -> [String : Any] {
+        [MemeStrings.authorIDKey : authorID,
+         MemeStrings.winningCaptionIDKey : winningCaptionID as Any,
+         MemeStrings.gameIDKey : gameID,
+         MemeStrings.recordIDKey : recordID]
+    }
+}
+
+// MARK: - Equatable
+
+extension Meme: Equatable {
+    static func == (lhs: Meme, rhs: Meme) -> Bool {
+        return lhs.recordID == rhs.recordID
     }
 }

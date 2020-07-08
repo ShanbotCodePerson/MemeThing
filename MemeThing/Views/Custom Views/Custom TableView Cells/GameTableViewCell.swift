@@ -30,6 +30,10 @@ class GameTableViewCell: UITableViewCell {
     // MARK: - Actions
     
     @IBAction func invitationResponseButtonTapped(_ sender: UIButton) {
+        // Show the loading icon over the cell
+        self.contentView.startLoadingIcon(color: .white)
+        
+        // Pass the functionality off to the delegate
         delegate?.respondToGameInvitation(for: self, accept: (sender.tag == 1))
     }
     
@@ -63,8 +67,13 @@ class GameTableViewCell: UITableViewCell {
     private func setUpWaitingForResponseView(for game: Game) {
         secondaryTextLabel.isHidden = true
         buttonStackView.isHidden = true
-        mainTextLabel.text = "You have sent a game invitation to \(game.listOfPlayerNames)"
         contentView.backgroundColor = .systemRed
+        if let currentUser = UserController.shared.currentUser,
+            game.leadPlayerID == currentUser.recordID {
+            mainTextLabel.text = "You have sent a game invitation to \(game.listOfPlayerNames)"
+        } else {
+             mainTextLabel.text = "You have been invited to a game with \(game.listOfPlayerNames)"
+        }
     }
     
     private func setUpActiveGameView(for game: Any?) {

@@ -4,6 +4,11 @@
 
 .DS_Store
 
+## Pods
+Podfile
+Podfile.lock
+Pods/
+
 ## User settings
 xcuserdata/
 

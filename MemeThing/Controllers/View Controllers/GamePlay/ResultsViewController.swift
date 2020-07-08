@@ -21,14 +21,12 @@ class ResultsViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var constraintToButton: NSLayoutConstraint!
     @IBOutlet weak var constraintToSafeArea: NSLayoutConstraint!
-    @IBOutlet weak var initialLoadingIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var savingLoadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
-    var meme: Meme? { didSet { memeImageView.image = meme?.photo } }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
+    var meme: Meme? { didSet { memeImageView.image = meme?.image } }
     var captions: [Caption]? { didSet { setUpPages(from: captions) } }
     var nextDestination: StoryboardNames?
     
@@ -52,7 +50,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     func loadAllData() {
         guard let game = game, let memeReference = game.memes?.last else { return }
-        print("got here to \(#function) and \(game.debugging)")
+        
+        // Show the loading icon
+        view.startLoadingIcon()
         
         // Fetch the meme from the cloud
         MemeController.shared.fetchMeme(from: memeReference) { [weak self] (result) in
@@ -68,6 +68,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
                     // Fetch the captions for that meme from the cloud
                     MemeController.shared.fetchCaptions(for: meme, expectedNumber: expectedNumber) { (result) in
                         DispatchQueue.main.async {
+                            // Hide the loading icon
+                            self?.view.stopLoadingIcon()
+                            
                             switch result {
                             case .success(let captions):
                                 print("in completion in results VC and captions are \(captions)")
@@ -78,9 +81,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                 self?.pageControl.numberOfPages = captions.count
                                 self?.pageControl.isHidden = false
                                 self?.nextButton.tintColor = .systemBlue
-                                
-                                // Hide the loading icon
-                                self?.initialLoadingIndicator.stopAnimating()
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 self?.presentErrorAlert(error)
@@ -88,7 +88,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
                         }
                     }
                 case .failure(let error):
+                    // Print and display the error and hide the loading icon
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.stopLoadingIcon()
                     self?.presentErrorAlert(error)
                 }
             }
@@ -98,8 +100,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
-        view.backgroundColor = .background
-        savingLoadingIndicator.isHidden = true
         previousButton.deactivate()
         previousButton.tintColor = .lightGray
         nextButton.tintColor = .lightGray
@@ -108,7 +108,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
         
         // Hide the button to choose the winner if the user is not the lead player
-        if game.leadPlayer != currentUser.reference {
+        if game.leadPlayerID != currentUser.recordID {
             chooseWinnerButton.isHidden = true
             constraintToButton.isActive = false
             constraintToSafeArea.isActive = true
@@ -157,53 +157,22 @@ class ResultsViewController: UIViewController, HasAGameObject {
         }
     }
     
-    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
-    func disableUI() {
-        // Display the loading icon while the image saves
-        savingLoadingIndicator.startAnimating()
-        savingLoadingIndicator.isHidden = false
-        
-        // Don't allow the user to interact with the screen while the save is in progress
-        chooseWinnerButton.deactivate()
-        nextButton.deactivate()
-        nextButton.tintColor = .lightGray
-        previousButton.deactivate()
-        previousButton.tintColor = .lightGray
-    }
-    
-    func enableUI() {
-        // Hide the loading icon
-        savingLoadingIndicator.stopAnimating()
-        savingLoadingIndicator.isHidden = true
-        
-        // Re enable the buttons as applicable
-        chooseWinnerButton.activate()
-        if pageControl.currentPage < pageControl.numberOfPages {
-            nextButton.activate()
-            nextButton.tintColor = .systemBlue // TODO: - do I want a different color for this?
-        }
-        if pageControl.currentPage > 0 {
-            previousButton.activate()
-            previousButton.tintColor = .systemBlue
-        }
-    }
-    
     // MARK: - Respond to Notifications
     
     @objc func transitionToNewPage(_ sender: NSNotification) {
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName,
+            gameID == game.recordID,
             let currentUser = UserController.shared.currentUser
             else { return }
 
         // If the leaderboard is open, close it
-        NotificationCenter.default.post(Notification(name: closeLeaderboard, userInfo: ["gameID" : game.recordID.recordName]))
+        NotificationCenter.default.post(Notification(name: closeLeaderboard, userInfo: ["gameID" : game.recordID]))
         
         // Decide on the next destination view controller based on the type of update
         DispatchQueue.main.async {
             if sender.name == toNewRound {
-                if game.leadPlayer == currentUser.reference {
+                if game.leadPlayerID == currentUser.recordID {
                     self.nextDestination = .Drawing
                 } else {
                     self.nextDestination = .Waiting
@@ -222,7 +191,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     func presentEndOFRoundView(with game: Game) {
         let storyboard = UIStoryboard(name: StoryboardNames.EndOfRound.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? EndOfRoundViewController else { return }
-        initialVC.gameID = game.recordID.recordName
+        initialVC.gameID = game.recordID
         initialVC.nextDestination = self.nextDestination
         initialVC.modalPresentationStyle = .overFullScreen
         initialVC.modalTransitionStyle = .crossDissolve
@@ -245,13 +214,13 @@ class ResultsViewController: UIViewController, HasAGameObject {
             let meme = meme
             else { return }
         
-        presentTextFieldAlert(title: "Report Drawing?", message: "Report the drawing for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
+        presentTextFieldAlert(title: "Report User?", message: "Report the author of this drawing for offensive or inappropriate content", textFieldPlaceholder: "Describe problem...") { (complaint) in
             
             // Form the body of the report
-            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.author.recordID). User description of problem is: \(complaint)"
+            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.authorID). User description of problem is: \(complaint)"
             
             // Save the complaint to the cloud to be reviewed later
-            ComplaintController.createComplaint(with: content, photo: meme.photo) { [weak self] (result) in
+            ComplaintController.createComplaint(with: content, image: meme.image) { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
@@ -275,13 +244,13 @@ class ResultsViewController: UIViewController, HasAGameObject {
             else { return }
         let caption = captions[pageControl.currentPage]
         
-        presentTextFieldAlert(title: "Report Caption?", message: "Report the caption for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
+        presentTextFieldAlert(title: "Report User?", message: "Report the author of this caption for offensive or inappropriate content", textFieldPlaceholder: "Describe problem...") { (complaint) in
             
             // Form the body of the report
-            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a caption made by user with id \(caption.author.recordID) about a drawing made by user with id \(meme.author.recordID). Caption text is \(caption.text). User description of problem is: \(complaint)"
+            let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a caption made by user with id \(caption.authorID) about a drawing made by user with id \(meme.authorID). Caption text is \(caption.text). User description of problem is: \(complaint)"
             
             // Save the complaint to the cloud to be reviewed later
-            ComplaintController.createComplaint(with: content, photo: meme.photo, caption: caption.text) { [weak self] (result) in
+            ComplaintController.createComplaint(with: content, image: meme.image, caption: caption.text) { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
@@ -305,8 +274,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
         // Get the caption based on which "page" the view is on at the time the button is clicked
         let caption = captions[pageControl.currentPage]
         
-        // Disable the UI while the data loads
-        disableUI()
+        // Show the loading icon
+        view.startLoadingIcon()
         
         // Update the data in the meme and the caption
         MemeController.shared.setWinningCaption(to: caption, for: meme) { [weak self] (result) in
@@ -321,6 +290,9 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 // Save the updated game to the cloud
                 GameController.shared.saveChanges(to: game) { (result) in
                     DispatchQueue.main.async {
+                        // Hide the loading icon
+                        self?.view.stopLoadingIcon()
+                        
                         switch result {
                         case .success(_):
                             // If the game is over, go to the game over view
@@ -328,27 +300,21 @@ class ResultsViewController: UIViewController, HasAGameObject {
                                 // Otherwise, set the next destination as the waiting view
                             else { self?.nextDestination = .Waiting }
                             
-                            // Before transitioning to the next view, first display the results of this round
-                            self?.savingLoadingIndicator.stopAnimating()
+                            // Before transitioning to the next view, first display the results of this round)
                             self?.presentEndOFRoundView(with: game)
                         case .failure(let error):
                             // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             self?.presentErrorAlert(error)
-                            
-                            // Reset the UI
-                            self?.enableUI()
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    // Print and display the error
+                    // Print and display the error and hide the loading icon
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.stopLoadingIcon()
                     self?.presentErrorAlert(error)
-                    
-                    // Reset the UI
-                    self?.enableUI()
                 }
             }
         }

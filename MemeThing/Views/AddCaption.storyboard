@@ -82,18 +82,14 @@
                                     <constraint firstItem="jPV-4g-3rQ" firstAttribute="trailing" secondItem="7IK-AJ-lNo" secondAttribute="trailing" constant="-12" id="q9N-Qv-L5O"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="GQi-c7-ih1">
-                                <rect key="frame" x="178.5" y="792.5" width="57" height="57.5"/>
-                            </activityIndicatorView>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" name="background"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="nkK-uE-dFS" firstAttribute="top" secondItem="9G1-Tm-2X0" secondAttribute="top" id="0sC-zd-kj4"/>
                             <constraint firstItem="nkK-uE-dFS" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="17t-QN-WYx"/>
                             <constraint firstItem="9G1-Tm-2X0" firstAttribute="bottom" secondItem="xcm-NG-LHC" secondAttribute="bottom" constant="12" id="1iS-t2-Tf9"/>
                             <constraint firstItem="hmp-WS-XX3" firstAttribute="top" secondItem="gCh-mx-hlE" secondAttribute="top" id="8Gb-wj-136"/>
-                            <constraint firstItem="GQi-c7-ih1" firstAttribute="height" secondItem="xcm-NG-LHC" secondAttribute="height" id="9bx-2J-teb"/>
                             <constraint firstItem="xcm-NG-LHC" firstAttribute="height" secondItem="9G1-Tm-2X0" secondAttribute="height" multiplier="0.07" id="BS0-m4-LIn"/>
                             <constraint firstItem="2qC-42-JGe" firstAttribute="top" secondItem="hmp-WS-XX3" secondAttribute="bottom" id="Dgo-g1-U45"/>
                             <constraint firstItem="KHy-3E-I4Q" firstAttribute="top" secondItem="2qC-42-JGe" secondAttribute="bottom" id="JIm-c2-XYL"/>
@@ -104,12 +100,9 @@
                             <constraint firstItem="hmp-WS-XX3" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="eI7-pM-E04"/>
                             <constraint firstItem="hmp-WS-XX3" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="hFx-Ur-YO4"/>
                             <constraint firstItem="2qC-42-JGe" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="ir9-h3-KIM"/>
-                            <constraint firstItem="GQi-c7-ih1" firstAttribute="centerX" secondItem="xcm-NG-LHC" secondAttribute="centerX" id="jYH-Yo-SS0"/>
                             <constraint firstItem="nkK-uE-dFS" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="kRm-aa-SN6"/>
                             <constraint firstItem="KHy-3E-I4Q" firstAttribute="width" secondItem="9G1-Tm-2X0" secondAttribute="width" multiplier="0.9" id="m5D-xD-GaQ"/>
                             <constraint firstItem="xcm-NG-LHC" firstAttribute="top" secondItem="KHy-3E-I4Q" secondAttribute="bottom" constant="8" id="sb1-FW-wNU"/>
-                            <constraint firstItem="GQi-c7-ih1" firstAttribute="width" secondItem="xcm-NG-LHC" secondAttribute="height" multiplier="1:1" id="st0-3f-Yjz"/>
-                            <constraint firstItem="GQi-c7-ih1" firstAttribute="centerY" secondItem="xcm-NG-LHC" secondAttribute="centerY" id="t94-yf-bSr"/>
                             <constraint firstItem="xcm-NG-LHC" firstAttribute="width" secondItem="9G1-Tm-2X0" secondAttribute="width" multiplier="0.9" id="xCQ-1I-88j"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9G1-Tm-2X0"/>
@@ -120,7 +113,6 @@
                     <connections>
                         <outlet property="captionTextField" destination="KHy-3E-I4Q" id="BVi-in-Bts"/>
                         <outlet property="keyboardHeightLayoutConstraint" destination="sb1-FW-wNU" id="SUa-GW-06J"/>
-                        <outlet property="loadingIndicator" destination="GQi-c7-ih1" id="fLQ-op-Axf"/>
                         <outlet property="memeImageView" destination="7IK-AJ-lNo" id="IA8-Xi-3a1"/>
                         <outlet property="navigationBar" destination="nkK-uE-dFS" id="xZp-iN-6xU"/>
                         <outlet property="sendButton" destination="xcm-NG-LHC" id="YPk-ut-lNZ"/>
@@ -139,6 +131,9 @@
     <resources>
         <image name="ellipsis" catalog="system" width="128" height="37"/>
         <image name="flag" catalog="system" width="128" height="121"/>
+        <namedColor name="background">
+            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="navBar">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

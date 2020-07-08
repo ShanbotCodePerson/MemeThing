@@ -18,7 +18,7 @@ class FriendTableViewCell: UITableViewCell {
     
     // MARK: - Outlets
     
-    @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var pointsLabel: UILabel!
     @IBOutlet weak var buttonStackView: UIStackView!
     @IBOutlet weak var rightConstraint: NSLayoutConstraint!
@@ -31,52 +31,58 @@ class FriendTableViewCell: UITableViewCell {
     // MARK: - Actions
     
     @IBAction func friendRequestButtonTapped(_ sender: UIButton) {
+        // TODO: - test that this actually works, and if so then add to other cells
+        // Show the loading icon over the cell
+        self.contentView.startLoadingIcon(color: .white)
+        
+        // Pass the functionality off to the delegate
         delegate?.respondToFriendRequest(from: self, accept: (sender.tag == 1))
     }
     
     // MARK: - Set Up UI
     
-    func setUpViews(section: FriendsListTableViewController.SectionNames, username: String?, points: Int? = nil) {
+    func setUpViews(section: FriendsListTableViewController.SectionNames, name: String?, points: Int? = nil) {
+        nameLabel.textAlignment = .left
+        
         switch section {
         case .pendingFriendRequests:
-            guard let username = username else { return }
-            setUpPendingFriendRequestView(for: username)
+            guard let name = name else { return }
+            setUpPendingFriendRequestView(for: name)
         case .outgoingFriendRequests:
-            guard let username = username else { return }
-            setUpOutgoingFriendRequestView(for: username)
+            guard let name = name else { return }
+            setUpOutgoingFriendRequestView(for: name)
         case .friends:
-            setUpFriendView(for: username, points: points)
+            setUpFriendView(for: name, points: points)
         }
     }
     
-    private func setUpPendingFriendRequestView(for username: String) {
+    private func setUpPendingFriendRequestView(for name: String) {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = false
-        usernameLabel.text = "\(username) has sent you a friend request"
+        nameLabel.text = "\(name) has sent you a friend request"
         contentView.backgroundColor = .systemGreen
     }
     
-    private func setUpOutgoingFriendRequestView(for username: String) {
+    private func setUpOutgoingFriendRequestView(for name: String) {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = true
-        usernameLabel.text = "Waiting for \(username) to respond to your friend request"
+        nameLabel.text = "Waiting for \(name) to respond to your friend request"
         contentView.backgroundColor = .systemRed
     }
     
-    private func setUpFriendView(for username: String?, points: Int?) {
+    private func setUpFriendView(for name: String?, points: Int?) {
         buttonStackView.isHidden = true
         contentView.backgroundColor = .clear
         
-        if let username = username {
-            usernameLabel.text = username
+        if let name = name {
+            nameLabel.text = name
             pointsLabel.text = "Points: \(points ?? 0)"
-            usernameLabel.textAlignment = .left
             pointsLabel.textAlignment = .right
             rightConstraint.constant = 6
             pointsLabel.isHidden = false
         } else {
-            usernameLabel.text = "You have not added any friends yet"
-            usernameLabel.textAlignment = .center
+            nameLabel.text = "You have not added any friends yet"
+            nameLabel.textAlignment = .center
             pointsLabel.isHidden = true
         }
     }

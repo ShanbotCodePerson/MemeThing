@@ -16,19 +16,16 @@ class DrawingViewController: UIViewController, HasAGameObject {
     @IBOutlet weak var undoButton: UIButton!
     @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
     
     var gameID: String?
-    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID.recordName == gameID }) }
+    var game: Game? { GameController.shared.currentGames?.first(where: { $0.recordID == gameID }) }
     
     // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .background
-        loadingIndicator.isHidden = true
         
         // Set up the observer to transition to the game over view in case the game ends prematurely
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
@@ -40,7 +37,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
         print("got here to \(#function) in drawingview and \(sender.name)")
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
-            gameID == game.recordID.recordName else { return }
+            gameID == game.recordID else { return }
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
@@ -49,26 +46,6 @@ class DrawingViewController: UIViewController, HasAGameObject {
                 self.transitionToStoryboard(named: .GameOver, with: game)
             }
         }
-    }
-    
-    // MARK: - Helper Methods
-    
-    // Helper methods to disable the UI while the data is loading and reenable it when it's finished
-    func disableUI() {
-        loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
-        
-        canvasView.isUserInteractionEnabled = false
-        sendButton.deactivate()
-    }
-    
-    func enableUI() {
-        canvasView.isUserInteractionEnabled = true
-        sendButton.activate()
-        undoButton.isHidden = false
-        
-        loadingIndicator.isHidden = true
-        loadingIndicator.stopAnimating()
     }
     
     // MARK: - Actions
@@ -99,20 +76,15 @@ class DrawingViewController: UIViewController, HasAGameObject {
         undoButton.isHidden = true
         let image = canvasView.getImage()
         
-        // Don't allow the user to continue drawing or resubmit the drawing while the image saves
-        disableUI()
+        // Show the loading icon
+        view.startLoadingIcon()
         
         // Create the meme object and save it to the cloud
         MemeController.shared.createMeme(in: game, with: image, by: currentUser) { [weak self] (result) in
             switch result {
             case .success(let meme):
                 // Add the meme to the game
-                if var memes = game.memes {
-                    memes.append(meme.reference)
-                    game.memes = memes
-                } else {
-                    game.memes = [meme.reference]
-                }
+                if game.memes?.append(meme.recordID) == nil { game.memes = [meme.recordID] }
                 
                 // Update the game's status
                 game.gameStatus = .waitingForCaptions
@@ -123,24 +95,26 @@ class DrawingViewController: UIViewController, HasAGameObject {
                 // Save the game to the cloud
                  GameController.shared.saveChanges(to: game) { (result) in
                     DispatchQueue.main.async {
+                        // Hide the loading icon
+                        self?.view.stopLoadingIcon()
+                        
                         switch result {
                         case .success(_):
                             // Transition back to the waiting view until all the captions have been submitted
                             self?.transitionToStoryboard(named: .Waiting, with: game)
                         case .failure(let error):
-                            // Print and display the error and reset the UI
+                            // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             self?.presentErrorAlert(error)
-                            self?.enableUI()
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    // Print and display the error and reset the UI
+                    // Print and display the error and hide the loading icon
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.stopLoadingIcon()
                     self?.presentErrorAlert(error)
-                    self?.enableUI()
                 }
             }
         }
