@@ -122,7 +122,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
             let meme = meme
             else { return }
         
-        presentTextFieldAlert(title: "Report Drawing?", message: "Report the drawing for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
+        presentTextFieldAlert(title: "Report User?", message: "Report the author of this drawing for offensive or inappropriate content", textFieldPlaceholder: "Describe problem...") { (complaint) in
             
             // Form the body of the report
             let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.authorID). User description of problem is: \(complaint)"

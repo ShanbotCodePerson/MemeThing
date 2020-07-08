@@ -214,7 +214,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
             let meme = meme
             else { return }
         
-        presentTextFieldAlert(title: "Report Drawing?", message: "Report the drawing for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
+        presentTextFieldAlert(title: "Report User?", message: "Report the author of this drawing for offensive or inappropriate content", textFieldPlaceholder: "Describe problem...") { (complaint) in
             
             // Form the body of the report
             let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a drawing made by user with id \(meme.authorID). User description of problem is: \(complaint)"
@@ -244,7 +244,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
             else { return }
         let caption = captions[pageControl.currentPage]
         
-        presentTextFieldAlert(title: "Report Caption?", message: "Report the caption for offensive content", textFieldPlaceholder: "Describe problem...") { (complaint) in
+        presentTextFieldAlert(title: "Report User?", message: "Report the author of this caption for offensive or inappropriate content", textFieldPlaceholder: "Describe problem...") { (complaint) in
             
             // Form the body of the report
             let content = "Report filed by user with id \(currentUser.recordID) on \(Date()) regarding a caption made by user with id \(caption.authorID) about a drawing made by user with id \(meme.authorID). Caption text is \(caption.text). User description of problem is: \(complaint)"
