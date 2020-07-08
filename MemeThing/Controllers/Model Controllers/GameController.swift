@@ -340,9 +340,34 @@ class GameController {
                     return completion(.failure(.fsError(error)))
                 }
                 
-                return completion(.success(true))
+                let group = DispatchGroup()
                 
-                // FIXME: - delete all associated memes and captions
+                // Delete all the memes and captions associated with the game
+                group.enter()
+                MemeController.shared.deleteAllMemes(in: game) { (result) in
+                    switch result {
+                    case .success(_):
+                        group.leave()
+                    case .failure(let error):
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                }
+                group.enter()
+                MemeController.shared.deleteAllCaptions(in: game) { (result) in
+                    switch result {
+                    case .success(_):
+                        group.leave()
+                    case .failure(let error):
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                }
+                
+                // Return the success
+                group.notify(queue: .main) { return completion(.success(true)) }
         }
     }
     

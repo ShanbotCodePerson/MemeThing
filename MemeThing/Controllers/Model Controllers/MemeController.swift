@@ -250,7 +250,79 @@ class MemeController {
         }
     }
     
-    // TODO: - Delete all memes associated with a game when the game is over
+    // Delete all memes associated with a game
+    func deleteAllMemes(in game: Game, completion: @escaping resultCompletion) {
+        // Fetch the data from the cloud
+        db.collection(MemeStrings.recordType)
+            .whereField(MemeStrings.gameIDKey, isEqualTo: game.recordID)
+            .getDocuments { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                let memes = documents.compactMap { Meme(dictionary: $0.data()) }
+                
+                let group = DispatchGroup()
+                
+                // Delete all the memes
+                documents.forEach {
+                    group.enter()
+                    self?.db.collection(MemeStrings.recordType).document($0.documentID).delete() { (error) in
+                        if let error = error {
+                            // Print and return the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return completion(.failure(.fsError(error)))
+                        }
+                        group.leave()
+                    }
+                }
+                
+                // Delete all the corresponding meme images
+                memes.forEach {
+                    group.enter()
+                    self?.storage.reference().child("memes/\($0.recordID).jpg").delete { (error) in
+                        if let error = error {
+                            // Print and return the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return completion(.failure(.fsError(error)))
+                        }
+                        group.leave()
+                    }
+                }
+                
+                // Return the success
+                group.notify(queue: .main) { return completion(.success(true)) }
+        }
+    }
     
-    // TODO: - Delete all captions associated with a game when the game is over
+    // Delete all captions associated with a game when the game is over
+    func deleteAllCaptions(in game: Game, completion: @escaping resultCompletion) {
+        // Fetch the data from the cloud
+        db.collection(CaptionStrings.recordType)
+            .whereField(CaptionStrings.gameIDKey, isEqualTo: game.recordID)
+            .getDocuments { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                
+                // Delete all the captions
+                documents.forEach {
+                    self?.db.collection(CaptionStrings.recordType).document($0.documentID).delete()
+                }
+                
+                // Return the success
+                return completion(.success(true))
+        }
+    }
 }

@@ -15,7 +15,7 @@ struct MemeStrings {
     static let recordType = "Meme"
     fileprivate static let authorIDKey = "authorID"
     fileprivate static let winningCaptionIDKey = "winningCaptionID"
-    fileprivate static let gameIDKey = "gameID"
+    static let gameIDKey = "gameID"
     static let recordIDKey = "recordID"
 }
 
