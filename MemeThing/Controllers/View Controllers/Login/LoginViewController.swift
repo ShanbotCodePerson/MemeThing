@@ -173,10 +173,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // Try to log the user in
     func autoLogin() {
-        // Show the loading icon
-        view.startLoadingIcon()
-        
         if let user = Auth.auth().currentUser {
+            // Show the loading icon
+            view.startLoadingIcon()
+            
             // If the user's email account has not yet been verified, don't sign in
             guard user.isEmailVerified else {
                 // Hide the loading icon
