@@ -93,7 +93,11 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                                 if let gameWinner = game.gameWinner {
                                     self?.nextUpLabel.text = "The game is over and \(gameWinner) has won!"
                                 } else {
-                                    self?.nextUpLabel.text = "Next it is \(game.leadPlayerName)'s turn to draw a meme!"
+                                    if game.leadPlayerID == UserController.shared.currentUser?.recordID {
+                                         self?.nextUpLabel.text = "Next it is your turn to draw a meme!"
+                                    } else {
+                                        self?.nextUpLabel.text = "Next it is \(game.leadPlayerName)'s turn to draw a meme!"
+                                    }
                                 }
                                 
                                 guard let currentUser = UserController.shared.currentUser else { return }
