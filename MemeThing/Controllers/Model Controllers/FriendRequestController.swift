@@ -243,6 +243,62 @@ class FriendRequestController {
         }
     }
     
+    // Delete friend requests associated with the current user
+    func deleteAll(completion: @escaping resultCompletion) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        let group = DispatchGroup()
+        
+        // Fetch all outstanding friend requests sent by the user
+        group.enter()
+        db.collection(FriendRequestStrings.recordType)
+            .whereField(FriendRequestStrings.fromIDKey, isEqualTo: currentUser.recordID)
+            .whereField(FriendRequestStrings.statusKey, isLessThan: FriendRequest.Status.removingFriend.rawValue)
+            .getDocuments(completion: { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                
+                // Delete all the voting invitations
+                documents.forEach {
+                    self?.db.collection(FriendRequestStrings.recordType).document($0.documentID).delete()
+                }
+                
+                group.leave()
+            })
+        
+        // Fetch all outstanding friend requests sent to the user
+        group.enter()
+        db.collection(FriendRequestStrings.recordType)
+            .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.recordID)
+            .getDocuments(completion: { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                
+                // Delete all the voting invitations
+                documents.forEach {
+                    self?.db.collection(FriendRequestStrings.recordType).document($0.documentID).delete()
+                }
+                
+                group.leave()
+            })
+        
+        group.notify(queue: .main) { return completion(.success(true)) }
+    }
+    
     // MARK: - Notifications
     
     func subscribeToFriendRequestNotifications() {
