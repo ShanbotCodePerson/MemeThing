@@ -448,12 +448,17 @@ class GameController {
         
         // Post the notification to update the view
         guard let notificationName = notificationDestination else { return }
-        NotificationCenter.default.post(Notification(name: notificationName,  userInfo: ["gameID" : game.recordID]))
+        NotificationCenter.default.post(Notification(name: notificationName, userInfo: ["gameID" : game.recordID]))
         print("notification sent with name \(notificationName)")
     }
     
     private func handleDeletion(of game: Game) {
         print("got here to \(#function), not sure I even need this function")
+        
+        // Transition back to the main menu if the user was currently viewing the end of game screen
+        NotificationCenter.default.post(Notification(name: toMainMenu, userInfo: ["gameID" : game.recordID]))
+        
+        // Handle any necessary clean up for leaving the game
         handleEnd(for: game)
     }
 

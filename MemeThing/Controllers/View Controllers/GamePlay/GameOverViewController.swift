@@ -26,7 +26,23 @@ class GameOverViewController: UIViewController, HasAGameObject {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set up the UI
         setUpViews()
+        
+        // Set up the observer to listen for notifications that the game has been restarted
+        NotificationCenter.default.addObserver(self, selector: #selector(returnToMainMenu(_:)), name: toMainMenu, object: nil)
+    }
+    
+    // MARK: - Notifications
+    
+    @objc func returnToMainMenu(_ sender: NSNotification) {
+        // Only change the view if the update is for the game that the user currently has open
+        guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
+            gameID == game.recordID else { return }
+        
+        // Return to the main menu
+        DispatchQueue.main.async { self.transitionToStoryboard(named: .MainMenu) }
     }
     
     // MARK: - Set Up UI
