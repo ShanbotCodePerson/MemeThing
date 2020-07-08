@@ -278,6 +278,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                        self?.presentErrorAlert(error)
                     }
                     
+                    // Finish setting up the account
+                    self?.setUpUser(with: email, name: self?.screenNameTextField.text)
+                    
                     // Present an alert asking them to check their email
                     self?.presentVerifyEmailAlert(with: email)
                 }
@@ -286,9 +289,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     // Once a user has verified their email, finish completing their account
-    func setUpUser(with email: String) {
-        // FIXME: - maybe create this earlier, so that name originally entered by user is saved as is
-        UserController.shared.createUser(with: email, screenName: screenNameTextField.text) { [weak self] (result) in
+    func setUpUser(with email: String, name: String?) {
+        UserController.shared.createUser(with: email, screenName: name) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
@@ -334,7 +336,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         case .failure(let error):
                             // If the error is that the user doesn't exist yet, then create it
                             if case MemeThingError.noUserFound = error {
-                                self?.setUpUser(with: email)
+                                self?.setUpUser(with: email, name: self?.screenNameTextField.text)
                                 return
                             }
                             // Print and display the error

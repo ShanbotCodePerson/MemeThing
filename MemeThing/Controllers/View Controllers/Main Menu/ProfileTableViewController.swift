@@ -113,7 +113,7 @@ class ProfileTableViewController: UITableViewController {
         do {
             // Sign the user out and return to the main screen
             try Auth.auth().signOut()
-            transitionToStoryboard(named: .Main, direction: .fromRight)
+            transitionToStoryboard(named: .Main)
         } catch let error {
             // Print and display the error
             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
