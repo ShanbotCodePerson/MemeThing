@@ -31,7 +31,6 @@ class FriendTableViewCell: UITableViewCell {
     // MARK: - Actions
     
     @IBAction func friendRequestButtonTapped(_ sender: UIButton) {
-        // TODO: - test that this actually works, and if so then add to other cells
         // Show the loading icon over the cell
         self.contentView.startLoadingIcon(color: .white)
         

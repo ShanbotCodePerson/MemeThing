@@ -134,8 +134,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
                     case .success(_):
                         // Display the success
                         self?.presentAlert(title: "Report Sent", message: "Your report has been sent and will be reviewed as soon as possible")
-                        
-                        // TODO: - Notify the development team (aka me)
                     case .failure(let error):
                         // Print and display the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

@@ -79,7 +79,6 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                     
                     // Fetch the winning caption
                     MemeController.shared.fetchWinningCaption(for: meme) { (result) in
-                        print("got here to \(#function) and fetched winning caption")
                         DispatchQueue.main.async {
                             // Hide the loading icon
                             self?.view.stopLoadingIcon()
@@ -106,7 +105,6 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                                 
                                 guard let currentUser = UserController.shared.currentUser else { return }
                                 if caption.authorID == currentUser.recordID {
-                                    print("got here to updating current user's points")
                                     UserController.shared.update(currentUser, points: 1) { (result) in
                                         // TODO: - show alerts? tell winning user they earned a point?
                                         switch result {

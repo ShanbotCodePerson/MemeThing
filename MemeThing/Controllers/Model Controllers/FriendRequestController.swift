@@ -92,7 +92,6 @@ class FriendRequestController {
     // Read (fetch) all the pending friend requests
     func fetchPendingFriendRequests(completion: @escaping resultCompletion) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-        print("got here to \(#function) and SoT has \(pendingFriendRequests?.count)")
         
         // Fetch the data from the cloud
         db.collection(FriendRequestStrings.recordType)
@@ -113,14 +112,14 @@ class FriendRequestController {
                     friendRequest.documentID = document.documentID
                     return friendRequest
                 }
-                print("got here to \(#function) and there are \(pendingFriendRequests.count) new friend requests")
                 
                 // Save the data to the source of truth
                 self?.pendingFriendRequests = pendingFriendRequests
-                print("SoT now has \(self?.pendingFriendRequests?.count)")
                 
                 // TODO: - display alerts for each friend request?
-                // TODO: - update the table views
+                
+                // Send a local notification to update the friends tableview
+                NotificationCenter.default.post(Notification(name: .friendsUpdate))
                 
                 // Return the success
                 return completion(.success(true))
@@ -130,7 +129,6 @@ class FriendRequestController {
     // Read (fetch) all the outgoing friend requests
     func fetchOutgoingFriendRequests(completion: @escaping resultCompletion) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-        print("got here to \(#function) and SoT has \(self.outgoingFriendRequests?.count)")
         
         // Fetch the data from the cloud
         db.collection(FriendRequestStrings.recordType)
@@ -151,14 +149,14 @@ class FriendRequestController {
                     friendRequest.documentID = document.documentID
                     return friendRequest
                 }
-                print("got here to \(#function) and there are \(outgoingFriendRequests.count) outgoing friend requests")
                 
                 // Save the data to the source of truth
                 self?.outgoingFriendRequests = outgoingFriendRequests
-                print("SoT now has \(self?.outgoingFriendRequests?.count)")
                 
                 // TODO: - display alerts for each friend request?
-                // TODO: - update the table views
+                
+                // Send a local notification to update the friends tableview
+                NotificationCenter.default.post(Notification(name: .friendsUpdate))
                 
                 // Return the success
                 return completion(.success(true))
@@ -302,7 +300,6 @@ class FriendRequestController {
     // MARK: - Notifications
     
     func subscribeToFriendRequestNotifications() {
-        print("got here to \(#function)")
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted of any adding-type friend requests with the current user as the recipient
@@ -310,7 +307,6 @@ class FriendRequestController {
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.recordID)
             .whereField(FriendRequestStrings.statusKey, isEqualTo: FriendRequest.Status.waiting.rawValue)
             .addSnapshotListener { [weak self] (snapshot, error) in
-//                print("got here to \(#function) and snapshot triggered")
                 
                 if let error = error {
                     // Print and return the error
@@ -325,7 +321,6 @@ class FriendRequestController {
                     friendRequest.documentID = document.documentID
                     return friendRequest
                 }
-//                print("Got \(newFriendRequests.count) new friend requests. SoT currently has \(self?.pendingFriendRequests?.count)")
                 
                 for friendRequest in newFriendRequests {
                     // Add the friend request to the source of truth if it isn't already
@@ -333,17 +328,13 @@ class FriendRequestController {
                         self?.pendingFriendRequests = [friendRequest]
                     }
                     
-                    // TODO: - Send a local notification to present an alert and update the tableview
-                    //                    NotificationCenter.default.post(name: newFriendRequest, object: friendRequest)
+                    // Send a local notification to update the friends tableview
                     NotificationCenter.default.post(Notification(name: .friendsUpdate))
-                    // FIXME: - need to figure out how this works when there are multiple friend requests
                 }
-//                print("now SoT has \(self?.pendingFriendRequests?.count)")
         }
     }
     
     func subscribeToFriendRequestResponseNotifications() {
-        print("got here to \(#function)")
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted of changes to friend requests with the current user as the sender
@@ -351,7 +342,6 @@ class FriendRequestController {
             .whereField(FriendRequestStrings.fromIDKey, isEqualTo: currentUser.recordID)
             .whereField(FriendRequestStrings.statusKey, in: [FriendRequest.Status.accepted.rawValue, FriendRequest.Status.denied.rawValue])
             .addSnapshotListener { [weak self] (snapshot, error) in
-//                print("got here to \(#function) and snapshot triggered")
                 
                 if let error = error {
                     // Print and return the error
@@ -382,7 +372,7 @@ class FriendRequestController {
                             UserController.shared.fetchUsersFriends { (result) in
                                 switch result {
                                 case .success(_):
-                                    // TODO: - Send local notifications to show an alert and update the tableview as necessary
+                                    // Send a local notification to update the friends tableview
                                     NotificationCenter.default.post(Notification(name: .friendsUpdate))
                                 case .failure(let error):
                                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -399,13 +389,15 @@ class FriendRequestController {
                 // Remove the requests from the source of truth
                 self?.outgoingFriendRequests?.removeAll(where: { newResponses.contains($0) })
                 
+                // Send a local notification to update the friends tableview
+                NotificationCenter.default.post(Notification(name: .friendsUpdate))
+                
                 // Delete the requests now that they're no longer needed
                 newResponses.forEach({ self?.delete($0, completion: { (_) in }) })
         }
     }
     
     func subscribeToRemovingFriendNotifications() {
-        print("got here to \(#function)")
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted of any removing-type friend requests with the current user as the recipient
@@ -413,7 +405,6 @@ class FriendRequestController {
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.recordID)
             .whereField(FriendRequestStrings.statusKey, isEqualTo: FriendRequest.Status.removingFriend.rawValue)
             .addSnapshotListener { [weak self] (snapshot, error) in
-//                print("got here to \(#function) and snapshot triggered")
                 
                 if let error = error {
                     // Print and return the error

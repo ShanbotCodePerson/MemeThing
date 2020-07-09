@@ -113,9 +113,7 @@ class FriendsListTableViewController: UITableViewController {
             }
         }
         
-        group.notify(queue: .main) {
-            self.tableView.reloadData()
-        }
+        group.notify(queue: .main) { self.tableView.reloadData() }
     }
     
     func blockUser(with ID: String, name: String) {

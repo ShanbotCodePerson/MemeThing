@@ -18,10 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="gvR-q1-r0k">
-                                <rect key="frame" x="-43" y="251" width="500" height="448"/>
+                                <rect key="frame" x="41.5" y="251" width="331" height="448"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUO-Of-2dw" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="500" height="106"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="331" height="106"/>
                                         <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="18"/>
                                         <state key="normal" title="New Game"/>
                                         <connections>
@@ -29,7 +29,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QmY-Sk-EIK" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="114" width="500" height="106"/>
+                                        <rect key="frame" x="0.0" y="114" width="331" height="106"/>
                                         <fontDescription key="fontDescription" name="Futura-Bold" family="Futura" pointSize="17"/>
                                         <state key="normal" title="Resume Game"/>
                                         <connections>
@@ -37,21 +37,21 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U25-wd-vr0" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="228" width="500" height="106"/>
+                                        <rect key="frame" x="0.0" y="228" width="331" height="106"/>
                                         <state key="normal" title="Friends"/>
                                         <connections>
                                             <segue destination="zQQ-LU-7ql" kind="show" identifier="toFriendsTVC" id="XD5-pV-uaG"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9HV-p3-eCF" customClass="MemeThingButton" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="342" width="500" height="106"/>
+                                        <rect key="frame" x="0.0" y="342" width="331" height="106"/>
                                         <state key="normal" title="Profile"/>
                                         <connections>
                                             <segue destination="Ko3-va-DOb" kind="show" id="rY2-du-ZtF"/>
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ey-6h-7nf">
-                                        <rect key="frame" x="0.0" y="452" width="500" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="452" width="331" height="0.0"/>
                                         <state key="normal" title="Fake notifications"/>
                                         <connections>
                                             <action selector="tempFakeNotifications:" destination="TSk-Yz-NDn" eventType="touchUpInside" id="BIM-eF-eLS"/>
@@ -59,7 +59,7 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="500" id="sZr-PI-J7w"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="500" id="sZr-PI-J7w"/>
                                 </constraints>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome, [screen name]!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dPK-ol-adM" customClass="MemeThingLabelBackground" customModule="MemeThing" customModuleProvider="target">

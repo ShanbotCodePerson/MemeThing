@@ -73,7 +73,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
                             
                             switch result {
                             case .success(let captions):
-                                print("in completion in results VC and captions are \(captions)")
                                 // Shuffle order of captions so that they're not in order of who submitted first
                                 self?.captions = captions.shuffled()
                                 
@@ -116,9 +115,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     }
     
     func setUpPages(from captions: [Caption]?) {
-        print("setting up scroll view")
         guard let captions = captions else { return }
-        print("got here to \(#function) and \(captions.count) captions have loaded")
         
         var frame = CGRect.zero
         

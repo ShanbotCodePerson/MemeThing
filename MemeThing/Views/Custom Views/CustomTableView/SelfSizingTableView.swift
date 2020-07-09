@@ -20,7 +20,6 @@ class SelfSizingTableView: UITableView {
     
     override var intrinsicContentSize: CGSize {
         let height = min(contentSize.height * 1.4, maxHeight)
-        print("got here to \(#function) and height is \(height)")
         if contentSize.height * 1.4 < maxHeight {
             isScrollEnabled = false
         }
