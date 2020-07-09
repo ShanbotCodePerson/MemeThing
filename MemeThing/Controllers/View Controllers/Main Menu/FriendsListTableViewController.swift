@@ -12,6 +12,8 @@ class FriendsListTableViewController: UITableViewController {
     
     // MARK: - Properties
     
+    var refresh = UIRefreshControl()
+    
     enum SectionNames: String {
         case pendingFriendRequests = "Pending Friend Requests"
         case outgoingFriendRequests = "Outgoing Friend Requests"
@@ -58,10 +60,30 @@ class FriendsListTableViewController: UITableViewController {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
+    @objc func refreshData() {
+        // Check for new pending friend requests
+        FriendRequestController.shared.fetchPendingFriendRequests { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    self?.refresh.endRefreshing()
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
+    }
+    
     func setUpViews() {
         navigationController?.setNavigationBarHidden(false, animated: true)
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .background
+        
+        // Set up the refresh icon to check for updates whenever the user pulls down on the tableview
+        refresh.attributedTitle = NSAttributedString(string: "Checking for updates")
+        refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        tableView.addSubview(refresh)
     }
     
     func loadAllData() {
@@ -149,7 +171,6 @@ class FriendsListTableViewController: UITableViewController {
     
     // A helper function for when the user clicks to add the friend
     func sendRequest(to email: String) {
-        // FIXME: - send friend requests by email instead of username
         guard let currentUser = UserController.shared.currentUser,
             email != currentUser.email else {
                 presentAlert(title: "Invalid Email", message: "You can't send a friend request to yourself")
@@ -173,7 +194,6 @@ class FriendsListTableViewController: UITableViewController {
                         self?.presentAlert(title: "Blocked", message: "You have blocked \(email)")
                         return
                     }
-                    // FIXME: - pretty sure this stuff won't work
                     if let outgoingFriendRequests = FriendRequestController.shared.outgoingFriendRequests {
                         guard outgoingFriendRequests.filter({ $0.toID == friend.recordID }).count == 0 else {
                             self?.presentAlert(title: "Already Sent", message: "You have already sent a friend request to \(email)")

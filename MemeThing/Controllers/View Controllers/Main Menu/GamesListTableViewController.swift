@@ -75,10 +75,10 @@ class GamesListTableViewController: UITableViewController {
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .background
         
-//        // FIXME: - need to figure out why this isn't calling its target function
-//        refresh.attributedTitle = NSAttributedString(string: "Check for updates")
-//        refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-//        tableView.addSubview(refresh)
+        // Set up the refresh icon to check for updates whenever the user pulls down on the tableview
+        refresh.attributedTitle = NSAttributedString(string: "Checking for updates")
+        refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        tableView.addSubview(refresh)
     }
     
     func loadAllData() {
