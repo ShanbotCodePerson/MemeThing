@@ -35,7 +35,6 @@ class MainMenuViewController: UIViewController {
         welcomeLabel.text = "Welcome, \(user.screenName)!"
     }
     
-    // FIXME: - delete later, for debugging only
     @IBAction func tempFakeNotifications(_ sender: UIButton) {
         // Reload all the data as if a notification of any sort had been received (for testing on simulators) 
         UserController.shared.fetchUsersFriends { (_) in }
