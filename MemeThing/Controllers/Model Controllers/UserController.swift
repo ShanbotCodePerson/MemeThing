@@ -220,7 +220,7 @@ class UserController {
                 }
                 
                 // Tell the tableview in the friends list to update
-                NotificationCenter.default.post(Notification(name: friendsUpdate))
+                NotificationCenter.default.post(Notification(name: .friendsUpdate))
             case .failure(let error):
                 // Print the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

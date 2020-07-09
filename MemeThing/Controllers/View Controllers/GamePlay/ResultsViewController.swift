@@ -42,8 +42,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
         loadAllData()
         
         // Set up the observers to listen for notifications telling the view to transition to a new page
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toNewRound, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toNewRound, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
     }
     
     // MARK: - Helper Method
@@ -167,18 +167,18 @@ class ResultsViewController: UIViewController, HasAGameObject {
             else { return }
 
         // If the leaderboard is open, close it
-        NotificationCenter.default.post(Notification(name: closeLeaderboard, userInfo: ["gameID" : game.recordID]))
+        NotificationCenter.default.post(Notification(name: .closeLeaderboard, userInfo: ["gameID" : game.recordID]))
         
         // Decide on the next destination view controller based on the type of update
         DispatchQueue.main.async {
-            if sender.name == toNewRound {
+            if sender.name == .toNewRound {
                 if game.leadPlayerID == currentUser.recordID {
                     self.nextDestination = .Drawing
                 } else {
                     self.nextDestination = .Waiting
                 }
             }
-            else if sender.name == toGameOver {
+            else if sender.name == .toGameOver {
                 self.nextDestination = .GameOver
             }
             

@@ -51,7 +51,7 @@ class FriendRequestController {
                 }
                 
                 // Send a local notification to update the tableview
-                NotificationCenter.default.post(Notification(name: friendsUpdate))
+                NotificationCenter.default.post(Notification(name: .friendsUpdate))
                 
                 // Return the success
                 return completion(.success(true))
@@ -187,7 +187,7 @@ class FriendRequestController {
                         switch result {
                         case .success(_):
                             // Send a local notification to update the friends tableview
-                            NotificationCenter.default.post(Notification(name: friendsUpdate))
+                            NotificationCenter.default.post(Notification(name: .friendsUpdate))
                         case .failure(let error):
                             // Print and return the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -217,7 +217,7 @@ class FriendRequestController {
                 self?.pendingFriendRequests?.removeAll(where: { $0 == friendRequest })
                 
                 // Send a local notification to update the friends tableview
-                NotificationCenter.default.post(Notification(name: friendsUpdate))
+                NotificationCenter.default.post(Notification(name: .friendsUpdate))
                 
                 // Otherwise return the success
                 return completion(.success(true))
@@ -335,7 +335,7 @@ class FriendRequestController {
                     
                     // TODO: - Send a local notification to present an alert and update the tableview
                     //                    NotificationCenter.default.post(name: newFriendRequest, object: friendRequest)
-                    NotificationCenter.default.post(Notification(name: friendsUpdate))
+                    NotificationCenter.default.post(Notification(name: .friendsUpdate))
                     // FIXME: - need to figure out how this works when there are multiple friend requests
                 }
 //                print("now SoT has \(self?.pendingFriendRequests?.count)")
@@ -383,8 +383,7 @@ class FriendRequestController {
                                 switch result {
                                 case .success(_):
                                     // TODO: - Send local notifications to show an alert and update the tableview as necessary
-                                    //                                    NotificationCenter.default.post(name: responseToFriendRequest, object: response)
-                                    NotificationCenter.default.post(Notification(name: friendsUpdate))
+                                    NotificationCenter.default.post(Notification(name: .friendsUpdate))
                                 case .failure(let error):
                                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 }
@@ -442,7 +441,7 @@ class FriendRequestController {
                         UserController.shared.usersFriends?.removeAll(where: { friendsIDs.contains($0.recordID) })
                         
                         // Send a local notification to update the tableview
-                        NotificationCenter.default.post(Notification(name: friendsUpdate))
+                        NotificationCenter.default.post(Notification(name: .friendsUpdate))
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     }

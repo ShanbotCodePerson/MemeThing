@@ -48,7 +48,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         
         // Add an observer for if the user denies permission to receive remote notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(deniedNotifications), name: notificationsDenied, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deniedNotifications), name: .notificationsDenied, object: nil)
     }
     
     // MARK: - Respond to Notifications
@@ -134,10 +134,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func toggleToLogin() {
         UIView.animate(withDuration: 0.2) {
             // Toggle which of the buttons is highlighted
-            self.loginToggleButton.tintColor = .purpleAccent
-            self.loginToggleButton.backgroundColor = .systemGray4
-            self.signUpToggleButton.tintColor = .lightGray
-            self.signUpToggleButton.backgroundColor = .clear
+            self.loginToggleButton.backgroundColor = .loginBox
+            self.signUpToggleButton.backgroundColor = .loginBoxFaded
             
             // Hide all but the necessary text fields
             self.screenNameTextField.isHidden = true
@@ -153,10 +151,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func toggleToSignUp() {
         UIView.animate(withDuration: 0.2) {
             // Toggle which of the buttons is highlighted
-            self.loginToggleButton.tintColor = .lightGray
-            self.loginToggleButton.backgroundColor = .clear
-            self.signUpToggleButton.tintColor = .purpleAccent
-            self.signUpToggleButton.backgroundColor = .systemGray4
+            self.loginToggleButton.backgroundColor = .loginBoxFaded
+            self.signUpToggleButton.backgroundColor = .loginBox
             
             // Show all the text fields
             self.screenNameTextField.isHidden = false

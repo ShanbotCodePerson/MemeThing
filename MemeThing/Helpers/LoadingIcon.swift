@@ -10,10 +10,10 @@ import UIKit
 
 extension UIView {
     
-    func startLoadingIcon(color: UIColor = .darkGray) {
+    func startLoadingIcon(color: UIColor = .loadingIcon) {
         let backgroundView = UIView()
         backgroundView.frame = CGRect.init(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.15)
+        backgroundView.backgroundColor = UIColor.loadingIconBackground.withAlphaComponent(0.15)
         backgroundView.tag = 475647
         
         let activityIndicator = UIActivityIndicatorView(frame: backgroundView.frame)

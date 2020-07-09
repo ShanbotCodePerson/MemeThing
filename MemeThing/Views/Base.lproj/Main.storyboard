@@ -30,7 +30,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Meme Thing" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cis-zz-m9s">
                                 <rect key="frame" x="41.5" y="74" width="331" height="182"/>
                                 <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="70"/>
-                                <color key="textColor" name="purpleAccent"/>
+                                <color key="textColor" name="navBarText"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Psx-mv-opk">
@@ -44,8 +44,9 @@
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TA2-Zb-LEP">
                                                         <rect key="frame" x="0.0" y="0.0" width="165.5" height="49"/>
-                                                        <color key="backgroundColor" systemColor="systemGray4Color" red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <color key="tintColor" name="purpleAccent"/>
+                                                        <color key="backgroundColor" name="loginBox"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                        <color key="tintColor" name="border"/>
                                                         <state key="normal" title="Sign Up"/>
                                                         <connections>
                                                             <action selector="signUpToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="q6s-ln-sVF"/>
@@ -53,8 +54,9 @@
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Asi-DS-fLW">
                                                         <rect key="frame" x="165.5" y="0.0" width="165.5" height="49"/>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="backgroundColor" name="loginBoxFaded"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                        <color key="tintColor" name="border"/>
                                                         <state key="normal" title="Log In"/>
                                                         <connections>
                                                             <action selector="loginToggleButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="QHd-jT-mRK"/>
@@ -91,7 +93,7 @@
                                                         </subviews>
                                                     </stackView>
                                                 </subviews>
-                                                <color key="backgroundColor" systemColor="systemGray4Color" red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" name="loginBox"/>
                                                 <constraints>
                                                     <constraint firstItem="lFt-yw-6cG" firstAttribute="centerX" secondItem="TyY-uG-08h" secondAttribute="centerX" id="Ktt-HO-ItG"/>
                                                     <constraint firstItem="lFt-yw-6cG" firstAttribute="centerY" secondItem="TyY-uG-08h" secondAttribute="centerY" id="aMg-2C-lZb"/>
@@ -100,9 +102,10 @@
                                                 </constraints>
                                             </view>
                                         </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </stackView>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" name="loginBox"/>
                                 <constraints>
                                     <constraint firstItem="Lol-Sz-ptg" firstAttribute="height" secondItem="Psx-mv-opk" secondAttribute="height" id="MJB-uA-WZc"/>
                                     <constraint firstItem="Lol-Sz-ptg" firstAttribute="centerX" secondItem="Psx-mv-opk" secondAttribute="centerX" id="f8J-aV-r8P"/>
@@ -166,7 +169,16 @@
         <namedColor name="background">
             <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="purpleAccent">
+        <namedColor name="border">
+            <color red="0.25490196078431371" green="0.23529411764705882" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="loginBox">
+            <color red="0.57045853140000002" green="0.57047235969999999" blue="0.57046490910000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="loginBoxFaded">
+            <color red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="navBarText">
             <color red="0.25490196078431371" green="0.23529411764705882" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>

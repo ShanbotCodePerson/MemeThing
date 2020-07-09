@@ -73,13 +73,15 @@ class NotificationHelper {
 
 // MARK: - Local Notification Names
 
-let friendsUpdate = Notification.Name("friendsUpdate")
-let closeLeaderboard = Notification.Name("closeLeaderboard")
-let updateListOfGames = Notification.Name("updateListOfGames")
-let updateWaitingView = Notification.Name("updateWaitingView")
-let toCaptionsView = Notification.Name("toCaptionsView")
-let toResultsView = Notification.Name("toResultsView")
-let toNewRound = Notification.Name("toNewRound")
-let toGameOver = Notification.Name("toGameOver")
-let toMainMenu = Notification.Name("toMainMenu")
-let notificationsDenied = Notification.Name("notificationsDenied")
+extension Notification.Name {
+    static let friendsUpdate = Notification.Name("friendsUpdate")
+    static let closeLeaderboard = Notification.Name("closeLeaderboard")
+    static let updateListOfGames = Notification.Name("updateListOfGames")
+    static let updateWaitingView = Notification.Name("updateWaitingView")
+    static let toCaptionsView = Notification.Name("toCaptionsView")
+    static let toResultsView = Notification.Name("toResultsView")
+    static let toNewRound = Notification.Name("toNewRound")
+    static let toGameOver = Notification.Name("toGameOver")
+    static let toMainMenu = Notification.Name("toMainMenu")
+    static let notificationsDenied = Notification.Name("notificationsDenied")
+}

@@ -31,13 +31,13 @@ class WaitingViewController: UIViewController, HasAGameObject {
         
         // FIXME: - do I have to remove these observers upon deinit?
         // Set up the observers to listen for notifications telling the view to reload its data
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshPage(_:)), name: updateWaitingView, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(gameStarting(_:)), name: toNewRound, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshPage(_:)), name: .updateWaitingView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(gameStarting(_:)), name: .toNewRound, object: nil)
         
         // Set up the observers to listen for notifications telling the view to transition to a new page
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toCaptionsView, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toResultsView, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toCaptionsView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toResultsView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
     }
     
     // MARK: - Set Up UI
@@ -97,13 +97,13 @@ class WaitingViewController: UIViewController, HasAGameObject {
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
-            if sender.name == toCaptionsView {
+            if sender.name == .toCaptionsView {
                 self.transitionToStoryboard(named: .AddCaption, with: game)
             }
-            else if sender.name == toResultsView {
+            else if sender.name == .toResultsView {
                 self.transitionToStoryboard(named: .ViewResults, with: game)
             }
-            else if sender.name == toGameOver {
+            else if sender.name == .toGameOver {
                 self.transitionToStoryboard(named: .GameOver, with: game)
             }
         }

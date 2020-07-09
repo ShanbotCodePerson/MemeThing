@@ -30,10 +30,10 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         setUpViews()
         
         // Set up the observers to listen for notifications telling the view to transition to a new page
-        NotificationCenter.default.addObserver(self, selector: #selector(closeSelf(_:)), name: closeLeaderboard, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toCaptionsView, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toResultsView, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(closeSelf(_:)), name: .closeLeaderboard, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toCaptionsView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toResultsView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
     }
     
     // MARK: - Respond to Notifications
@@ -53,13 +53,13 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
-            if sender.name == toCaptionsView {
+            if sender.name == .toCaptionsView {
                 self.transitionToStoryboard(named: .AddCaption, with: game)
             }
-            else if sender.name == toResultsView {
+            else if sender.name == .toResultsView {
                 self.transitionToStoryboard(named: .ViewResults, with: game)
             }
-            else if sender.name == toGameOver {
+            else if sender.name == .toGameOver {
                 self.transitionToStoryboard(named: .GameOver, with: game)
             }
         }

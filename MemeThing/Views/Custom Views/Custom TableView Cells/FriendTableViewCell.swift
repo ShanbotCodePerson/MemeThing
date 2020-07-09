@@ -43,6 +43,7 @@ class FriendTableViewCell: UITableViewCell {
     
     func setUpViews(section: FriendsListTableViewController.SectionNames, name: String?, points: Int? = nil) {
         nameLabel.textAlignment = .left
+        rightConstraint.constant = 0
         
         switch section {
         case .pendingFriendRequests:
@@ -60,14 +61,14 @@ class FriendTableViewCell: UITableViewCell {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = false
         nameLabel.text = "\(name) has sent you a friend request"
-        contentView.backgroundColor = .systemGreen
+        contentView.backgroundColor = .greenAccent
     }
     
     private func setUpOutgoingFriendRequestView(for name: String) {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = true
         nameLabel.text = "Waiting for \(name) to respond to your friend request"
-        contentView.backgroundColor = .systemRed
+        contentView.backgroundColor = .redAccent
     }
     
     private func setUpFriendView(for name: String?, points: Int?) {
