@@ -1,5 +1,11 @@
 # MemeThing
-An interactive multiplayer game that is halfway between apples-to-apples and a caption contest. 
+An interactive multiplayer game that is halfway between apples-to-apples and a caption contest.
+
+## App Store
+
+Find us on the App Store! https://apps.apple.com/us/app/memething/id1522753418
+
+## Description
 
 Users can search for friends by their email address, then start a game with a minimum of two friends. The person who initiates the game is the first lead player. As soon as everyone has responded to the invitation to the game, the lead player draws whatever they like and sends it to the other players to caption. Once everyone has captioned the drawing, all players can see the drawing with the captions anonymously displayed below it. The lead player has the option of selecting a caption as a winner. When a winning caption is selected, the author of that caption earns a point. A new lead player is chosen and another round begins until someone earns three points total and becomes the winner of the game.
 
