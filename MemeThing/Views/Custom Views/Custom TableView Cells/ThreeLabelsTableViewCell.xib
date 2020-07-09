@@ -52,6 +52,7 @@
                             <constraint firstItem="IMy-6n-dg6" firstAttribute="leading" secondItem="77y-AD-EAl" secondAttribute="leading" constant="6" id="JUL-Gu-MM9"/>
                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="Ucg-Cc-Ngy"/>
                             <constraint firstAttribute="bottom" secondItem="IMy-6n-dg6" secondAttribute="bottom" id="ozo-R2-6Lx"/>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="600" id="wLx-qt-llM"/>
                             <constraint firstItem="IMy-6n-dg6" firstAttribute="top" secondItem="77y-AD-EAl" secondAttribute="top" id="yRr-8x-6uX"/>
                             <constraint firstAttribute="trailing" secondItem="IMy-6n-dg6" secondAttribute="trailing" constant="6" id="zIp-7f-9Fm"/>
                         </constraints>
@@ -59,7 +60,7 @@
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-                    <constraint firstItem="77y-AD-EAl" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.95" id="91k-Fn-auY"/>
+                    <constraint firstItem="77y-AD-EAl" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.95" priority="999" id="91k-Fn-auY"/>
                     <constraint firstItem="77y-AD-EAl" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="OTt-Fd-2Sh"/>
                     <constraint firstItem="77y-AD-EAl" firstAttribute="height" secondItem="H2p-sc-9uM" secondAttribute="height" multiplier="0.8" id="saj-3f-e1r"/>
                     <constraint firstItem="77y-AD-EAl" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="vgL-xP-8z7"/>

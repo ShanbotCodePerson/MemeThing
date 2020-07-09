@@ -64,7 +64,6 @@ class GamesListTableViewController: UITableViewController {
     }
     
     @objc func refreshData() {
-        print("got here to \(#function)")
         DispatchQueue.main.async {
             self.loadAllData()
             self.refresh.endRefreshing()
@@ -93,7 +92,6 @@ class GamesListTableViewController: UITableViewController {
                 
                 switch result {
                 case .success(_):
-                    print("got here to \(#function)")
                     // Refresh the table to show the data
                     self?.tableView.reloadData()
                 case .failure(let error):

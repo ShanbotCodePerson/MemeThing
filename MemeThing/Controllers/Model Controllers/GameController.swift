@@ -272,58 +272,58 @@ class GameController {
         }
     }
     
-//    // Helper method to handle merge conflicts between different games pushed to the cloud at the same time
-//    func handleMerge(for localGame: Game, completion: @escaping resultCompletionWith<Game>){
-//        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-//        print("got here to \(#function)")
-//
-//        // Fetch the updated game from the cloud
-//        fetchGame(from: localGame.recordID) { [weak self] (result) in
-//            switch result {
-//            case .success(let remoteGame):
-//                // Starting with the remote game's array, update just the indices of the current user's points and status
-//                print("remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
-//                remoteGame.updateStatus(of: currentUser, to: localGame.getStatus(of: currentUser))
-//                remoteGame.updatePoints(of: currentUser, to: localGame.getPoints(of: currentUser))
-//                print("now remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
-//
-//                // If all players have seen the game, delete it from the cloud
-//                if remoteGame.allPlayersDone {
-//                    self?.delete(remoteGame, completion: { (result) in
-//                        switch result {
-//                        case .success(_):
-//                            // Return the success
-//                            return completion(.success(remoteGame))
-//                        case .failure(let error):
-//                            // Print and return the error
-//                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                            return completion(.failure(error))
-//                        }
-//                    })
-//                } else {
-//                    // Otherwise, use the newly merged data to recalculate the game's status
-//                    remoteGame.resetGameStatus()
-//                    //                if remoteGame.allPlayersResponded { remoteGame.gameStatus = .waitingForDrawing }
-//                    //                if remoteGame.allCaptionsSubmitted { remoteGame.gameStatus = .waitingForResult }
-//                    //                if remoteGame.gameWinner != nil { remoteGame.gameStatus = .gameOver }
-//                    print("finally, remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
-//
-//                    // Try again to save the newly merged and updated game
-//                    self?.saveChanges(to: remoteGame, completion: completion)
-//                }
-//            case .failure(let error):
-//                // If the error is that a merge is needed again, handle that
-//                if case MemeThingError.mergeNeeded = error {
-//                    self?.handleMerge(for: localGame, completion: completion)
-//                }
-//                else {
-//                    // Print and return the error
-//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                    return completion(.failure(error))
-//                }
-//            }
-//        }
-//    }
+    //    // Helper method to handle merge conflicts between different games pushed to the cloud at the same time
+    //    func handleMerge(for localGame: Game, completion: @escaping resultCompletionWith<Game>){
+    //        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+    //        print("got here to \(#function)")
+    //
+    //        // Fetch the updated game from the cloud
+    //        fetchGame(from: localGame.recordID) { [weak self] (result) in
+    //            switch result {
+    //            case .success(let remoteGame):
+    //                // Starting with the remote game's array, update just the indices of the current user's points and status
+    //                print("remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
+    //                remoteGame.updateStatus(of: currentUser, to: localGame.getStatus(of: currentUser))
+    //                remoteGame.updatePoints(of: currentUser, to: localGame.getPoints(of: currentUser))
+    //                print("now remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
+    //
+    //                // If all players have seen the game, delete it from the cloud
+    //                if remoteGame.allPlayersDone {
+    //                    self?.delete(remoteGame, completion: { (result) in
+    //                        switch result {
+    //                        case .success(_):
+    //                            // Return the success
+    //                            return completion(.success(remoteGame))
+    //                        case .failure(let error):
+    //                            // Print and return the error
+    //                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+    //                            return completion(.failure(error))
+    //                        }
+    //                    })
+    //                } else {
+    //                    // Otherwise, use the newly merged data to recalculate the game's status
+    //                    remoteGame.resetGameStatus()
+    //                    //                if remoteGame.allPlayersResponded { remoteGame.gameStatus = .waitingForDrawing }
+    //                    //                if remoteGame.allCaptionsSubmitted { remoteGame.gameStatus = .waitingForResult }
+    //                    //                if remoteGame.gameWinner != nil { remoteGame.gameStatus = .gameOver }
+    //                    print("finally, remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
+    //
+    //                    // Try again to save the newly merged and updated game
+    //                    self?.saveChanges(to: remoteGame, completion: completion)
+    //                }
+    //            case .failure(let error):
+    //                // If the error is that a merge is needed again, handle that
+    //                if case MemeThingError.mergeNeeded = error {
+    //                    self?.handleMerge(for: localGame, completion: completion)
+    //                }
+    //                else {
+    //                    // Print and return the error
+    //                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+    //                    return completion(.failure(error))
+    //                }
+    //            }
+    //        }
+    //    }
     
     // Delete a game when it's finished
     func delete(_ game: Game, completion: @escaping resultCompletion) {
@@ -375,8 +375,6 @@ class GameController {
     
     // FIXME: - remote notifications, for when the app is closed
     
-    // FIXME: - I think this same function will actually run for all game changes (creations, updates, and deletes)
-    /// check to see when this function runs, and break out into helper functions as needed
     // Subscribe all players to notifications related to games
     func subscribeToGameNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
@@ -401,8 +399,6 @@ class GameController {
                     let status = game.getStatus(of: currentUser)
                     guard status != .denied, status != .quit, status != .done else { return }
                     
-                    print("got here to \(#function) and \(game) \(change.type.rawValue)")
-                    
                     switch change.type {
                     case .added:
                         // The user has been invited to a game
@@ -421,19 +417,15 @@ class GameController {
     // MARK: - Helper Methods
     
     private func handleInvitation(to game: Game) {
-        print("got here to \(#function)")
-        
         // Update the source of truth if it doesn't already contain the game
         if currentGames?.uniqueAppend(game) == nil { currentGames = [game] }
         
         // Tell the table view list of current games to update itself and show an alert to the user
         NotificationCenter.default.post(Notification(name: .updateListOfGames))
-        // TODO: - show a pop up with the game invitation?
     }
     
     private func handleUpdate(to game: Game) {
         guard let currentUser = UserController.shared.currentUser else { return }
-        print("got here to \(#function)")
         
         // Ignore updates to games that the user is not currently participating in
         let status = game.getStatus(of: currentUser)
@@ -476,26 +468,21 @@ class GameController {
         // Post the notification to update the view
         guard let notificationName = notificationDestination else { return }
         NotificationCenter.default.post(Notification(name: notificationName, userInfo: ["gameID" : game.recordID]))
-        print("notification sent with name \(notificationName)")
     }
     
     private func handleDeletion(of game: Game) {
-        print("got here to \(#function), not sure I even need this function")
-        
         // Transition back to the main menu if the user was currently viewing the end of game screen
         NotificationCenter.default.post(Notification(name: .toMainMenu, userInfo: ["gameID" : game.recordID]))
         
         // Handle any necessary clean up for leaving the game
         handleEnd(for: game)
     }
-
+    
     // Perform all the cleanup for the user to exit the game, whether it's over or the user has quit
     private func handleEnd(for game: Game) {
-        print("got here to \(#function) and SoT has \(String(describing: currentGames?.count)) games")
         // Remove the game from the source of truth
         currentGames?.removeAll(where: { $0 == game })
-        print("Now has \(String(describing: currentGames?.count)) games")
-
+        
         // Tell the table view list of current games to update itself
         NotificationCenter.default.post(Notification(name: .updateListOfGames))
     }

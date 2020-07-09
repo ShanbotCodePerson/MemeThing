@@ -9,7 +9,6 @@
 import UIKit
 
 extension UILabel {
-    // TODO: - refactor - probably don't need border here
     func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 0, borderColor: UIColor = .border, backgroundColor: UIColor? = .purpleAccent, opacity: CGFloat = 0.6, textColor: UIColor = .mainText, fontSize: CGFloat = 20, fontName: String = FontNames.mainFont) {
         addCornerRadius(cornerRadius)
         addBorder(width: borderWidth, color: borderColor)

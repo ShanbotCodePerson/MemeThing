@@ -34,17 +34,13 @@ class DrawingViewController: UIViewController, HasAGameObject {
     // MARK: - Respond to Notifications
     
     @objc func transitionToNewPage(_ sender: NSNotification) {
-        print("got here to \(#function) in drawingview and \(sender.name)")
         // Only change the view if the update is for the game that the user currently has open
         guard let game  = game, let gameID = sender.userInfo?["gameID"] as? String,
             gameID == game.recordID else { return }
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
-            if sender.name == .toGameOver {
-                print("should be going to game over view now")
-                self.transitionToStoryboard(named: .GameOver, with: game)
-            }
+            if sender.name == .toGameOver { self.transitionToStoryboard(named: .GameOver, with: game) }
         }
     }
     

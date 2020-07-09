@@ -57,7 +57,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        print("got here to \(#function)")
         
         // Handle the notification
         NotificationHelper.processNotification(withData: userInfo) { (rawValue) in
@@ -72,7 +71,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        print("got here to \(#function)")
         
         // TODO: - find out which view the user is currently on and don't present an alert if the user is currently in the game
         

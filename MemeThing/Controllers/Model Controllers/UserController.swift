@@ -85,7 +85,6 @@ class UserController {
     }
     
     // Read (fetch) all the friends of a user
-    // TODO: - is this a problem with security? how to only have access to relevant details?
     func fetchUsersFriends(completion: @escaping resultCompletion) {
         guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
@@ -330,7 +329,6 @@ class UserController {
     
     // Set up all the necessary notification subscriptions for the user
     func setUpUser() {
-        print("got here to \(#function)")
         FriendRequestController.shared.subscribeToFriendRequestNotifications()
         FriendRequestController.shared.subscribeToFriendRequestResponseNotifications()
         FriendRequestController.shared.subscribeToRemovingFriendNotifications()
