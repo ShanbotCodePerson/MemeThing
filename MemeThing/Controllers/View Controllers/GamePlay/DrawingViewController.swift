@@ -28,7 +28,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
         super.viewDidLoad()
         
         // Set up the observer to transition to the game over view in case the game ends prematurely
-        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: toGameOver, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
     }
     
     // MARK: - Respond to Notifications
@@ -41,7 +41,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
         
         // Transition to the relevant view based on the type of update
         DispatchQueue.main.async {
-            if sender.name == toGameOver {
+            if sender.name == .toGameOver {
                 print("should be going to game over view now")
                 self.transitionToStoryboard(named: .GameOver, with: game)
             }

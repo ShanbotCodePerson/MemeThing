@@ -186,7 +186,7 @@ class GameController {
                 if !accept { self?.handleEnd(for: game) }
                 
                 // Tell the table view list of current games to update itself
-                NotificationCenter.default.post(Notification(name: updateListOfGames))
+                NotificationCenter.default.post(Notification(name: .updateListOfGames))
                 
                 // Return the success
                 return completion(.success(true))
@@ -427,7 +427,7 @@ class GameController {
         if currentGames?.uniqueAppend(game) == nil { currentGames = [game] }
         
         // Tell the table view list of current games to update itself and show an alert to the user
-        NotificationCenter.default.post(Notification(name: updateListOfGames))
+        NotificationCenter.default.post(Notification(name: .updateListOfGames))
         // TODO: - show a pop up with the game invitation?
     }
     
@@ -450,27 +450,27 @@ class GameController {
         switch game.gameStatus {
         case .waitingForPlayers:
             // Tell the waiting view to update itself
-            notificationDestination = updateWaitingView
+            notificationDestination = .updateWaitingView
         case .waitingForDrawing:
             // Tell the view (either the waiting view or the end of round view) to transition to a new round
-            notificationDestination = toNewRound
+            notificationDestination = .toNewRound
         case .waitingForCaptions:
             // If the player has not submitted a caption yet, tell their view to transition to the captions view
             if game.getStatus(of: currentUser) == .accepted {
-                notificationDestination = toCaptionsView
+                notificationDestination = .toCaptionsView
             } else {
                 // Otherwise, tell the waiting view to update itself
-                notificationDestination = updateWaitingView
+                notificationDestination = .updateWaitingView
             }
         case .waitingForResult:
             // Tell the waiting view to transition to the results view
-            notificationDestination = toResultsView
+            notificationDestination = .toResultsView
         case .waitingForNextRound:
             // Tell the results view to navigate to a new round
-            notificationDestination = toNewRound
+            notificationDestination = .toNewRound
         case .gameOver:
             // Tell the results view to navigate to the game over view
-            notificationDestination = toGameOver
+            notificationDestination = .toGameOver
         }
         
         // Post the notification to update the view
@@ -483,7 +483,7 @@ class GameController {
         print("got here to \(#function), not sure I even need this function")
         
         // Transition back to the main menu if the user was currently viewing the end of game screen
-        NotificationCenter.default.post(Notification(name: toMainMenu, userInfo: ["gameID" : game.recordID]))
+        NotificationCenter.default.post(Notification(name: .toMainMenu, userInfo: ["gameID" : game.recordID]))
         
         // Handle any necessary clean up for leaving the game
         handleEnd(for: game)
@@ -497,6 +497,6 @@ class GameController {
         print("Now has \(String(describing: currentGames?.count)) games")
 
         // Tell the table view list of current games to update itself
-        NotificationCenter.default.post(Notification(name: updateListOfGames))
+        NotificationCenter.default.post(Notification(name: .updateListOfGames))
     }
 }

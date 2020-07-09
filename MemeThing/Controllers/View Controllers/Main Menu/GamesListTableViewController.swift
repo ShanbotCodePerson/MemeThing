@@ -54,7 +54,7 @@ class GamesListTableViewController: UITableViewController {
         if GameController.shared.currentGames == nil { loadAllData() }
         
         // Set up the observer to listen for notifications telling the view to reload its data
-        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: updateListOfGames, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: .updateListOfGames, object: nil)
     }
     
     // MARK: - Helper Methods

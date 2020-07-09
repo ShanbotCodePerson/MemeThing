@@ -49,7 +49,7 @@ class FriendsListTableViewController: UITableViewController {
         loadAllData()
         
         // Set up the observer to listen for notifications telling the view to reload its data
-        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: friendsUpdate, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: .friendsUpdate, object: nil)
     }
     
     // MARK: - Helper Methods

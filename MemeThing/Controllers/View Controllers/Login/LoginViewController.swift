@@ -48,7 +48,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         
         // Add an observer for if the user denies permission to receive remote notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(deniedNotifications), name: notificationsDenied, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deniedNotifications), name: .notificationsDenied, object: nil)
     }
     
     // MARK: - Respond to Notifications
@@ -134,10 +134,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func toggleToLogin() {
         UIView.animate(withDuration: 0.2) {
             // Toggle which of the buttons is highlighted
-            self.loginToggleButton.tintColor = .purpleAccent
-            self.loginToggleButton.backgroundColor = .systemGray4
-            self.signUpToggleButton.tintColor = .lightGray
-            self.signUpToggleButton.backgroundColor = .clear
+            self.loginToggleButton.backgroundColor = .loginBox
+            self.signUpToggleButton.backgroundColor = .loginBoxFaded
             
             // Hide all but the necessary text fields
             self.screenNameTextField.isHidden = true
@@ -153,10 +151,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func toggleToSignUp() {
         UIView.animate(withDuration: 0.2) {
             // Toggle which of the buttons is highlighted
-            self.loginToggleButton.tintColor = .lightGray
-            self.loginToggleButton.backgroundColor = .clear
-            self.signUpToggleButton.tintColor = .purpleAccent
-            self.signUpToggleButton.backgroundColor = .systemGray4
+            self.loginToggleButton.backgroundColor = .loginBoxFaded
+            self.signUpToggleButton.backgroundColor = .loginBox
             
             // Show all the text fields
             self.screenNameTextField.isHidden = false
@@ -173,10 +169,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // Try to log the user in
     func autoLogin() {
-        // Show the loading icon
-        view.startLoadingIcon()
-        
         if let user = Auth.auth().currentUser {
+            // Show the loading icon
+            view.startLoadingIcon()
+            
             // If the user's email account has not yet been verified, don't sign in
             guard user.isEmailVerified else {
                 // Hide the loading icon
@@ -278,6 +274,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                        self?.presentErrorAlert(error)
                     }
                     
+                    // Finish setting up the account
+                    self?.setUpUser(with: email, name: self?.screenNameTextField.text)
+                    
                     // Present an alert asking them to check their email
                     self?.presentVerifyEmailAlert(with: email)
                 }
@@ -286,9 +285,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     // Once a user has verified their email, finish completing their account
-    func setUpUser(with email: String) {
-        // FIXME: - maybe create this earlier, so that name originally entered by user is saved as is
-        UserController.shared.createUser(with: email, screenName: screenNameTextField.text) { [weak self] (result) in
+    func setUpUser(with email: String, name: String?) {
+        UserController.shared.createUser(with: email, screenName: name) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
@@ -334,7 +332,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         case .failure(let error):
                             // If the error is that the user doesn't exist yet, then create it
                             if case MemeThingError.noUserFound = error {
-                                self?.setUpUser(with: email)
+                                self?.setUpUser(with: email, name: self?.screenNameTextField.text)
                                 return
                             }
                             // Print and display the error

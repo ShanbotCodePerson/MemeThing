@@ -31,7 +31,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
         setUpViews()
         
         // Set up the observer to listen for notifications that the game has been restarted
-        NotificationCenter.default.addObserver(self, selector: #selector(returnToMainMenu(_:)), name: toMainMenu, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(returnToMainMenu(_:)), name: .toMainMenu, object: nil)
     }
     
     // MARK: - Notifications

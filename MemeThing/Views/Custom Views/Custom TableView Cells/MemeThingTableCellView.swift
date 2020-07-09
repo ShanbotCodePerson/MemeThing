@@ -12,7 +12,7 @@ class MemeThingTableCellView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         addCornerRadius(8)
-        self.backgroundColor = UIColor.purpleAccent.withAlphaComponent(0.6)
+        self.backgroundColor = UIColor.cellBackground.withAlphaComponent(0.6)
     }
 }
 

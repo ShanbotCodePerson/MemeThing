@@ -23,14 +23,23 @@ extension UIView {
 
 extension UIColor {
     static let background = UIColor(named: "background")!
+    static let border = UIColor(named: "border")!
     static let navBar = UIColor(named: "navBar")!
+    static let navBarText = UIColor(named: "navBarText")!
+    static let loginBox = UIColor(named: "loginBox")!
+    static let loginBoxFaded = UIColor(named: "loginBoxFaded")!
+    static let loadingIcon = UIColor(named: "loadingIcon")!
+    static let loadingIconBackground = UIColor(named: "loadingIconBackground")!
     static let purpleAccent = UIColor(named: "purpleAccent")!
+    static let pinkAccent = UIColor(named: "pinkAccent")!
     static let greenAccent = UIColor(named: "greenAccent")!
     static let redAccent = UIColor(named: "redAccent")!
+    static let neutralAccent = UIColor(named: "neutralAccent")!
+    static let buttonText = UIColor(named: "buttonText")!
     static let lightBlueAccent = UIColor(named: "lightBlueAccent")!
     static let mainText = UIColor(named: "mainText")!
-    static let accentText = UIColor(named: "accentText")!
     static let textBackground = UIColor(named: "textBackground")!
+    static let cellBackground = UIColor(named: "cellBackground")!
 }
 
 struct FontNames {

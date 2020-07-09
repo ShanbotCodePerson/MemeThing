@@ -19,6 +19,7 @@ extension UIViewController {
     // MARK: - Navigation
     
     enum StoryboardNames: String  {
+        case Main
         case MainMenu
         case Waiting
         case Drawing
@@ -106,7 +107,7 @@ extension UIViewController {
     }
     
     // Present an alert with a text field to get some input from the user
-    func presentTextFieldAlert(title: String, message: String, textFieldPlaceholder: String, textFieldText: String? = nil, saveButtonTitle: String = "Save", completion: @escaping (String) -> Void) {
+    func presentTextFieldAlert(title: String, message: String, textFieldPlaceholder: String?, textFieldText: String? = nil, saveButtonTitle: String = "Save", completion: @escaping (String) -> Void) {
         // Create the alert controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
@@ -139,7 +140,7 @@ extension UIViewController {
     // Present an alert at the bottom of the screen to display an error to the user
     func presentErrorAlert(_ localizedError: LocalizedError) {
         // Create the alert controller
-        let alertController = UIAlertController(title: "ERROR", message: localizedError.errorDescription, preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title: "ERROR", message: localizedError.errorDescription, preferredStyle: .alert)
         
         // Add the dismiss button to the alert
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
@@ -149,7 +150,7 @@ extension UIViewController {
     }
     func presentErrorAlert(_ error: Error) {
         // Create the alert controller
-        let alertController = UIAlertController(title: "ERROR", message: error.localizedDescription, preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title: "ERROR", message: error.localizedDescription, preferredStyle: .alert)
         
         // Add the dismiss button to the alert
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel))

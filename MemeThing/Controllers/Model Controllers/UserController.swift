@@ -220,7 +220,7 @@ class UserController {
                 }
                 
                 // Tell the tableview in the friends list to update
-                NotificationCenter.default.post(Notification(name: friendsUpdate))
+                NotificationCenter.default.post(Notification(name: .friendsUpdate))
             case .failure(let error):
                 // Print the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -252,11 +252,63 @@ class UserController {
         saveChanges(to: user, completion: completion)
     }
     
-    // Delete a user
-    func delete(_ user: User, completion: @escaping resultCompletion) {
-        guard let documentID = user.documentID else { return completion(.failure(.noUserFound)) }
+    // Delete the current user
+    func deleteCurrentUser(completion: @escaping resultCompletion) {
+        guard let currentUser = currentUser,
+            let documentID = currentUser.documentID
+            else { return completion(.failure(.noUserFound)) }
         
-        // Delete the data from the cloud
+        let group = DispatchGroup()
+        
+        // Delete all friend requests sent to or from the current user
+        group.enter()
+        FriendRequestController.shared.deleteAll { (result) in
+            switch result {
+            case .success(_):
+                group.leave()
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+        
+        // Quit the user out of any games they were playing
+        if let games = GameController.shared.currentGames {
+            for game in games {
+                group.enter()
+                GameController.shared.quit(game) { (result) in
+                    switch result {
+                    case .success(_):
+                        group.leave()
+                    case .failure(let error):
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                }
+            }
+        }
+        
+        // Remove the current user as a friend from all their friends
+        if let friends = usersFriends {
+            for friend in friends {
+                group.enter()
+                FriendRequestController.shared.sendRequestToRemove(friend) { (result) in
+                    switch result {
+                    case .success(_):
+                        group.leave()
+                    case .failure(let error):
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                }
+            }
+        }
+        
+        // Delete the user's account from the cloud
+        group.enter()
         db.collection(UserStrings.recordType)
             .document(documentID)
             .delete() { (error) in
@@ -267,8 +319,11 @@ class UserController {
                     return completion(.failure(.fsError(error)))
                 }
                 
-                // FIXME: - delete all related objects, friend requests, etc
+                group.leave()
         }
+        
+        // Return the success
+        group.notify(queue: .main) { return completion(.success(true)) }
     }
     
     // MARK: - Helper Methods

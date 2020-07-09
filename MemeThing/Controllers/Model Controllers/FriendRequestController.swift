@@ -51,7 +51,7 @@ class FriendRequestController {
                 }
                 
                 // Send a local notification to update the tableview
-                NotificationCenter.default.post(Notification(name: friendsUpdate))
+                NotificationCenter.default.post(Notification(name: .friendsUpdate))
                 
                 // Return the success
                 return completion(.success(true))
@@ -187,7 +187,7 @@ class FriendRequestController {
                         switch result {
                         case .success(_):
                             // Send a local notification to update the friends tableview
-                            NotificationCenter.default.post(Notification(name: friendsUpdate))
+                            NotificationCenter.default.post(Notification(name: .friendsUpdate))
                         case .failure(let error):
                             // Print and return the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -217,7 +217,7 @@ class FriendRequestController {
                 self?.pendingFriendRequests?.removeAll(where: { $0 == friendRequest })
                 
                 // Send a local notification to update the friends tableview
-                NotificationCenter.default.post(Notification(name: friendsUpdate))
+                NotificationCenter.default.post(Notification(name: .friendsUpdate))
                 
                 // Otherwise return the success
                 return completion(.success(true))
@@ -241,6 +241,62 @@ class FriendRequestController {
                     // Otherwise return the success
                 else { return completion(.success(true)) }
         }
+    }
+    
+    // Delete friend requests associated with the current user
+    func deleteAll(completion: @escaping resultCompletion) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        let group = DispatchGroup()
+        
+        // Fetch all outstanding friend requests sent by the user
+        group.enter()
+        db.collection(FriendRequestStrings.recordType)
+            .whereField(FriendRequestStrings.fromIDKey, isEqualTo: currentUser.recordID)
+            .whereField(FriendRequestStrings.statusKey, isLessThan: FriendRequest.Status.removingFriend.rawValue)
+            .getDocuments(completion: { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                
+                // Delete all the voting invitations
+                documents.forEach {
+                    self?.db.collection(FriendRequestStrings.recordType).document($0.documentID).delete()
+                }
+                
+                group.leave()
+            })
+        
+        // Fetch all outstanding friend requests sent to the user
+        group.enter()
+        db.collection(FriendRequestStrings.recordType)
+            .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.recordID)
+            .getDocuments(completion: { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                
+                // Delete all the voting invitations
+                documents.forEach {
+                    self?.db.collection(FriendRequestStrings.recordType).document($0.documentID).delete()
+                }
+                
+                group.leave()
+            })
+        
+        group.notify(queue: .main) { return completion(.success(true)) }
     }
     
     // MARK: - Notifications
@@ -279,7 +335,7 @@ class FriendRequestController {
                     
                     // TODO: - Send a local notification to present an alert and update the tableview
                     //                    NotificationCenter.default.post(name: newFriendRequest, object: friendRequest)
-                    NotificationCenter.default.post(Notification(name: friendsUpdate))
+                    NotificationCenter.default.post(Notification(name: .friendsUpdate))
                     // FIXME: - need to figure out how this works when there are multiple friend requests
                 }
 //                print("now SoT has \(self?.pendingFriendRequests?.count)")
@@ -326,10 +382,8 @@ class FriendRequestController {
                             UserController.shared.fetchUsersFriends { (result) in
                                 switch result {
                                 case .success(_):
-                                    print("fill this out later")
                                     // TODO: - Send local notifications to show an alert and update the tableview as necessary
-                                    //                                    NotificationCenter.default.post(name: responseToFriendRequest, object: response)
-                                    NotificationCenter.default.post(Notification(name: friendsUpdate))
+                                    NotificationCenter.default.post(Notification(name: .friendsUpdate))
                                 case .failure(let error):
                                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 }
@@ -387,7 +441,7 @@ class FriendRequestController {
                         UserController.shared.usersFriends?.removeAll(where: { friendsIDs.contains($0.recordID) })
                         
                         // Send a local notification to update the tableview
-                        NotificationCenter.default.post(Notification(name: friendsUpdate))
+                        NotificationCenter.default.post(Notification(name: .friendsUpdate))
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     }
