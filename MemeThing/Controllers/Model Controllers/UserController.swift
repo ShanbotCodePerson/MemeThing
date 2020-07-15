@@ -37,8 +37,10 @@ class UserController {
         // Create the new user
         let user = User(email: email, screenName: screenName)
         
-        // Save the user to the cloud
+        let group = DispatchGroup()
+        
         // Save the user object to the cloud and save the documentID for editing purposes
+        group.enter()
         let reference: DocumentReference = db.collection(UserStrings.recordType).addDocument(data: user.asDictionary()) { (error) in
             
             if let error = error {
@@ -46,6 +48,7 @@ class UserController {
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(.fsError(error)))
             }
+            group.leave()
         }
         // FIXME: - threading issue here, but need reference outside
         user.documentID = reference.documentID
@@ -53,6 +56,7 @@ class UserController {
         // Save to the source of truth and return the success
         currentUser = user
         setUpUser()
+        group.notify(queue: .main) { return completion(.success(true)) }
     }
     
     // Read (fetch) the current user
