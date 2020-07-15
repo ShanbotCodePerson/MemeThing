@@ -215,6 +215,9 @@ class GamesListTableViewController: UITableViewController {
         // Get the record of the selected game
         let game = dataSource[indexPath.section].data[indexPath.row]
         
+//        transitionToStoryboard(named: enter_name_here, with: game)
+        // BETH: comment out lines 222-244 and uncomment out the above line with whatever storyboard you want to test
+        
         // Go to the correct page of the gameplay based on the status of the game and whether or not the user is the lead player
         switch game.gameStatus {
         case .waitingForPlayers:

@@ -40,6 +40,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         // Try to automatically log the user in
         autoLogin()
+        // BETH: comment out above line if you want to edit the login page
         
         // Set up the UI
         setUpViews()
