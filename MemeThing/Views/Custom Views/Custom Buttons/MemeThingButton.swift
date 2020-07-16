@@ -54,7 +54,8 @@ class MemeThingButton: UIButton {
 class SubmitButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderWidth: 2, backgroundColor: .greenAccent, textColor: .buttonText)
+        setUpViews(borderWidth: 0, backgroundColor: .greenAccent, textColor: .buttonText)
+        titleLabel?.font = UIFont(name: FontNames.mainFont, size: 35)
     }
 }
 
