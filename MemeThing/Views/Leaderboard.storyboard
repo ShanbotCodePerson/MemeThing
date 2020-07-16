@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="udx-0g-6jh">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Leaderboard View Controller-->
+        <scene sceneID="7tq-bA-yR6">
+            <objects>
+                <viewController id="udx-0g-6jh" customClass="LeaderboardViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="lcK-hF-0Gj">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[game status]" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y5T-UQ-2vA" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="41.5" y="324.5" width="331" height="20.5"/>
+                                <color key="backgroundColor" name="lightBlueAccent"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="323" placeholderIntrinsicHeight="200" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gKL-sf-953" customClass="SelfSizingTableView" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="41.5" y="353" width="331" height="200"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="playerCell" id="1ji-NQ-c3J" customClass="ThreeLabelsTableViewCell" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="331" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1ji-NQ-c3J" id="BdL-dA-5c4">
+                                            <rect key="frame" x="0.0" y="0.0" width="331" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="MYJ-P3-iiX">
+                                <rect key="frame" x="41.5" y="561" width="331" height="41"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tqM-eI-L3c" customClass="QuitButton" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="159.5" height="41"/>
+                                        <state key="normal" title="Quit Game"/>
+                                        <connections>
+                                            <action selector="quitButtonTapped:" destination="udx-0g-6jh" eventType="touchUpInside" id="qef-FY-iOt"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mmA-Fc-vb9" customClass="CloseButton" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="171.5" y="0.0" width="159.5" height="41"/>
+                                        <state key="normal" title="Close"/>
+                                        <connections>
+                                            <action selector="closeButtonTapped:" destination="udx-0g-6jh" eventType="touchUpInside" id="nwU-vR-DzO"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="top" secondItem="gKL-sf-953" secondAttribute="bottom" constant="8" id="0LE-WS-94Q"/>
+                            <constraint firstItem="y5T-UQ-2vA" firstAttribute="width" secondItem="c9Y-8r-g0v" secondAttribute="width" multiplier="0.8" id="9bw-cA-bPr"/>
+                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="width" secondItem="c9Y-8r-g0v" secondAttribute="width" multiplier="0.8" id="ADf-Ni-Rgn"/>
+                            <constraint firstItem="gKL-sf-953" firstAttribute="width" secondItem="c9Y-8r-g0v" secondAttribute="width" multiplier="0.8" id="Ko0-95-Z1c"/>
+                            <constraint firstItem="gKL-sf-953" firstAttribute="centerY" secondItem="c9Y-8r-g0v" secondAttribute="centerY" id="NQx-Ni-rHd"/>
+                            <constraint firstItem="gKL-sf-953" firstAttribute="top" secondItem="y5T-UQ-2vA" secondAttribute="bottom" constant="8" id="QW1-iZ-Paa"/>
+                            <constraint firstItem="gKL-sf-953" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="UU3-pp-Wmn"/>
+                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="WpU-S6-GmD"/>
+                            <constraint firstItem="y5T-UQ-2vA" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="vnT-ON-WY7"/>
+                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.05" id="wxH-kB-z7m"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="c9Y-8r-g0v"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="1ar-aH-Gop" appends="YES" id="LEE-UO-wxi"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="gameStatusLabel" destination="y5T-UQ-2vA" id="v7w-9A-Izo"/>
+                        <outlet property="playersTableView" destination="gKL-sf-953" id="zPT-Qe-dM6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lOH-hF-jUP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="1ar-aH-Gop">
+                    <connections>
+                        <action selector="screenTapped:" destination="udx-0g-6jh" id="uzQ-vt-DH7"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="129.91071428571428"/>
+        </scene>
+    </scenes>
+    <resources>
+        <namedColor name="lightBlueAccent">
+            <color red="0.8666666666666667" green="0.93725490196078431" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

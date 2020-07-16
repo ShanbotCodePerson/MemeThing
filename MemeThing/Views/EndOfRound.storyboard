@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="UaH-bf-bqP">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--End Of Round View Controller-->
+        <scene sceneID="WJ7-vm-EMn">
+            <objects>
+                <viewController id="UaH-bf-bqP" customClass="EndOfRoundViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YY5-JD-mE3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="poq-0W-Hh3" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="707" width="373" height="41"/>
+                                <state key="normal" title="Continue"/>
+                                <connections>
+                                    <action selector="continueButtonTapped:" destination="UaH-bf-bqP" eventType="touchUpInside" id="ksX-tY-eV5"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ejJ-2K-M7N" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="116" width="373" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="JzP-v4-33S"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ezc-7D-MKU">
+                                <rect key="frame" x="20.5" y="164" width="373" height="487"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PKS-h6-6LA">
+                                        <rect key="frame" x="0.0" y="0.0" width="373" height="447"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5yZ-7t-7eS" customClass="MemeThingCaption" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="447" width="373" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="fnL-p8-3k2"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="PKS-h6-6LA" firstAttribute="width" secondItem="ezc-7D-MKU" secondAttribute="width" id="51E-W0-csd"/>
+                                    <constraint firstItem="5yZ-7t-7eS" firstAttribute="top" secondItem="PKS-h6-6LA" secondAttribute="bottom" id="9Ds-gq-hY0"/>
+                                    <constraint firstAttribute="bottom" secondItem="5yZ-7t-7eS" secondAttribute="bottom" id="EcS-iV-Voz"/>
+                                    <constraint firstItem="5yZ-7t-7eS" firstAttribute="width" secondItem="PKS-h6-6LA" secondAttribute="width" id="HXk-Ds-n0H"/>
+                                    <constraint firstItem="PKS-h6-6LA" firstAttribute="centerX" secondItem="ezc-7D-MKU" secondAttribute="centerX" id="r24-7k-ww5"/>
+                                    <constraint firstItem="5yZ-7t-7eS" firstAttribute="centerX" secondItem="ezc-7D-MKU" secondAttribute="centerX" id="sQX-8E-QoI"/>
+                                    <constraint firstItem="PKS-h6-6LA" firstAttribute="top" secondItem="ezc-7D-MKU" secondAttribute="top" id="src-Mh-dCs"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHi-YD-VRK" customClass="MemeThingLabelBackgroundLight" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="659" width="373" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="Wug-Al-qYR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="poq-0W-Hh3" firstAttribute="top" secondItem="KHi-YD-VRK" secondAttribute="bottom" constant="8" id="0x4-cS-Fz6"/>
+                            <constraint firstItem="poq-0W-Hh3" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="Aq9-DZ-EKo"/>
+                            <constraint firstItem="ejJ-2K-M7N" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="BKK-ZJ-WPC"/>
+                            <constraint firstItem="ejJ-2K-M7N" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="HSb-WH-aeX"/>
+                            <constraint firstItem="poq-0W-Hh3" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="IVI-6g-rsh"/>
+                            <constraint firstItem="KHi-YD-VRK" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="MEb-7Z-mf1"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="centerY" secondItem="oRY-78-WsG" secondAttribute="centerY" multiplier="0.9" id="Put-cE-g1o"/>
+                            <constraint firstItem="poq-0W-Hh3" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.05" id="XUw-KC-t83"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="pPu-vO-uhz"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="top" secondItem="ejJ-2K-M7N" secondAttribute="bottom" constant="8" id="q5c-V4-5x1"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="rmb-Th-0Yr"/>
+                            <constraint firstItem="KHi-YD-VRK" firstAttribute="top" secondItem="ezc-7D-MKU" secondAttribute="bottom" constant="8" id="tZq-Hq-Aei"/>
+                            <constraint firstItem="ezc-7D-MKU" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.595355" id="ugQ-H9-8ao"/>
+                            <constraint firstItem="KHi-YD-VRK" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="zMY-6v-xFU"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="oRY-78-WsG"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="ieP-ge-z66" appends="YES" id="NFs-z1-1bM"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="captionLabel" destination="5yZ-7t-7eS" id="QPZ-Qf-nYD"/>
+                        <outlet property="memeImageView" destination="PKS-h6-6LA" id="MRP-Av-cid"/>
+                        <outlet property="nextUpLabel" destination="KHi-YD-VRK" id="e6O-8k-IRD"/>
+                        <outlet property="winnerLabel" destination="ejJ-2K-M7N" id="jad-vH-wcI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="714-0x-zF4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="ieP-ge-z66">
+                    <connections>
+                        <action selector="screenTapped:" destination="UaH-bf-bqP" id="498-og-in4"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="205.79710144927537" y="95.758928571428569"/>
+        </scene>
+    </scenes>
+</document>
