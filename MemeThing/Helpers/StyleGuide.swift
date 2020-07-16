@@ -19,6 +19,16 @@ extension UIView {
         layer.borderWidth = width
         layer.borderColor = color.cgColor
     }
+    
+    func addStroke(string: String, foregroundColor: UIColor, strokeColor: UIColor, fontSize: Double) {
+        let str = NSAttributedString(string: "Hello, World", attributes: [
+            NSForegroundColorAttributeName : foregroundColor,
+            NSStrokeColorAttributeName : strokeColor,
+            NSStrokeWidthAttributeName : -1,
+            NSFontAttributeName : UIFont.systemFontOfSize(60.0)
+            ])
+        self.attributedText = str
+    }
 }
 
 extension UIColor {
