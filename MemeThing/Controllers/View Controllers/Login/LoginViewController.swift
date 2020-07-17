@@ -32,6 +32,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Beth added:
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
+        
         // Make sure that the user is connected to the internet
         guard Reachability.checkReachable() else {
             presentInternetAlert()
