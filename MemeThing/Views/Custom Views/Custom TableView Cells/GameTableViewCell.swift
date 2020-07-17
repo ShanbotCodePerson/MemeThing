@@ -39,7 +39,7 @@ class GameTableViewCell: UITableViewCell {
     
     // MARK: - Set Up UI
     
-    func setUpViews(in section: GamesListTableViewController.SectionName, with game: Game?) {
+    func setUpViews(in section: GamesListViewController.SectionName, with game: Game?) {
         selectionStyle = .none
         
         switch section {

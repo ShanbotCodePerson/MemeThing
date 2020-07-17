@@ -17,7 +17,7 @@
 		402D7CFE249C45A100955ADF /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402D7CFD249C45A100955ADF /* Reachability.swift */; };
 		4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365B2486B898007C2601 /* NotificationHelper.swift */; };
 		403936602486E684007C2601 /* FriendRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039365F2486E684007C2601 /* FriendRequestController.swift */; };
-		4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039366124870328007C2601 /* InviteFriendsTableViewController.swift */; };
+		4039366224870328007C2601 /* InviteFriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039366124870328007C2601 /* InviteFriendsViewController.swift */; };
 		4039CE042481DF5C004DA41F /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE032481DF5C004DA41F /* CanvasView.swift */; };
 		4039CE062481E553004DA41F /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE052481E553004DA41F /* Meme.swift */; };
 		4039CE0C248205D4004DA41F /* StyleGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4039CE0B248205D4004DA41F /* StyleGuide.swift */; };
@@ -43,17 +43,17 @@
 		407681DE2493D21F009D0C15 /* EndOfRound.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 407681DD2493D21F009D0C15 /* EndOfRound.storyboard */; };
 		407681E02493D446009D0C15 /* EndOfRoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407681DF2493D446009D0C15 /* EndOfRoundViewController.swift */; };
 		40A777EC248966F200ADBB82 /* GameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777EB248966F200ADBB82 /* GameTableViewCell.swift */; };
-		40A777EE24896A4500ADBB82 /* GamesListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */; };
+		40A777EE24896A4500ADBB82 /* GamesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A777ED24896A4500ADBB82 /* GamesListViewController.swift */; };
 		40BA228F248715C9009A2197 /* AddCaption.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA228E248715C9009A2197 /* AddCaption.storyboard */; };
 		40BA229424871F0D009A2197 /* Waiting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40BA229324871F0D009A2197 /* Waiting.storyboard */; };
 		40C2146C247EE0E7007B7630 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146B247EE0E7007B7630 /* LoginViewController.swift */; };
 		40C2146E247EE0F4007B7630 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */; };
-		40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */; };
+		40C21470247EE0FF007B7630 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2146F247EE0FF007B7630 /* FriendsListViewController.swift */; };
 		40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */; };
 		40C21474247EE939007B7630 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21473247EE939007B7630 /* User.swift */; };
 		40C21476247EE944007B7630 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21475247EE944007B7630 /* UserController.swift */; };
 		40C2147C247EEE9B007B7630 /* MemeThingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2147B247EEE9B007B7630 /* MemeThingError.swift */; };
-		40C21481247F1434007B7630 /* ProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21480247F1434007B7630 /* ProfileTableViewController.swift */; };
+		40C21481247F1434007B7630 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C21480247F1434007B7630 /* ProfileViewController.swift */; };
 		40C2148324809A24007B7630 /* DrawingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148224809A24007B7630 /* DrawingViewController.swift */; };
 		40C2148524809A35007B7630 /* CaptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148424809A35007B7630 /* CaptionViewController.swift */; };
 		40C2148724809A47007B7630 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C2148624809A47007B7630 /* ResultsViewController.swift */; };
@@ -79,7 +79,7 @@
 		402D7CFD249C45A100955ADF /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		4039365B2486B898007C2601 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationHelper.swift; path = MemeThing/Helpers/NotificationHelper.swift; sourceTree = SOURCE_ROOT; };
 		4039365F2486E684007C2601 /* FriendRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestController.swift; sourceTree = "<group>"; };
-		4039366124870328007C2601 /* InviteFriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsTableViewController.swift; sourceTree = "<group>"; };
+		4039366124870328007C2601 /* InviteFriendsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsViewController.swift; sourceTree = "<group>"; };
 		4039CE032481DF5C004DA41F /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		4039CE052481E553004DA41F /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Meme.swift; path = MemeThing/Models/Meme.swift; sourceTree = SOURCE_ROOT; };
 		4039CE0B248205D4004DA41F /* StyleGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StyleGuide.swift; path = MemeThing/Helpers/StyleGuide.swift; sourceTree = SOURCE_ROOT; };
@@ -107,19 +107,19 @@
 		407681DD2493D21F009D0C15 /* EndOfRound.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = EndOfRound.storyboard; sourceTree = "<group>"; };
 		407681DF2493D446009D0C15 /* EndOfRoundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRoundViewController.swift; sourceTree = "<group>"; };
 		40A777EB248966F200ADBB82 /* GameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTableViewCell.swift; sourceTree = "<group>"; };
-		40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListTableViewController.swift; sourceTree = "<group>"; };
+		40A777ED24896A4500ADBB82 /* GamesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesListViewController.swift; sourceTree = "<group>"; };
 		40BA228E248715C9009A2197 /* AddCaption.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AddCaption.storyboard; sourceTree = "<group>"; };
 		40BA229324871F0D009A2197 /* Waiting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Waiting.storyboard; sourceTree = "<group>"; };
 		40C2146B247EE0E7007B7630 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
-		40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListTableViewController.swift; sourceTree = "<group>"; };
+		40C2146F247EE0FF007B7630 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
 		40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIViewControllerExtension.swift; path = MemeThing/Helpers/UIViewControllerExtension.swift; sourceTree = SOURCE_ROOT; };
 		40C21473247EE939007B7630 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = MemeThing/Models/User.swift; sourceTree = SOURCE_ROOT; };
 		40C21475247EE944007B7630 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
 		40C21477247EE97A007B7630 /* MemeThing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MemeThing.entitlements; sourceTree = "<group>"; };
 		40C21479247EE97D007B7630 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		40C2147B247EEE9B007B7630 /* MemeThingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MemeThingError.swift; path = MemeThing/Helpers/MemeThingError.swift; sourceTree = SOURCE_ROOT; };
-		40C21480247F1434007B7630 /* ProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewController.swift; sourceTree = "<group>"; };
+		40C21480247F1434007B7630 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		40C2148224809A24007B7630 /* DrawingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingViewController.swift; sourceTree = "<group>"; };
 		40C2148424809A35007B7630 /* CaptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionViewController.swift; sourceTree = "<group>"; };
 		40C2148624809A47007B7630 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
@@ -169,10 +169,10 @@
 			isa = PBXGroup;
 			children = (
 				40C2146D247EE0F4007B7630 /* MainMenuViewController.swift */,
-				4039366124870328007C2601 /* InviteFriendsTableViewController.swift */,
-				40A777ED24896A4500ADBB82 /* GamesListTableViewController.swift */,
-				40C2146F247EE0FF007B7630 /* FriendsListTableViewController.swift */,
-				40C21480247F1434007B7630 /* ProfileTableViewController.swift */,
+				4039366124870328007C2601 /* InviteFriendsViewController.swift */,
+				40A777ED24896A4500ADBB82 /* GamesListViewController.swift */,
+				40C2146F247EE0FF007B7630 /* FriendsListViewController.swift */,
+				40C21480247F1434007B7630 /* ProfileViewController.swift */,
 			);
 			path = "Main Menu";
 			sourceTree = "<group>";
@@ -534,7 +534,7 @@
 				4005A19C24AB819000BE556F /* ComplaintController.swift in Sources */,
 				40C2148924809A57007B7630 /* WaitingViewController.swift in Sources */,
 				40C21476247EE944007B7630 /* UserController.swift in Sources */,
-				4039366224870328007C2601 /* InviteFriendsTableViewController.swift in Sources */,
+				4039366224870328007C2601 /* InviteFriendsViewController.swift in Sources */,
 				406C5394248AE9EC004729C7 /* LeaderBoardViewController.swift in Sources */,
 				40D003B924831B700046D64B /* Caption.swift in Sources */,
 				40A777EC248966F200ADBB82 /* GameTableViewCell.swift in Sources */,
@@ -543,10 +543,10 @@
 				40C21472247EE44D007B7630 /* UIViewControllerExtension.swift in Sources */,
 				4011098B24882AEE00E8FCE2 /* MemeController.swift in Sources */,
 				40DC059424902D7400EE02AC /* MemeThingTableCellView.swift in Sources */,
-				40A777EE24896A4500ADBB82 /* GamesListTableViewController.swift in Sources */,
+				40A777EE24896A4500ADBB82 /* GamesListViewController.swift in Sources */,
 				40169F7E24AFF8550078706C /* LoadingIcon.swift in Sources */,
 				403936602486E684007C2601 /* FriendRequestController.swift in Sources */,
-				40C21470247EE0FF007B7630 /* FriendsListTableViewController.swift in Sources */,
+				40C21470247EE0FF007B7630 /* FriendsListViewController.swift in Sources */,
 				401109892487FF7600E8FCE2 /* MemeImageView.swift in Sources */,
 				402D7CFE249C45A100955ADF /* Reachability.swift in Sources */,
 				4005A1A224AC34E000BE556F /* UIImageExtension.swift in Sources */,
@@ -555,7 +555,7 @@
 				40D003B724831B690046D64B /* Game.swift in Sources */,
 				4039365C2486B898007C2601 /* NotificationHelper.swift in Sources */,
 				405279E724781E1A00942A7D /* SceneDelegate.swift in Sources */,
-				40C21481247F1434007B7630 /* ProfileTableViewController.swift in Sources */,
+				40C21481247F1434007B7630 /* ProfileViewController.swift in Sources */,
 				40C21474247EE939007B7630 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

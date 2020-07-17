@@ -40,7 +40,7 @@ class FriendTableViewCell: UITableViewCell {
     
     // MARK: - Set Up UI
     
-    func setUpViews(section: FriendsListTableViewController.SectionNames, name: String?, points: Int? = nil) {
+    func setUpViews(section: FriendsListViewController.SectionNames, name: String?, points: Int? = nil) {
         nameLabel.textAlignment = .left
         rightConstraint.constant = 0
         

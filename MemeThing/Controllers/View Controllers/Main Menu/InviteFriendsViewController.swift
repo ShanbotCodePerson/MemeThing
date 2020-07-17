@@ -1,5 +1,5 @@
 //
-//  InviteFriendsTableViewController.swift
+//  InviteFriendsViewController.swift
 //  MemeThing
 //
 //  Created by Shannon Draeker on 6/2/20.
@@ -8,11 +8,12 @@
 
 import UIKit
 
-class InviteFriendsTableViewController: UITableViewController {
+class InviteFriendsViewController: UIViewController {
     
     // MARK: - Outlets
     
     @IBOutlet weak var startGameButton: UIButton!
+    @IBOutlet weak var friendsTableView: UITableView!
     
     // MARK: - Lifecycle Methods
     
@@ -30,7 +31,9 @@ class InviteFriendsTableViewController: UITableViewController {
     
     func setUpViews() {
         navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "friendCell")
+        friendsTableView.delegate = self
+        friendsTableView.dataSource = self
+        friendsTableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "friendCell")
         
         // Start off with the button disabled until enough players have been selected for the game
         startGameButton.deactivate()
@@ -48,7 +51,7 @@ class InviteFriendsTableViewController: UITableViewController {
                     
                     switch result {
                     case .success(_):
-                        self?.tableView.reloadData()
+                        self?.friendsTableView.reloadData()
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         self?.presentErrorAlert(error)
@@ -68,7 +71,7 @@ class InviteFriendsTableViewController: UITableViewController {
         }
         
         // Get the list of selected players
-        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
+        guard let indexPaths = friendsTableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.usersFriends?[$0.row] }
         
         // Show the loading icon
@@ -92,14 +95,17 @@ class InviteFriendsTableViewController: UITableViewController {
             }
         }
     }
+}
+
+// MARK: - TableView Methods
+
+extension InviteFriendsViewController: UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - Table view data source
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return max(UserController.shared.usersFriends?.count ?? 0, 1)
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? ThreeLabelsTableViewCell else { return UITableViewCell() }
         
         // Fill in the details of the cell with the friend's information
@@ -117,7 +123,7 @@ class InviteFriendsTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Check how many rows are selected and enable or disable the start game button accordingly
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 1 {
             startGameButton.activate()
@@ -125,7 +131,7 @@ class InviteFriendsTableViewController: UITableViewController {
         else  { startGameButton.deactivate() }
     }
     
-    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         // Check how many rows are selected and enable or disable the start game button accordingly
         if let indexPaths = tableView.indexPathsForSelectedRows, indexPaths.count > 1 {
             startGameButton.activate()
