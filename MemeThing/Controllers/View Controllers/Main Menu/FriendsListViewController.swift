@@ -1,5 +1,5 @@
 //
-//  FriendsListTableViewController.swift
+//  FriendsListViewController.swift
 //  MemeThing
 //
 //  Created by Shannon Draeker on 5/27/20.
@@ -8,7 +8,11 @@
 
 import UIKit
 
-class FriendsListTableViewController: UITableViewController {
+class FriendsListViewController: UIViewController {
+    
+    // MARK: - Outlets
+    
+    @IBOutlet weak var friendsTableView: UITableView!
     
     // MARK: - Properties
     
@@ -57,7 +61,7 @@ class FriendsListTableViewController: UITableViewController {
     // MARK: - Helper Methods
     
     @objc func updateData() {
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async { self.friendsTableView.reloadData() }
     }
     
     @objc func refreshData() {
@@ -76,14 +80,16 @@ class FriendsListTableViewController: UITableViewController {
     }
     
     func setUpViews() {
+        friendsTableView.delegate = self
+        friendsTableView.dataSource = self
+        
         navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .background
+        friendsTableView.tableFooterView = UIView()
+        friendsTableView.backgroundColor = .background
         
         // Set up the refresh icon to check for updates whenever the user pulls down on the tableview
-        refresh.attributedTitle = NSAttributedString(string: "Checking for updates")
         refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-        tableView.addSubview(refresh)
+        friendsTableView.addSubview(refresh)
     }
     
     func loadAllData() {
@@ -135,7 +141,7 @@ class FriendsListTableViewController: UITableViewController {
             }
         }
         
-        group.notify(queue: .main) { self.tableView.reloadData() }
+        group.notify(queue: .main) { self.friendsTableView.reloadData() }
     }
     
     func blockUser(with ID: String, name: String) {
@@ -220,7 +226,7 @@ class FriendsListTableViewController: UITableViewController {
                             case .success(_):
                                 // Display an alert showing the success, and refresh the tableview to show the pending friend request
                                 self?.presentAlert(title: "Friend Request Sent", message: "A friend request has been sent to \(friend.email)")
-                                self?.tableView.reloadData()
+                                self?.friendsTableView.reloadData()
                             case .failure(let error):
                                 // Print and display the error
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -236,24 +242,27 @@ class FriendsListTableViewController: UITableViewController {
             }
         }
     }
+}
+
+// MARK: - Tableview Methods
+
+extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - Table view data source
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return dataSource.count
     }
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return dataSource[section].name.rawValue
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Add a placeholder row if the user has no friends
         if dataSource[section].name == .friends && dataSource[section].data.count == 0 { return 1 }
         return dataSource[section].data.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? FriendTableViewCell else { return UITableViewCell() }
         cell.delegate = self
         
@@ -279,13 +288,13 @@ class FriendsListTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Enable swipe-to-delete functionality only for friends, not friend requests
         if dataSource[indexPath.section].name == .friends && dataSource[indexPath.section].data.count > 0 { return true }
         return false
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Get the reference to the friend
             guard let friend = dataSource[indexPath.section].data[indexPath.row] as? User else { return }
@@ -316,7 +325,7 @@ class FriendsListTableViewController: UITableViewController {
                             self?.presentErrorAlert(error)
                         }
                         // Turn user interaction back on
-                        self?.tableView.isUserInteractionEnabled = true
+                        self?.friendsTableView.isUserInteractionEnabled = true
                     }
                 }
             }
@@ -326,7 +335,7 @@ class FriendsListTableViewController: UITableViewController {
 
 // MARK: - TableViewCell Button Delegate
 
-extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
+extension FriendsListViewController: FriendTableViewCellButtonDelegate {
     
     func respondToFriendRequest(from cell: FriendTableViewCell, accept: Bool) {
         // Make sure the user is connected to the internet
@@ -336,7 +345,7 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
         }
         
         // Get the reference to the friend request that was responded to
-        guard let indexPath = tableView.indexPath(for: cell),
+        guard let indexPath = friendsTableView.indexPath(for: cell),
             dataSource[indexPath.section].name == .pendingFriendRequests,
             let friendRequest = dataSource[indexPath.section].data[indexPath.row] as? FriendRequest
             else { return }
@@ -359,7 +368,7 @@ extension FriendsListTableViewController: FriendTableViewCellButtonDelegate {
                     }
                     
                     // Refresh the tableview to reflect the changes
-                    self?.tableView.reloadData()
+                    self?.friendsTableView.reloadData()
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

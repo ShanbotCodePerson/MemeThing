@@ -1,5 +1,5 @@
 //
-//  GamesListTableViewController.swift
+//  GamesListViewController.swift
 //  MemeThing
 //
 //  Created by Shannon Draeker on 6/4/20.
@@ -8,7 +8,11 @@
 
 import UIKit
 
-class GamesListTableViewController: UITableViewController {
+class GamesListViewController: UIViewController {
+    
+    // MARK: - Outlets
+    
+    @IBOutlet weak var gamesTableView: UITableView!
     
     // MARK: - Properties
     
@@ -43,7 +47,7 @@ class GamesListTableViewController: UITableViewController {
     }
     
     // MARK: - Lifecycle Methods
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -60,7 +64,7 @@ class GamesListTableViewController: UITableViewController {
     // MARK: - Helper Methods
     
     @objc func updateData() {
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async { self.gamesTableView.reloadData() }
     }
     
     @objc func refreshData() {
@@ -71,14 +75,16 @@ class GamesListTableViewController: UITableViewController {
     }
     
     func setUpViews() {
+        gamesTableView.delegate = self
+        gamesTableView.dataSource = self
+        
         navigationController?.setNavigationBarHidden(false, animated: true)
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .background
+        gamesTableView.tableFooterView = UIView()
+        gamesTableView.backgroundColor = .background
         
         // Set up the refresh icon to check for updates whenever the user pulls down on the tableview
-        refresh.attributedTitle = NSAttributedString(string: "Checking for updates")
         refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-        tableView.addSubview(refresh)
+        gamesTableView.addSubview(refresh)
     }
     
     func loadAllData() {
@@ -93,7 +99,7 @@ class GamesListTableViewController: UITableViewController {
                 switch result {
                 case .success(_):
                     // Refresh the table to show the data
-                    self?.tableView.reloadData()
+                    self?.gamesTableView.reloadData()
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -105,7 +111,7 @@ class GamesListTableViewController: UITableViewController {
     
     func quit(_ game: Game) {
         // Don't allow the user to interact with the view while the change is being processed
-        tableView.isUserInteractionEnabled = false
+        gamesTableView.isUserInteractionEnabled = false
         
         GameController.shared.quit(game) { [weak self] (result) in
             DispatchQueue.main.async {
@@ -119,14 +125,14 @@ class GamesListTableViewController: UITableViewController {
                     self?.presentErrorAlert(error)
                 }
                 // Turn user interaction back on
-                self?.tableView.isUserInteractionEnabled = true
+                self?.gamesTableView.isUserInteractionEnabled = true
             }
         }
     }
     
     func leave(_ game: Game) {
         // Don't allow the user to interact with the view while the change is being processed
-        tableView.isUserInteractionEnabled = false
+        gamesTableView.isUserInteractionEnabled = false
         
         GameController.shared.leave(game) { [weak self] (result) in
             DispatchQueue.main.async {
@@ -140,28 +146,31 @@ class GamesListTableViewController: UITableViewController {
                     self?.presentErrorAlert(error)
                 }
                 // Turn user interaction back on
-                self?.tableView.isUserInteractionEnabled = true
+                self?.gamesTableView.isUserInteractionEnabled = true
             }
         }
     }
+}
 
-    // MARK: - Table view data source
+// MARK: - TableView Methods
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+extension GamesListViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return dataSource.count
     }
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return dataSource[section].name.rawValue
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Add a placeholder row if the user has no active games
         if dataSource[section].name == .games && dataSource[section].data.count == 0 { return 1 }
         return dataSource[section].data.count
     }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "gameCell", for: indexPath) as? GameTableViewCell else { return UITableViewCell() }
         
         let sectionName = dataSource[indexPath.section].name
@@ -178,13 +187,13 @@ class GamesListTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if dataSource[indexPath.section].name == .games && dataSource[indexPath.section].data.count > 0 { return true }
         if dataSource[indexPath.section].name == .finishedGames { return true }
         return false
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Get the reference to the game
             let gameToQuit = dataSource[indexPath.section].data[indexPath.row]
@@ -206,7 +215,7 @@ class GamesListTableViewController: UITableViewController {
     
     // MARK: - Navigation
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard dataSource[indexPath.section].name != .pendingInvitations,
             dataSource[indexPath.section].data.count > 0,
             let currentUser = UserController.shared.currentUser
@@ -215,7 +224,7 @@ class GamesListTableViewController: UITableViewController {
         // Get the record of the selected game
         let game = dataSource[indexPath.section].data[indexPath.row]
         
-//        transitionToStoryboard(named: enter_name_here, with: game)
+        //        transitionToStoryboard(named: enter_name_here, with: game)
         // BETH: comment out lines 222-244 and uncomment out the above line with whatever storyboard you want to test
         
         // Go to the correct page of the gameplay based on the status of the game and whether or not the user is the lead player
@@ -247,7 +256,7 @@ class GamesListTableViewController: UITableViewController {
 
 // MARK: - TableViewCell Button Delegate
 
-extension GamesListTableViewController: GameTableViewCellDelegate {
+extension GamesListViewController: GameTableViewCellDelegate {
     
     func respondToGameInvitation(for cell: GameTableViewCell, accept: Bool) {
         // Make sure the user is connected to the internet
@@ -257,7 +266,7 @@ extension GamesListTableViewController: GameTableViewCellDelegate {
         }
         
         // Get the reference to the game that was responded to
-        guard let indexPath = tableView.indexPath(for: cell),
+        guard let indexPath = gamesTableView.indexPath(for: cell),
             dataSource[indexPath.section].name == .pendingInvitations
             else { return }
         let game = dataSource[indexPath.section].data[indexPath.row]

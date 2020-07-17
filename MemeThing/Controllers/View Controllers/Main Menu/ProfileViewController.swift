@@ -1,5 +1,5 @@
 //
-//  ProfileTableViewController.swift
+//  ProfileViewController.swift
 //  MemeThing
 //
 //  Created by Shannon Draeker on 5/27/20.
@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class ProfileTableViewController: UITableViewController {
+class ProfileViewController: UIViewController {
     
     // MARK: - Outlets
     
