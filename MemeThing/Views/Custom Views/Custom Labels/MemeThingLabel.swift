@@ -72,3 +72,11 @@ class MemeThingLabelDark: UILabel {
         setUpViews(backgroundColor: nil, textColor: .border)
     }
 }
+
+class MemeThingTitle: UILabel {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews(backgroundColor: nil, textColor: .border)
+        addStrokeAndShadow(label: self, string: "Meme\nThing", textColor: .white, shadowColor: .blue, strokeColor: .clear, fontSize: 70.0)
+    }
+}

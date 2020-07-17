@@ -20,14 +20,19 @@ extension UIView {
         layer.borderColor = color.cgColor
     }
     
-    func addStroke(string: String, foregroundColor: UIColor, strokeColor: UIColor, fontSize: Double) {
-        let str = NSAttributedString(string: "Hello, World", attributes: [
-            NSForegroundColorAttributeName : foregroundColor,
-            NSStrokeColorAttributeName : strokeColor,
-            NSStrokeWidthAttributeName : -1,
-            NSFontAttributeName : UIFont.systemFontOfSize(60.0)
+    //Beth added:
+    func addStrokeAndShadow(label: UILabel, string: String, textColor: UIColor, shadowColor: UIColor, strokeColor: UIColor, fontSize: CGFloat) {
+        let shadow = NSShadow()
+        shadow.shadowColor = shadowColor
+        shadow.shadowBlurRadius = 5
+        let str = NSAttributedString(string: string, attributes: [
+            NSAttributedString.Key.foregroundColor : textColor,
+            NSAttributedString.Key.strokeColor : strokeColor,
+            NSAttributedString.Key.strokeWidth : -1,
+            NSAttributedString.Key.font : UIFont(name: FontNames.titleFont, size: fontSize),
+            NSAttributedString.Key.shadow :shadow
             ])
-        self.attributedText = str
+        label.attributedText = str
     }
 }
 
@@ -55,4 +60,5 @@ extension UIColor {
 struct FontNames {
     static let otherPossibleFont = "Futura-Bold"
     static let mainFont = "MarkerFelt-Thin"
+    static let titleFont = "MarkerFelt-Wide"
 }
