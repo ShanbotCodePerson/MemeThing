@@ -185,21 +185,28 @@ extension UIViewController {
     func setUpObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(toFriendsList), name: .toFriendsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toGamesList), name: .toGamesView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toGameOver), name: .toGameOver, object: nil)
     }
     func removeObservers() {
         NotificationCenter.default.removeObserver(self, name: .toFriendsView, object: nil)
         NotificationCenter.default.removeObserver(self, name: .toGamesView, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toGameOver, object: nil)
     }
     
     // Transition to the relevant storyboards in response to notifications
     @objc func toFriendsList() {
         print("trying to transition to friends list view")
         // FIXME: - need to separate out the views in the main storyboard
-//        DispatchQueue.main.async { self.transitionToStoryboard(named: ) }
+        //        DispatchQueue.main.async { self.transitionToStoryboard(named: ) }
     }
     @objc func toGamesList() {
-         print("trying to transition to games list view")
+        print("trying to transition to games list view")
         // FIXME: - need to separate out the views in the main storyboard
-       //        DispatchQueue.main.async { self.transitionToStoryboard(named: ) }
+        //        DispatchQueue.main.async { self.transitionToStoryboard(named: ) }
+    }
+    @objc func toGameOver() {
+        print("trying to transition to game over view")
+        // FIXME: - need to get game from notification
+//        DispatchQueue.main.async { self.transitionToStoryboard(named: .GameOver, with: game) }
     }
 }
