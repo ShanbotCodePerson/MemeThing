@@ -88,5 +88,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         // Handle the notification by directing the user to relevant screen of the app
         NotificationHelper.handleResponse(to: response.notification)
+        completionHandler()
     }
 }

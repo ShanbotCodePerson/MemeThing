@@ -44,6 +44,16 @@ class ResultsViewController: UIViewController, HasAGameObject {
         // Set up the observers to listen for notifications telling the view to transition to a new page
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toNewRound, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
+        
+        // Set up the observers to listen for responses to push notifications
+        setUpObservers()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .toNewRound, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toGameOver, object: nil)
+        removeObservers()
     }
     
     // MARK: - Helper Method

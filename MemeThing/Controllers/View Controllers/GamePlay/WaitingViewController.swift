@@ -37,13 +37,19 @@ class WaitingViewController: UIViewController, HasAGameObject {
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toCaptionsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toResultsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
+        
+        // Set up the observers for responding to push notifications
+        setUpObservers()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(true)
-        #warning("Need to fill this out later")
-        // FIXME: - fill this out for all notifications, all view controllers
+        super.viewDidDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: .updateWaitingView, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toNewRound, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toCaptionsView, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toResultsView, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toGameOver, object: nil)
+        removeObservers()
     }
     
     // MARK: - Set Up UI

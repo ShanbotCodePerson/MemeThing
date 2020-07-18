@@ -24,6 +24,14 @@ class InviteFriendsTableViewController: UITableViewController {
         
         // Load the data if it hasn't been loaded already
         loadData()
+        
+        // Set up the observers to listen for responses to push notifications
+        setUpObservers()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        removeObservers()
     }
     
     // MARK: - Helper Methods
