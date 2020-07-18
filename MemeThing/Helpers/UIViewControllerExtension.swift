@@ -14,9 +14,9 @@ protocol HasAGameObject: UIViewController {
     var gameID: String? { get set }
 }
 
+// MARK: - Navigation
+
 extension UIViewController {
-    
-    // MARK: - Navigation
     
     enum StoryboardNames: String  {
         case Main
@@ -31,6 +31,12 @@ extension UIViewController {
     }
     
     func transitionToStoryboard(named storyboard: StoryboardNames, direction: CATransitionSubtype = .fromLeft) {
+        // Make sure the user is not already on the given storyboard
+        guard let currentStoryboard = self.storyboard?.value(forKey: "name") as? String,
+            currentStoryboard != storyboard.rawValue
+            else { return }
+        
+        // Initialize the storyboard
         let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() else { return }
         initialVC.modalPresentationStyle = .fullScreen
@@ -43,10 +49,12 @@ extension UIViewController {
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         view.window?.layer.add(transition, forKey: kCATransition)
         
+        // Present the storyboard
         self.present(initialVC, animated: false)
     }
     
     func transitionToStoryboard(named storyboard: StoryboardNames, with game: Game) {
+        // Initialize the storyboard
         let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
         initialVC.gameID = game.recordID
@@ -60,19 +68,28 @@ extension UIViewController {
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         view.window?.layer.add(transition, forKey: kCATransition)
         
+        // Present the storyboard
         self.present(initialVC, animated: false)
     }
     
     func presentPopoverStoryboard(named storyboard: StoryboardNames, with game: Game) {
+        // Initialize the storyboard
         let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() as? HasAGameObject else { return }
         initialVC.gameID = game.recordID
+        
+        // Set the transition to appear in the middle of the screen
         initialVC.modalPresentationStyle = .overFullScreen
         initialVC.modalTransitionStyle = .crossDissolve
+        
+        // Initialize the storyboard
         self.present(initialVC, animated: true)
     }
-    
-    // MARK: - Alerts
+}
+
+// MARK: - Alerts
+
+extension UIViewController {
     
     // Present an alert with a simple dismiss button to display a message to the user
     func presentAlert(title: String, message: String, completion: @escaping () -> Void = {}) {
@@ -157,5 +174,32 @@ extension UIViewController {
         
         // Present the alert
         present(alertController, animated: true)
+    }
+}
+
+// MARK: - Notifications
+
+extension UIViewController {
+    
+    // Set up or remove the notifications for any view controller to be able to respond to push notifications
+    func setUpObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(toFriendsList), name: .toFriendsView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toGamesList), name: .toGamesView, object: nil)
+    }
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: .toFriendsView, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toGamesView, object: nil)
+    }
+    
+    // Transition to the relevant storyboards in response to notifications
+    @objc func toFriendsList() {
+        print("trying to transition to friends list view")
+        // FIXME: - need to separate out the views in the main storyboard
+//        DispatchQueue.main.async { self.transitionToStoryboard(named: ) }
+    }
+    @objc func toGamesList() {
+         print("trying to transition to games list view")
+        // FIXME: - need to separate out the views in the main storyboard
+       //        DispatchQueue.main.async { self.transitionToStoryboard(named: ) }
     }
 }

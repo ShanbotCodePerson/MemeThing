@@ -330,6 +330,10 @@ class FriendRequestController {
                     
                     // Send a local notification to update the friends tableview
                     NotificationCenter.default.post(Notification(name: .friendsUpdate))
+                    
+                    // Create a notification to display if the user is looking at a different view
+                    // FIXME: - check what view the user is currently on
+                    NotificationHelper.createFriendRequestNotification(friendRequest)
                 }
         }
     }
