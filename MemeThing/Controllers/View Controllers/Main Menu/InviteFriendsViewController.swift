@@ -37,6 +37,12 @@ class InviteFriendsViewController: UIViewController {
         
         // Start off with the button disabled until enough players have been selected for the game
         startGameButton.deactivate()
+        
+        //Beth added:
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     func loadData() {

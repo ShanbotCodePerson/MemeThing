@@ -80,11 +80,17 @@ class GamesListViewController: UIViewController {
         
         navigationController?.setNavigationBarHidden(false, animated: true)
         gamesTableView.tableFooterView = UIView()
-        gamesTableView.backgroundColor = .background
+        //gamesTableView.backgroundColor = .background
         
         // Set up the refresh icon to check for updates whenever the user pulls down on the tableview
         refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         gamesTableView.addSubview(refresh)
+        
+        //Beth added:
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     func loadAllData() {

@@ -83,13 +83,13 @@ class CircularButton: UIButton {
 class AcceptButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .greenAccent, textColor: .white, tintColor: .buttonText)
+        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .greenAccent, textColor: .white, tintColor: .blue)
     }
 }
 
 class DenyButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .redAccent, textColor: .white, tintColor: .buttonText)
+        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .red, textColor: .white, tintColor: .buttonText)
     }
 }

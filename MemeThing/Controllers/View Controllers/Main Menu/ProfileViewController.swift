@@ -37,6 +37,12 @@ class ProfileViewController: UIViewController {
         screenNameLabel.text = "Screen Name: \(user.screenName)"
         emailLabel.text = "Email: \(user.email)"
         pointsLabel.text = "Points: \(user.points)"
+        
+        //Beth added:
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     // MARK: - Actions

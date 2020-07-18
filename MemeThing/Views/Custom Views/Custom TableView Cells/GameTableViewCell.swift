@@ -61,7 +61,7 @@ class GameTableViewCell: UITableViewCell {
         secondaryTextLabel.isHidden = true
         buttonStackView.isHidden = false
         mainTextLabel.text = "\(game.playersNames[0]) has invited you to a game with \(game.listOfPlayerNames)"
-        contentView.backgroundColor = .systemGreen
+        contentView.backgroundColor = .orange
     }
     
     private func setUpWaitingForResponseView(for game: Game) {
