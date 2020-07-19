@@ -141,7 +141,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yuf-VC-mpJ">
-                                <rect key="frame" x="0.0" y="50" width="414" height="649"/>
+                                <rect key="frame" x="0.0" y="60" width="414" height="639"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="friendCell" id="OaQ-vD-R8S" customClass="ThreeLabelsTableViewCell" customModule="MemeThing" customModuleProvider="target">
@@ -159,7 +159,7 @@
                         </subviews>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
-                            <constraint firstItem="yuf-VC-mpJ" firstAttribute="top" secondItem="9Es-gh-fxN" secondAttribute="bottom" id="5dP-gw-aeR"/>
+                            <constraint firstItem="yuf-VC-mpJ" firstAttribute="top" secondItem="9Es-gh-fxN" secondAttribute="bottom" multiplier="1.2" id="5dP-gw-aeR"/>
                             <constraint firstItem="9Es-gh-fxN" firstAttribute="leading" secondItem="G5A-kT-9mS" secondAttribute="leading" id="9ld-0v-Y2B"/>
                             <constraint firstItem="G5A-kT-9mS" firstAttribute="trailing" secondItem="lOT-1b-9NO" secondAttribute="trailing" id="Yx2-bX-h9k"/>
                             <constraint firstItem="yuf-VC-mpJ" firstAttribute="leading" secondItem="G5A-kT-9mS" secondAttribute="leading" id="ec2-9b-uJM"/>
@@ -526,11 +526,11 @@
                                                                             <nil key="textColor"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="hel-7E-9Gs">
+                                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="hel-7E-9Gs">
                                                                             <rect key="frame" x="197.5" y="0.0" width="189.5" height="30"/>
                                                                             <subviews>
                                                                                 <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ebP-Lh-VSJ" customClass="AcceptButton" customModule="MemeThing" customModuleProvider="target">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="94.5" height="30"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="95" height="30"/>
                                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <state key="normal" title="Accept"/>
                                                                                     <connections>
@@ -538,7 +538,7 @@
                                                                                     </connections>
                                                                                 </button>
                                                                                 <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ULZ-SU-LtQ" customClass="DenyButton" customModule="MemeThing" customModuleProvider="target">
-                                                                                    <rect key="frame" x="95.5" y="0.0" width="94" height="30"/>
+                                                                                    <rect key="frame" x="95" y="0.0" width="94.5" height="30"/>
                                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <state key="normal" title="Deny"/>
                                                                                     <connections>

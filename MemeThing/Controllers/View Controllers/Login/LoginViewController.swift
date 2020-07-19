@@ -106,6 +106,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func setUpViews() {
         textFieldContainerView.addCornerRadius(12)
+        //textFieldContainerView.addBorder()
         
         screenNameTextField.delegate = self
         emailTextField.delegate = self
