@@ -170,6 +170,7 @@ extension GamesListViewController: UITableViewDelegate, UITableViewDataSource {
         return dataSource[section].name.rawValue
     }
     
+    //Beth added:
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 60.0
     }
