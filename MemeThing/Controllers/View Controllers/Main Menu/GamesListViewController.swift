@@ -170,6 +170,20 @@ extension GamesListViewController: UITableViewDelegate, UITableViewDataSource {
         return dataSource[section].name.rawValue
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 60.0
+    }
+    
+    //Beth added:
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int){
+        view.tintColor = UIColor.clear
+        guard let header = view as? UITableViewHeaderFooterView else { return }
+        header.textLabel?.textColor = UIColor.darkGray
+        header.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        //header.textLabel?.frame = header.frame
+        //header.textLabel?.textAlignment = .center
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Add a placeholder row if the user has no active games
         if dataSource[section].name == .games && dataSource[section].data.count == 0 { return 1 }
