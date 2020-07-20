@@ -12,6 +12,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var memeImageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var pageControl: UIPageControl!
@@ -112,6 +113,12 @@ class ResultsViewController: UIViewController, HasAGameObject {
             constraintToButton.isActive = false
             constraintToSafeArea.isActive = true
         }
+        
+        //Beth added:
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.backgroundView.bounds
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     func setUpPages(from captions: [Caption]?) {

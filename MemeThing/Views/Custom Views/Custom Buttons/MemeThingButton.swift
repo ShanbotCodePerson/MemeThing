@@ -76,7 +76,7 @@ class QuitButton: UIButton {
 class CircularButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: self.frame.height / 2, backgroundColor: .neutralAccent, tintColor: .darkGray)
+        setUpViews(cornerRadius: self.frame.height / 2, backgroundColor: .lightGray, tintColor: .darkGray)
     }
 }
 

@@ -56,6 +56,7 @@ extension UIColor {
     static let textBackground = UIColor(named: "textBackground")!
     static let cellBackground = UIColor(named: "cellBackground")!
     static let orangeAccent = UIColor(named: "orangeAccent")!
+    static let orangeFadedAccent = UIColor(named: "orangeFadedAccent")!
 }
 
 struct FontNames {

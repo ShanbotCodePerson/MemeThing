@@ -271,7 +271,7 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int){
         view.tintColor = UIColor.clear
         guard let header = view as? UITableViewHeaderFooterView else { return }
-        header.textLabel?.textColor = UIColor.darkGray
+        header.textLabel?.textColor = UIColor.purpleAccent
         header.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         //header.textLabel?.frame = header.frame
         //header.textLabel?.textAlignment = .center

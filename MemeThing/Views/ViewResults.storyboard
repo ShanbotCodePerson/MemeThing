@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OFq-l9-Vna">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OFq-l9-Vna">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -19,12 +19,12 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qSh-vj-0xP">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
-                                <color key="backgroundColor" name="navBar"/>
+                                <color key="backgroundColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0B-nn-3yJ">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <color key="tintColor" name="navBarText"/>
-                                <color key="barTintColor" name="navBar"/>
+                                <color key="barTintColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <items>
                                     <navigationItem id="XPZ-v1-tvU">
                                         <barButtonItem key="leftBarButtonItem" title="Main Menu" id="rWf-Jn-Zc9">
@@ -42,6 +42,10 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q0W-cq-2Xt">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yf6-n3-Yte">
                                 <rect key="frame" x="0.0" y="88" width="414" height="570"/>
                                 <subviews>
@@ -143,6 +147,7 @@
                             <constraint firstItem="NVX-Za-Jzn" firstAttribute="top" secondItem="AI8-U4-y9f" secondAttribute="bottom" constant="8" id="3tt-9Z-nNy"/>
                             <constraint firstItem="qSh-vj-0xP" firstAttribute="top" secondItem="Bo3-Gf-UQy" secondAttribute="top" id="4tj-CC-WHH"/>
                             <constraint firstItem="CL9-hn-DN2" firstAttribute="top" secondItem="yf6-n3-Yte" secondAttribute="bottom" id="6c4-ZD-Uh3"/>
+                            <constraint firstAttribute="bottom" secondItem="q0W-cq-2Xt" secondAttribute="bottom" id="6uE-7E-9ce"/>
                             <constraint firstItem="f0B-nn-3yJ" firstAttribute="leading" secondItem="1UW-qO-BJN" secondAttribute="leading" id="8Db-4Q-KjF"/>
                             <constraint firstItem="NVX-Za-Jzn" firstAttribute="height" secondItem="1UW-qO-BJN" secondAttribute="height" multiplier="0.07" id="9ZI-DY-lEh"/>
                             <constraint firstItem="AI8-U4-y9f" firstAttribute="height" secondItem="1UW-qO-BJN" secondAttribute="height" multiplier="0.045" id="9kF-L3-UzY"/>
@@ -161,8 +166,11 @@
                             <constraint firstItem="1UW-qO-BJN" firstAttribute="trailing" secondItem="qSh-vj-0xP" secondAttribute="trailing" id="Vhy-Yk-gKL"/>
                             <constraint firstItem="AI8-U4-y9f" firstAttribute="centerX" secondItem="1UW-qO-BJN" secondAttribute="centerX" id="W7w-Qf-V3K"/>
                             <constraint firstItem="1UW-qO-BJN" firstAttribute="bottom" secondItem="NVX-Za-Jzn" secondAttribute="bottom" constant="12" id="YjD-Ia-gd1"/>
+                            <constraint firstItem="1UW-qO-BJN" firstAttribute="trailing" secondItem="q0W-cq-2Xt" secondAttribute="trailing" id="aGp-Xf-GWy"/>
                             <constraint firstItem="yf6-n3-Yte" firstAttribute="top" secondItem="f0B-nn-3yJ" secondAttribute="bottom" id="cJq-1f-Oa5"/>
                             <constraint firstItem="1UW-qO-BJN" firstAttribute="trailing" secondItem="gvc-ly-50N" secondAttribute="trailing" id="i0U-WP-76P"/>
+                            <constraint firstItem="q0W-cq-2Xt" firstAttribute="top" secondItem="f0B-nn-3yJ" secondAttribute="bottom" id="ppo-t4-jjF"/>
+                            <constraint firstItem="q0W-cq-2Xt" firstAttribute="leading" secondItem="Bo3-Gf-UQy" secondAttribute="leading" id="qnz-2V-cZg"/>
                             <constraint firstItem="f0B-nn-3yJ" firstAttribute="trailing" secondItem="1UW-qO-BJN" secondAttribute="trailing" id="rd4-t2-0d8"/>
                             <constraint firstItem="qSh-vj-0xP" firstAttribute="leading" secondItem="Bo3-Gf-UQy" secondAttribute="leading" id="uVH-gM-jiu"/>
                             <constraint firstItem="f0B-nn-3yJ" firstAttribute="top" secondItem="1UW-qO-BJN" secondAttribute="top" id="ztR-NW-odc"/>
@@ -175,6 +183,7 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="backgroundView" destination="q0W-cq-2Xt" id="LOG-JS-b8J"/>
                         <outlet property="chooseWinnerButton" destination="NVX-Za-Jzn" id="95q-2j-jEp"/>
                         <outlet property="constraintToButton" destination="3tt-9Z-nNy" id="HIq-8z-lqR"/>
                         <outlet property="constraintToSafeArea" destination="Jhr-5d-b0e" id="hmD-bh-TvB"/>
@@ -195,10 +204,7 @@
         <image name="ellipsis" catalog="system" width="128" height="37"/>
         <image name="flag" catalog="system" width="128" height="121"/>
         <namedColor name="background">
-            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="navBar">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.11372549019607843" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarText">
             <color red="0.25490196078431371" green="0.23529411764705882" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

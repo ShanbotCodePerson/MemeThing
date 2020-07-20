@@ -45,10 +45,11 @@ class MemeThingLabelBackground: UILabel {
     }
 }
 
+//rename to rounded?
 class MemeThingLabelBackgroundLight: MemeThingLabelBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderWidth: 2, backgroundColor: .lightBlueAccent, opacity: 1, textColor: .border)
+        setUpViews(borderWidth: 0, backgroundColor: .orangeAccent, opacity: 1, textColor: .mainText)
     }
 }
 
@@ -66,10 +67,11 @@ class MemeThingLabel: UILabel {
     }
 }
 
+//rename to unrounded?
 class MemeThingLabelDark: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: nil, textColor: .border)
+        setUpViews(cornerRadius: 0, backgroundColor: nil, textColor: .mainText)
     }
 }
 
