@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vF3-GY-91v">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vF3-GY-91v">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -35,6 +35,10 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTj-VX-maJ">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[winner name]" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fvu-tI-e4F" customClass="MemeThingLabelDark" customModule="MemeThing" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="88" width="414" height="44"/>
                                 <color key="backgroundColor" name="lightBlueAccent"/>
@@ -91,15 +95,19 @@
                         <constraints>
                             <constraint firstItem="1eo-go-cSN" firstAttribute="top" secondItem="WDd-WB-wEb" secondAttribute="bottom" id="2l4-hm-UQB"/>
                             <constraint firstItem="Fvu-tI-e4F" firstAttribute="top" secondItem="fJE-8X-ex2" secondAttribute="bottom" id="2yW-ho-67t"/>
+                            <constraint firstItem="fTj-VX-maJ" firstAttribute="leading" secondItem="1WI-hM-gnU" secondAttribute="leading" id="5Dt-E0-tTH"/>
                             <constraint firstItem="fJE-8X-ex2" firstAttribute="top" secondItem="dKz-gp-v3E" secondAttribute="bottom" constant="-10" id="6vK-0p-0ve"/>
                             <constraint firstItem="1eo-go-cSN" firstAttribute="height" secondItem="qoa-2s-lxQ" secondAttribute="height" multiplier="0.06" id="AL8-aC-HIr"/>
                             <constraint firstItem="qoa-2s-lxQ" firstAttribute="trailing" secondItem="Fvu-tI-e4F" secondAttribute="trailing" id="Blh-nt-9yT"/>
+                            <constraint firstItem="qoa-2s-lxQ" firstAttribute="trailing" secondItem="fTj-VX-maJ" secondAttribute="trailing" id="Dud-Rq-s6j"/>
                             <constraint firstAttribute="trailing" secondItem="fJE-8X-ex2" secondAttribute="trailing" id="Ee0-3X-agv"/>
                             <constraint firstItem="C6x-WJ-hoh" firstAttribute="top" secondItem="1eo-go-cSN" secondAttribute="bottom" constant="8" id="Imy-GZ-8h5"/>
                             <constraint firstItem="qoa-2s-lxQ" firstAttribute="trailing" secondItem="dKz-gp-v3E" secondAttribute="trailing" id="MZa-im-Xhf"/>
                             <constraint firstItem="C6x-WJ-hoh" firstAttribute="centerX" secondItem="qoa-2s-lxQ" secondAttribute="centerX" id="Oal-tK-KxD"/>
                             <constraint firstItem="WDd-WB-wEb" firstAttribute="leading" secondItem="qoa-2s-lxQ" secondAttribute="leading" id="Rwl-vP-ypv"/>
                             <constraint firstItem="1eo-go-cSN" firstAttribute="centerX" secondItem="qoa-2s-lxQ" secondAttribute="centerX" id="TQ5-Gv-AeS"/>
+                            <constraint firstItem="fTj-VX-maJ" firstAttribute="top" secondItem="fJE-8X-ex2" secondAttribute="bottom" id="Wy6-73-53Z"/>
+                            <constraint firstAttribute="bottom" secondItem="fTj-VX-maJ" secondAttribute="bottom" id="XcX-e6-VqZ"/>
                             <constraint firstItem="WDd-WB-wEb" firstAttribute="trailing" secondItem="qoa-2s-lxQ" secondAttribute="trailing" id="aXg-jJ-vCi"/>
                             <constraint firstItem="WDd-WB-wEb" firstAttribute="top" secondItem="Fvu-tI-e4F" secondAttribute="bottom" id="an4-nX-kuH"/>
                             <constraint firstItem="C6x-WJ-hoh" firstAttribute="height" secondItem="qoa-2s-lxQ" secondAttribute="height" multiplier="0.07" id="dzn-3K-yOe"/>
@@ -115,6 +123,7 @@
                         <viewLayoutGuide key="safeArea" id="qoa-2s-lxQ"/>
                     </view>
                     <connections>
+                        <outlet property="backgroundView" destination="fTj-VX-maJ" id="BYK-uT-blh"/>
                         <outlet property="exitGameButton" destination="1eo-go-cSN" id="kMj-c2-8Jx"/>
                         <outlet property="playAgainButton" destination="C6x-WJ-hoh" id="tqM-Hl-6DY"/>
                         <outlet property="resultsTableView" destination="edL-Y1-kIt" id="ToD-Lh-Rm7"/>
@@ -128,7 +137,7 @@
     </scenes>
     <resources>
         <namedColor name="background">
-            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.11372549019607843" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="lightBlueAccent">
             <color red="0.8666666666666667" green="0.93725490196078431" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

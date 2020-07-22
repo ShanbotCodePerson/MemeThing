@@ -49,14 +49,14 @@ class MemeThingLabelBackground: UILabel {
 class MemeThingLabelBackgroundLight: MemeThingLabelBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderWidth: 0, backgroundColor: .orangeAccent, opacity: 1, textColor: .mainText)
+        setUpViews(borderWidth: 0, backgroundColor: .orangeAccent, opacity: 1)
     }
 }
 
 class MemeThingCaption: MemeThingLabelBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        addBorder()
+        setUpViews(borderWidth: 2, backgroundColor: .orangeAccent, opacity: 1)
     }
 }
 
@@ -71,14 +71,14 @@ class MemeThingLabel: UILabel {
 class MemeThingLabelDark: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 0, backgroundColor: nil, textColor: .mainText)
+        setUpViews(cornerRadius: 0, backgroundColor: nil)
     }
 }
 
 class MemeThingTitle: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: nil, textColor: .border)
-        addStrokeAndShadow(label: self, string: "Meme\nThing", textColor: .white, shadowColor: .blue, strokeColor: .clear, fontSize: 70.0)
+        setUpViews(backgroundColor: nil)
+        addStrokeAndShadow(label: self, string: "Meme\nThing", textColor: .mainText, shadowColor: .blue, strokeColor: .clear, fontSize: 70.0)
     }
 }

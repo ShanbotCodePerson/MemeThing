@@ -18,7 +18,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i8k-Sa-Dqv">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
-                                <color key="backgroundColor" red="0.45138680930000002" green="0.99309605359999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JNr-ca-bWi">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
@@ -92,7 +92,7 @@
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UWg-1Y-3dz">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <color key="tintColor" name="purpleAccent"/>
-                                <color key="barTintColor" red="0.45138680930000002" green="0.99309605359999997" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="barTintColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <items>
                                     <navigationItem id="0yv-Xm-4gS">
                                         <barButtonItem key="leftBarButtonItem" title="Main Menu" id="iOH-De-Uvz">

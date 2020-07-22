@@ -13,6 +13,6 @@ class MemeImageView: UIImageView {
     override func awakeFromNib() {
         super.awakeFromNib()
         addCornerRadius()
-        addBorder()
+        //addBorder()
     }
 }

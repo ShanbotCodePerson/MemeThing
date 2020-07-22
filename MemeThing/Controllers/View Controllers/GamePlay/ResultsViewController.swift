@@ -150,14 +150,14 @@ class ResultsViewController: UIViewController, HasAGameObject {
             previousButton.tintColor = .lightGray
         } else {
             previousButton.activate()
-            previousButton.tintColor = .systemBlue
+            previousButton.tintColor = .white
         }
         if pageControl.currentPage == (pageControl.numberOfPages - 1) {
             nextButton.deactivate()
             nextButton.tintColor = .lightGray
         } else {
             nextButton.activate()
-            nextButton.tintColor = .systemBlue
+            nextButton.tintColor = .white
         }
     }
     

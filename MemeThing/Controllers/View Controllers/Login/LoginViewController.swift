@@ -108,6 +108,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         confirmPasswordTextField.delegate = self
         
         //Beth added:
+        emailTextField.autocapitalizationType = .none
+        
+        //Beth added:
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.view.bounds
         gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]

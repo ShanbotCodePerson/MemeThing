@@ -459,6 +459,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
+                                            <outlet property="backgroundContainerView" destination="H67-u5-oiY" id="l2v-Am-ofO"/>
                                             <outlet property="buttonStackView" destination="90P-XR-gps" id="X3a-g7-fwr"/>
                                             <outlet property="nameLabel" destination="Mib-ft-RxE" id="INd-RS-DoT"/>
                                             <outlet property="pointsLabel" destination="IOn-E2-g8R" id="Pqr-T8-Y9j"/>

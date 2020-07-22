@@ -61,6 +61,12 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
+        //Beth added:
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
+        
         view.backgroundColor = UIColor(white: 0, alpha: 0.6)
         captionLabel.backgroundColor = .purpleAccent
         
