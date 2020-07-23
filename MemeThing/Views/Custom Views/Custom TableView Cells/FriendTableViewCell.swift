@@ -18,6 +18,7 @@ class FriendTableViewCell: UITableViewCell {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var backgroundContainerView: MemeThingTableCellView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var pointsLabel: UILabel!
     @IBOutlet weak var buttonStackView: UIStackView!
@@ -60,7 +61,8 @@ class FriendTableViewCell: UITableViewCell {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = false
         nameLabel.text = "\(name) has sent you a friend request"
-        contentView.backgroundColor = .greenAccent
+        contentView.backgroundColor = .orangeAccent
+        backgroundContainerView.backgroundColor = .clear
     }
     
     private func setUpOutgoingFriendRequestView(for name: String) {

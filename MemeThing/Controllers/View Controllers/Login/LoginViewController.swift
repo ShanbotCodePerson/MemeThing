@@ -32,12 +32,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //Beth added:
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = self.view.bounds
-        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
-        self.view.layer.insertSublayer(gradientLayer, at: 0)
-        
         // Make sure that the user is connected to the internet
         guard Reachability.checkReachable() else {
             presentInternetAlert()
@@ -106,11 +100,21 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func setUpViews() {
         textFieldContainerView.addCornerRadius(12)
+        //textFieldContainerView.addBorder()
         
         screenNameTextField.delegate = self
         emailTextField.delegate = self
         passwordTextField.delegate = self
         confirmPasswordTextField.delegate = self
+        
+        //Beth added:
+        emailTextField.autocapitalizationType = .none
+        
+        //Beth added:
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     // Move the text fields out of the way if the keyboard is going to block them
@@ -141,8 +145,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func toggleToLogin() {
         UIView.animate(withDuration: 0.2) {
             // Toggle which of the buttons is highlighted
-            self.loginToggleButton.backgroundColor = .loginBox
-            self.signUpToggleButton.backgroundColor = .loginBoxFaded
+            self.loginToggleButton.backgroundColor = .orangeAccent
+            self.signUpToggleButton.backgroundColor = .orangeFadedAccent
             
             // Hide all but the necessary text fields
             self.screenNameTextField.isHidden = true
@@ -158,8 +162,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func toggleToSignUp() {
         UIView.animate(withDuration: 0.2) {
             // Toggle which of the buttons is highlighted
-            self.loginToggleButton.backgroundColor = .loginBoxFaded
-            self.signUpToggleButton.backgroundColor = .loginBox
+            self.loginToggleButton.backgroundColor = .orangeFadedAccent
+            self.signUpToggleButton.backgroundColor = .orangeAccent
             
             // Show all the text fields
             self.screenNameTextField.isHidden = false

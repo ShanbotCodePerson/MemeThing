@@ -15,7 +15,7 @@ extension UIView {
         clipsToBounds = true
     }
     
-    func addBorder(width: CGFloat = 2, color: UIColor = .darkGray) {
+    func addBorder(width: CGFloat = 2, color: UIColor = .white) {
         layer.borderWidth = width
         layer.borderColor = color.cgColor
     }
@@ -55,6 +55,8 @@ extension UIColor {
     static let mainText = UIColor(named: "mainText")!
     static let textBackground = UIColor(named: "textBackground")!
     static let cellBackground = UIColor(named: "cellBackground")!
+    static let orangeAccent = UIColor(named: "orangeAccent")!
+    static let orangeFadedAccent = UIColor(named: "orangeFadedAccent")!
 }
 
 struct FontNames {

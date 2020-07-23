@@ -44,8 +44,8 @@
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TA2-Zb-LEP">
                                                         <rect key="frame" x="0.0" y="0.0" width="165.5" height="49"/>
-                                                        <color key="backgroundColor" name="loginBox"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                        <color key="backgroundColor" name="orangeAccent"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Sign Up"/>
                                                         <connections>
@@ -54,8 +54,8 @@
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Asi-DS-fLW">
                                                         <rect key="frame" x="165.5" y="0.0" width="165.5" height="49"/>
-                                                        <color key="backgroundColor" name="loginBoxFaded"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                        <color key="backgroundColor" name="orangeFadedAccent"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Log In"/>
                                                         <connections>
@@ -93,7 +93,7 @@
                                                         </subviews>
                                                     </stackView>
                                                 </subviews>
-                                                <color key="backgroundColor" name="loginBox"/>
+                                                <color key="backgroundColor" name="orangeAccent"/>
                                                 <constraints>
                                                     <constraint firstItem="lFt-yw-6cG" firstAttribute="centerX" secondItem="TyY-uG-08h" secondAttribute="centerX" id="Ktt-HO-ItG"/>
                                                     <constraint firstItem="lFt-yw-6cG" firstAttribute="centerY" secondItem="TyY-uG-08h" secondAttribute="centerY" id="aMg-2C-lZb"/>
@@ -168,8 +168,11 @@
         <namedColor name="loginBox">
             <color red="1" green="0.25882352941176473" blue="0.52941176470588236" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="loginBoxFaded">
-            <color red="0.90196078431372551" green="0.23529411764705882" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="orangeAccent">
+            <color red="1" green="0.52156862745098043" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="orangeFadedAccent">
+            <color red="0.94117647058823528" green="0.48627450980392156" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

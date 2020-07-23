@@ -85,11 +85,17 @@ class FriendsListViewController: UIViewController {
         
         navigationController?.setNavigationBarHidden(false, animated: true)
         friendsTableView.tableFooterView = UIView()
-        friendsTableView.backgroundColor = .background
+        //friendsTableView.backgroundColor = .background
         
         // Set up the refresh icon to check for updates whenever the user pulls down on the tableview
         refresh.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         friendsTableView.addSubview(refresh)
+        
+        //Beth added:
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     func loadAllData() {
@@ -254,6 +260,21 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return dataSource[section].name.rawValue
+    }
+    
+    //Beth added:
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 60.0
+    }
+    
+    //Beth added:
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int){
+        view.tintColor = UIColor.clear
+        guard let header = view as? UITableViewHeaderFooterView else { return }
+        header.textLabel?.textColor = UIColor.purpleAccent
+        header.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        //header.textLabel?.frame = header.frame
+        //header.textLabel?.textAlignment = .center
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

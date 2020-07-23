@@ -76,11 +76,13 @@ class LeaderboardViewController: UIViewController, HasAGameObject {
         
         playersTableView.maxHeight = view.frame.height * 0.5
         playersTableView.addCornerRadius()
-        playersTableView.addBorder(width: 2)
+        //playersTableView.addBorder(width: 2)
         playersTableView.delegate = self
         playersTableView.dataSource = self
         playersTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")
         playersTableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "playerCell")
+        
+        
     }
     
     // MARK: - Actions
