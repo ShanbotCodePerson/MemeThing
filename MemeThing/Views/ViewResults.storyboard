@@ -81,6 +81,7 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4EB-A1-VVY">
                                                 <rect key="frame" x="0.0" y="0.0" width="30" height="36.5"/>
+                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
                                                 <state key="normal" title="&lt;"/>
                                                 <connections>
                                                     <action selector="previousButtonTapped:" destination="OFq-l9-Vna" eventType="touchUpInside" id="gAT-To-iXk"/>
@@ -91,6 +92,8 @@
                                             </pageControl>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7mb-DM-cl2">
                                                 <rect key="frame" x="324" y="0.0" width="30" height="36.5"/>
+                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" title="&gt;"/>
                                                 <connections>
                                                     <action selector="nextButtonTapped:" destination="OFq-l9-Vna" eventType="touchUpInside" id="xnX-Zz-noJ"/>

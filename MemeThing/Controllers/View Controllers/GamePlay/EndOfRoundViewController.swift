@@ -66,9 +66,10 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         gradientLayer.frame = self.view.bounds
         gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
         self.view.layer.insertSublayer(gradientLayer, at: 0)
-        
+                
         view.backgroundColor = UIColor(white: 0, alpha: 0.6)
-        captionLabel.backgroundColor = .purpleAccent
+        //captionLabel.backgroundColor = .purpleAccent
+        memeImageView.addCornerRadius(10)
         
         guard let game = game, let memeReference = game.memes?.last else { return }
         
@@ -82,6 +83,8 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Set the image view
                     self?.memeImageView.image = meme.image
+                    self?.memeImageView.addCornerRadius(10)
+
                     
                     // Fetch the winning caption
                     MemeController.shared.fetchWinningCaption(for: meme) { (result) in
@@ -93,19 +96,20 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                             case .success(let caption):
                                 // Get the name of the user from the game object to display in the winner's name label
                                 let name = game.getName(of: caption.authorID)
-                                self?.winnerLabel.text = "Congratulations \(name) for having the best caption!"
+                                self?.winnerLabel.text = "Congratulations, \(name), for having the best caption!"
                                 
-                                // Set the text of the caption label
+                                // Set the text/UI of the caption label
                                 self?.captionLabel.text = caption.text
+                                self?.captionLabel.setUpViews(borderWidth: 2, backgroundColor: .orangeAccent, opacity: 1)
                                 
                                 // Set the text of the label telling the users what's up next
                                 if let gameWinner = game.gameWinner {
                                     self?.nextUpLabel.text = "The game is over and \(gameWinner) has won!"
                                 } else {
                                     if game.leadPlayerID == UserController.shared.currentUser?.recordID {
-                                         self?.nextUpLabel.text = "Next it is your turn to draw a meme!"
+                                         self?.nextUpLabel.text = "Next, it is your turn to draw a meme!"
                                     } else {
-                                        self?.nextUpLabel.text = "Next it is \(game.leadPlayerName)'s turn to draw a meme!"
+                                        self?.nextUpLabel.text = "Next, it is \(game.leadPlayerName)'s turn to draw a meme!"
                                     }
                                 }
                                 

@@ -93,7 +93,7 @@ class GameTableViewCell: UITableViewCell {
     
     private func setUpFinishedGameView(for game: Game) {
         buttonStackView.isHidden = true
-        contentView.backgroundColor = .lightGray
+        contentView.backgroundColor = .greenAccent
         mainTextLabel.text = "You played a game with \(game.listOfPlayerNames)"
         secondaryTextLabel.text = game.gameStatusDescription
     }

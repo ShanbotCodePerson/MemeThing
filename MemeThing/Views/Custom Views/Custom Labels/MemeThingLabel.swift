@@ -56,7 +56,7 @@ class MemeThingLabelBackgroundLight: MemeThingLabelBackground {
 class MemeThingCaption: MemeThingLabelBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderWidth: 2, backgroundColor: .orangeAccent, opacity: 1)
+        setUpViews(borderWidth: 2, backgroundColor: .orangeAccent, opacity: 1) // why doesn't this work?
     }
 }
 
