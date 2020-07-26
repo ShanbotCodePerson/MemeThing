@@ -20,6 +20,7 @@ class MemeThingViewSubtle: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         addCornerRadius(8)
-        self.backgroundColor = UIColor.darkGray.withAlphaComponent(0.4)
+        //self.backgroundColor = UIColor.darkGray.withAlphaComponent(0.4)
+        self.backgroundColor = UIColor.black.withAlphaComponent(0.1)
     }
 }

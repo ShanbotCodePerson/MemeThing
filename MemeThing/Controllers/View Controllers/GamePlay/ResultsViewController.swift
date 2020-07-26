@@ -102,7 +102,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     func setUpViews() {
         previousButton.deactivate()
         previousButton.tintColor = .lightGray
-        nextButton.tintColor = .lightGray
+        nextButton.tintColor = .white
         pageControl.isHidden = true
         
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
@@ -119,6 +119,8 @@ class ResultsViewController: UIViewController, HasAGameObject {
         gradientLayer.frame = self.backgroundView.bounds
         gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
         self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
+        
+        memeImageView.addCornerRadius(15) //why is this being weird??
     }
     
     func setUpPages(from captions: [Caption]?) {
@@ -133,7 +135,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
             let captionLabel = MemeThingCaption(frame: frame)
             captionLabel.text = captions[index].text
             captionLabel.textAlignment = .center
-            captionLabel.setUpViews()
+            captionLabel.setUpViews(backgroundColor: .orangeAccent, opacity: 1)
             captionLabel.addBorder()
             
             self.scrollView.addSubview(captionLabel)
