@@ -92,7 +92,7 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Set the image view
                     self?.memeImageView.image = meme.image
-                    self?.memeImageView.addCornerRadius(10)
+                    self?.memeImageView.roundCornersForAspectFit(radius: 15)
 
                     // Fetch the winning caption
                     MemeController.shared.fetchWinningCaption(for: meme) { (result) in

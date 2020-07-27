@@ -72,6 +72,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme
                     self?.meme = meme
+                    self?.memeImageView.roundCornersForAspectFit(radius: 15)
                     
                     // Calculate how many captions there should be
                     let expectedNumber = game.playersStatus.filter({ $0 == .sentCaption }).count

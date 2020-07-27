@@ -102,6 +102,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme object
                     self?.meme = meme
+                    self?.memeImageView.roundCornersForAspectFit(radius: 15)
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
