@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xsl-Ho-zco">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Profile-->
+        <scene sceneID="84b-uA-qsW">
+            <objects>
+                <viewController id="xsl-Ho-zco" customClass="ProfileViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0wA-6L-vAo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JwJ-2E-2De">
+                                <rect key="frame" x="0.0" y="787" width="414" height="75"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Iap-eR-h9g">
+                                        <rect key="frame" x="20.5" y="11.5" width="373" height="52.5"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xvf-js-2le" customClass="QuitButton" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="182.5" height="52.5"/>
+                                                <state key="normal" title="Delete Account"/>
+                                                <connections>
+                                                    <action selector="deleteAccountButtonTapped:" destination="xsl-Ho-zco" eventType="touchUpInside" id="iDf-AG-WnY"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XdL-0V-fmF" customClass="CloseButton" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="190.5" y="0.0" width="182.5" height="52.5"/>
+                                                <state key="normal" title="Sign Out"/>
+                                                <connections>
+                                                    <action selector="signOutButtonTapped:" destination="xsl-Ho-zco" eventType="touchUpInside" id="kST-P8-6yc"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="600" id="cey-eq-5TS"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Iap-eR-h9g" firstAttribute="centerX" secondItem="JwJ-2E-2De" secondAttribute="centerX" id="4nR-io-cAs"/>
+                                    <constraint firstItem="Iap-eR-h9g" firstAttribute="centerY" secondItem="JwJ-2E-2De" secondAttribute="centerY" id="Qmt-d8-d5x"/>
+                                    <constraint firstAttribute="height" constant="75" id="bfI-GC-NQm"/>
+                                    <constraint firstItem="Iap-eR-h9g" firstAttribute="width" secondItem="JwJ-2E-2De" secondAttribute="width" multiplier="0.9" priority="999" id="e6x-2f-UQg"/>
+                                    <constraint firstItem="Iap-eR-h9g" firstAttribute="height" secondItem="JwJ-2E-2De" secondAttribute="height" multiplier="0.7" id="i9d-Ll-wEh"/>
+                                </constraints>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="lFa-x2-ZvI">
+                                <rect key="frame" x="20.5" y="56" width="373" height="224"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eEr-Db-uNj" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="373" height="50"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="K0s-cO-IA6">
+                                                <rect key="frame" x="6" y="0.0" width="361" height="50"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[email]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mMj-Vh-3Se" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="Eop-GV-v72"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="K0s-cO-IA6" secondAttribute="bottom" id="N5f-1g-n84"/>
+                                            <constraint firstAttribute="trailing" secondItem="K0s-cO-IA6" secondAttribute="trailing" constant="6" id="RA9-Gq-ys6"/>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="600" id="YEq-Yt-gbd"/>
+                                            <constraint firstItem="K0s-cO-IA6" firstAttribute="leading" secondItem="eEr-Db-uNj" secondAttribute="leading" constant="6" id="bhn-JI-3Bw"/>
+                                            <constraint firstItem="K0s-cO-IA6" firstAttribute="top" secondItem="eEr-Db-uNj" secondAttribute="top" id="obT-Ke-VLI"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tlc-mv-rLV" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="58" width="373" height="50"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1de-Lq-uiq">
+                                                <rect key="frame" x="6" y="0.0" width="361" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="0tU-OT-RKR"/>
+                                                </constraints>
+                                                <color key="tintColor" name="mainText"/>
+                                                <state key="normal" title="Reset Password"/>
+                                                <connections>
+                                                    <action selector="resetPasswordButtonTapped:" destination="xsl-Ho-zco" eventType="touchUpInside" id="Ii6-0c-NeA"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="1de-Lq-uiq" secondAttribute="bottom" id="9ud-4Y-hKS"/>
+                                            <constraint firstItem="1de-Lq-uiq" firstAttribute="top" secondItem="tlc-mv-rLV" secondAttribute="top" id="IyW-RS-ZuP"/>
+                                            <constraint firstAttribute="trailing" secondItem="1de-Lq-uiq" secondAttribute="trailing" constant="6" id="kS3-E5-JjO"/>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="600" id="pro-8D-jdN"/>
+                                            <constraint firstItem="1de-Lq-uiq" firstAttribute="leading" secondItem="tlc-mv-rLV" secondAttribute="leading" constant="6" id="swv-3Y-YeN"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yMI-S3-AKr" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="116" width="373" height="50"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[screen name]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="maU-KZ-lZe" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="6" y="0.0" width="323" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="uu4-R4-UFh"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Uo-jl-Kgv">
+                                                <rect key="frame" x="335" y="0.0" width="32" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="32" id="J3z-dT-VQr"/>
+                                                </constraints>
+                                                <color key="tintColor" name="mainText"/>
+                                                <state key="normal" title="Edit"/>
+                                                <connections>
+                                                    <action selector="editScreenNameButtonTapped:" destination="xsl-Ho-zco" eventType="touchUpInside" id="lYb-oY-W9c"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstItem="maU-KZ-lZe" firstAttribute="top" secondItem="yMI-S3-AKr" secondAttribute="top" id="Ivf-re-EXE"/>
+                                            <constraint firstItem="maU-KZ-lZe" firstAttribute="leading" secondItem="yMI-S3-AKr" secondAttribute="leading" constant="6" id="RkW-cE-SpQ"/>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="600" id="WwE-ps-76u"/>
+                                            <constraint firstAttribute="bottom" secondItem="3Uo-jl-Kgv" secondAttribute="bottom" id="a14-EG-tt3"/>
+                                            <constraint firstAttribute="bottom" secondItem="maU-KZ-lZe" secondAttribute="bottom" id="dc5-mO-GBf"/>
+                                            <constraint firstItem="3Uo-jl-Kgv" firstAttribute="top" secondItem="yMI-S3-AKr" secondAttribute="top" id="m7o-AI-BQJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="3Uo-jl-Kgv" secondAttribute="trailing" constant="6" id="wo7-TC-zFG"/>
+                                            <constraint firstItem="3Uo-jl-Kgv" firstAttribute="leading" secondItem="maU-KZ-lZe" secondAttribute="trailing" constant="6" id="zYt-tc-PKy"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z0M-RP-kr7" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="174" width="373" height="50"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="FB6-Xp-hiO">
+                                                <rect key="frame" x="6" y="0.0" width="361" height="50"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[points]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BhT-Rz-yO9" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="176.5" height="50"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="xbr-aW-pnf"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Put-i3-kCi">
+                                                        <rect key="frame" x="184.5" y="0.0" width="176.5" height="50"/>
+                                                        <color key="tintColor" name="mainText"/>
+                                                        <state key="normal" image="info.circle" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="pointsInformationButtonTapped:" destination="xsl-Ho-zco" eventType="touchUpInside" id="ZPD-J4-fxB"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="600" id="0aD-cg-1rx"/>
+                                            <constraint firstItem="FB6-Xp-hiO" firstAttribute="leading" secondItem="z0M-RP-kr7" secondAttribute="leading" constant="6" id="DKg-xf-Tsn"/>
+                                            <constraint firstAttribute="trailing" secondItem="FB6-Xp-hiO" secondAttribute="trailing" constant="6" id="UdG-Wl-W0o"/>
+                                            <constraint firstItem="FB6-Xp-hiO" firstAttribute="top" secondItem="z0M-RP-kr7" secondAttribute="top" id="pAt-D8-Cba"/>
+                                            <constraint firstAttribute="bottom" secondItem="FB6-Xp-hiO" secondAttribute="bottom" id="uZ6-1T-Pdp"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="lFa-x2-ZvI" firstAttribute="centerX" secondItem="ySW-rd-wdU" secondAttribute="centerX" id="Ybe-2J-9vT"/>
+                            <constraint firstItem="lFa-x2-ZvI" firstAttribute="top" secondItem="ySW-rd-wdU" secondAttribute="top" constant="12" id="emh-TN-66x"/>
+                            <constraint firstItem="JwJ-2E-2De" firstAttribute="trailing" secondItem="ySW-rd-wdU" secondAttribute="trailing" id="jSz-eR-onG"/>
+                            <constraint firstItem="lFa-x2-ZvI" firstAttribute="width" secondItem="0wA-6L-vAo" secondAttribute="width" multiplier="0.9" id="mft-sm-TmH"/>
+                            <constraint firstItem="ySW-rd-wdU" firstAttribute="bottom" secondItem="JwJ-2E-2De" secondAttribute="bottom" id="nBF-ZI-Xyo"/>
+                            <constraint firstItem="JwJ-2E-2De" firstAttribute="leading" secondItem="ySW-rd-wdU" secondAttribute="leading" id="urQ-fv-MpF"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ySW-rd-wdU"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Profile" id="RuO-By-FiV"/>
+                    <connections>
+                        <outlet property="emailLabel" destination="mMj-Vh-3Se" id="05m-U0-xPw"/>
+                        <outlet property="pointsLabel" destination="BhT-Rz-yO9" id="Y6j-8T-Kms"/>
+                        <outlet property="screenNameLabel" destination="maU-KZ-lZe" id="XVK-ha-UTX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sba-NF-tSr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-188.40579710144928" y="870.53571428571422"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="info.circle" catalog="system" width="128" height="121"/>
+        <namedColor name="background">
+            <color red="0.0" green="0.11372549019607843" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="mainText">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

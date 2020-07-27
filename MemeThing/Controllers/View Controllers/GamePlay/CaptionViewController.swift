@@ -12,6 +12,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var memeImageView: MemeImageView!
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var navigationBar: UINavigationBar!
@@ -101,6 +102,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme object
                     self?.meme = meme
+                    self?.memeImageView.roundCornersForAspectFit(radius: 15)
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -108,6 +110,11 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 }
             }
         }
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.frame
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     // MARK: - Actions

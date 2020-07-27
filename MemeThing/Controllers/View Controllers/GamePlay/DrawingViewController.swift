@@ -26,6 +26,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpViews()
         
         // Set up the observer to transition to the game over view in case the game ends prematurely
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
@@ -38,6 +39,16 @@ class DrawingViewController: UIViewController, HasAGameObject {
         super.viewDidDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: .toGameOver, object: nil)
         removeObservers()
+    }
+    
+    // MARK: - Set Up Views
+    
+    //Beth added:
+    func setUpViews() {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.frame
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     // MARK: - Respond to Notifications

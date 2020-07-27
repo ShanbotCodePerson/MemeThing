@@ -15,9 +15,24 @@ extension UIView {
         clipsToBounds = true
     }
     
-    func addBorder(width: CGFloat = 2, color: UIColor = .darkGray) {
+    func addBorder(width: CGFloat = 2, color: UIColor = .white) {
         layer.borderWidth = width
         layer.borderColor = color.cgColor
+    }
+    
+    //Beth added:
+    func addStrokeAndShadow(label: UILabel, string: String, textColor: UIColor, shadowColor: UIColor, strokeColor: UIColor, fontSize: CGFloat) {
+        let shadow = NSShadow()
+        shadow.shadowColor = shadowColor
+        shadow.shadowBlurRadius = 5
+        let str = NSAttributedString(string: string, attributes: [
+            NSAttributedString.Key.foregroundColor : textColor,
+            NSAttributedString.Key.strokeColor : strokeColor,
+            NSAttributedString.Key.strokeWidth : -1,
+            NSAttributedString.Key.font : UIFont(name: FontNames.titleFont, size: fontSize),
+            NSAttributedString.Key.shadow :shadow
+            ])
+        label.attributedText = str
     }
 }
 
@@ -40,9 +55,12 @@ extension UIColor {
     static let mainText = UIColor(named: "mainText")!
     static let textBackground = UIColor(named: "textBackground")!
     static let cellBackground = UIColor(named: "cellBackground")!
+    static let orangeAccent = UIColor(named: "orangeAccent")!
+    static let orangeFadedAccent = UIColor(named: "orangeFadedAccent")!
 }
 
 struct FontNames {
     static let otherPossibleFont = "Futura-Bold"
     static let mainFont = "MarkerFelt-Thin"
+    static let titleFont = "MarkerFelt-Wide"
 }
