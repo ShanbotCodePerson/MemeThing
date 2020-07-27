@@ -21,6 +21,8 @@ extension UIViewController {
     enum StoryboardNames: String  {
         case Main
         case MainMenu
+        case CurrentGames
+        case Friends
         case Waiting
         case Drawing
         case AddCaption

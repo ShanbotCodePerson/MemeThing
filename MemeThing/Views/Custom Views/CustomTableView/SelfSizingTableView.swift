@@ -10,7 +10,7 @@ import UIKit
 
 class SelfSizingTableView: UITableView {
     
-    var maxHeight: CGFloat = UIScreen.main.bounds.size.height
+    var maxHeight: CGFloat = UIScreen.main.bounds.size.height * 0.9
     
     override func reloadData() {
         super.reloadData()
@@ -19,7 +19,9 @@ class SelfSizingTableView: UITableView {
     }
     
     override var intrinsicContentSize: CGSize {
-        let height = min(contentSize.height * 1.4, maxHeight)
+        let cellHeights = visibleCells.map({ $0.frame.size.height }).reduce(0, +)
+        
+        let height = min(cellHeights, maxHeight)
         if contentSize.height * 1.4 < maxHeight {
             isScrollEnabled = false
         }

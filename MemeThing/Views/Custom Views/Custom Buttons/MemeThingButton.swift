@@ -83,7 +83,7 @@ class CircularButton: UIButton {
 class AcceptButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 8, borderWidth: 0, backgroundColor: .greenAccent)
+        setUpViews(cornerRadius: 8, borderWidth: 0, backgroundColor: UIColor.greenAccent.withAlphaComponent(0.8))
         self.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     }
 }
@@ -91,6 +91,6 @@ class AcceptButton: UIButton {
 class DenyButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .redAccent)
+        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: UIColor.redAccent.withAlphaComponent(0.8))
     }
 }

@@ -61,15 +61,12 @@ class FriendTableViewCell: UITableViewCell {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = false
         nameLabel.text = "\(name) has sent you a friend request"
-        contentView.backgroundColor = .orangeAccent
-        backgroundContainerView.backgroundColor = .clear
     }
     
     private func setUpOutgoingFriendRequestView(for name: String) {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = true
         nameLabel.text = "Waiting for \(name) to respond to your friend request"
-        contentView.backgroundColor = .redAccent
     }
     
     private func setUpFriendView(for name: String?, points: Int?) {

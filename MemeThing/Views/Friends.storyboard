@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="XBR-bp-Z4K">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Friends-->
+        <scene sceneID="Phv-GT-f4N">
+            <objects>
+                <viewController id="XBR-bp-Z4K" customClass="FriendsListViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Uxe-mU-EOb">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Vki-hf-Sq4">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="friendCell" id="ZM7-Q1-wT7" customClass="FriendTableViewCell" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="62.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZM7-Q1-wT7" id="Z8R-D4-Kjf">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="62.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H67-u5-oiY" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
+                                                    <rect key="frame" x="10.5" y="6.5" width="393" height="50"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bNm-WN-uDj">
+                                                            <rect key="frame" x="6" y="0.0" width="387" height="50"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="[main text]" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mib-ft-RxE" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="123.5" height="50"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="EKC-k5-enu"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[points text]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IOn-E2-g8R" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                                                    <rect key="frame" x="131.5" y="0.0" width="124" height="50"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="90P-XR-gps">
+                                                                    <rect key="frame" x="263.5" y="0.0" width="123.5" height="50"/>
+                                                                    <subviews>
+                                                                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VNI-Kr-fhq" customClass="AcceptButton" customModule="MemeThing" customModuleProvider="target">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="61.5" height="50"/>
+                                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                            <state key="normal" title="Accept"/>
+                                                                            <connections>
+                                                                                <action selector="friendRequestButtonTapped:" destination="ZM7-Q1-wT7" eventType="touchUpInside" id="WyY-qX-Eie"/>
+                                                                            </connections>
+                                                                        </button>
+                                                                        <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="krd-dB-ZTG" customClass="DenyButton" customModule="MemeThing" customModuleProvider="target">
+                                                                            <rect key="frame" x="62.5" y="0.0" width="61" height="50"/>
+                                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                            <state key="normal" title="Deny"/>
+                                                                            <connections>
+                                                                                <action selector="friendRequestButtonTapped:" destination="ZM7-Q1-wT7" eventType="touchUpInside" id="EBh-59-416"/>
+                                                                            </connections>
+                                                                        </button>
+                                                                    </subviews>
+                                                                </stackView>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                    <constraints>
+                                                        <constraint firstItem="bNm-WN-uDj" firstAttribute="leading" secondItem="H67-u5-oiY" secondAttribute="leading" constant="6" id="2kc-Gy-Zaq"/>
+                                                        <constraint firstAttribute="bottom" secondItem="bNm-WN-uDj" secondAttribute="bottom" id="GBW-w3-vTT"/>
+                                                        <constraint firstAttribute="trailing" secondItem="bNm-WN-uDj" secondAttribute="trailing" id="Ky3-G1-bBZ"/>
+                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="600" id="Md2-eX-g47"/>
+                                                        <constraint firstItem="bNm-WN-uDj" firstAttribute="top" secondItem="H67-u5-oiY" secondAttribute="top" id="fLS-Qg-eSk"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="H67-u5-oiY" firstAttribute="height" secondItem="Z8R-D4-Kjf" secondAttribute="height" multiplier="0.8" id="C71-aC-Wq9"/>
+                                                <constraint firstItem="H67-u5-oiY" firstAttribute="width" secondItem="Z8R-D4-Kjf" secondAttribute="width" multiplier="0.95" priority="999" id="p0F-cd-xig"/>
+                                                <constraint firstItem="H67-u5-oiY" firstAttribute="centerY" secondItem="Z8R-D4-Kjf" secondAttribute="centerY" id="qj6-hT-VwG"/>
+                                                <constraint firstItem="H67-u5-oiY" firstAttribute="centerX" secondItem="Z8R-D4-Kjf" secondAttribute="centerX" id="ssd-ub-wAZ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="backgroundContainerView" destination="H67-u5-oiY" id="l2v-Am-ofO"/>
+                                            <outlet property="buttonStackView" destination="90P-XR-gps" id="X3a-g7-fwr"/>
+                                            <outlet property="nameLabel" destination="Mib-ft-RxE" id="INd-RS-DoT"/>
+                                            <outlet property="pointsLabel" destination="IOn-E2-g8R" id="Pqr-T8-Y9j"/>
+                                            <outlet property="rightConstraint" destination="Ky3-G1-bBZ" id="tHA-gu-hEe"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="r2h-oj-32c" firstAttribute="bottom" secondItem="Vki-hf-Sq4" secondAttribute="bottom" id="LgL-hx-TjL"/>
+                            <constraint firstItem="Vki-hf-Sq4" firstAttribute="top" secondItem="r2h-oj-32c" secondAttribute="top" id="P6u-kI-ooU"/>
+                            <constraint firstItem="Vki-hf-Sq4" firstAttribute="leading" secondItem="r2h-oj-32c" secondAttribute="leading" id="UnM-VL-OX0"/>
+                            <constraint firstItem="r2h-oj-32c" firstAttribute="trailing" secondItem="Vki-hf-Sq4" secondAttribute="trailing" id="dBH-mS-Yrb"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="r2h-oj-32c"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Friends" id="58R-fD-8aR">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="fk7-Fj-49u">
+                            <connections>
+                                <action selector="addButtonTapped:" destination="XBR-bp-Z4K" id="O0O-R3-YRq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="friendsTableView" destination="Vki-hf-Sq4" id="f55-5v-PKf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="v2t-i8-ATN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="723" y="871"/>
+        </scene>
+    </scenes>
+    <resources>
+        <namedColor name="background">
+            <color red="0.0" green="0.11372549019607843" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>
