@@ -422,6 +422,10 @@ class GameController {
         
         // Tell the table view list of current games to update itself and show an alert to the user
         NotificationCenter.default.post(Notification(name: .updateListOfGames))
+        
+        // Create a notification to display if the user is looking at a different view
+        // FIXME: - check what view the user is currently on
+        NotificationHelper.createGameInvitationNotification(game)
     }
     
     private func handleUpdate(to game: Game) {
@@ -468,6 +472,11 @@ class GameController {
         // Post the notification to update the view
         guard let notificationName = notificationDestination else { return }
         NotificationCenter.default.post(Notification(name: notificationName, userInfo: ["gameID" : game.recordID]))
+        
+        // Create a notification to display if the user is looking at a different view
+        // FIXME: - check what view the user is currently on
+        // FIXME: - only use this notification when it's the user's turn next
+        NotificationHelper.createGameUpdateNotification(game)
     }
     
     private func handleDeletion(of game: Game) {
@@ -485,5 +494,9 @@ class GameController {
         
         // Tell the table view list of current games to update itself
         NotificationCenter.default.post(Notification(name: .updateListOfGames))
+        
+        // Create a notification to display if the user is looking at a different view
+        // FIXME: - check what view the user is currently on
+        NotificationHelper.createGameOverNotification(game)
     }
 }

@@ -19,11 +19,17 @@ class MainMenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: false)
+        setUpObservers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
+        super.viewWillAppear(animated)
         setUpViews()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        removeObservers()
     }
     
     // MARK: - Set Up View
@@ -33,6 +39,12 @@ class MainMenuViewController: UIViewController {
         
         guard let user = UserController.shared.currentUser else { return }
         welcomeLabel.text = "Welcome, \(user.screenName)!"
+        
+        //Beth added:
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     @IBAction func tempFakeNotifications(_ sender: UIButton) {

@@ -14,7 +14,7 @@ class MemeThingTextField: UITextField {
         super.awakeFromNib()
         
         addCornerRadius()
-        addBorder()
+        //addBorder()
     }
 }
 

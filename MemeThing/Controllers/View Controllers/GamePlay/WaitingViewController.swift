@@ -12,6 +12,7 @@ class WaitingViewController: UIViewController, HasAGameObject {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var waitingLabel: UILabel!
     @IBOutlet weak var waitingForTableView: UITableView!
     @IBOutlet weak var navigationBar: UINavigationBar!
@@ -37,13 +38,19 @@ class WaitingViewController: UIViewController, HasAGameObject {
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toCaptionsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toResultsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
+        
+        // Set up the observers for responding to push notifications
+        setUpObservers()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(true)
-        #warning("Need to fill this out later")
-        // FIXME: - fill this out for all notifications, all view controllers
+        super.viewDidDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: .updateWaitingView, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toNewRound, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toCaptionsView, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toResultsView, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toGameOver, object: nil)
+        removeObservers()
     }
     
     // MARK: - Set Up UI
@@ -70,6 +77,11 @@ class WaitingViewController: UIViewController, HasAGameObject {
         default:
             print("In waiting view and game status is \(game.gameStatus). This shouldn't happen - check what went wrong")
         }
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.frame
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     // Set up the tableview if it's needed

@@ -12,6 +12,7 @@ class GameOverViewController: UIViewController, HasAGameObject {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var winnerNameLabel: UILabel!
     @IBOutlet weak var resultsTableView: UITableView!
     @IBOutlet weak var exitGameButton: UIButton!
@@ -32,6 +33,15 @@ class GameOverViewController: UIViewController, HasAGameObject {
         
         // Set up the observer to listen for notifications that the game has been restarted
         NotificationCenter.default.addObserver(self, selector: #selector(returnToMainMenu(_:)), name: .toMainMenu, object: nil)
+        
+        // Set up the observers to listen for responses to push notifications
+        setUpObservers()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .toMainMenu, object: nil)
+        removeObservers()
     }
     
     // MARK: - Notifications
@@ -58,6 +68,11 @@ class GameOverViewController: UIViewController, HasAGameObject {
         resultsTableView.register(ThreeLabelsTableViewCell.self, forCellReuseIdentifier: "playerCell")
         resultsTableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "playerCell")
         resultsTableView.isUserInteractionEnabled = false
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.frame
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     // MARK: - Actions

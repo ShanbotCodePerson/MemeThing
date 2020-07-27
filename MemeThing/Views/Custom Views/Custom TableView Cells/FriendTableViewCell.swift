@@ -18,6 +18,7 @@ class FriendTableViewCell: UITableViewCell {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var backgroundContainerView: MemeThingTableCellView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var pointsLabel: UILabel!
     @IBOutlet weak var buttonStackView: UIStackView!
@@ -40,7 +41,7 @@ class FriendTableViewCell: UITableViewCell {
     
     // MARK: - Set Up UI
     
-    func setUpViews(section: FriendsListTableViewController.SectionNames, name: String?, points: Int? = nil) {
+    func setUpViews(section: FriendsListViewController.SectionNames, name: String?, points: Int? = nil) {
         nameLabel.textAlignment = .left
         rightConstraint.constant = 0
         
@@ -60,14 +61,12 @@ class FriendTableViewCell: UITableViewCell {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = false
         nameLabel.text = "\(name) has sent you a friend request"
-        contentView.backgroundColor = .greenAccent
     }
     
     private func setUpOutgoingFriendRequestView(for name: String) {
         pointsLabel.isHidden = true
         buttonStackView.isHidden = true
         nameLabel.text = "Waiting for \(name) to respond to your friend request"
-        contentView.backgroundColor = .redAccent
     }
     
     private func setUpFriendView(for name: String?, points: Int?) {

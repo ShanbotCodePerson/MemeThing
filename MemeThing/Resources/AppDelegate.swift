@@ -57,12 +57,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        
-        // Handle the notification
-        NotificationHelper.processNotification(withData: userInfo) { (rawValue) in
-            let result = UIBackgroundFetchResult(rawValue: rawValue) ?? UIBackgroundFetchResult.failed
-            completionHandler(result)
-        }
+        print("got here to \(#function) and \(userInfo)")
+//        // Handle the notification
+//        NotificationHelper.processNotification(withData: userInfo) { (rawValue) in
+//            let result = UIBackgroundFetchResult(rawValue: rawValue) ?? UIBackgroundFetchResult.failed
+//            completionHandler(result)
+//        }
     }
 }
 
@@ -71,14 +71,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
+        print("got here to \(#function) and \(notification)")
         // TODO: - find out which view the user is currently on and don't present an alert if the user is currently in the game
         
-        let userInfo = notification.request.content.userInfo
-        let shouldPresent = NotificationHelper.shouldPresentNotification(withData: userInfo)
+//        let userInfo = notification.request.content.userInfo
+//        let shouldPresent = NotificationHelper.shouldPresentNotification(withData: userInfo)
         
         // FIXME: - first look at the content of the alert to decide if it's something worth using an alert for or not
         // Present the alert even when the app is open
-        completionHandler(shouldPresent ? [.alert] : [])
+//        completionHandler(shouldPresent ? [.alert] : [])
+        completionHandler([.alert])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("got here to \(#function) and \(response)")
+        
+        // Handle the notification by directing the user to relevant screen of the app
+        NotificationHelper.handleResponse(to: response.notification)
+        completionHandler()
     }
 }

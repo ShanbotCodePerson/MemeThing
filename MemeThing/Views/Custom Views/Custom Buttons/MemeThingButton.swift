@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIButton {
-    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 4, borderColor: UIColor = .border, backgroundColor: UIColor = .white, textColor: UIColor = .darkGray, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: String = FontNames.mainFont) {
+    func setUpViews(cornerRadius: CGFloat = 20, borderWidth: CGFloat = 4, borderColor: UIColor = .border, backgroundColor: UIColor = .white, textColor: UIColor = .buttonText, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: String = FontNames.mainFont) {
         addCornerRadius(cornerRadius)
         addBorder(width: borderWidth, color: borderColor)
         self.backgroundColor = backgroundColor
@@ -35,7 +35,7 @@ class MemeThingButton: UIButton {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderColor: .border, backgroundColor: .lightBlueAccent, textColor: .border)
+        setUpViews(backgroundColor: .orange, fontSize: 35)
     }
     
     override var intrinsicContentSize: CGSize { return addInsets(to: super.intrinsicContentSize) }
@@ -54,41 +54,43 @@ class MemeThingButton: UIButton {
 class SubmitButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderWidth: 2, backgroundColor: .greenAccent, textColor: .buttonText)
+        setUpViews(borderWidth: 2, backgroundColor: .greenAccent)
+        titleLabel?.font = UIFont(name: FontNames.mainFont, size: 35)
     }
 }
 
 class CloseButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderWidth: 2, backgroundColor: .neutralAccent, textColor: .buttonText)
+        setUpViews(borderWidth: 2, backgroundColor: .orangeAccent)
     }
 }
 
 class QuitButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(borderWidth: 2, backgroundColor: .redAccent, textColor: .buttonText)
+        setUpViews(borderWidth: 2, backgroundColor: .redAccent)
     }
 }
 
 class CircularButton: UIButton {
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        setUpViews(cornerRadius: self.frame.height / 2, backgroundColor: .neutralAccent, tintColor: .darkGray)
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setUpViews(cornerRadius: self.frame.height / 2, backgroundColor: .lightGray, tintColor: .darkGray)
     }
 }
 
 class AcceptButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .greenAccent, textColor: .white, tintColor: .buttonText)
+        setUpViews(cornerRadius: 8, borderWidth: 0, backgroundColor: UIColor.greenAccent.withAlphaComponent(0.8))
+        self.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     }
 }
 
 class DenyButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .redAccent, textColor: .white, tintColor: .buttonText)
+        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: UIColor.redAccent.withAlphaComponent(0.8))
     }
 }

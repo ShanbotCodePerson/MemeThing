@@ -13,21 +13,19 @@ Players can continue to view the results of the game until they exit or someone 
 
 ## Add Friends and Invite Them To Games
 <p align = "center">
-  <img src= "Screenshots/5.5 Inch/Friends.png" width = "260">
-  <img src= "Screenshots/5.5 Inch/InviteFriends.png" width = "260">
-  <img src= "Screenshots/5.5 Inch/Games.png" width = "260">
+  <img src= "Screenshots/5.5 Inch/Friends.png" width = "300">
+  <img src= "Screenshots/5.5 Inch/InviteFriends.png" width = "300">
 </p>
 
 ## Draw, Caption, And View Captions
 <p align = "center">
-  <img src= "Screenshots/5.5 Inch/Drawing.png" width = "260">
+  <img src= "Screenshots/5.5 Inch/Draw.png" width = "260">
   <img src= "Screenshots/5.5 Inch/Caption.png" width = "260">
   <img src= "Screenshots/5.5 Inch/Results.png" width = "260">
 </p>
 
 ## Choose a Winner, View Results, and See Game Winner
 <p align = "center">
-  <img src= "Screenshots/5.5 Inch/Results2.png" width = "260">
-  <img src= "Screenshots/5.5 Inch/EndOfRound.png" width = "260">
-  <img src= "Screenshots/5.5 Inch/GameOver.png" width = "260">
+  <img src= "Screenshots/5.5 Inch/EndOfRound.png" width = "300">
+  <img src= "Screenshots/5.5 Inch/GameOver.png" width = "300">
 </p>

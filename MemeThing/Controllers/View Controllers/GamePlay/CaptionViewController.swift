@@ -12,6 +12,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var memeImageView: MemeImageView!
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var navigationBar: UINavigationBar!
@@ -36,6 +37,16 @@ class CaptionViewController: UIViewController, HasAGameObject {
         
         // Set up the observer to transition to the game over view in case the game ends prematurely
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
+        
+        // Set up the observers to listen for responses to push notifications
+        setUpObservers()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toGameOver, object: nil)
+        removeObservers()
     }
     
     // MARK: - Respond to Notifications
@@ -91,6 +102,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme object
                     self?.meme = meme
+                    self?.memeImageView.roundCornersForAspectFit(radius: 15)
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -98,6 +110,11 @@ class CaptionViewController: UIViewController, HasAGameObject {
                 }
             }
         }
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.frame
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     // MARK: - Actions
