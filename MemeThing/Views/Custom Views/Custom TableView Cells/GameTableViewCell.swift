@@ -61,14 +61,11 @@ class GameTableViewCell: UITableViewCell {
         secondaryTextLabel.isHidden = true
         buttonStackView.isHidden = false
         mainTextLabel.text = "\(game.playersNames[0]) has invited you to a game with \(game.listOfPlayerNames)"
-        contentView.backgroundColor = .orangeAccent
-        //backgroundContainerView.backgroundColor = .clear
     }
     
     private func setUpWaitingForResponseView(for game: Game) {
         secondaryTextLabel.isHidden = true
         buttonStackView.isHidden = true
-        contentView.backgroundColor = .systemRed
         if let currentUser = UserController.shared.currentUser,
             game.leadPlayerID == currentUser.recordID {
             mainTextLabel.text = "You have sent a game invitation to \(game.listOfPlayerNames)"
@@ -79,7 +76,7 @@ class GameTableViewCell: UITableViewCell {
     
     private func setUpActiveGameView(for game: Any?) {
         buttonStackView.isHidden = true
-        contentView.backgroundColor = .clear
+        
         if let game = game as? Game {
             mainTextLabel.text = "You are playing a game with \(game.listOfPlayerNames)"
             secondaryTextLabel.text = game.gameStatusDescription
@@ -93,7 +90,6 @@ class GameTableViewCell: UITableViewCell {
     
     private func setUpFinishedGameView(for game: Game) {
         buttonStackView.isHidden = true
-        contentView.backgroundColor = .greenAccent
         mainTextLabel.text = "You played a game with \(game.listOfPlayerNames)"
         secondaryTextLabel.text = game.gameStatusDescription
     }

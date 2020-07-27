@@ -45,6 +45,13 @@ class MemeThingLabelBackground: UILabel {
     }
 }
 
+class MemeThingWelcome: MemeThingLabelBackground {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        font = UIFont(name: FontNames.mainFont, size: 40)
+    }
+}
+
 //rename to rounded?
 class MemeThingLabelBackgroundLight: MemeThingLabelBackground {
     override func awakeFromNib() {
