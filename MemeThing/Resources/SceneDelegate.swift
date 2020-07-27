@@ -35,16 +35,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UNUserNotificationCenter.current().getDeliveredNotifications { (notifications) in
             print("got here to \(#function) and there are \(notifications.count) notifications")
             for notification in notifications {
-                
-                // Extract the relevant data from the notification
-                let userInfo = notification.request.content.userInfo
-                 
-                // Handle the notification
-                NotificationHelper.processNotification(withData: userInfo) { (_) in }
-                
-                // Remove the notification after it's been handled
-                let identifier = notification.request.identifier
-                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
+                print("got here to \(#function) and \(notification)")
+//                // Extract the relevant data from the notification
+//                let userInfo = notification.request.content.userInfo
+//
+//                // Handle the notification
+//                NotificationHelper.processNotification(withData: userInfo) { (_) in }
+//
+//                // Remove the notification after it's been handled
+//                let identifier = notification.request.identifier
+//                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
             }
         }
     }

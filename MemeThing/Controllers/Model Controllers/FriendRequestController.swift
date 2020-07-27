@@ -330,6 +330,10 @@ class FriendRequestController {
                     
                     // Send a local notification to update the friends tableview
                     NotificationCenter.default.post(Notification(name: .friendsUpdate))
+                    
+                    // Create a notification to display if the user is looking at a different view
+                    // FIXME: - check what view the user is currently on
+                    NotificationHelper.createFriendRequestNotification(friendRequest)
                 }
         }
     }
@@ -392,8 +396,14 @@ class FriendRequestController {
                 // Send a local notification to update the friends tableview
                 NotificationCenter.default.post(Notification(name: .friendsUpdate))
                 
-                // Delete the requests now that they're no longer needed
-                newResponses.forEach({ self?.delete($0, completion: { (_) in }) })
+                for friendRequest in newResponses {
+                    // Create a notification to display if the user is looking at a different view
+                    // FIXME: - check what view the user is currently on
+                    NotificationHelper.createFriendResponseNotification(friendRequest)
+                    
+                    // Delete the request now that it's no longer needed
+                    self?.delete(friendRequest, completion: { (_) in })
+                }
         }
     }
     

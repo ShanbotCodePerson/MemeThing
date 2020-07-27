@@ -35,6 +35,17 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toCaptionsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toMainMenu, object: nil)
+        
+        // Set up the observers to listen for responses to push notifications
+        setUpObservers()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .toCaptionsView, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toGameOver, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toMainMenu, object: nil)
+        removeObservers()
     }
     
     // MARK: - Respond to Notifications

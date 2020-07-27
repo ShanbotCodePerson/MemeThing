@@ -30,6 +30,15 @@ class DrawingViewController: UIViewController, HasAGameObject {
         
         // Set up the observer to transition to the game over view in case the game ends prematurely
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
+        
+        // Set up the observers to listen for responses to push notifications
+        setUpObservers()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .toGameOver, object: nil)
+        removeObservers()
     }
     
     // MARK: - Set Up Views
