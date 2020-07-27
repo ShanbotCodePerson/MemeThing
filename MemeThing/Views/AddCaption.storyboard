@@ -24,21 +24,6 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcm-NG-LHC" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="20.5" y="792.5" width="373" height="57.5"/>
-                                <state key="normal" title="Send"/>
-                                <connections>
-                                    <action selector="sendButtonTapped:" destination="wv3-dL-fID" eventType="touchUpInside" id="mQX-bX-p9q"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter funniest caption..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KHy-3E-I4Q" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
-                                <rect key="frame" x="20.5" y="740.5" width="373" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="xbq-ej-gFg"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="send"/>
-                            </textField>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nkK-uE-dFS">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -60,6 +45,21 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcm-NG-LHC" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="792.5" width="373" height="57.5"/>
+                                <state key="normal" title="Send"/>
+                                <connections>
+                                    <action selector="sendButtonTapped:" destination="wv3-dL-fID" eventType="touchUpInside" id="mQX-bX-p9q"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter funniest caption..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KHy-3E-I4Q" customClass="MemeThingTextField" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="20.5" y="740.5" width="373" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="xbq-ej-gFg"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="send"/>
+                            </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2qC-42-JGe">
                                 <rect key="frame" x="0.0" y="88" width="414" height="652.5"/>
                                 <subviews>
@@ -97,14 +97,14 @@
                             <constraint firstItem="nkK-uE-dFS" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="17t-QN-WYx"/>
                             <constraint firstItem="9G1-Tm-2X0" firstAttribute="bottom" secondItem="xcm-NG-LHC" secondAttribute="bottom" constant="12" id="1iS-t2-Tf9"/>
                             <constraint firstItem="hmp-WS-XX3" firstAttribute="top" secondItem="gCh-mx-hlE" secondAttribute="top" id="8Gb-wj-136"/>
-                            <constraint firstAttribute="bottom" secondItem="Iyb-2o-7uQ" secondAttribute="bottom" id="8Xw-ba-gDM"/>
                             <constraint firstItem="xcm-NG-LHC" firstAttribute="height" secondItem="9G1-Tm-2X0" secondAttribute="height" multiplier="0.07" id="BS0-m4-LIn"/>
                             <constraint firstItem="2qC-42-JGe" firstAttribute="top" secondItem="hmp-WS-XX3" secondAttribute="bottom" id="Dgo-g1-U45"/>
-                            <constraint firstItem="9G1-Tm-2X0" firstAttribute="trailing" secondItem="Iyb-2o-7uQ" secondAttribute="trailing" id="GXv-df-Vtu"/>
+                            <constraint firstAttribute="bottom" secondItem="Iyb-2o-7uQ" secondAttribute="bottom" id="H5t-t4-Kbb"/>
                             <constraint firstItem="KHy-3E-I4Q" firstAttribute="top" secondItem="2qC-42-JGe" secondAttribute="bottom" id="JIm-c2-XYL"/>
                             <constraint firstItem="xcm-NG-LHC" firstAttribute="centerX" secondItem="9G1-Tm-2X0" secondAttribute="centerX" id="KcE-KI-oLj"/>
-                            <constraint firstItem="Iyb-2o-7uQ" firstAttribute="leading" secondItem="gCh-mx-hlE" secondAttribute="leading" id="NRo-eN-pZe"/>
+                            <constraint firstItem="Iyb-2o-7uQ" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="MeZ-El-6pD"/>
                             <constraint firstItem="KHy-3E-I4Q" firstAttribute="centerX" secondItem="9G1-Tm-2X0" secondAttribute="centerX" id="Xqg-4h-Y1M"/>
+                            <constraint firstItem="Iyb-2o-7uQ" firstAttribute="top" secondItem="hmp-WS-XX3" secondAttribute="bottom" id="Y9R-bp-kDE"/>
                             <constraint firstItem="nkK-uE-dFS" firstAttribute="bottom" secondItem="hmp-WS-XX3" secondAttribute="bottom" id="YiD-qg-UWN"/>
                             <constraint firstItem="9G1-Tm-2X0" firstAttribute="trailing" secondItem="2qC-42-JGe" secondAttribute="trailing" id="cru-F3-4xN"/>
                             <constraint firstItem="hmp-WS-XX3" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="eI7-pM-E04"/>
@@ -112,9 +112,9 @@
                             <constraint firstItem="2qC-42-JGe" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="ir9-h3-KIM"/>
                             <constraint firstItem="nkK-uE-dFS" firstAttribute="leading" secondItem="9G1-Tm-2X0" secondAttribute="leading" id="kRm-aa-SN6"/>
                             <constraint firstItem="KHy-3E-I4Q" firstAttribute="width" secondItem="9G1-Tm-2X0" secondAttribute="width" multiplier="0.9" id="m5D-xD-GaQ"/>
+                            <constraint firstItem="Iyb-2o-7uQ" firstAttribute="trailing" secondItem="9G1-Tm-2X0" secondAttribute="trailing" id="qaK-NV-jh6"/>
                             <constraint firstItem="xcm-NG-LHC" firstAttribute="top" secondItem="KHy-3E-I4Q" secondAttribute="bottom" constant="8" id="sb1-FW-wNU"/>
                             <constraint firstItem="xcm-NG-LHC" firstAttribute="width" secondItem="9G1-Tm-2X0" secondAttribute="width" multiplier="0.9" id="xCQ-1I-88j"/>
-                            <constraint firstItem="Iyb-2o-7uQ" firstAttribute="top" secondItem="nkK-uE-dFS" secondAttribute="bottom" id="yob-VA-UwV"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9G1-Tm-2X0"/>
                         <connections>

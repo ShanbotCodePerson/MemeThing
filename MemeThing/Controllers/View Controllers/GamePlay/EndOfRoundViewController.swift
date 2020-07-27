@@ -72,9 +72,8 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
     // MARK: - Set Up UI
     
     func setUpViews() {
-        //Beth added:
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = self.view.bounds
+        gradientLayer.frame = self.view.frame
         gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
         self.view.layer.insertSublayer(gradientLayer, at: 0)
                 

@@ -69,9 +69,8 @@ class GameOverViewController: UIViewController, HasAGameObject {
         resultsTableView.register(UINib(nibName: "ThreeLabelsTableViewCell", bundle: nil), forCellReuseIdentifier: "playerCell")
         resultsTableView.isUserInteractionEnabled = false
         
-        //Beth added:
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = self.backgroundView.bounds
+        gradientLayer.frame = self.view.frame
         gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
         self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
     }

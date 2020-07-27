@@ -78,9 +78,8 @@ class WaitingViewController: UIViewController, HasAGameObject {
             print("In waiting view and game status is \(game.gameStatus). This shouldn't happen - check what went wrong")
         }
         
-        //Beth added:
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = self.backgroundView.bounds
+        gradientLayer.frame = self.view.frame
         gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
         self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
     }

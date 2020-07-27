@@ -46,7 +46,7 @@ class DrawingViewController: UIViewController, HasAGameObject {
     //Beth added:
     func setUpViews() {
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = self.view.bounds
+        gradientLayer.frame = self.view.frame
         gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
         self.view.layer.insertSublayer(gradientLayer, at: 0)
     }
