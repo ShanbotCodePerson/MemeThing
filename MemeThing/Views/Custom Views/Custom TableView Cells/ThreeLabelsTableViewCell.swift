@@ -23,9 +23,9 @@ class ThreeLabelsTableViewCell: UITableViewCell {
         
         // Change the colors when the cell is selected
         if selected {
-            containerView.backgroundColor = UIColor.pinkAccent.withAlphaComponent(0.6)
-            firstLabel.textColor = UIColor.border.withAlphaComponent(0.6)
-            secondLabel.textColor = UIColor.border.withAlphaComponent(0.6)
+            containerView.backgroundColor = UIColor.greenAccent.withAlphaComponent(1)
+            firstLabel.textColor = UIColor.background.withAlphaComponent(0.6)
+            secondLabel.textColor = UIColor.background.withAlphaComponent(0.6)
         }
         else {
             containerView.backgroundColor = UIColor.cellBackground.withAlphaComponent(0.6)

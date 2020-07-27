@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ue1-Lo-lSw">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Invite Friends-->
+        <scene sceneID="jHs-u5-4VV">
+            <objects>
+                <viewController id="ue1-Lo-lSw" customClass="InviteFriendsViewController" customModule="MemeThing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="WG2-9f-PLN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Es-gh-fxN">
+                                <rect key="frame" x="0.0" y="44" width="414" height="50"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select at least two friends to start a game!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iHb-Sl-1d7" customClass="MemeThingLabelDark" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" name="orangeAccent"/>
+                                <constraints>
+                                    <constraint firstItem="iHb-Sl-1d7" firstAttribute="width" secondItem="9Es-gh-fxN" secondAttribute="width" id="Rc5-w1-qJy"/>
+                                    <constraint firstItem="iHb-Sl-1d7" firstAttribute="centerX" secondItem="9Es-gh-fxN" secondAttribute="centerX" id="SPM-Uf-QKY"/>
+                                    <constraint firstItem="iHb-Sl-1d7" firstAttribute="height" secondItem="9Es-gh-fxN" secondAttribute="height" id="a7a-nY-2a3"/>
+                                    <constraint firstAttribute="height" constant="50" id="cRl-1M-1UY"/>
+                                    <constraint firstItem="iHb-Sl-1d7" firstAttribute="centerY" secondItem="9Es-gh-fxN" secondAttribute="centerY" id="v5u-3g-5LK"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lOT-1b-9NO">
+                                <rect key="frame" x="0.0" y="787" width="414" height="75"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6pE-Yd-zwk" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="103.5" y="22.5" width="207" height="30"/>
+                                        <color key="backgroundColor" name="greenAccent"/>
+                                        <state key="normal" title="Start Game!"/>
+                                        <connections>
+                                            <action selector="startGameButtonTapped:" destination="ue1-Lo-lSw" eventType="touchUpInside" id="QAa-6Y-zXL"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="75" id="VTa-VS-ppj"/>
+                                    <constraint firstItem="6pE-Yd-zwk" firstAttribute="width" secondItem="lOT-1b-9NO" secondAttribute="width" multiplier="0.5" id="dBX-ls-baj"/>
+                                    <constraint firstItem="6pE-Yd-zwk" firstAttribute="centerY" secondItem="lOT-1b-9NO" secondAttribute="centerY" id="lDL-6a-8eg"/>
+                                    <constraint firstItem="6pE-Yd-zwk" firstAttribute="centerX" secondItem="lOT-1b-9NO" secondAttribute="centerX" id="vYq-QS-s45"/>
+                                </constraints>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="yuf-VC-mpJ">
+                                <rect key="frame" x="0.0" y="113" width="414" height="674"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="friendCell" id="OaQ-vD-R8S" customClass="ThreeLabelsTableViewCell" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OaQ-vD-R8S" id="5cV-Uv-YWH">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="yuf-VC-mpJ" firstAttribute="top" secondItem="9Es-gh-fxN" secondAttribute="bottom" multiplier="1.2" id="5dP-gw-aeR"/>
+                            <constraint firstItem="9Es-gh-fxN" firstAttribute="leading" secondItem="G5A-kT-9mS" secondAttribute="leading" id="9ld-0v-Y2B"/>
+                            <constraint firstItem="G5A-kT-9mS" firstAttribute="trailing" secondItem="lOT-1b-9NO" secondAttribute="trailing" id="Yx2-bX-h9k"/>
+                            <constraint firstItem="yuf-VC-mpJ" firstAttribute="leading" secondItem="G5A-kT-9mS" secondAttribute="leading" id="ec2-9b-uJM"/>
+                            <constraint firstItem="G5A-kT-9mS" firstAttribute="trailing" secondItem="yuf-VC-mpJ" secondAttribute="trailing" id="fql-kh-XoX"/>
+                            <constraint firstItem="lOT-1b-9NO" firstAttribute="leading" secondItem="G5A-kT-9mS" secondAttribute="leading" id="mq2-Ob-0YB"/>
+                            <constraint firstItem="9Es-gh-fxN" firstAttribute="top" secondItem="G5A-kT-9mS" secondAttribute="top" id="sQH-6k-zgo"/>
+                            <constraint firstItem="G5A-kT-9mS" firstAttribute="bottom" secondItem="lOT-1b-9NO" secondAttribute="bottom" id="tPP-MU-maI"/>
+                            <constraint firstItem="G5A-kT-9mS" firstAttribute="trailing" secondItem="9Es-gh-fxN" secondAttribute="trailing" id="uLl-3I-94f"/>
+                            <constraint firstItem="lOT-1b-9NO" firstAttribute="top" secondItem="yuf-VC-mpJ" secondAttribute="bottom" id="ykC-qE-jeu"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="G5A-kT-9mS"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Invite Friends" id="Pjp-Xr-iJb"/>
+                    <connections>
+                        <outlet property="friendsTableView" destination="yuf-VC-mpJ" id="xLW-Bb-8Yv"/>
+                        <outlet property="startGameButton" destination="6pE-Yd-zwk" id="d4I-vD-PEA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="scE-H3-yUu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1693" y="130"/>
+        </scene>
+    </scenes>
+    <resources>
+        <namedColor name="background">
+            <color red="0.0" green="0.11372549019607843" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="greenAccent">
+            <color red="0.16470588235294117" green="0.85882352941176465" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="orangeAccent">
+            <color red="1" green="0.52156862745098043" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

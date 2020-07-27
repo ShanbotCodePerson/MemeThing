@@ -12,6 +12,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var memeImageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var pageControl: UIPageControl!
@@ -44,6 +45,16 @@ class ResultsViewController: UIViewController, HasAGameObject {
         // Set up the observers to listen for notifications telling the view to transition to a new page
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toNewRound, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transitionToNewPage(_:)), name: .toGameOver, object: nil)
+        
+        // Set up the observers to listen for responses to push notifications
+        setUpObservers()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .toNewRound, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .toGameOver, object: nil)
+        removeObservers()
     }
     
     // MARK: - Helper Method
@@ -61,6 +72,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
                 case .success(let meme):
                     // Save the meme
                     self?.meme = meme
+                    self?.memeImageView.roundCornersForAspectFit(radius: 15)
                     
                     // Calculate how many captions there should be
                     let expectedNumber = game.playersStatus.filter({ $0 == .sentCaption }).count
@@ -101,7 +113,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
     func setUpViews() {
         previousButton.deactivate()
         previousButton.tintColor = .lightGray
-        nextButton.tintColor = .lightGray
+        nextButton.tintColor = .white
         pageControl.isHidden = true
         
         guard let game = game, let currentUser = UserController.shared.currentUser else { return }
@@ -112,6 +124,11 @@ class ResultsViewController: UIViewController, HasAGameObject {
             constraintToButton.isActive = false
             constraintToSafeArea.isActive = true
         }
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = self.view.frame
+        gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
+        self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
     }
     
     func setUpPages(from captions: [Caption]?) {
@@ -126,7 +143,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
             let captionLabel = MemeThingCaption(frame: frame)
             captionLabel.text = captions[index].text
             captionLabel.textAlignment = .center
-            captionLabel.setUpViews()
+            captionLabel.setUpViews(backgroundColor: .orangeAccent, opacity: 1)
             captionLabel.addBorder()
             
             self.scrollView.addSubview(captionLabel)
@@ -143,14 +160,14 @@ class ResultsViewController: UIViewController, HasAGameObject {
             previousButton.tintColor = .lightGray
         } else {
             previousButton.activate()
-            previousButton.tintColor = .systemBlue
+            previousButton.tintColor = .white
         }
         if pageControl.currentPage == (pageControl.numberOfPages - 1) {
             nextButton.deactivate()
             nextButton.tintColor = .lightGray
         } else {
             nextButton.activate()
-            nextButton.tintColor = .systemBlue
+            nextButton.tintColor = .white
         }
     }
     
