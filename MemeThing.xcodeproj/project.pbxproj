@@ -342,11 +342,11 @@
 			isa = PBXGroup;
 			children = (
 				4039365B2486B898007C2601 /* NotificationHelper.swift */,
+				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
 				402D7CFD249C45A100955ADF /* Reachability.swift */,
 				40C2147B247EEE9B007B7630 /* MemeThingError.swift */,
 				4039CE0B248205D4004DA41F /* StyleGuide.swift */,
 				40169F7D24AFF8550078706C /* LoadingIcon.swift */,
-				40C21471247EE44D007B7630 /* UIViewControllerExtension.swift */,
 				4005A1A124AC34E000BE556F /* UIImageExtension.swift */,
 				405C1E1A24B285F20025AF18 /* ArrayHelper.swift */,
 			);

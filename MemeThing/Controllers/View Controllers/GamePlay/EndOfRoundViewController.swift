@@ -79,8 +79,6 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
         self.view.layer.insertSublayer(gradientLayer, at: 0)
                 
         view.backgroundColor = UIColor(white: 0, alpha: 0.6)
-        //captionLabel.backgroundColor = .purpleAccent
-        memeImageView.addCornerRadius(10)
         
         guard let game = game, let memeReference = game.memes?.last else { return }
         
@@ -96,7 +94,6 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                     self?.memeImageView.image = meme.image
                     self?.memeImageView.addCornerRadius(10)
 
-                    
                     // Fetch the winning caption
                     MemeController.shared.fetchWinningCaption(for: meme) { (result) in
                         DispatchQueue.main.async {

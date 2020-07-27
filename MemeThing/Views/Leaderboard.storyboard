@@ -55,6 +55,9 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="LtA-KE-euQ"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <gestureRecognizers/>
@@ -68,7 +71,7 @@
                             <constraint firstItem="gKL-sf-953" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="UU3-pp-Wmn"/>
                             <constraint firstItem="MYJ-P3-iiX" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="WpU-S6-GmD"/>
                             <constraint firstItem="y5T-UQ-2vA" firstAttribute="centerX" secondItem="c9Y-8r-g0v" secondAttribute="centerX" id="vnT-ON-WY7"/>
-                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.05" id="wxH-kB-z7m"/>
+                            <constraint firstItem="MYJ-P3-iiX" firstAttribute="height" secondItem="c9Y-8r-g0v" secondAttribute="height" multiplier="0.05" priority="999" id="wxH-kB-z7m"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="c9Y-8r-g0v"/>
                         <connections>

@@ -17,6 +17,9 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="poq-0W-Hh3" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
                                 <rect key="frame" x="20.5" y="707" width="373" height="41"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="wpU-Hs-jRr"/>
+                                </constraints>
                                 <state key="normal" title="Continue"/>
                                 <connections>
                                     <action selector="continueButtonTapped:" destination="UaH-bf-bqP" eventType="touchUpInside" id="ksX-tY-eV5"/>
@@ -77,7 +80,7 @@
                             <constraint firstItem="poq-0W-Hh3" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="IVI-6g-rsh"/>
                             <constraint firstItem="KHi-YD-VRK" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="MEb-7Z-mf1"/>
                             <constraint firstItem="ezc-7D-MKU" firstAttribute="centerY" secondItem="oRY-78-WsG" secondAttribute="centerY" multiplier="0.9" id="Put-cE-g1o"/>
-                            <constraint firstItem="poq-0W-Hh3" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.05" id="XUw-KC-t83"/>
+                            <constraint firstItem="poq-0W-Hh3" firstAttribute="height" secondItem="oRY-78-WsG" secondAttribute="height" multiplier="0.05" priority="999" id="XUw-KC-t83"/>
                             <constraint firstItem="ezc-7D-MKU" firstAttribute="centerX" secondItem="oRY-78-WsG" secondAttribute="centerX" id="pPu-vO-uhz"/>
                             <constraint firstItem="ezc-7D-MKU" firstAttribute="top" secondItem="ejJ-2K-M7N" secondAttribute="bottom" constant="8" id="q5c-V4-5x1"/>
                             <constraint firstItem="ezc-7D-MKU" firstAttribute="width" secondItem="oRY-78-WsG" secondAttribute="width" multiplier="0.9" id="rmb-Th-0Yr"/>

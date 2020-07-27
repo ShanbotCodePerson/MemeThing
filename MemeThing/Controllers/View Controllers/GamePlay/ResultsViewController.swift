@@ -129,8 +129,6 @@ class ResultsViewController: UIViewController, HasAGameObject {
         gradientLayer.frame = self.backgroundView.bounds
         gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
         self.backgroundView.layer.insertSublayer(gradientLayer, at: 0)
-        
-        memeImageView.addCornerRadius(15) //why is this being weird??
     }
     
     func setUpPages(from captions: [Caption]?) {

@@ -63,11 +63,11 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2qC-42-JGe">
                                 <rect key="frame" x="0.0" y="88" width="414" height="652.5"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="7IK-AJ-lNo" customClass="MemeImageView" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="20.5" y="16.5" width="373" height="620"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="200" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7IK-AJ-lNo" customClass="MemeImageView" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="20.5" y="12" width="373" height="628.5"/>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPV-4g-3rQ">
-                                        <rect key="frame" x="359.5" y="602.5" width="22" height="22"/>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jPV-4g-3rQ">
+                                        <rect key="frame" x="359.5" y="606.5" width="22" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="jPV-4g-3rQ" secondAttribute="height" multiplier="1:1" id="B63-Rb-HJ1"/>
                                         </constraints>
@@ -81,10 +81,9 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="7IK-AJ-lNo" firstAttribute="centerX" secondItem="2qC-42-JGe" secondAttribute="centerX" id="4xQ-2m-Vr8"/>
-                                    <constraint firstItem="7IK-AJ-lNo" firstAttribute="height" secondItem="2qC-42-JGe" secondAttribute="height" multiplier="0.95" id="8Kv-ny-tP6"/>
                                     <constraint firstItem="jPV-4g-3rQ" firstAttribute="bottom" secondItem="7IK-AJ-lNo" secondAttribute="bottom" constant="-12" id="HlS-LF-KKp"/>
                                     <constraint firstItem="7IK-AJ-lNo" firstAttribute="centerY" secondItem="2qC-42-JGe" secondAttribute="centerY" id="Lj7-vI-zob"/>
-                                    <constraint firstItem="7IK-AJ-lNo" firstAttribute="width" secondItem="2qC-42-JGe" secondAttribute="width" multiplier="0.9" id="akC-Fe-QSW"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="7IK-AJ-lNo" secondAttribute="bottom" constant="12" id="bfe-7n-arR"/>
                                     <constraint firstItem="jPV-4g-3rQ" firstAttribute="trailing" secondItem="7IK-AJ-lNo" secondAttribute="trailing" constant="-12" id="q9N-Qv-L5O"/>
                                 </constraints>
                             </view>
@@ -101,6 +100,7 @@
                             <constraint firstItem="2qC-42-JGe" firstAttribute="top" secondItem="hmp-WS-XX3" secondAttribute="bottom" id="Dgo-g1-U45"/>
                             <constraint firstItem="9G1-Tm-2X0" firstAttribute="trailing" secondItem="Iyb-2o-7uQ" secondAttribute="trailing" id="GXv-df-Vtu"/>
                             <constraint firstItem="KHy-3E-I4Q" firstAttribute="top" secondItem="2qC-42-JGe" secondAttribute="bottom" id="JIm-c2-XYL"/>
+                            <constraint firstItem="7IK-AJ-lNo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="KHy-3E-I4Q" secondAttribute="leading" id="JdR-6y-EoB"/>
                             <constraint firstItem="xcm-NG-LHC" firstAttribute="centerX" secondItem="9G1-Tm-2X0" secondAttribute="centerX" id="KcE-KI-oLj"/>
                             <constraint firstItem="Iyb-2o-7uQ" firstAttribute="leading" secondItem="gCh-mx-hlE" secondAttribute="leading" id="NRo-eN-pZe"/>
                             <constraint firstItem="KHy-3E-I4Q" firstAttribute="centerX" secondItem="9G1-Tm-2X0" secondAttribute="centerX" id="Xqg-4h-Y1M"/>

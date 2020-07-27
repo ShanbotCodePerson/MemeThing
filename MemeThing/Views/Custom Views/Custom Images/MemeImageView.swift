@@ -9,10 +9,8 @@
 import UIKit
 
 class MemeImageView: UIImageView {
-    
     override func awakeFromNib() {
         super.awakeFromNib()
-        addCornerRadius()
-        //addBorder()
+        addCornerRadius(15)
     }
 }

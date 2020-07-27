@@ -55,6 +55,34 @@ extension UIViewController {
         self.present(initialVC, animated: false)
     }
     
+    func transitionToStoryboardInNavController(named storyboard: StoryboardNames, direction: CATransitionSubtype = .fromLeft) {
+        // Make sure the user is not already on the given storyboard
+        guard let currentStoryboard = self.storyboard?.value(forKey: "name") as? String,
+            currentStoryboard != storyboard.rawValue
+            else { return }
+        
+        // Initialize the storyboard
+        let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
+        let navigationStoryboard = UIStoryboard(name: StoryboardNames.MainMenu.rawValue, bundle: nil)
+        guard let initialVC = storyboard.instantiateInitialViewController(),
+            let navigationVC = navigationStoryboard.instantiateInitialViewController() as? UINavigationController
+            else { return }
+        navigationVC.modalPresentationStyle = .fullScreen
+        
+        // Make the transition look like navigating back through a navigation controller
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.type = .push
+        transition.subtype = direction
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        view.window?.layer.add(transition, forKey: kCATransition)
+        
+        
+        // Present the storyboard
+        self.present(navigationVC, animated: false)
+        navigationVC.pushViewController(initialVC, animated: true)
+    }
+    
     func transitionToStoryboard(named storyboard: StoryboardNames, with game: Game) {
         // Initialize the storyboard
         let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
@@ -187,7 +215,7 @@ extension UIViewController {
     func setUpObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(toFriendsList), name: .toFriendsView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(toGamesList), name: .toGamesView, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(toGameOver), name: .toGameOver, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toGameOver(_:)), name: .toGameOver, object: nil)
     }
     func removeObservers() {
         NotificationCenter.default.removeObserver(self, name: .toFriendsView, object: nil)
@@ -197,18 +225,17 @@ extension UIViewController {
     
     // Transition to the relevant storyboards in response to notifications
     @objc func toFriendsList() {
-        print("trying to transition to friends list view")
-        // FIXME: - need to separate out the views in the main storyboard
-        //        DispatchQueue.main.async { self.transitionToStoryboard(named: ) }
+//        DispatchQueue.main.async { self.transitionToStoryboardInNavController(named: .Friends) }
     }
     @objc func toGamesList() {
-        print("trying to transition to games list view")
-        // FIXME: - need to separate out the views in the main storyboard
-        //        DispatchQueue.main.async { self.transitionToStoryboard(named: ) }
+//        DispatchQueue.main.async { self.transitionToStoryboardInNavController(named: .CurrentGames) }
     }
-    @objc func toGameOver() {
+    @objc func toGameOver(_ sender: NSNotification) {
         print("trying to transition to game over view")
-        // FIXME: - need to get game from notification
+//        guard let gameID = sender.userInfo?["gameID"] as? String,
+//            let game = GameController.shared.currentGames?.first(where: { $0.recordID == gameID })
+//            else { return }
+//        
 //        DispatchQueue.main.async { self.transitionToStoryboard(named: .GameOver, with: game) }
     }
 }
