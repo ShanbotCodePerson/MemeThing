@@ -19,7 +19,7 @@ Players can continue to view the results of the game until they exit or someone 
 
 ## Draw, Caption, And View Captions
 <p align = "center">
-  <img src= "Screenshots/5.5 Inch/Drawing.png" width = "260">
+  <img src= "Screenshots/5.5 Inch/Draw.png" width = "260">
   <img src= "Screenshots/5.5 Inch/Caption.png" width = "260">
   <img src= "Screenshots/5.5 Inch/Results.png" width = "260">
 </p>
