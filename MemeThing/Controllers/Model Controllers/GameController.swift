@@ -489,6 +489,21 @@ class GameController {
     
     // Perform all the cleanup for the user to exit the game, whether it's over or the user has quit
     private func handleEnd(for game: Game) {
+        // Make sure to update the user's points with however many points they earned in the game
+        if let currentUser = UserController.shared.currentUser {
+            let points = game.getPoints(of: currentUser)
+            UserController.shared.update(currentUser, points: points) { (result) in
+                switch result {
+                case .success(_):
+                    print("should have incremented users points, now is \(currentUser.points)")
+                case .failure(let error):
+                    // Print the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+            }
+        }
+        
         // Remove the game from the source of truth
         currentGames?.removeAll(where: { $0 == game })
         
