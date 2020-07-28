@@ -120,20 +120,6 @@ class EndOfRoundViewController: UIViewController, HasAGameObject {
                                     }
                                 }
                                 
-                                guard let currentUser = UserController.shared.currentUser else { return }
-                                if caption.authorID == currentUser.recordID {
-                                    UserController.shared.update(currentUser, points: 1) { (result) in
-                                        // TODO: - show alerts? tell winning user they earned a point?
-                                        switch result {
-                                        case .success(_):
-                                            // TODO: - display an alert or update the ui somehow telling the user they got a point
-                                            print("should have incremented users points, now is \(currentUser.points)")
-                                        case .failure(let error):
-                                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                        }
-                                    }
-                                }
-                                
                             case .failure(let error):
                                 // Print and display the error
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
