@@ -90,6 +90,15 @@
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES" textContentType="password"/>
                                                             </textField>
+                                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KfB-f1-VJI">
+                                                                <rect key="frame" x="0.0" y="204" width="315" height="0.0"/>
+                                                                <state key="normal" title="Forgot password?">
+                                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </state>
+                                                                <connections>
+                                                                    <action selector="forgotPasswordButtonTapped:" destination="Z7G-aV-WzP" eventType="touchUpInside" id="mjV-kh-BPt"/>
+                                                                </connections>
+                                                            </button>
                                                         </subviews>
                                                     </stackView>
                                                 </subviews>
@@ -146,6 +155,7 @@
                         <outlet property="confirmPasswordTextField" destination="Ea3-oj-rzn" id="FCw-Xu-Ea5"/>
                         <outlet property="doneButton" destination="cam-3L-kts" id="SAk-I6-a2L"/>
                         <outlet property="emailTextField" destination="twx-kb-Bqy" id="f5Q-Dq-d9U"/>
+                        <outlet property="forgotPasswordButton" destination="KfB-f1-VJI" id="k6a-lK-EZN"/>
                         <outlet property="keyboardHeightLayoutConstraint" destination="i9w-Mx-86o" id="G5z-X8-7f3"/>
                         <outlet property="loginToggleButton" destination="Asi-DS-fLW" id="eSc-Hz-h9l"/>
                         <outlet property="passwordTextField" destination="IxU-ce-hvA" id="lzg-3M-IKU"/>
