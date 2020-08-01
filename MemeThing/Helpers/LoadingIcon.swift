@@ -10,20 +10,26 @@ import UIKit
 
 extension UIView {
     
-    func startLoadingIcon(color: UIColor = .loadingIcon) {
+    func startLoadingIcon() {
         let backgroundView = UIView()
         backgroundView.frame = CGRect.init(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-        backgroundView.backgroundColor = UIColor.loadingIconBackground.withAlphaComponent(0.15)
+        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         backgroundView.tag = 475647
+        
+        let view = UIView()
+        view.frame = CGRect(x: self.bounds.width / 2 - 45, y: self.bounds.height / 2 - 45, width: 90, height: 90)
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        view.addCornerRadius(18)
         
         let activityIndicator = UIActivityIndicatorView(frame: backgroundView.frame)
         activityIndicator.center = backgroundView.center
         activityIndicator.hidesWhenStopped = true
         activityIndicator.style = .large
-        activityIndicator.color = color
+        activityIndicator.color = .white
         activityIndicator.startAnimating()
         self.isUserInteractionEnabled = false
         
+        backgroundView.addSubview(view)
         backgroundView.addSubview(activityIndicator)
         
         self.addSubview(backgroundView)

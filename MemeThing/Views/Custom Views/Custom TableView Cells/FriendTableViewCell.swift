@@ -33,7 +33,7 @@ class FriendTableViewCell: UITableViewCell {
     
     @IBAction func friendRequestButtonTapped(_ sender: UIButton) {
         // Show the loading icon over the cell
-        self.contentView.startLoadingIcon(color: .white)
+        self.contentView.startLoadingIcon()
         
         // Pass the functionality off to the delegate
         delegate?.respondToFriendRequest(from: self, accept: (sender.tag == 1))
