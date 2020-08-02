@@ -311,7 +311,7 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
             if data.count == 0 { cell.setUpViews(section: sectionName, name: nil) }
             else {
                 guard let friend = data[indexPath.row] as? User else { return cell }
-                cell.setUpViews(section: sectionName, name: friend.screenName, points: friend.points)
+                cell.setUpViews(section: sectionName, name: friend.screenName, points: friend.points, photo: friend.photo)
             }
         }
         

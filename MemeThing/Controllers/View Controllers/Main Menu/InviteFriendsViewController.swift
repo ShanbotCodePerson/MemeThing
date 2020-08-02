@@ -125,7 +125,7 @@ extension InviteFriendsViewController: UITableViewDelegate, UITableViewDataSourc
         // Fill in the details of the cell with the friend's information
         if let friends = UserController.shared.usersFriends, friends.count > 0 {
             let friend = friends[indexPath.row]
-            cell.setUpUI(firstText: friend.screenName, secondText: "Points: \(friend.points)")
+            cell.setUpUI(firstText: friend.screenName, secondText: "Points: \(friend.points)", photo: friend.photo)
             cell.isUserInteractionEnabled = true
         }
             // Insert a filler row if the user has not added any friends yet
