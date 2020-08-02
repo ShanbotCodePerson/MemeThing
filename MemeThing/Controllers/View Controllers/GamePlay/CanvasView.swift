@@ -18,18 +18,12 @@ class CanvasView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setUpViews()
+        addCornerRadius()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setUpViews()
-    }
-    
-    // Some formatting
-    func setUpViews() {
         addCornerRadius()
-        addBorder()
     }
     
     // MARK: - Drawing Methods
@@ -71,6 +65,14 @@ class CanvasView: UIView {
     }
     
     // MARK: - Helper Methods
+    
+    func clear() {
+        // Remove all the lines
+        lines.removeAll()
+        
+        // Update the display
+        setNeedsDisplay()
+    }
     
     func undoDraw() {
         // Remove the most recent line from the array

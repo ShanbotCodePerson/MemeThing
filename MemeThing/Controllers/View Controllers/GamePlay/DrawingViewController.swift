@@ -43,7 +43,6 @@ class DrawingViewController: UIViewController, HasAGameObject {
     
     // MARK: - Set Up Views
     
-    //Beth added:
     func setUpViews() {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.view.frame

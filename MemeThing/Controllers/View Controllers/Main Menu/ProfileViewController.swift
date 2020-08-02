@@ -90,6 +90,8 @@ class ProfileViewController: UIViewController {
         
         // Add a button option for drawing a sketch
         let drawAction = UIAlertAction(title: "Draw a sketch of yourself", style: .default) { [weak self] (_) in
+            self?.undoButton.isHidden = false
+            self?.canvasView.clear()
             self?.drawingProfilePhotoPopoverView.isHidden = false
         }
         
