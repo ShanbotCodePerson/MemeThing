@@ -145,6 +145,7 @@ class ResultsViewController: UIViewController, HasAGameObject {
             captionLabel.textAlignment = .center
             captionLabel.setUpViews(backgroundColor: .orangeAccent, opacity: 1)
             captionLabel.addBorder()
+            captionLabel.adjustsFontSizeToFitWidth = true
             
             self.scrollView.addSubview(captionLabel)
         }
