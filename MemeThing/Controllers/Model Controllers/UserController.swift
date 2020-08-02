@@ -168,7 +168,7 @@ class UserController {
     }
     
     // Update a user - generic helper function for other update functionality
-     func saveChanges(to user: User, completion: @escaping resultCompletion) {
+    func saveChanges(to user: User, completion: @escaping resultCompletion) {
         guard let documentID = user.documentID else { return completion(.failure(.noUserFound)) }
         
         // Update the data in the cloud

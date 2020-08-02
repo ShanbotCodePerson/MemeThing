@@ -307,6 +307,7 @@ extension GamesListViewController: GameTableViewCellDelegate {
                 switch result {
                 case .success(_):
                     // If the user accepted the invitation, transition them to the waiting view until all users have responded
+                    cell.contentView.stopLoadingIcon()
                     if accept { self?.transitionToStoryboard(named: .Waiting, with: game) }
                 case .failure(let error):
                     // Otherwise, display the error

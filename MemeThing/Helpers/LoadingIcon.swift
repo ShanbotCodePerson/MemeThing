@@ -16,10 +16,11 @@ extension UIView {
         backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         backgroundView.tag = 475647
         
-        let view = UIView()
-        view.frame = CGRect(x: self.bounds.width / 2 - 45, y: self.bounds.height / 2 - 45, width: 90, height: 90)
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        view.addCornerRadius(18)
+        let squareView = UIView()
+        squareView.frame = CGRect(x: self.bounds.width / 2 - 45, y: self.bounds.height / 2 - 45, width: 90, height: 90)
+        squareView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        squareView.addCornerRadius(18)
+        squareView.tag = 475648
         
         let activityIndicator = UIActivityIndicatorView(frame: backgroundView.frame)
         activityIndicator.center = backgroundView.center
@@ -29,15 +30,16 @@ extension UIView {
         activityIndicator.startAnimating()
         self.isUserInteractionEnabled = false
         
-        backgroundView.addSubview(view)
+        backgroundView.addSubview(squareView)
         backgroundView.addSubview(activityIndicator)
         
         self.addSubview(backgroundView)
     }
     
     func stopLoadingIcon() {
-        if let background = self.viewWithTag(475647){
-            background.removeFromSuperview()
+        if let backgroundView = self.viewWithTag(475647) {
+            if let squareView = backgroundView.viewWithTag(475648) { squareView.removeFromSuperview() }
+            backgroundView.removeFromSuperview()
         }
         self.isUserInteractionEnabled = true
     }

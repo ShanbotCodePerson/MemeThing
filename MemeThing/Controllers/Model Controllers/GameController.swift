@@ -90,7 +90,7 @@ class GameController {
     }
     
     // Read (fetch) all the games the user is currently involved in
-    func fetchCurrentGames(completion: @escaping resultCompletion) {
+    func fetchCurrentGames(completion: @escaping resultCompletionWith<[Game]>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Fetch all the games that include the user
@@ -106,15 +106,16 @@ class GameController {
                 
                 // Unwrap the data
                 guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
-                let games = documents.compactMap { (document) -> Game? in
+                var games = documents.compactMap { (document) -> Game? in
                     guard let game = Game(dictionary: document.data()) else { return nil }
                     game.documentID = document.documentID
                     return game
                 }
                 
                 // Save to the source of truth, filtering out the games that the user has declined, quit, or finished
-                self?.currentGames = games.filter { $0.getStatus(of: currentUser) != .denied && $0.getStatus(of: currentUser) != .quit && $0.getStatus(of: currentUser) != .done }
-                return completion(.success(true))
+                games = games.filter { $0.getStatus(of: currentUser) != .denied && $0.getStatus(of: currentUser) != .quit && $0.getStatus(of: currentUser) != .done }
+                self?.currentGames = games
+                return completion(.success(games))
         }
     }
     
