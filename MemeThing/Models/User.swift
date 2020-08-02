@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit.UIImage
 
 // MARK: - String Constants
 
@@ -14,6 +15,7 @@ struct UserStrings {
     static let recordType = "User"
     static let emailKey = "email"
     fileprivate static let screenNameKey = "screenName"
+    fileprivate static let profilePhotoURLKey = "profilePhotoURL"
     fileprivate static let pointsKey = "points"
     fileprivate static let blockedIDsKey = "blockedIDs"
     fileprivate static let friendIDsKey = "friendIDs"
@@ -26,6 +28,8 @@ class User {
     
     let email: String
     var screenName: String
+    var profilePhotoURL: String?
+    var photo: UIImage?
     var points: Int
     var blockedIDs: [String]
     var friendIDs: [String]
@@ -36,6 +40,7 @@ class User {
     
     init(email: String,
          screenName: String?,
+         profilePhotoURL: String? = nil,
          points: Int = 0,
          blockedIDs: [String] = [],
          friendIDs: [String] = [],
@@ -43,10 +48,19 @@ class User {
         
         self.email = email
         self.screenName = (screenName ?? email.components(separatedBy: "@").first) ?? email
+        self.profilePhotoURL = profilePhotoURL
         self.points = points
         self.blockedIDs = blockedIDs
         self.friendIDs = friendIDs
         self.recordID = recordID
+        
+        UserController.shared.fetchUsersProfilePhoto(user: self) { [weak self] (photo) in
+            self?.photo = photo
+            
+            // Update the UI
+            NotificationCenter.default.post(Notification(name: .friendsUpdate))
+            NotificationCenter.default.post(Notification(name: .updateProfileView))
+        }
     }
     
     convenience init?(dictionary: [String : Any]) {
@@ -57,10 +71,12 @@ class User {
             var friendIDs = dictionary[UserStrings.friendIDsKey] as? [String],
             let recordID = dictionary[UserStrings.recordIDKey] as? String
             else { return nil }
+        let profilePhotoURL = dictionary[UserStrings.profilePhotoURLKey] as? String
         friendIDs = Array(Set(friendIDs))
         
         self.init(email: email,
                   screenName: screenName,
+                  profilePhotoURL: profilePhotoURL,
                   points: points,
                   blockedIDs: blockedIDs,
                   friendIDs: friendIDs,
@@ -72,6 +88,7 @@ class User {
     func asDictionary() -> [String : Any] {
         [UserStrings.emailKey : email,
          UserStrings.screenNameKey : screenName,
+         UserStrings.profilePhotoURLKey : profilePhotoURL as Any,
          UserStrings.pointsKey : points,
          UserStrings.blockedIDsKey : blockedIDs,
          UserStrings.friendIDsKey : friendIDs,

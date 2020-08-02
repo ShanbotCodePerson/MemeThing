@@ -88,6 +88,30 @@ class UserController {
         }
     }
     
+    // Read (fetch) a user's profile photo
+    func fetchUsersProfilePhoto(user: User, completion: @escaping (UIImage) -> Void) {
+        // If the user doesn't have a photo, use the default one
+        guard let profilePhotoURL = user.profilePhotoURL else { return completion(#imageLiteral(resourceName: "default_profile")) }
+        
+        // Get the reference to the profile photo
+        let photoRef = storage.reference().child(profilePhotoURL)
+        
+        // Download the photo from the cloud
+        photoRef.getData(maxSize: Int64(1.2 * 1024 * 1024)) { (data, error) in
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(#imageLiteral(resourceName: "default_profile"))
+            }
+            
+            // Convert the data to an image and return it
+            guard let data = data,
+                let photo = UIImage(data: data)
+                else { return completion(#imageLiteral(resourceName: "default_profile")) }
+            return completion(photo)
+        }
+    }
+    
     // Read (fetch) all the friends of a user
     func fetchUsersFriends(completion: @escaping resultCompletion) {
         guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
@@ -190,13 +214,48 @@ class UserController {
         }
     }
     
-    // Update a user with new profile information
+    // Update a user with a new screen name
     func update(_ user: User, screenName: String?, completion: @escaping resultCompletion) {
         // Update any fields that changed
         if let screenName = screenName { user.screenName = screenName }
         
         // Save the changes to the cloud
         saveChanges(to: user, completion: completion)
+    }
+    
+    // Update a user with a new profile photo
+    func update(_ photo: UIImage, completion: @escaping resultCompletion) {
+        guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Convert the image to data
+        guard let data = photo.compressTo(1) else { return completion(.failure(.badPhotoFile)) }
+        
+        // Create a name for the file in the cloud using the user's id
+        let photoRef = storage.reference().child("profilePhotos/\(currentUser.recordID).jpg")
+            
+        // Save the data to the cloud
+        photoRef.putData(data, metadata: nil) { [weak self] (metadata, error) in
+            
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.fsError(error)))
+            }
+            
+            // Save the link to the profile picture
+            currentUser.profilePhotoURL = "profilePhotos/\(currentUser.recordID).jpg"
+            currentUser.photo = photo
+            self?.saveChanges(to: currentUser, completion: { (result) in
+                switch result {
+                case .success(_):
+                    return completion(.success(true))
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            })
+        }
     }
     
     // Update a user's points

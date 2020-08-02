@@ -40,3 +40,11 @@ class BadgeImage: UIImageView {
         addCornerRadius(17.5)
     }
 }
+
+class ProfileImage: UIImageView {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        addCornerRadius(self.frame.height / 2)
+        addBorder(width: 4)
+    }
+}
