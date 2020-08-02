@@ -53,36 +53,6 @@ class Game {
         var points: Int
     }
     
-    // Player Status
-    enum PlayerStatus: Int {
-        case invited
-        case accepted
-        case denied
-        case quit
-        case sentDrawing
-        case sentCaption
-        case done
-        
-        var asString: String {
-            switch self {
-            case .accepted:
-                return "In Game"
-            case .denied:
-                return "Declined Invitation"
-            case .invited:
-                return "Waiting for Response"
-            case .quit:
-                return "Quit Game"
-            case .sentCaption:
-                return "Submitted Caption"
-            case .sentDrawing:
-                return "Submitted Drawing"
-            case .done:
-                return "Done"
-            }
-        }
-    }
-    
     // Game Status
     enum GameStatus: Int {
         case waitingForPlayers

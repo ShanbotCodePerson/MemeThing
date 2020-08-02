@@ -149,6 +149,7 @@ class NotificationHelper {
 // MARK: - Local Notification Names
 
 extension Notification.Name {
+    static let updateProfileView = Notification.Name("updateProfileView")
     static let friendsUpdate = Notification.Name("friendsUpdate")
     static let toFriendsView = Notification.Name("toFriendsView")
     static let toGamesView = Notification.Name("toGamesView")

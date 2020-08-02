@@ -22,7 +22,7 @@ extension UIImageView {
             if boundsScale > imageScale {
                 drawingRect.size.width =  drawingRect.size.height * imageScale
                 drawingRect.origin.x = (self.bounds.size.width - drawingRect.size.width) / 2
-            }else {
+            } else {
                 drawingRect.size.height = drawingRect.size.width / imageScale
                 drawingRect.origin.y = (self.bounds.size.height - drawingRect.size.height) / 2
             }
@@ -34,8 +34,17 @@ extension UIImageView {
     }
 }
 
-class MemeImageView: UIImageView {
+class BadgeImage: UIImageView {
     override func awakeFromNib() {
         super.awakeFromNib()
+        addCornerRadius(17.5)
+    }
+}
+
+class ProfileImage: UIImageView {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        addCornerRadius(self.frame.height / 2)
+        addBorder(width: 4)
     }
 }

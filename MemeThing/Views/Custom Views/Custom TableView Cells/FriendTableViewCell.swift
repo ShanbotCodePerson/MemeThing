@@ -19,6 +19,8 @@ class FriendTableViewCell: UITableViewCell {
     // MARK: - Outlets
     
     @IBOutlet weak var backgroundContainerView: MemeThingTableCellView!
+    @IBOutlet weak var photoContainerView: UIView!
+    @IBOutlet weak var profilePhotoImageView: ProfileImage!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var pointsLabel: UILabel!
     @IBOutlet weak var buttonStackView: UIStackView!
@@ -33,7 +35,7 @@ class FriendTableViewCell: UITableViewCell {
     
     @IBAction func friendRequestButtonTapped(_ sender: UIButton) {
         // Show the loading icon over the cell
-        self.contentView.startLoadingIcon(color: .white)
+        self.contentView.startLoadingIcon()
         
         // Pass the functionality off to the delegate
         delegate?.respondToFriendRequest(from: self, accept: (sender.tag == 1))
@@ -41,9 +43,10 @@ class FriendTableViewCell: UITableViewCell {
     
     // MARK: - Set Up UI
     
-    func setUpViews(section: FriendsListViewController.SectionNames, name: String?, points: Int? = nil) {
+    func setUpViews(section: FriendsListViewController.SectionNames, name: String?, points: Int? = nil, photo: UIImage? = nil) {
         nameLabel.textAlignment = .left
         rightConstraint.constant = 0
+        photoContainerView.isHidden = true
         
         switch section {
         case .pendingFriendRequests:
@@ -53,7 +56,7 @@ class FriendTableViewCell: UITableViewCell {
             guard let name = name else { return }
             setUpOutgoingFriendRequestView(for: name)
         case .friends:
-            setUpFriendView(for: name, points: points)
+            setUpFriendView(for: name, points: points, photo: photo)
         }
     }
     
@@ -69,9 +72,15 @@ class FriendTableViewCell: UITableViewCell {
         nameLabel.text = "Waiting for \(name) to respond to your friend request"
     }
     
-    private func setUpFriendView(for name: String?, points: Int?) {
+    private func setUpFriendView(for name: String?, points: Int?, photo: UIImage?) {
         buttonStackView.isHidden = true
         contentView.backgroundColor = .clear
+        
+        if let photo = photo {
+            photoContainerView.isHidden = false
+            profilePhotoImageView.image = photo
+            profilePhotoImageView.addBorder(width: 2)
+        }
         
         if let name = name {
             nameLabel.text = name

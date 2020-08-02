@@ -17,7 +17,7 @@ class GameController {
     
     // MARK: - Source of Truth
     
-    var currentGames: [Game]? // TODO: - could replace with a dictionary to make it easier to index by game id?
+    var currentGames: [Game]?
     
     // MARK: - Properties
     
@@ -90,7 +90,7 @@ class GameController {
     }
     
     // Read (fetch) all the games the user is currently involved in
-    func fetchCurrentGames(completion: @escaping resultCompletion) {
+    func fetchCurrentGames(completion: @escaping resultCompletionWith<[Game]>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Fetch all the games that include the user
@@ -106,15 +106,16 @@ class GameController {
                 
                 // Unwrap the data
                 guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
-                let games = documents.compactMap { (document) -> Game? in
+                var games = documents.compactMap { (document) -> Game? in
                     guard let game = Game(dictionary: document.data()) else { return nil }
                     game.documentID = document.documentID
                     return game
                 }
                 
                 // Save to the source of truth, filtering out the games that the user has declined, quit, or finished
-                self?.currentGames = games.filter { $0.getStatus(of: currentUser) != .denied && $0.getStatus(of: currentUser) != .quit && $0.getStatus(of: currentUser) != .done }
-                return completion(.success(true))
+                games = games.filter { $0.getStatus(of: currentUser) != .denied && $0.getStatus(of: currentUser) != .quit && $0.getStatus(of: currentUser) != .done }
+                self?.currentGames = games
+                return completion(.success(games))
         }
     }
     
@@ -271,59 +272,6 @@ class GameController {
             }
         }
     }
-    
-    //    // Helper method to handle merge conflicts between different games pushed to the cloud at the same time
-    //    func handleMerge(for localGame: Game, completion: @escaping resultCompletionWith<Game>){
-    //        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-    //        print("got here to \(#function)")
-    //
-    //        // Fetch the updated game from the cloud
-    //        fetchGame(from: localGame.recordID) { [weak self] (result) in
-    //            switch result {
-    //            case .success(let remoteGame):
-    //                // Starting with the remote game's array, update just the indices of the current user's points and status
-    //                print("remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
-    //                remoteGame.updateStatus(of: currentUser, to: localGame.getStatus(of: currentUser))
-    //                remoteGame.updatePoints(of: currentUser, to: localGame.getPoints(of: currentUser))
-    //                print("now remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
-    //
-    //                // If all players have seen the game, delete it from the cloud
-    //                if remoteGame.allPlayersDone {
-    //                    self?.delete(remoteGame, completion: { (result) in
-    //                        switch result {
-    //                        case .success(_):
-    //                            // Return the success
-    //                            return completion(.success(remoteGame))
-    //                        case .failure(let error):
-    //                            // Print and return the error
-    //                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-    //                            return completion(.failure(error))
-    //                        }
-    //                    })
-    //                } else {
-    //                    // Otherwise, use the newly merged data to recalculate the game's status
-    //                    remoteGame.resetGameStatus()
-    //                    //                if remoteGame.allPlayersResponded { remoteGame.gameStatus = .waitingForDrawing }
-    //                    //                if remoteGame.allCaptionsSubmitted { remoteGame.gameStatus = .waitingForResult }
-    //                    //                if remoteGame.gameWinner != nil { remoteGame.gameStatus = .gameOver }
-    //                    print("finally, remote game is \(remoteGame.debugging) and local game is \(localGame.debugging)")
-    //
-    //                    // Try again to save the newly merged and updated game
-    //                    self?.saveChanges(to: remoteGame, completion: completion)
-    //                }
-    //            case .failure(let error):
-    //                // If the error is that a merge is needed again, handle that
-    //                if case MemeThingError.mergeNeeded = error {
-    //                    self?.handleMerge(for: localGame, completion: completion)
-    //                }
-    //                else {
-    //                    // Print and return the error
-    //                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-    //                    return completion(.failure(error))
-    //                }
-    //            }
-    //        }
-    //    }
     
     // Delete a game when it's finished
     func delete(_ game: Game, completion: @escaping resultCompletion) {

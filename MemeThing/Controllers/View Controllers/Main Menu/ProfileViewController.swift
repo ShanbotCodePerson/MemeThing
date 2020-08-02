@@ -13,13 +13,17 @@ class ProfileViewController: UIViewController {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var profilePhotoImageView: UIImageView!
+    @IBOutlet weak var drawingProfilePhotoPopoverView: UIView!
+    @IBOutlet weak var canvasView: CanvasView!
+    @IBOutlet weak var undoButton: UIButton!
     @IBOutlet weak var screenNameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var pointsLabel: UILabel!
     
     // MARK: - Properties
     
-    var editingPassword = false
+    var imagePicker = UIImagePickerController()
     
     // MARK: - Lifecycle Methods
     
@@ -27,6 +31,9 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setUpViews()
         setUpObservers()
+        
+        // Set up the observer to update the UI when the photo is done saving
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshUI), name: .updateProfileView, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -34,17 +41,25 @@ class ProfileViewController: UIViewController {
         removeObservers()
     }
     
+    // MARK: - Notifications
+    
+    @objc func refreshUI() {
+        DispatchQueue.main.async { self.profilePhotoImageView.image = UserController.shared.currentUser?.photo }
+    }
+    
     // MARK: - Set Up Views
     
     func setUpViews() {
         navigationController?.setNavigationBarHidden(false, animated: true)
         
-        guard let user = UserController.shared.currentUser else { return }
-        screenNameLabel.text = "Screen Name: \(user.screenName)"
-        emailLabel.text = "Email: \(user.email)"
-        pointsLabel.text = "Points: \(user.points)"
+        imagePicker.delegate = self
         
-        //Beth added:
+        guard let currentUser = UserController.shared.currentUser else { return }
+        profilePhotoImageView.image = currentUser.photo
+        screenNameLabel.text = "Screen Name: \(currentUser.screenName)"
+        emailLabel.text = "Email: \(currentUser.email)"
+        pointsLabel.text = "Points: \(currentUser.points)"
+        
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.view.bounds
         gradientLayer.colors = [UIColor.cyan.cgColor, UIColor.blue.cgColor]
@@ -52,6 +67,87 @@ class ProfileViewController: UIViewController {
     }
     
     // MARK: - Actions
+    
+    @IBAction func editProfilePhotoButtonTapped(_ sender: UIButton) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
+        // Create an alert controller with options for how to get a photo
+        let alertController = UIAlertController(title: "New Profile Photo!", message: nil, preferredStyle: .alert)
+        
+        // Add a button option for the photo library
+        let photoLibraryAction = UIAlertAction(title: "Choose a photo from your library", style: .default) { [weak self] (_) in
+            self?.openPhotoLibrary()
+        }
+        
+        // Add a button option for the camera
+        let cameraAction = UIAlertAction(title: "Take a photo with your camera", style: .default) { [weak self] (_) in
+            self?.openCamera()
+        }
+        
+        // Add a button option for drawing a sketch
+        let drawAction = UIAlertAction(title: "Draw a sketch of yourself", style: .default) { [weak self] (_) in
+            self?.drawingProfilePhotoPopoverView.isHidden = false
+        }
+        
+        // Add a button for the user to dismiss the alert
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] (_) in
+            self?.imagePicker.dismiss(animated: true, completion: nil)
+        }
+        
+        // Add the actions and present the alert
+        alertController.addAction(photoLibraryAction)
+        alertController.addAction(cameraAction)
+        alertController.addAction(drawAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
+    }
+    
+    @IBAction func undoButtonTapped(_ sender: UIButton) {
+        canvasView.undoDraw()
+    }
+    
+    @IBAction func discardDrawingButtonTapped(_ sender: UIButton) {
+        drawingProfilePhotoPopoverView.isHidden = true
+    }
+    
+    @IBAction func saveDrawingButtonTapped(_ sender: UIButton) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
+        // Create the image from the canvas (hide the undo button first so that it isn't saved in the screenshot)
+        undoButton.isHidden = true
+        let image = canvasView.getImage()
+        
+        // Show the loading icon
+        view.startLoadingIcon()
+        
+        // Save the profile photo
+        UserController.shared.update(image) { [weak self] (result) in
+            DispatchQueue.main.async {
+                // Hide the loading icon
+                self?.view.stopLoadingIcon()
+                
+                switch result {
+                case .success(_):
+                    // Update the photo and hide the drawing screen
+                    self?.profilePhotoImageView.image = image
+                    self?.drawingProfilePhotoPopoverView.isHidden = true
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                    self?.drawingProfilePhotoPopoverView.isHidden = true
+                }
+            }
+        }
+    }
     
     @IBAction func editScreenNameButtonTapped(_ sender: UIButton) {
         guard let user = UserController.shared.currentUser else { return }
@@ -174,5 +270,58 @@ class ProfileViewController: UIViewController {
                 }
             }
         }
+    }
+}
+
+// MARK: - Image Picker Delegate
+
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func openPhotoLibrary() {
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            imagePicker.sourceType = .photoLibrary
+            present(imagePicker, animated: true)
+        } else {
+            presentAlert(title: "Camera Access Not Available", message: "Please allow access to your camera to use this feature")
+        }
+    }
+    
+    func openCamera() {
+          if UIImagePickerController.isSourceTypeAvailable(.camera) {
+              imagePicker.sourceType = .camera
+              present(imagePicker, animated: true)
+          } else {
+            presentAlert(title: "Photo Library Access Not Available", message: "Please allow access to your photo library to use this feature")
+          }
+      }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        // Get the photo
+        guard let photo = info[.originalImage] as? UIImage else { return }
+        
+        // Close the image picker
+        imagePicker.dismiss(animated: true)
+        
+        // Save the photo to the cloud
+        profilePhotoImageView.startLoadingIcon()
+        UserController.shared.update(photo) { [weak self] (result) in
+            DispatchQueue.main.async {
+                self?.profilePhotoImageView.stopLoadingIcon()
+                
+                switch result {
+                case .success(_):
+                    // Update the UI
+                    self?.profilePhotoImageView.image = photo
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
+    }
+      
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        imagePicker.dismiss(animated: true)
     }
 }

@@ -187,7 +187,7 @@ class FriendsListViewController: UIViewController {
         }
         
         // Present the text field for the user to enter the desired username to friend
-        presentTextFieldAlert(title: "Add Friend", message: "Connect with your friends!", textFieldPlaceholder: "Enter email here...", saveButtonTitle: "Send Friend Request", completion: sendRequest(to:))
+        presentTextFieldAlert(title: "Add Friend", message: "Connect with your friends!", textFieldPlaceholder: "Enter email here...", saveButtonTitle: "Send", completion: sendRequest(to:))
     }
     
     // A helper function for when the user clicks to add the friend
@@ -311,7 +311,7 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
             if data.count == 0 { cell.setUpViews(section: sectionName, name: nil) }
             else {
                 guard let friend = data[indexPath.row] as? User else { return cell }
-                cell.setUpViews(section: sectionName, name: friend.screenName, points: friend.points)
+                cell.setUpViews(section: sectionName, name: friend.screenName, points: friend.points, photo: friend.photo)
             }
         }
         
@@ -390,7 +390,7 @@ extension FriendsListViewController: FriendTableViewCellButtonDelegate {
                         self?.presentAlert(title: "Friend Added", message: "You have successfully added \(friendRequest.fromName) as a friend!")
                     } else {
                         // Give the user an opportunity to block the unwanted friend request
-                        self?.presentConfirmAlert(title: "Friend Request Denied", message: "Do you want to block \(friendRequest.fromName) from sending you any more friend requests?", cancelText: "No", confirmText: "Yes, block \(friendRequest.fromName)", completion: {
+                        self?.presentConfirmAlert(title: "Friend Request Denied", message: "Do you want to block \(friendRequest.fromName) from sending you any more friend requests?", cancelText: "No", confirmText: "Yes, block", completion: {
                             
                             // If the user clicks "confirm," add that user to their blocked list
                             self?.blockUser(with: friendRequest.fromID, name: friendRequest.fromName)
@@ -398,6 +398,7 @@ extension FriendsListViewController: FriendTableViewCellButtonDelegate {
                     }
                     
                     // Refresh the tableview to reflect the changes
+                    cell.contentView.stopLoadingIcon()
                     self?.friendsTableView.reloadData()
                 case .failure(let error):
                     // Print and display the error

@@ -13,7 +13,7 @@ class CaptionViewController: UIViewController, HasAGameObject {
     // MARK: - Outlets
     
     @IBOutlet weak var backgroundView: UIView!
-    @IBOutlet weak var memeImageView: MemeImageView!
+    @IBOutlet weak var memeImageView: UIImageView!
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!

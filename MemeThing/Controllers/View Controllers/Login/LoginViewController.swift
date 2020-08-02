@@ -19,6 +19,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var screenNameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
+    @IBOutlet weak var forgotPasswordButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var textFieldContainerView: UIView!
     @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!
@@ -70,6 +71,43 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func loginToggleButtonTapped(_ sender: UIButton) {
         toggleToLogin()
+    }
+    
+    @IBAction func forgotPasswordButtonTapped(_ sender: UIButton) {
+        // If the user has already entered an email address, send an email
+        if let email = emailTextField.text, !email.isEmpty {
+            Auth.auth().sendPasswordReset(withEmail: email) { [weak self] (error) in
+                
+                if let error = error {
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                    return
+                }
+                
+                // Display the success
+                self?.presentAlert(title: "Email Sent!", message: "An email has been sent to \(email) to reset your password. Please allow a few minutes for the email to arrive")
+            }
+        }
+        
+        // Otherwise, first present an alert to ask the user to enter an email
+        else {
+            presentTextFieldAlert(title: "Reset Password", message: "Please enter the email address you used for your MemeThing account in order to reset your password", textFieldPlaceholder: "Enter email here...", textFieldText: nil, saveButtonTitle: "Send Email") { (email) in
+                
+                Auth.auth().sendPasswordReset(withEmail: email) { [weak self] (error) in
+                    
+                    if let error = error {
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                        return
+                    }
+                    
+                    // Display the success
+                    self?.presentAlert(title: "Email Sent!", message: "An email has been sent to \(email) to reset your password. Please allow a few minutes for the email to arrive")
+                }
+            }
+        }
     }
     
     @IBAction func doneButtonTapped(_ sender: UIButton) {
@@ -152,6 +190,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             self.screenNameTextField.isHidden = true
             self.confirmPasswordTextField.isHidden = true
             self.passwordTextField.returnKeyType = .done
+            self.forgotPasswordButton.isHidden = false
             
             // Change the text of the done button
             self.doneButton.setTitle("Log In", for: .normal)
@@ -169,6 +208,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             self.screenNameTextField.isHidden = false
             self.confirmPasswordTextField.isHidden = false
             self.passwordTextField.returnKeyType = .next
+            self.forgotPasswordButton.isHidden = true
             
             // Change the text of the done button
             self.doneButton.setTitle("Sign Up", for: .normal)

@@ -12,6 +12,8 @@ class ThreeLabelsTableViewCell: UITableViewCell {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var photoContainerView: UIView!
+    @IBOutlet weak var profilePhotoImageView: ProfileImage!
     @IBOutlet weak var firstLabel: UILabel!
     @IBOutlet weak var secondLabel: UILabel!
     @IBOutlet weak var thirdLabel: UILabel!
@@ -36,7 +38,7 @@ class ThreeLabelsTableViewCell: UITableViewCell {
     
     // MARK: - Set Up UI
     
-    func setUpUI(firstText: String, secondText: String? = nil, thirdText: String? = nil) {
+    func setUpUI(firstText: String, secondText: String? = nil, thirdText: String? = nil, photo: UIImage? = nil) {
         containerView.addCornerRadius(8)
         containerView.backgroundColor = UIColor.purpleAccent.withAlphaComponent(0.6)
  
@@ -45,6 +47,7 @@ class ThreeLabelsTableViewCell: UITableViewCell {
         secondLabel.textAlignment = .left
         secondLabel.isHidden = false
         thirdLabel.isHidden = false
+        photoContainerView.isHidden = true
         
         // Fill in the text fields as applicable
         firstLabel.text = firstText
@@ -57,6 +60,11 @@ class ThreeLabelsTableViewCell: UITableViewCell {
         else {
             secondLabel.textAlignment = .right
             thirdLabel.isHidden = true
+        }
+        if let photo = photo {
+            photoContainerView.isHidden = false
+            profilePhotoImageView.image = photo
+            profilePhotoImageView.addBorder(width: 2)
         }
     }
 }

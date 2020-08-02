@@ -31,7 +31,7 @@ class GameTableViewCell: UITableViewCell {
     
     @IBAction func invitationResponseButtonTapped(_ sender: UIButton) {
         // Show the loading icon over the cell
-        self.contentView.startLoadingIcon(color: .white)
+        self.contentView.startLoadingIcon()
         
         // Pass the functionality off to the delegate
         delegate?.respondToGameInvitation(for: self, accept: (sender.tag == 1))

@@ -90,7 +90,7 @@ class FriendRequestController {
     }
     
     // Read (fetch) all the pending friend requests
-    func fetchPendingFriendRequests(completion: @escaping resultCompletion) {
+    func fetchPendingFriendRequests(completion: @escaping resultCompletionWith<Int>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Fetch the data from the cloud
@@ -122,7 +122,7 @@ class FriendRequestController {
                 NotificationCenter.default.post(Notification(name: .friendsUpdate))
                 
                 // Return the success
-                return completion(.success(true))
+                return completion(.success(pendingFriendRequests.count))
         }
     }
     

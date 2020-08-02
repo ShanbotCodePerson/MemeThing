@@ -51,11 +51,17 @@
                                     <constraint firstItem="Iap-eR-h9g" firstAttribute="height" secondItem="JwJ-2E-2De" secondAttribute="height" multiplier="0.7" id="i9d-Ll-wEh"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="lFa-x2-ZvI">
-                                <rect key="frame" x="20.5" y="56" width="373" height="224"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="lFa-x2-ZvI">
+                                <rect key="frame" x="20.5" y="56" width="373" height="455.5"/>
                                 <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile" translatesAutoresizingMaskIntoConstraints="NO" id="4I1-ys-U4z" customClass="ProfileImage" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="74.5" y="0.0" width="224" height="223.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="4I1-ys-U4z" secondAttribute="height" multiplier="1:1" id="eNR-d8-umm"/>
+                                        </constraints>
+                                    </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eEr-Db-uNj" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="373" height="50"/>
+                                        <rect key="frame" x="0.0" y="231.5" width="373" height="50"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="K0s-cO-IA6">
                                                 <rect key="frame" x="6" y="0.0" width="361" height="50"/>
@@ -82,7 +88,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tlc-mv-rLV" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="58" width="373" height="50"/>
+                                        <rect key="frame" x="0.0" y="289.5" width="373" height="50"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1de-Lq-uiq">
                                                 <rect key="frame" x="6" y="0.0" width="361" height="50"/>
@@ -106,7 +112,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yMI-S3-AKr" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="116" width="373" height="50"/>
+                                        <rect key="frame" x="0.0" y="347.5" width="373" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[screen name]" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="maU-KZ-lZe" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="6" y="0.0" width="323" height="50"/>
@@ -142,7 +148,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z0M-RP-kr7" customClass="MemeThingTableCellView" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="174" width="373" height="50"/>
+                                        <rect key="frame" x="0.0" y="405.5" width="373" height="50"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="FB6-Xp-hiO">
                                                 <rect key="frame" x="6" y="0.0" width="361" height="50"/>
@@ -177,24 +183,110 @@
                                         </constraints>
                                     </view>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="tlc-mv-rLV" firstAttribute="width" secondItem="lFa-x2-ZvI" secondAttribute="width" id="4Cg-gC-wfr"/>
+                                    <constraint firstItem="z0M-RP-kr7" firstAttribute="width" secondItem="lFa-x2-ZvI" secondAttribute="width" id="G9c-Vn-KXJ"/>
+                                    <constraint firstItem="eEr-Db-uNj" firstAttribute="width" secondItem="lFa-x2-ZvI" secondAttribute="width" id="NBm-wU-3vx"/>
+                                    <constraint firstItem="yMI-S3-AKr" firstAttribute="width" secondItem="lFa-x2-ZvI" secondAttribute="width" id="eRH-XP-ihj"/>
+                                    <constraint firstItem="4I1-ys-U4z" firstAttribute="width" secondItem="lFa-x2-ZvI" secondAttribute="width" multiplier="0.6" id="kxI-EL-aTk"/>
+                                </constraints>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eu2-d1-Cfl" customClass="EditButton" customModule="MemeThing" customModuleProvider="target">
+                                <rect key="frame" x="192" y="239.5" width="30" height="30"/>
+                                <state key="normal" title="Edit"/>
+                                <connections>
+                                    <action selector="editProfilePhotoButtonTapped:" destination="xsl-Ho-zco" eventType="touchUpInside" id="i1O-YP-58t"/>
+                                </connections>
+                            </button>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="diV-Dk-ans">
+                                <rect key="frame" x="0.0" y="5" width="414" height="896"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="auh-eH-ETd" customClass="CanvasView" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="28" y="45" width="358" height="358"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="bxm-Np-fNS" customClass="CircularButton" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="305.5" y="8" width="44.5" height="44.5"/>
+                                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="oaf-hb-soi"/>
+                                                    <constraint firstAttribute="width" secondItem="bxm-Np-fNS" secondAttribute="height" multiplier="1:1" id="ooC-aC-8em"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="arrow.counterclockwise" catalog="system"/>
+                                                <connections>
+                                                    <action selector="undoButtonTapped:" destination="xsl-Ho-zco" eventType="touchUpInside" id="QWO-RQ-bZJ"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstItem="bxm-Np-fNS" firstAttribute="top" secondItem="auh-eH-ETd" secondAttribute="top" constant="8" id="Dk8-S4-iYS"/>
+                                            <constraint firstAttribute="width" secondItem="auh-eH-ETd" secondAttribute="height" multiplier="1:1" id="HBe-TP-3JF"/>
+                                            <constraint firstAttribute="trailing" secondItem="bxm-Np-fNS" secondAttribute="trailing" constant="8" id="HYq-8Z-B8c"/>
+                                        </constraints>
+                                    </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aA1-7c-uxn">
+                                        <rect key="frame" x="28" y="415" width="358" height="54"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ew-nH-GA9" customClass="QuitButton" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="175" height="54"/>
+                                                <state key="normal" title="Discard"/>
+                                                <connections>
+                                                    <action selector="discardDrawingButtonTapped:" destination="xsl-Ho-zco" eventType="touchUpInside" id="S4I-uN-RnD"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exi-MZ-a3x" customClass="SubmitButton" customModule="MemeThing" customModuleProvider="target">
+                                                <rect key="frame" x="183" y="0.0" width="175" height="54"/>
+                                                <state key="normal" title="Save"/>
+                                                <connections>
+                                                    <action selector="saveDrawingButtonTapped:" destination="xsl-Ho-zco" eventType="touchUpInside" id="nlU-Ps-3i9"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstItem="bxm-Np-fNS" firstAttribute="height" secondItem="diV-Dk-ans" secondAttribute="height" multiplier="0.05" id="30a-bJ-MKT"/>
+                                    <constraint firstItem="auh-eH-ETd" firstAttribute="height" secondItem="diV-Dk-ans" secondAttribute="height" multiplier="0.4" priority="999" id="5Da-fv-GJz"/>
+                                    <constraint firstItem="auh-eH-ETd" firstAttribute="centerX" secondItem="diV-Dk-ans" secondAttribute="centerX" id="CDO-Db-HVg"/>
+                                    <constraint firstItem="aA1-7c-uxn" firstAttribute="width" secondItem="auh-eH-ETd" secondAttribute="width" id="L2B-oN-EL4"/>
+                                    <constraint firstItem="auh-eH-ETd" firstAttribute="centerY" secondItem="diV-Dk-ans" secondAttribute="centerY" multiplier="0.5" id="Ojr-eX-bV9"/>
+                                    <constraint firstItem="aA1-7c-uxn" firstAttribute="height" secondItem="diV-Dk-ans" secondAttribute="height" multiplier="0.06" id="YqL-1g-X9M"/>
+                                    <constraint firstItem="auh-eH-ETd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="diV-Dk-ans" secondAttribute="leading" constant="12" id="dVW-gA-HSH"/>
+                                    <constraint firstItem="aA1-7c-uxn" firstAttribute="top" secondItem="auh-eH-ETd" secondAttribute="bottom" constant="12" id="g1q-0C-UyT"/>
+                                    <constraint firstItem="aA1-7c-uxn" firstAttribute="centerX" secondItem="diV-Dk-ans" secondAttribute="centerX" id="hrL-cb-CUd"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" name="background"/>
+                        <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="diV-Dk-ans" firstAttribute="centerY" secondItem="ySW-rd-wdU" secondAttribute="centerY" id="0Tw-cn-z3B"/>
+                            <constraint firstItem="diV-Dk-ans" firstAttribute="width" secondItem="0wA-6L-vAo" secondAttribute="width" id="1hC-lh-T8s"/>
+                            <constraint firstItem="diV-Dk-ans" firstAttribute="height" secondItem="0wA-6L-vAo" secondAttribute="height" id="3CU-am-nns"/>
+                            <constraint firstItem="Eu2-d1-Cfl" firstAttribute="bottom" secondItem="4I1-ys-U4z" secondAttribute="bottom" constant="-10" id="H1E-8h-l9P"/>
                             <constraint firstItem="lFa-x2-ZvI" firstAttribute="centerX" secondItem="ySW-rd-wdU" secondAttribute="centerX" id="Ybe-2J-9vT"/>
+                            <constraint firstItem="Eu2-d1-Cfl" firstAttribute="centerX" secondItem="4I1-ys-U4z" secondAttribute="centerX" id="a1E-VA-w65"/>
                             <constraint firstItem="lFa-x2-ZvI" firstAttribute="top" secondItem="ySW-rd-wdU" secondAttribute="top" constant="12" id="emh-TN-66x"/>
                             <constraint firstItem="JwJ-2E-2De" firstAttribute="trailing" secondItem="ySW-rd-wdU" secondAttribute="trailing" id="jSz-eR-onG"/>
                             <constraint firstItem="lFa-x2-ZvI" firstAttribute="width" secondItem="0wA-6L-vAo" secondAttribute="width" multiplier="0.9" id="mft-sm-TmH"/>
                             <constraint firstItem="ySW-rd-wdU" firstAttribute="bottom" secondItem="JwJ-2E-2De" secondAttribute="bottom" id="nBF-ZI-Xyo"/>
+                            <constraint firstItem="diV-Dk-ans" firstAttribute="centerX" secondItem="ySW-rd-wdU" secondAttribute="centerX" id="ovA-cw-gGS"/>
                             <constraint firstItem="JwJ-2E-2De" firstAttribute="leading" secondItem="ySW-rd-wdU" secondAttribute="leading" id="urQ-fv-MpF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ySW-rd-wdU"/>
                     </view>
                     <navigationItem key="navigationItem" title="Profile" id="RuO-By-FiV"/>
                     <connections>
+                        <outlet property="canvasView" destination="auh-eH-ETd" id="3oa-1O-qO6"/>
+                        <outlet property="drawingProfilePhotoPopoverView" destination="diV-Dk-ans" id="YgF-xy-JLW"/>
                         <outlet property="emailLabel" destination="mMj-Vh-3Se" id="05m-U0-xPw"/>
                         <outlet property="pointsLabel" destination="BhT-Rz-yO9" id="Y6j-8T-Kms"/>
+                        <outlet property="profilePhotoImageView" destination="4I1-ys-U4z" id="dCW-aU-Kab"/>
                         <outlet property="screenNameLabel" destination="maU-KZ-lZe" id="XVK-ha-UTX"/>
+                        <outlet property="undoButton" destination="bxm-Np-fNS" id="sAY-qi-8VC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sba-NF-tSr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -203,6 +295,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrow.counterclockwise" catalog="system" width="115" height="128"/>
+        <image name="default_profile" width="100" height="100"/>
         <image name="info.circle" catalog="system" width="128" height="121"/>
         <namedColor name="background">
             <color red="0.0" green="0.11372549019607843" blue="0.47843137254901963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
