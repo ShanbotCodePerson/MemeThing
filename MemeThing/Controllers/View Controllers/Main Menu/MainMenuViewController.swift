@@ -30,6 +30,10 @@ class MainMenuViewController: UIViewController {
         
         setUpObservers()
         loadAllData()
+        
+        // Set up the observers to listen for notifications of game invitations or friend requests to update the badges
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshBadgeImages), name: .updateListOfGames, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshBadgeImages), name: .friendsUpdate, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -37,8 +41,7 @@ class MainMenuViewController: UIViewController {
         setUpViews()
         
         // Set up the badges on the games and friends buttons
-        if let games = GameController.shared.currentGames { setUpGamesBadgeImage(for: games) }
-        if let friendRequests = FriendRequestController.shared.pendingFriendRequests?.count { setUpFriendsBadgeImage(for: friendRequests) }
+        refreshBadgeImages()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -49,6 +52,12 @@ class MainMenuViewController: UIViewController {
     // MARK: - Notifications
     
     // TODO: - set up notifications to display badges when new games or friend requests come in
+    @objc func refreshBadgeImages() {
+        DispatchQueue.main.async {
+            if let games = GameController.shared.currentGames { self.setUpGamesBadgeImage(for: games) }
+            if let friendRequests = FriendRequestController.shared.pendingFriendRequests?.count { self.setUpFriendsBadgeImage(for: friendRequests) }
+        }
+    }
     
     // MARK: - Set Up View
     
