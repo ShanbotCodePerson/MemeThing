@@ -30,7 +30,6 @@ class CaptionViewController: UIViewController, HasAGameObject {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
-        captionTextField.delegate = self
         
         // Add an observer for when the keyboard appears or disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
@@ -68,7 +67,10 @@ class CaptionViewController: UIViewController, HasAGameObject {
             }
         }
         
-        UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
+        UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: {
+            self.view.layoutIfNeeded()
+            self.memeImageView.roundCornersForAspectFit(radius: 15)
+        })
     }
     
     @objc func transitionToNewPage(_ sender: NSNotification) {
@@ -88,6 +90,8 @@ class CaptionViewController: UIViewController, HasAGameObject {
     
     func setUpViews() {
         guard let game = game, let memeID = game.memes?.last else { return }
+        
+        captionTextField.delegate = self
         
         // Show the loading icon
         view.startLoadingIcon()

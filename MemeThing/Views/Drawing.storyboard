@@ -28,7 +28,27 @@
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rKZ-Hn-ghd" customClass="CanvasView" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="20.5" y="16.5" width="373" height="627.5"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="K7K-Gu-Wsw" customClass="CircularButton" customModule="MemeThing" customModuleProvider="target">
+                                                        <rect key="frame" x="321" y="8" width="44" height="44"/>
+                                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="K7K-Gu-Wsw" secondAttribute="height" multiplier="1:1" id="12y-Si-vtn"/>
+                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="k1t-9p-lcp"/>
+                                                        </constraints>
+                                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="arrow.counterclockwise" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="undoButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iCC-wx-RcW"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="K7K-Gu-Wsw" secondAttribute="trailing" constant="8" id="SWx-Ci-5pS"/>
+                                                    <constraint firstItem="K7K-Gu-Wsw" firstAttribute="height" secondItem="rKZ-Hn-ghd" secondAttribute="height" multiplier="0.07" id="gtw-eU-fW7"/>
+                                                    <constraint firstItem="K7K-Gu-Wsw" firstAttribute="top" secondItem="rKZ-Hn-ghd" secondAttribute="top" constant="8" id="yQU-hp-FRx"/>
+                                                </constraints>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -114,6 +134,7 @@
                         <outlet property="canvasView" destination="rKZ-Hn-ghd" id="iaH-uE-Ftp"/>
                         <outlet property="navigationBar" destination="UWg-1Y-3dz" id="ev9-NY-xpN"/>
                         <outlet property="sendButton" destination="4zL-R8-fD7" id="9dd-RV-Gmv"/>
+                        <outlet property="undoButton" destination="K7K-Gu-Wsw" id="r9a-1J-kVT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -122,6 +143,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrow.counterclockwise" catalog="system" width="115" height="128"/>
         <image name="ellipsis" catalog="system" width="128" height="37"/>
         <namedColor name="navBarText">
             <color red="0.25490196078431371" green="0.23529411764705882" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -75,11 +75,14 @@ class FriendTableViewCell: UITableViewCell {
     private func setUpFriendView(for name: String?, points: Int?, photo: UIImage?) {
         buttonStackView.isHidden = true
         contentView.backgroundColor = .clear
+        photoContainerView.isHidden = false
+        profilePhotoImageView.addBorder(width: 2)
+        profilePhotoImageView.stopLoadingIcon()
         
-        if let photo = photo {
-            photoContainerView.isHidden = false
-            profilePhotoImageView.image = photo
-            profilePhotoImageView.addBorder(width: 2)
+        if let photo = photo { profilePhotoImageView.image = photo }
+        else {
+            profilePhotoImageView.image = #imageLiteral(resourceName: "default_profile")
+            profilePhotoImageView.startLoadingIcon()
         }
         
         if let name = name {

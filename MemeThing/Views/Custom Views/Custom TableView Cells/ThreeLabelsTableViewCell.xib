@@ -11,23 +11,23 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="ThreeLabelsTableViewCell" customModule="MemeThing" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <rect key="frame" x="0.0" y="0.0" width="403" height="76"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <rect key="frame" x="0.0" y="0.0" width="403" height="76"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="77y-AD-EAl">
-                        <rect key="frame" x="8" y="7" width="304" height="57"/>
+                        <rect key="frame" x="10" y="7.5" width="383" height="61"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="IMy-6n-dg6">
-                                <rect key="frame" x="6" y="0.0" width="292" height="57"/>
+                                <rect key="frame" x="6" y="0.0" width="371" height="61"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Yg-vO-5ZC">
-                                        <rect key="frame" x="-54" y="0.0" width="50" height="57"/>
+                                        <rect key="frame" x="-54" y="0.0" width="50" height="61"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QYq-x1-pUk" customClass="ProfileImage" customModule="MemeThing" customModuleProvider="target">
-                                                <rect key="frame" x="2.5" y="6" width="45" height="45"/>
+                                                <rect key="frame" x="2.5" y="8" width="45" height="45"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="QYq-x1-pUk" secondAttribute="height" multiplier="1:1" id="HXy-MN-8EQ"/>
                                                 </constraints>
@@ -43,23 +43,20 @@
                                             <constraint firstItem="QYq-x1-pUk" firstAttribute="centerY" secondItem="4Yg-vO-5ZC" secondAttribute="centerY" id="o87-dN-8Ei"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQ6-Cb-luM" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="97.5" height="57"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="ICO-b9-Dzh"/>
-                                        </constraints>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQ6-Cb-luM" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="123.5" height="61"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vnv-pL-FQx" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="105.5" y="0.0" width="97" height="57"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vnv-pL-FQx" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="131.5" y="0.0" width="124" height="61"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pAR-ik-eaB" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
-                                        <rect key="frame" x="210.5" y="0.0" width="81.5" height="57"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pAR-ik-eaB" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
+                                        <rect key="frame" x="263.5" y="0.0" width="107.5" height="61"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -70,7 +67,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="IMy-6n-dg6" firstAttribute="leading" secondItem="77y-AD-EAl" secondAttribute="leading" constant="6" id="JUL-Gu-MM9"/>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="Ucg-Cc-Ngy"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="Ucg-Cc-Ngy"/>
                             <constraint firstAttribute="bottom" secondItem="IMy-6n-dg6" secondAttribute="bottom" id="ozo-R2-6Lx"/>
                             <constraint firstAttribute="width" relation="lessThanOrEqual" constant="600" id="wLx-qt-llM"/>
                             <constraint firstItem="IMy-6n-dg6" firstAttribute="top" secondItem="77y-AD-EAl" secondAttribute="top" id="yRr-8x-6uX"/>
@@ -91,12 +88,10 @@
             <connections>
                 <outlet property="containerView" destination="77y-AD-EAl" id="uJE-zi-TdE"/>
                 <outlet property="firstLabel" destination="qQ6-Cb-luM" id="ybX-5D-vEY"/>
-                <outlet property="photoContainerView" destination="4Yg-vO-5ZC" id="Ozk-2C-N1I"/>
-                <outlet property="profilePhotoImageView" destination="QYq-x1-pUk" id="c73-pc-2rv"/>
                 <outlet property="secondLabel" destination="vnv-pL-FQx" id="ESn-FR-EcI"/>
                 <outlet property="thirdLabel" destination="pAR-ik-eaB" id="TSS-nz-aR1"/>
             </connections>
-            <point key="canvasLocation" x="25" y="14"/>
+            <point key="canvasLocation" x="36" y="-24"/>
         </tableViewCell>
     </objects>
 </document>
