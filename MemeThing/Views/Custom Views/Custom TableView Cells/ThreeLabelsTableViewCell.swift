@@ -12,7 +12,8 @@ class ThreeLabelsTableViewCell: UITableViewCell {
     
     // MARK: - Outlets
     
-//    @IBOutlet weak var profilePhotoImageView: ProfileImage!
+    @IBOutlet weak var photoContainerView: UIView!
+    @IBOutlet weak var profilePhotoImageView: ProfileImage!
     @IBOutlet weak var firstLabel: UILabel!
     @IBOutlet weak var secondLabel: UILabel!
     @IBOutlet weak var thirdLabel: UILabel!
@@ -46,7 +47,7 @@ class ThreeLabelsTableViewCell: UITableViewCell {
         secondLabel.textAlignment = .left
         secondLabel.isHidden = false
         thirdLabel.isHidden = false
-//        profilePhotoImageView.isHidden = true
+        photoContainerView.isHidden = true
         
         // Fill in the text fields as applicable
         firstLabel.text = firstText
@@ -61,9 +62,9 @@ class ThreeLabelsTableViewCell: UITableViewCell {
             thirdLabel.isHidden = true
         }
         if let photo = photo {
-//            profilePhotoImageView.isHidden = false
-//            profilePhotoImageView.image = photo
-//            profilePhotoImageView.addBorder(width: 2)
+            photoContainerView.isHidden = false
+            profilePhotoImageView.image = photo
+            profilePhotoImageView.addBorder(width: 2)
         }
     }
 }

@@ -26,6 +26,9 @@ class InviteFriendsViewController: UIViewController {
         // Load the data if it hasn't been loaded already
         loadData()
         
+        // Set up the observer to listen for notifications telling the view to reload its data
+        NotificationCenter.default.addObserver(self, selector: #selector(updateData), name: .friendsUpdate, object: nil)
+        
         // Set up the observers to listen for responses to push notifications
         setUpObservers()
     }
@@ -33,6 +36,12 @@ class InviteFriendsViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         removeObservers()
+    }
+    
+    // MARK: - Notifications
+    
+    @objc func updateData() {
+        DispatchQueue.main.async { self.friendsTableView.reloadData() }
     }
     
     // MARK: - Helper Methods
