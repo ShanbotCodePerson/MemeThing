@@ -27,16 +27,18 @@
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XiX-uy-0qA" customClass="ProfileImage" customModule="MemeThing" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="6.5" width="50" height="50"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="XiX-uy-0qA" secondAttribute="height" multiplier="1:1" id="GGs-ZJ-KEa"/>
+                                                    <constraint firstAttribute="width" secondItem="XiX-uy-0qA" secondAttribute="height" multiplier="1:1" priority="999" id="GGs-ZJ-KEa"/>
                                                 </constraints>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="XiX-uy-0qA" firstAttribute="width" secondItem="Fm8-aA-7LC" secondAttribute="width" id="1bD-dk-Wy9"/>
+                                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="XiX-uy-0qA" secondAttribute="bottom" constant="6" id="A0J-dG-E1i"/>
                                             <constraint firstAttribute="width" constant="50" id="MNy-zu-kHv"/>
                                             <constraint firstItem="XiX-uy-0qA" firstAttribute="centerY" secondItem="Fm8-aA-7LC" secondAttribute="centerY" id="XUC-EM-lYW"/>
                                             <constraint firstItem="XiX-uy-0qA" firstAttribute="centerX" secondItem="Fm8-aA-7LC" secondAttribute="centerX" id="Zh6-gi-wIY"/>
+                                            <constraint firstItem="XiX-uy-0qA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fm8-aA-7LC" secondAttribute="top" constant="6" id="uuD-hy-JJd"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="First Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="seq-uL-uuu" customClass="MemeThingLabel" customModule="MemeThing" customModuleProvider="target">
